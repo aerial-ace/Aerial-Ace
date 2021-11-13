@@ -3,6 +3,7 @@ import os
 import requests
 import json
 import random
+from textwrap import TextWrapper
 
 client = discord.Client()
 
@@ -76,6 +77,16 @@ def get_random_poke():
 
 	return poke
 
+#for wraping text
+def wrap_text(width, text):
+	wrapped_text = ""
+	wrapper = TextWrapper(width)
+	text_lines = wrapper.wrap(text)
+	for line in text_lines:
+		wrapped_text += "{line}\n".format(line = line)
+
+	return wrapped_text
+
 @client.event
 async def on_ready():
 	print("Logged in as {0.user}".format(client))
@@ -101,10 +112,8 @@ async def on_message(message):
 		reply.title = "**{0} : {1}**".format(rand_poke.id, rand_poke.name)
 		print(rand_poke.name)
 
-		description = ""
-		description += "{0}".format(rand_poke.p_info)
-		description += "\n\n"
-		description += "**Height** : {h}m | **Weight** : {w}kg".format(h = rand_poke.p_height, w = rand_poke.p_weight)
+		description = wrap_text(40, rand_poke.p_info)
+
 		reply.description = description
 
 		reply.set_image(url = rand_poke.image_link)
@@ -127,9 +136,8 @@ async def on_message(message):
 
 		reply.title = "**{0} : {1}**".format(pokeData.id, pokeData.name)
 
-		description = ""
-		description += "{0}".format(pokeData.p_info)
-		description += "\n\n"
+		description = wrap_text(40, pokeData.p_info)
+		description += "\n"
 		description += "**Height** : {h}m | **Weight** : {w}kg".format(h = pokeData.p_height, w = pokeData.p_weight)
 
 		reply.description = description
