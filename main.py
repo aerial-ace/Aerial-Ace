@@ -1,91 +1,8 @@
 import discord
 import os
-import requests
-import json
-import random
-from textwrap import TextWrapper
+import aerialace
 
 client = discord.Client()
-
-class PokeData:
-
-	p_valid = False
-	p_log = ""
-
-	p_id = 0
-	p_name = ""
-	p_type = ""
-	p_region = ""
-	p_weight = 0.0
-	p_height = 0.0
-	image_link = ""
-	p_info = ""
-
-	def __init__(self, name = "", id = 0):
-		self.name = name
-		self.id = id
-
-#for getting a pokemon of desired index
-def get_poke_by_id(id):
-
-	poke = PokeData()
-
-	general_response = requests.get("https://pokeapi.co/api/v2/pokemon/{0}".format(id))
-	flavor_response = requests.get("https://pokeapi.co/api/v2/pokemon-species/{0}/".format(id))
-
-	try:
-		data = json.loads(general_response.text)
-		flavor_data = json.loads(flavor_response.text)
-	except:
-		poke.p_valid = False
-		poke.p_log = "Pokemon not found, try \n```-aa dex 69```"
-		return poke
-
-	poke.p_valid = True
-	poke.p_log = "Valid Pokemon"
-
-	poke.id = id
-
-	#get name
-	poke.name = data["forms"][0]["name"].capitalize()
-
-	#get height and weight
-	poke.p_height = float(data["height"])
-	poke.p_weight = float(data["weight"])
-
-	#get info
-	allInfos = flavor_data["flavor_text_entries"]
-	poke.p_info = "*NULL*"
-
-	for i in allInfos:
-		if i["language"]["name"] == "en":
-			poke.p_info = i["flavor_text"]
-			break
-
-	#get image_link
-	rp_image_link = data["sprites"]["front_default"]
-	poke.image_link = rp_image_link
-
-	return poke
-
-#for getting a random pokemon 
-def get_random_poke():
-
-	rand_pokemon_id = random.randint(1, 898)
-	
-	poke = get_poke_by_id(rand_pokemon_id)
-
-	return poke
-
-#for wraping text
-def wrap_text(width, text):
-	wrapped_text = ""
-	wrapper = TextWrapper(width)
-	text_lines = wrapper.wrap(text)
-	for line in text_lines:
-		wrapped_text += "{line}\n".format(line = line)
-
-	return wrapped_text
 
 @client.event
 async def on_ready():
@@ -101,7 +18,7 @@ async def on_message(message):
 
 	#Random Pokemon
 	if(msg.startswith("-aa rp")) or msg.startswith("-aa rand_poke"):
-		rand_poke = get_random_poke()
+		rand_poke = aerialace.get_random_poke()
 		if rand_poke.p_valid == False:
 			await message.channel.send(rand_poke.p_log)
 			return
@@ -112,7 +29,7 @@ async def on_message(message):
 		reply.title = "**{0} : {1}**".format(rand_poke.id, rand_poke.name)
 		print(rand_poke.name)
 
-		description = wrap_text(40, rand_poke.p_info)
+		description = aerialace.wrap_text(40, rand_poke.p_info)
 
 		reply.description = description
 
@@ -126,7 +43,7 @@ async def on_message(message):
 		poke_id = poke_id.strip()
 		poke_id = int(poke_id)
 
-		pokeData = get_poke_by_id(poke_id)
+		pokeData = aerialace.get_poke_by_id(poke_id)
 		if pokeData.p_valid == False:
 			await message.channel.send(pokeData.p_log)
 			return
@@ -136,7 +53,7 @@ async def on_message(message):
 
 		reply.title = "**{0} : {1}**".format(pokeData.id, pokeData.name)
 
-		description = wrap_text(40, pokeData.p_info)
+		description = aerialace.wrap_text(40, pokeData.p_info)
 		description += "\n"
 		description += "**Height** : {h}m | **Weight** : {w}kg".format(h = pokeData.p_height, w = pokeData.p_weight)
 
@@ -147,9 +64,22 @@ async def on_message(message):
 
 	#rolling
 	if msg.startswith("-aa roll"):
-		random_num = random.randint(0, 100)
 
-		await message.channel.send("<@{user}> rolled {roll} :game_die:".format(user = user, roll = random_num))
+		max_roll = 100
+
+		try:
+			max_roll_str = msg.replace("-aa roll", "").strip()
+			if max_roll_str == "":
+				max_roll = 100
+			else:
+				max_roll = int(max_roll_str)
+		except:
+			await message.channel.send("Enter a valid upper index! Like this : ```-aa roll 100```")
+			return
+
+		roll = aerialace.roll(max_roll)
+
+		await message.channel.send("<@{user}> rolled {roll} :game_die:".format(user = user, roll = roll))
 		
 	#say hello
 	if msg.startswith("-aa Hello") or msg.startswith("-aa Alola") or msg.startswith("-aa Hola") or msg.startswith("-aa Henlu") or msg.startswith("-aa Hi"):
