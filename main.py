@@ -18,57 +18,41 @@ async def on_message(message):
 
 	#Random Pokemon
 	if(msg.startswith("-aa rp")) or msg.startswith("-aa rand_poke"):
-		rand_poke = aerialace.get_random_poke()
-		if rand_poke.p_valid == False:
-			await message.channel.send(rand_poke.p_log)
+		
+		try:
+			rand_poke = aerialace.get_random_poke()
+		except Exception as excp:
+			await message.channel.send("> Some error occured while fetching random pokemon, the details have been send to the appropriate peeps")
+			print("--Error while fetching random pokemon : {e}".format(e = excp))
 			return
 
-		reply = discord.Embed()
-		reply.color = discord.Color.blue()
-
-		reply.title = "**{0} : {1}**".format(rand_poke.id, rand_poke.name)
-		print(rand_poke.name)
-
-		description = aerialace.wrap_text(40, rand_poke.p_info)
-
-		reply.description = description
-
-		reply.set_image(url = rand_poke.image_link)
+		reply = aerialace.get_random_pokemon_embed(discord.Embed(), rand_poke, discord.Color.blue())
 
 		await message.channel.send(embed = reply)
 
 	#search for pokemon using index
-	if(msg.startswith("-aa dex ")):
-		poke_id = msg.replace("-aa dex ", "")
-		poke_id = poke_id.strip()
-		poke_id = int(poke_id)
+	if(msg.startswith("-aa dex")):
 
-		pokeData = aerialace.get_poke_by_id(poke_id)
-		if pokeData.p_valid == False:
-			await message.channel.send(pokeData.p_log)
+		param = aerialace.get_parameter(msg, "-aa dex")
+		pokeData = None
+
+		try:
+			pokeData = aerialace.get_poke_by_id(param)
+		except:
+			await message.channel.send("> Mhan, that pokemon was not found in the pokedex, if you think this pokemon should be there in the dex, dm DevGa.me#0176")
 			return
 
-		reply = discord.Embed()
-		reply.color = discord.Color.blue()
-
-		reply.title = "**{0} : {1}**".format(pokeData.id, pokeData.name)
-
-		description = aerialace.wrap_text(40, pokeData.p_info)
-		description += "\n"
-		description += "**Height** : {h}m | **Weight** : {w}kg".format(h = pokeData.p_height, w = pokeData.p_weight)
-
-		reply.description = description
-		reply.set_image(url = pokeData.image_link)
-
+		reply = aerialace.get_dex_entry_embed(discord.Embed(), pokeData, discord.Color.blue())
+		
 		await message.channel.send(embed = reply)
 
 	#rolling
 	if msg.startswith("-aa roll"):
-
 		max_roll = 100
 
 		try:
-			max_roll_str = msg.replace("-aa roll", "").strip()
+			max_roll_str = aerialace.get_parameter(msg, "-aa roll")
+			
 			if max_roll_str == "":
 				max_roll = 100
 			else:
@@ -79,11 +63,11 @@ async def on_message(message):
 
 		roll = aerialace.roll(max_roll)
 
-		await message.channel.send("<@{user}> rolled {roll} :game_die:".format(user = user, roll = roll))
+		await message.channel.send("> <@{user}> rolled {roll} :game_die:".format(user = user, roll = roll))
 		
 	#say hello
 	if msg.startswith("-aa Hello") or msg.startswith("-aa Alola") or msg.startswith("-aa Hola") or msg.startswith("-aa Henlu") or msg.startswith("-aa Hi"):
-		await message.channel.send("Alola <@{user}>".format(user = user))
+		await message.channel.send("> Alola <@{user}>".format(user = user))
 
 token = os.environ['TOKEN']
 

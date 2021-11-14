@@ -5,9 +5,6 @@ from textwrap import TextWrapper
 
 class PokeData:
 
-	p_valid = False
-	p_log = ""
-
 	p_id = 0
 	p_name = ""
 	p_type = ""
@@ -30,18 +27,10 @@ def get_poke_by_id(id):
 	general_response = requests.get("https://pokeapi.co/api/v2/pokemon/{0}".format(id))
 	flavor_response = requests.get("https://pokeapi.co/api/v2/pokemon-species/{0}/".format(id))
 
-	try:
-		data = json.loads(general_response.text)
-		flavor_data = json.loads(flavor_response.text)
-	except:
-		poke.p_valid = False
-		poke.p_log = "Pokemon not found, try \n```-aa dex 69```"
-		return poke
+	data = json.loads(general_response.text)
+	flavor_data = json.loads(flavor_response.text)
 
-	poke.p_valid = True
-	poke.p_log = "Valid Pokemon"
-
-	poke.id = id
+	poke.id = data["id"]
 
 	#get name
 	poke.name = data["forms"][0]["name"].capitalize()
@@ -88,3 +77,34 @@ def wrap_text(width, text):
 def roll(max):
 	roll = random.randint(0, max)
 	return roll
+
+def get_parameter(msg, removable_command):
+	return msg.replace(removable_command, "").strip()
+
+def get_random_pokemon_embed(embd, pokeData, color):
+
+	embd.color = color
+
+	embd.title = "**{0} : {1}**".format(pokeData.id, pokeData.name)
+	print(pokeData.name)
+
+	description = wrap_text(40, pokeData.p_info)
+
+	embd.description = description
+
+	embd.set_image(url = pokeData.image_link)
+
+	return embd
+
+def get_dex_entry_embed(embd, pokeData, color):
+	embd.color = color
+	embd.title = "**{0} : {1}**".format(pokeData.id, pokeData.name)
+
+	description = wrap_text(40, pokeData.p_info)
+	description += "\n"
+	description += "**Height** : {h}m | **Weight** : {w}kg".format(h = pokeData.p_height, w = pokeData.p_weight)
+
+	embd.description = description
+	embd.set_image(url = pokeData.image_link)
+
+	return embd
