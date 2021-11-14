@@ -21,15 +21,18 @@ def get_poke_by_id(id):
 	poke = PokeData()
 
 	general_response = requests.get("https://pokeapi.co/api/v2/pokemon/{0}".format(id))
-	flavor_response = requests.get("https://pokeapi.co/api/v2/pokemon-species/{0}/".format(id))
-
 	data = json.loads(general_response.text)
-	flavor_data = json.loads(flavor_response.text)
+
+	species_response = requests.get("https://pokeapi.co/api/v2/pokemon-species/{0}/".format(id))
+	species_data = json.loads(species_response.text)
+
+	generation_response = requests.get("https://pokeapi.co/api/v2/generation/{name}/".format(name = species_data["generation"]["name"]))
+	generation_data = json.loads(generation_response.text)
 
 	poke.id = data["id"]
 
 	#get name
-	poke.name = data["forms"][0]["name"].capitalize()
+	poke.p_name = data["name"].capitalize()
 
 	#get height and weight
 	poke.p_height = float(data["height"])
@@ -42,10 +45,13 @@ def get_poke_by_id(id):
 		poke.p_types += types[i]["type"]["name"].capitalize()
 
 		if i != len(types) - 1:
-			poke.p_types += '\n'
+			poke.p_types += ' | '
+
+	#get_region
+	poke.p_region = generation_data["main_region"]["name"].capitalize()
 
 	#get info
-	allInfos = flavor_data["flavor_text_entries"]
+	allInfos = species_data["flavor_text_entries"]
 	poke.p_info = "*NULL*"
 
 	for i in allInfos:
@@ -103,13 +109,15 @@ def get_random_pokemon_embed(embd, pokeData, color):
 
 def get_dex_entry_embed(embd, pokeData, color):
 	embd.color = color
-	embd.title = "**{0} : {1}**".format(pokeData.id, pokeData.name)
+	embd.title = "**{0} : {1}**".format(pokeData.id, pokeData.p_name)
 
 	description = wrap_text(40, pokeData.p_info)
 	description += "\n"
 
 	embd.add_field(name = "Height", value = "{h} m".format(h = pokeData.p_height), inline = True)
 	embd.add_field(name = "Weight", value = "{w} kg".format(w = pokeData.p_weight), inline = True)
+
+	embd.add_field(name = "Region", value = "{r}".format(r = pokeData.p_region), inline = True)
 	embd.add_field(name = "Type(s)", value = "{t}".format(t = pokeData.p_types), inline = True)
 
 	embd.description = description
