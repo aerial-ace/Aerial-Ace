@@ -14,10 +14,6 @@ class PokeData:
 	image_link = ""
 	p_info = ""
 
-	def __init__(self, name = "", id = 0):
-		self.name = name
-		self.id = id
-
 
 #for getting a pokemon of desired index
 def get_poke_by_id(id):
@@ -102,7 +98,10 @@ def get_dex_entry_embed(embd, pokeData, color):
 
 	description = wrap_text(40, pokeData.p_info)
 	description += "\n"
-	description += "**Height** : {h}m | **Weight** : {w}kg".format(h = pokeData.p_height, w = pokeData.p_weight)
+
+	embd.add_field(name = "Height", value = "{h}".format(h = pokeData.p_height), inline = True)
+	embd.add_field(name = "Weight", value = "{w}".format(w = pokeData.p_weight), inline = True)
+	
 
 	embd.description = description
 	embd.set_image(url = pokeData.image_link)
