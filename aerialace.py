@@ -7,7 +7,7 @@ class PokeData:
 
 	p_id = 0
 	p_name = ""
-	p_type = ""
+	p_types = ""
 	p_region = ""
 	p_weight = 0.0
 	p_height = 0.0
@@ -34,6 +34,15 @@ def get_poke_by_id(id):
 	#get height and weight
 	poke.p_height = float(data["height"])
 	poke.p_weight = float(data["weight"])
+
+	#get types
+	types = data["types"]
+	
+	for i in range(0, len(types)):
+		poke.p_types += types[i]["type"]["name"].capitalize()
+
+		if i != len(types) - 1:
+			poke.p_types += '\n'
 
 	#get info
 	allInfos = flavor_data["flavor_text_entries"]
@@ -99,9 +108,9 @@ def get_dex_entry_embed(embd, pokeData, color):
 	description = wrap_text(40, pokeData.p_info)
 	description += "\n"
 
-	embd.add_field(name = "Height", value = "{h}".format(h = pokeData.p_height), inline = True)
-	embd.add_field(name = "Weight", value = "{w}".format(w = pokeData.p_weight), inline = True)
-	
+	embd.add_field(name = "Height", value = "{h} m".format(h = pokeData.p_height), inline = True)
+	embd.add_field(name = "Weight", value = "{w} kg".format(w = pokeData.p_weight), inline = True)
+	embd.add_field(name = "Type(s)", value = "{t}".format(t = pokeData.p_types), inline = True)
 
 	embd.description = description
 	embd.set_image(url = pokeData.image_link)

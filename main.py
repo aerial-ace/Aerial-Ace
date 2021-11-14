@@ -38,8 +38,9 @@ async def on_message(message):
 
 		try:
 			pokeData = aerialace.get_poke_by_id(param)
-		except:
+		except Exception as excp:
 			await message.channel.send("> Mhan, that pokemon was not found in the pokedex, if you think this pokemon should be there in the dex, dm DevGa.me#0176")
+			print("--Error occured while showing a dex entry : {e}".format(e = excp))
 			return
 
 		reply = aerialace.get_dex_entry_embed(discord.Embed(), pokeData, discord.Color.blue())
