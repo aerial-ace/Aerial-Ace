@@ -136,6 +136,38 @@ def get_dex_entry_embed(embd, pokeData, color):
 
 	return embd
 
+#register server in data
+def register_guild(server_id):
+	
+	#get the data from the file
+	fav_data_out = open("data/fav_data.json", "r")
+	fav_data = json.loads(fav_data_out.read())
+	fav_data_out.close()
+
+	#update the data 
+	fav_data[str(server_id)] = {}
+
+	#save the data
+	fav_data_in = open("data/fav_data.json", "w")
+	json_obj = json.dumps(fav_data)
+	fav_data_in.write(json_obj)
+	fav_data_in.close()
+
+def remove_guild(server_id):
+	#get the data from the file
+	fav_data_out = open("data/fav_data.json", "r")
+	fav_data = json.loads(fav_data_out.read())
+	fav_data_out.close()
+
+	#update the data 
+	del fav_data[str(server_id)]
+
+	#save the data
+	fav_data_in = open("data/fav_data.json", "w")
+	json_obj = json.dumps(fav_data)
+	fav_data_in.write(json_obj)
+	fav_data_in.close()
+
 #Set the favourite pokemon of the user
 def set_fav(server_id, user_id, poke_name):
 	

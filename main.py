@@ -7,6 +7,16 @@ server = None
 server_id = None
 
 @client.event
+async def on_guild_join(guild):
+	aerialace.register_guild(guild.id)
+	print("server was joined and registered")
+
+@client.event
+async def on_guild_remove(guild):
+	aerialace.remove_guild(guild.id)
+	print("server was removed")
+
+@client.event
 async def on_ready():
 	print("Logged in as {0.user}".format(client))
 
