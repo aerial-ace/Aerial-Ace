@@ -119,7 +119,7 @@ def get_dex_entry_embed(embd, pokeData, color):
 	embd.color = color
 	embd.title = "**{0} : {1}**".format(pokeData.p_id, pokeData.p_name)
 
-	description = wrap_text(60, pokeData.p_info)
+	description = wrap_text(40, pokeData.p_info)
 	description += "\n"
 
 	embd.add_field(name = "Height", value = "{h} m".format(h = pokeData.p_height), inline = True)
@@ -127,10 +127,49 @@ def get_dex_entry_embed(embd, pokeData, color):
 	embd.add_field(name = "Region", value = "{r}".format(r = pokeData.p_region), inline = True)
 	embd.add_field(name = "Type(s)", value = "{t}".format(t = pokeData.p_types), inline = True)
 
-	stats_string = "**HP** : {hp} | **ATK** : {atk} | **DEF** : {df} | **SPAT** : {spat} | **SPDF** : {spdf} | **SPD** : {spd}".format(hp = pokeData.p_stats["hp"], atk = pokeData.p_stats["attack"], df = pokeData.p_stats["defense"], spat = pokeData.p_stats["special-attack"], spdf = pokeData.p_stats["special-defense"], spd = pokeData.p_stats["speed"])
+	stats_string = """**HP** : {hp} \u2800 | **ATK** : {atk} | **DEF** : {df}
+					  **SPAT** : {spat} | **SPDF** : {spdf} | **SPD** : {spd}""".format(hp = pokeData.p_stats["hp"], atk = pokeData.p_stats["attack"], df = pokeData.p_stats["defense"], spat = pokeData.p_stats["special-attack"], spdf = pokeData.p_stats["special-defense"], spd = pokeData.p_stats["speed"])
 	embd.add_field(name = "Stats", value = stats_string, inline = False)
 
 	embd.description = description
 	embd.set_image(url = pokeData.image_link)
 
 	return embd
+
+#Set the favourite pokemon of the user
+def set_fav(server_id, user_id, poke_name):
+	
+	#get the data from the file
+	fav_data_out = open("data/fav_data.json", "r")
+	fav_data = json.loads(fav_data_out.read())
+	fav_data_out.close()
+
+	#update the data 
+	fav_data[server_id][user_id] = poke_name
+
+	#save the data
+	fav_data_in = open("data/fav_data.json", "w")
+	json_obj = json.dumps(fav_data)
+	fav_data_in.write(json_obj)
+	fav_data_in.close()
+
+	return "> Your favourite pokemon is now **{fav}**. Check it using ```-aa fav```".format(fav = poke_name)
+	
+
+#Get the favourite pokemon of the user
+def get_fav(server_id, user_id):
+
+	fav_data_raw = open("data/fav_data.json", "r").read() 	# string data from the json file
+	fav_data = json.loads(fav_data_raw)					  	# dictionary data from the json file
+
+	server_list = list(fav_data.keys())						# all the registered servers
+
+	if server_id in server_list:
+		users = list(fav_data[server_id].keys())
+		if user_id in users:
+			fav_poke = fav_data[server_id][user_id]
+			return "> Your favourite pokemon is **{}**".format(fav_poke)
+		else:
+			return "> User was not found in the database, set you favourite using ```-aa set_fav <pokemon>```"
+	else:
+		return "> Server was not found!"

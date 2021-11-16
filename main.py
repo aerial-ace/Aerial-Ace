@@ -3,7 +3,8 @@ import os
 import aerialace
 
 client = discord.Client()
-guild = None
+server = None
+server_id = None
 
 @client.event
 async def on_ready():
@@ -13,16 +14,17 @@ async def on_ready():
 async def on_message(message):
 
 	#initialization
-	global guild
-	if guild == None : 
-		guild = message.guild
+	global server, server_id
+	if server == None : 
+		server = message.guild
+		server_id = str(server.id)
 
 	if(message.author == client.user):
 		return
 
 	msg = message.content.lower()
 	member = message.author
-	user_id = int(message.author.id)
+	user_id = str(message.author.id)
 	nickname = member.display_name
 
 	#say hello
@@ -66,7 +68,7 @@ async def on_message(message):
 		return
 
 	#search for pokemon using index
-	if(msg.startswith("-aa dex")):
+	if msg.startswith("-aa dex") :
 
 		param = aerialace.get_parameter(msg, "-aa dex")
 		pokeData = None
@@ -81,6 +83,36 @@ async def on_message(message):
 		reply = aerialace.get_dex_entry_embed(discord.Embed(), pokeData, discord.Color.blue())
 		
 		await message.channel.send(embed = reply)
+		return
+	
+	#logging names
+	if msg.startswith("-aa log"):
+
+		param = aerialace.get_parameter(msg, "-aa log")
+		with open("data/names.txt", "a") as name_file :
+			name_file.writelines("{param} \n".format(param = param))
+
+		return
+
+	#getting logged names
+	if msg.startswith("-aa get_logged"):
+		with open("data/names.txt", "r") as name_file:
+			logged_data = name_file.read()
+			await message.channel.send("**Logged Data in names.txt** : ```{data}```".format(data = logged_data))
+		return
+
+	#Register Favourite Pokemon
+	if msg.startswith("-aa set_fav"):
+		param = aerialace.get_parameter(msg, "-aa set_fav")
+
+		reply = aerialace.set_fav(server_id, user_id, param)
+		await message.channel.send(reply)
+		return
+		
+	#See favourite pokemon
+	if msg.startswith("-aa fav"):
+		reply = aerialace.get_fav(server_id, user_id)
+		await message.channel.send(reply)
 		return
 
 	#command not found

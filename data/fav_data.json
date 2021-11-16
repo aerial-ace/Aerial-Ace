@@ -1,7 +1,1 @@
-{
-	"server_name" : {
-		"player_name": {
-			"fav_poke" : "Pokemon"
-		}
-	}
-}
+{"server": {"player": "pokemon"}, "751076697884852389": {"734754644286504992": "Meostic", "734754644286504991": "klink"}}
