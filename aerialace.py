@@ -13,6 +13,7 @@ class PokeData:
 	p_height = 0.0
 	image_link = ""
 	p_info = ""
+	p_stats = {}
 
 
 #for getting a pokemon of desired index
@@ -29,7 +30,7 @@ def get_poke_by_id(id):
 	generation_response = requests.get("https://pokeapi.co/api/v2/generation/{name}/".format(name = species_data["generation"]["name"]))
 	generation_data = json.loads(generation_response.text)
 
-	poke.id = data["id"]
+	poke.p_id = data["id"]
 
 	#get name
 	poke.p_name = data["name"].capitalize()
@@ -60,8 +61,15 @@ def get_poke_by_id(id):
 			break
 
 	#get image_link
-	rp_image_link = data["sprites"]["front_default"]
-	poke.image_link = rp_image_link
+	poke.image_link = data["sprites"]["front_default"] 
+
+	#get stats
+	stats = data["stats"]
+
+	for i in range(0, len(stats)):
+		stat_name = stats[i]["stat"]["name"]
+		stat_value = stats[i]["base_stat"]
+		poke.p_stats[stat_name] = stat_value
 
 	return poke
 
@@ -96,8 +104,8 @@ def get_random_pokemon_embed(embd, pokeData, color):
 
 	embd.color = color
 
-	embd.title = "**{0} : {1}**".format(pokeData.id, pokeData.name)
-	print(pokeData.name)
+	embd.title = "**{0} : {1}**".format(pokeData.p_id, pokeData.p_name)
+	print(pokeData.p_name)
 
 	description = wrap_text(40, pokeData.p_info)
 
@@ -109,16 +117,18 @@ def get_random_pokemon_embed(embd, pokeData, color):
 
 def get_dex_entry_embed(embd, pokeData, color):
 	embd.color = color
-	embd.title = "**{0} : {1}**".format(pokeData.id, pokeData.p_name)
+	embd.title = "**{0} : {1}**".format(pokeData.p_id, pokeData.p_name)
 
-	description = wrap_text(40, pokeData.p_info)
+	description = wrap_text(60, pokeData.p_info)
 	description += "\n"
 
 	embd.add_field(name = "Height", value = "{h} m".format(h = pokeData.p_height), inline = True)
 	embd.add_field(name = "Weight", value = "{w} kg".format(w = pokeData.p_weight), inline = True)
-
 	embd.add_field(name = "Region", value = "{r}".format(r = pokeData.p_region), inline = True)
 	embd.add_field(name = "Type(s)", value = "{t}".format(t = pokeData.p_types), inline = True)
+
+	stats_string = "**HP** : {hp} | **ATK** : {atk} | **DEF** : {df} | **SPAT** : {spat} | **SPDF** : {spdf} | **SPD** : {spd}".format(hp = pokeData.p_stats["hp"], atk = pokeData.p_stats["attack"], df = pokeData.p_stats["defense"], spat = pokeData.p_stats["special-attack"], spdf = pokeData.p_stats["special-defense"], spd = pokeData.p_stats["speed"])
+	embd.add_field(name = "Stats", value = stats_string, inline = False)
 
 	embd.description = description
 	embd.set_image(url = pokeData.image_link)
