@@ -1,6 +1,8 @@
 import discord
 import os
 import aerialace
+import aerialace_data_manager
+import aerialace_music_manager
 
 client = discord.Client()
 server = None
@@ -10,12 +12,12 @@ admin_user_id = os.environ['ADMIN_ID']
 
 @client.event
 async def on_guild_join(guild):
-	aerialace.register_guild(guild.id)
+	aerialace_data_manager.register_guild(guild.id)
 	print("server was joined and registered")
 
 @client.event
 async def on_guild_remove(guild):
-	aerialace.remove_guild(guild.id)
+	aerialace_data_manager.remove_guild(guild.id)
 	print("server was removed")
 
 @client.event
@@ -86,7 +88,7 @@ async def on_message(message):
 		await message.channel.send(embed = reply)
 		return
 
-	#search for pokemon using index
+	#Dex search
 	if msg.startswith("-aa dex") :
 
 		param = aerialace.get_parameter(msg, "-aa dex")
@@ -108,20 +110,20 @@ async def on_message(message):
 	if msg.startswith("-aa set_fav"):
 		param = aerialace.get_parameter(msg, "-aa set_fav")
 
-		reply = aerialace.set_fav(server_id, user_id, param)
+		reply = aerialace_data_manager.set_fav(server_id, user_id, param)
 		await message.channel.send(reply)
 		return
 		
 	#See favourite pokemon
 	if msg.startswith("-aa fav"):
-		reply = aerialace.get_fav(server_id, user_id)
+		reply = aerialace_data_manager.get_fav(server_id, user_id)
 		await message.channel.send(reply)
 		return
 
 	#get duelish stats
 	if msg.startswith("-aa stats"):
 		param = aerialace.get_parameter(msg, "-aa stats")
-		reply = aerialace.get_stats_embed(discord.Embed(), param, discord.Color.blue())
+		reply = aerialace_data_manager.get_stats_embed(discord.Embed(), param, discord.Color.blue())
 		await message.channel.send(embed = reply)
 
 		return
@@ -130,13 +132,17 @@ async def on_message(message):
 	#returns the json files of the data
 	if msg.startswith("-aa fetch_data_files"):
 		if user_id == admin_user_id:
-			fav_data_file = discord.File("data/fav_data.json")
-			await message.channel.send(file = fav_data_file, content = "fav_data.json")
+			data_files = aerialace_data_manager.get_data_files()
+			await message.channel.send(file = data_files["fav"], content = "fav.json")
+			await message.channel.send(file = data_files["stats"], content = "stats.json")
 			return
 		else:
 			await message.channel.send("> This command is to be used by admins only. Use ```-aa help```to get the list of commands that you can use")
 			
 		return
+
+	#play random music
+	
 
 	#command not found
 	if msg.startswith("-aa "):

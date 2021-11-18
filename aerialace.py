@@ -112,9 +112,11 @@ def roll(max):
 	roll = random.randint(0, max)
 	return roll
 
+#get parameter from the message
 def get_parameter(msg, removable_command):
 	return msg.replace(removable_command, "").strip()
 
+#get random pokemon embed
 def get_random_pokemon_embed(embd, pokeData, color):
 
 	embd.color = color
@@ -130,6 +132,7 @@ def get_random_pokemon_embed(embd, pokeData, color):
 
 	return embd
 
+#get Dex entry embed
 def get_dex_entry_embed(embd, pokeData, color):
 	embd.color = color
 	embd.title = "**{0} : {1}**".format(pokeData.p_id, pokeData.p_name)
@@ -142,102 +145,11 @@ def get_dex_entry_embed(embd, pokeData, color):
 	embd.add_field(name = "Region", value = "{r}".format(r = pokeData.p_region), inline = True)
 	embd.add_field(name = "Type(s)", value = "{t}".format(t = pokeData.p_types), inline = True)
 
-	stats_string = """**HP** : {hp} \u2800 | **ATK** : {atk} | **DEF** : {df}
-					  **SPAT** : {spat} | **SPDF** : {spdf} | **SPD** : {spd}""".format(hp = pokeData.p_stats["hp"], atk = pokeData.p_stats["attack"], df = pokeData.p_stats["defense"], spat = pokeData.p_stats["special-attack"], spdf = pokeData.p_stats["special-defense"], spd = pokeData.p_stats["speed"])
+	stats_string = "**HP** : {hp} | **ATK** : {atk} | **DEF** : {df} \n".format(hp = pokeData.p_stats["hp"], atk = pokeData.p_stats["attack"], df = pokeData.p_stats["defense"])
+	stats_string += "**SPAT** : {spat} | **SPDF** : {spdf} | **SPD** : {spd}".format(spat = pokeData.p_stats["special-attack"], spdf = pokeData.p_stats["special-defense"], spd = pokeData.p_stats["speed"])
 	embd.add_field(name = "Stats", value = stats_string, inline = False)
 
 	embd.description = description
 	embd.set_image(url = pokeData.image_link)
 
 	return embd
-
-#register server in data
-def register_guild(server_id):
-	
-	#get the data from the file
-	fav_data_out = open("data/fav_data.json", "r")
-	fav_data = json.loads(fav_data_out.read())
-	fav_data_out.close()
-
-	#update the data 
-	fav_data[str(server_id)] = {}
-
-	#save the data
-	fav_data_in = open("data/fav_data.json", "w")
-	json_obj = json.dumps(fav_data)
-	fav_data_in.write(json_obj)
-	fav_data_in.close()
-
-def remove_guild(server_id):
-	#get the data from the file
-	fav_data_out = open("data/fav_data.json", "r")
-	fav_data = json.loads(fav_data_out.read())
-	fav_data_out.close()
-
-	#update the data 
-	del fav_data[str(server_id)]
-
-	#save the data
-	fav_data_in = open("data/fav_data.json", "w")
-	json_obj = json.dumps(fav_data)
-	fav_data_in.write(json_obj)
-	fav_data_in.close()
-
-#Set the favourite pokemon of the user
-def set_fav(server_id, user_id, poke_name):
-	
-	#get the data from the file
-	fav_data_out = open("data/fav_data.json", "r")
-	fav_data = json.loads(fav_data_out.read())
-	fav_data_out.close()
-
-	#update the data 
-	fav_data[server_id][user_id] = poke_name
-
-	#save the data
-	fav_data_in = open("data/fav_data.json", "w")
-	json_obj = json.dumps(fav_data)
-	fav_data_in.write(json_obj)
-	fav_data_in.close()
-
-	return "> Your favourite pokemon is now **{fav}**. Check it using ```-aa fav```".format(fav = poke_name)
-	
-
-#Get the favourite pokemon of the user
-def get_fav(server_id, user_id):
-
-	fav_data_raw = open("data/fav_data.json", "r").read() 	# string data from the json file
-	fav_data = json.loads(fav_data_raw)					  	# dictionary data from the json file
-
-	server_list = list(fav_data.keys())						# all the registered servers
-
-	if server_id in server_list:
-		users = list(fav_data[server_id].keys())
-		if user_id in users:
-			fav_poke = fav_data[server_id][user_id]
-			return "> Your favourite pokemon is **{}**".format(fav_poke.capitalize())
-		else:
-			return "> User was not found in the database, set you favourite using ```-aa set_fav <pokemon>```"
-	else:
-		return "> Server was not found!"
-
-#get duelish statss
-def get_stats_embed(embd, pokemon, color):
-	stats_file = open("data/stats.json", "r")
-	stats_data_raw = stats_file.read()
-	stats_data = json.loads(stats_data_raw)
-
-	pokemons = list(stats_data.keys())
-	embd.color = color
-
-	if pokemon in pokemons:
-		embd.title = "{poke}'s Stats".format(poke = pokemon.capitalize())
-		embd.description = "HP, Defense, Sp.Defense and Speed are `The more the better` stats \n"
-		embd.add_field(name = "Stats", value = "> {stats}".format(stats = stats_data[pokemon]), inline = False)
-
-		return embd
-
-	else:
-		embd.title = "That pokemon was not found in the database"
-		embd.description = "> PROBABLY because this pokemon is not good for battling"
-		return embd
