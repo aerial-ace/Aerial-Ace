@@ -27,6 +27,7 @@ def get_help_embed(embd, color):
 	embd.add_field(name = "View Dex Entry", value = "`-aa dex <pokedex id>` `-aa dex <pokemon name>`", inline = False)
 	embd.add_field(name = "Set Favourite Pokemon", value = "`-aa set_fav <pokemon name>`", inline = False)
 	embd.add_field(name = "View Favourite Pokemon", value = "`-aa fav`", inline = False)
+	embd.add_field(name = "Stats", value = "`-aa stats <Pokemon Name>`", inline = False)
 
 	return embd
 
@@ -214,13 +215,13 @@ def get_fav(server_id, user_id):
 		users = list(fav_data[server_id].keys())
 		if user_id in users:
 			fav_poke = fav_data[server_id][user_id]
-			return "> Your favourite pokemon is **{}**".format(fav_poke)
+			return "> Your favourite pokemon is **{}**".format(fav_poke.capitalize())
 		else:
 			return "> User was not found in the database, set you favourite using ```-aa set_fav <pokemon>```"
 	else:
 		return "> Server was not found!"
 
-#get duelish stats
+#get duelish statss
 def get_stats_embed(embd, pokemon, color):
 	stats_file = open("data/stats.json", "r")
 	stats_data_raw = stats_file.read()
@@ -233,7 +234,7 @@ def get_stats_embed(embd, pokemon, color):
 		embd.title = "{poke}'s Stats".format(poke = pokemon.capitalize())
 		embd.description = "HP, Defense, Sp.Defense and Speed are `The more the better` stats \n"
 		embd.add_field(name = "Stats", value = "> {stats}".format(stats = stats_data[pokemon]), inline = False)
-		
+
 		return embd
 
 	else:
