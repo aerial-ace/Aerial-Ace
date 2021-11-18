@@ -231,7 +231,9 @@ def get_stats_embed(embd, pokemon, color):
 
 	if pokemon in pokemons:
 		embd.title = "{poke}'s Stats".format(poke = pokemon.capitalize())
-		embd.description = "> {stats}".format(stats = stats_data[pokemon])
+		embd.description = "HP, Defense, Sp.Defense and Speed are `The more the better` stats \n"
+		embd.add_field(name = "Stats", value = "> {stats}".format(stats = stats_data[pokemon]), inline = False)
+		
 		return embd
 
 	else:
