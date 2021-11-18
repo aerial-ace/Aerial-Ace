@@ -6,6 +6,8 @@ client = discord.Client()
 server = None
 server_id = None
 
+admin_user_id = os.environ['ADMIN_ID']
+
 @client.event
 async def on_guild_join(guild):
 	aerialace.register_guild(guild.id)
@@ -36,6 +38,13 @@ async def on_message(message):
 	member = message.author
 	user_id = str(message.author.id)
 	nickname = member.display_name
+
+	#help 
+	if msg.startswith("-aa help"):
+		help_embed = aerialace.get_help_embed(discord.Embed(), discord.Color.blue())
+		await message.channel.send(embed = help_embed)
+
+		return
 
 	#say hello
 	if msg.startswith("-aa hello") or msg.startswith("-aa alola") or msg.startswith("-aa hola") or msg.startswith("-aa henlu") or msg.startswith("-aa hi"):
@@ -94,22 +103,6 @@ async def on_message(message):
 		
 		await message.channel.send(embed = reply)
 		return
-	
-	#logging names
-	if msg.startswith("-aa log"):
-
-		param = aerialace.get_parameter(msg, "-aa log")
-		with open("data/names.txt", "a") as name_file :
-			name_file.writelines("{param} \n".format(param = param))
-
-		return
-
-	#getting logged names
-	if msg.startswith("-aa get_logged"):
-		with open("data/names.txt", "r") as name_file:
-			logged_data = name_file.read()
-			await message.channel.send("**Logged Data in names.txt** : ```{data}```".format(data = logged_data))
-		return
 
 	#Register Favourite Pokemon
 	if msg.startswith("-aa set_fav"):
@@ -123,6 +116,26 @@ async def on_message(message):
 	if msg.startswith("-aa fav"):
 		reply = aerialace.get_fav(server_id, user_id)
 		await message.channel.send(reply)
+		return
+
+	#get duelish stats
+	if msg.startswith("-aa stats"):
+		param = aerialace.get_parameter(msg, "-aa stats")
+		reply = aerialace.get_stats_embed(discord.Embed(), param, discord.Color.blue())
+		await message.channel.send(embed = reply)
+
+		return
+
+	#Admins Only
+	#returns the json files of the data
+	if msg.startswith("-aa fetch_data_files"):
+		if user_id == admin_user_id:
+			fav_data_file = discord.File("data/fav_data.json")
+			await message.channel.send(file = fav_data_file, content = "fav_data.json")
+			return
+		else:
+			await message.channel.send("> This command is to be used by admins only. Use ```-aa help```to get the list of commands that you can use")
+			
 		return
 
 	#command not found

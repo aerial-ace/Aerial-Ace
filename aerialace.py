@@ -15,6 +15,20 @@ class PokeData:
 	p_info = ""
 	p_stats = {}
 
+#for getting the help embed
+def get_help_embed(embd, color):
+	embd.title = "Aerial Ace Help"
+	embd.color = color
+
+	#help fields
+	embd.add_field(name = "Say Hello", value = "`-aa Hello` `-aa Hola`", inline = False)
+	embd.add_field(name = "Rolling", value = "`-aa roll` `-aa roll <upper limit>`", inline = False)
+	embd.add_field(name = "Random Pokemon", value = "`-aa rp` `-aa rand_poke`", inline = False)
+	embd.add_field(name = "View Dex Entry", value = "`-aa dex <pokedex id>` `-aa dex <pokemon name>`", inline = False)
+	embd.add_field(name = "Set Favourite Pokemon", value = "`-aa set_fav <pokemon name>`", inline = False)
+	embd.add_field(name = "View Favourite Pokemon", value = "`-aa fav`", inline = False)
+
+	return embd
 
 #for getting a pokemon of desired index
 def get_poke_by_id(id):
@@ -205,3 +219,22 @@ def get_fav(server_id, user_id):
 			return "> User was not found in the database, set you favourite using ```-aa set_fav <pokemon>```"
 	else:
 		return "> Server was not found!"
+
+#get duelish stats
+def get_stats_embed(embd, pokemon, color):
+	stats_file = open("data/stats.json", "r")
+	stats_data_raw = stats_file.read()
+	stats_data = json.loads(stats_data_raw)
+
+	pokemons = list(stats_data.keys())
+	embd.color = color
+
+	if pokemon in pokemons:
+		embd.title = "{poke}'s Stats".format(poke = pokemon.capitalize())
+		embd.description = "> {stats}".format(stats = stats_data[pokemon])
+		return embd
+
+	else:
+		embd.title = "That pokemon was not found in the database"
+		embd.description = "> PROBABLY because this pokemon is not good for battling"
+		return embd
