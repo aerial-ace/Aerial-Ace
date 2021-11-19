@@ -63,6 +63,8 @@ async def on_message(message):
 			
 			if max_roll_str == "":
 				max_roll = 100
+			elif int(max_roll_str) < 0:
+				raise Exception()
 			else:
 				max_roll = int(max_roll_str)
 		except:
