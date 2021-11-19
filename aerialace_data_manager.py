@@ -1,5 +1,6 @@
 import discord
 import json
+import os
 import global_vars
 
 
@@ -12,8 +13,11 @@ def get_data_files():
 	return {"stats" : stats_file, "fav" : fav_file}
 
 #register server in data
-def register_guild(server_id):
+async def register_guild(client, guild):
 	
+	server_id = str(guild.id)
+	server_name = str(guild.name)
+
 	#get the data from the file
 	fav_data_out = open(global_vars.FAV_FILE_LOCATION, "r")
 	fav_data = json.loads(fav_data_out.read())
@@ -24,7 +28,8 @@ def register_guild(server_id):
 	server_data_out.close()
 
 	#update the data 
-	fav_data[str(server_id)] = {}
+	if server_id not in list(fav_data.keys()):
+		fav_data[str(server_id)] = {}
 
 	if server_id not in server_data :
 		server_data.append(server_id)
@@ -40,9 +45,12 @@ def register_guild(server_id):
 	server_data_in.write(json_obj)
 	server_data_in.close()
 
-	#DM Admins on server joins
 
-def remove_guild(server_id):
+async def remove_guild(client, guild):
+
+	server_id = str(guild.id)
+	server_name = str(guild.name)
+
 	#get the data from the file
 	fav_data_out = open(global_vars.FAV_FILE_LOCATION, "r")
 	fav_data = json.loads(fav_data_out.read())
@@ -53,7 +61,8 @@ def remove_guild(server_id):
 	server_data_out.close()
 
 	#update the data 
-	del fav_data[str(server_id)]
+	if server_id in list(fav_data.keys()):
+		del fav_data[server_id]
 	
 	if server_id in server_data:
 		server_data.remove(server_id)
@@ -69,7 +78,6 @@ def remove_guild(server_id):
 	server_data_in.write(json_obj)
 	server_data_in.close()
 
-	#DM Admins on server removes
 
 #Set the favourite pokemon of the user
 def set_fav(server_id, user_id, poke_name):

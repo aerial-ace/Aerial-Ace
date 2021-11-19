@@ -2,7 +2,6 @@ import discord
 import os
 import aerialace
 import aerialace_data_manager
-import global_vars
 
 client = discord.Client()
 server = None
@@ -12,12 +11,14 @@ admin_user_id = os.environ['ADMIN_ID']
 
 @client.event
 async def on_guild_join(guild):
-	aerialace_data_manager.register_guild(guild.id)
+
+	await aerialace_data_manager.register_guild(client, guild)
 	print("server was joined and registered")
 
 @client.event
 async def on_guild_remove(guild):
-	aerialace_data_manager.remove_guild(guild.id)
+	
+	await aerialace_data_manager.remove_guild(client, guild)
 	print("server was removed")
 
 @client.event
@@ -140,6 +141,7 @@ async def on_message(message):
 	if msg.startswith("-aa invite"):
 		reply = aerialace.get_invite_embed(discord.Embed(), discord.Color.blue())
 		await message.channel.send(embed = reply)
+		
 		return
 
 	#Admins Only
