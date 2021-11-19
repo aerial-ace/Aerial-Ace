@@ -2,6 +2,7 @@ import random
 import requests
 import json
 from textwrap import TextWrapper
+import global_vars
 
 class PokeData:
 
@@ -151,5 +152,17 @@ def get_dex_entry_embed(embd, pokeData, color):
 
 	embd.description = description
 	embd.set_image(url = pokeData.image_link)
+
+	return embd
+
+#get invite embed
+def get_invite_embed(embd, color):
+	invite_link = global_vars.INVITE_LINK
+	thumbnail_link = global_vars.AVATAR_LINK
+
+	embd.title = "Invite Aerial Ace to your server"
+	embd.description = "[Click the link and select the server to add to.]({link})".format(link = invite_link)
+	embd.set_thumbnail(url = thumbnail_link)
+	embd.color = color
 
 	return embd

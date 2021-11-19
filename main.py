@@ -2,7 +2,7 @@ import discord
 import os
 import aerialace
 import aerialace_data_manager
-import aerialace_music_manager
+import global_vars
 
 client = discord.Client()
 server = None
@@ -128,6 +128,20 @@ async def on_message(message):
 
 		return
 
+	#get tierlists
+	if msg.startswith("-aa tl"):
+		param = aerialace.get_parameter(msg, "-aa tl")
+		reply = aerialace_data_manager.get_tl(param)
+		await message.channel.send(reply)
+
+		return
+
+	#invite 
+	if msg.startswith("-aa invite"):
+		reply = aerialace.get_invite_embed(discord.Embed(), discord.Color.blue())
+		await message.channel.send(embed = reply)
+		return
+
 	#Admins Only
 	#returns the json files of the data
 	if msg.startswith("-aa fetch_data_files"):
@@ -140,9 +154,6 @@ async def on_message(message):
 			await message.channel.send("> This command is to be used by admins only. Use ```-aa help```to get the list of commands that you can use")
 			
 		return
-
-	#play random music
-	
 
 	#command not found
 	if msg.startswith("-aa "):
