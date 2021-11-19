@@ -31,8 +31,7 @@ async def register_guild(client, guild):
 	if server_id not in list(fav_data.keys()):
 		fav_data[str(server_id)] = {}
 
-	if server_id not in server_data :
-		server_data.append(server_id)
+	server_data[server_id] = server_name
 
 	#save the data
 	fav_data_in = open(global_vars.FAV_FILE_LOCATION, "w")
@@ -64,8 +63,8 @@ async def remove_guild(client, guild):
 	if server_id in list(fav_data.keys()):
 		del fav_data[server_id]
 	
-	if server_id in server_data:
-		server_data.remove(server_id)
+	if server_id in (server_data.keys()):
+		del server_data[server_id]
 
 	#save the data
 	fav_data_in = open(global_vars.FAV_FILE_LOCATION, "w")
