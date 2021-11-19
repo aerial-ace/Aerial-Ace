@@ -10,6 +10,7 @@ class PokeData:
 	p_name = ""
 	p_types = ""
 	p_region = ""
+	p_abilities = ""
 	p_weight = 0.0
 	p_height = 0.0
 	image_link = ""
@@ -67,6 +68,15 @@ def get_poke_by_id(id):
 
 	#get_region
 	poke.p_region = generation_data["main_region"]["name"].capitalize()
+
+	#get abilities
+	abilities = data["abilities"]
+
+	for i in range(0, len(abilities)):
+		poke.p_abilities += abilities[i]["ability"]["name"].capitalize()
+
+		if i != len(abilities) - 1:
+			poke.p_abilities += ' | '
 
 	#get info
 	allInfos = species_data["flavor_text_entries"]
@@ -146,6 +156,7 @@ def get_dex_entry_embed(embd, pokeData, color):
 	embd.add_field(name = "Weight", value = "{w} kg".format(w = pokeData.p_weight), inline = True)
 	embd.add_field(name = "Region", value = "{r}".format(r = pokeData.p_region), inline = True)
 	embd.add_field(name = "Type(s)", value = "{t}".format(t = pokeData.p_types), inline = True)
+	embd.add_field(name = "Ability(s)", value = "{a}".format(a = pokeData.p_abilities), inline = True)
 
 	stats_string = "**HP** : {hp} | **ATK** : {atk} | **DEF** : {df} \n".format(hp = pokeData.p_stats["hp"], atk = pokeData.p_stats["attack"], df = pokeData.p_stats["defense"])
 	stats_string += "**SPAT** : {spat} | **SPDF** : {spdf} | **SPD** : {spd}".format(spat = pokeData.p_stats["special-attack"], spdf = pokeData.p_stats["special-defense"], spd = pokeData.p_stats["speed"])
