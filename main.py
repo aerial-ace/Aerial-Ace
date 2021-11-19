@@ -84,7 +84,7 @@ async def on_message(message):
 			print("--Error while fetching random pokemon : {e}".format(e = excp))
 			return
 
-		reply = aerialace.get_random_pokemon_embed(discord.Embed(), rand_poke, discord.Color.blue())
+		reply = aerialace.get_random_pokemon_embed(discord.Embed(), rand_poke, discord.Color.blue(), server_id, user_id)
 
 		await message.channel.send(embed = reply)
 		return

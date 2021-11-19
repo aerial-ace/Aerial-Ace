@@ -1,6 +1,5 @@
 import discord
 import json
-import os
 import global_vars
 
 
@@ -48,7 +47,6 @@ async def register_guild(client, guild):
 async def remove_guild(client, guild):
 
 	server_id = str(guild.id)
-	server_name = str(guild.name)
 
 	#get the data from the file
 	fav_data_out = open(global_vars.FAV_FILE_LOCATION, "r")

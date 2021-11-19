@@ -3,6 +3,7 @@ import requests
 import json
 from textwrap import TextWrapper
 import global_vars
+import aerialace_data_manager
 
 class PokeData:
 
@@ -129,18 +130,22 @@ def get_parameter(msg, removable_command):
 	return msg.replace(removable_command, "").strip()
 
 #get random pokemon embed
-def get_random_pokemon_embed(embd, pokeData, color):
+def get_random_pokemon_embed(embd, pokeData, color, server_id, user_id):
 
 	embd.color = color
-
 	embd.title = "**{0} : {1}**".format(pokeData.p_id, pokeData.p_name)
-	print(pokeData.p_name)
 
 	description = wrap_text(40, pokeData.p_info)
-
 	embd.description = description
-
 	embd.set_image(url = pokeData.image_link)
+
+	#Ugly, ik '_'
+	fav_poke = ""
+	fav_out = aerialace_data_manager.get_fav(server_id, user_id)
+	if fav_out.startswith("> Your favourite pokemon is"):
+		fav_poke = fav_out.replace("> Your favourite pokemon is", "").strip().lower().replace("*", "")
+		if pokeData.p_name.lower() == fav_poke:
+			embd.set_footer(text = "This pokemon is your favourite")
 
 	return embd
 
