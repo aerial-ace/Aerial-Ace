@@ -73,7 +73,7 @@ async def on_message(message):
 		await message.channel.send("> **{name}** rolled and got {roll} :game_die:".format(name = nickname, roll = roll))
 		return 
 
-	#Random Pokemon
+	#Random Pokemonsd
 	if(msg.startswith("-aa rp")) or msg.startswith("-aa rand_poke"):
 		
 		try:

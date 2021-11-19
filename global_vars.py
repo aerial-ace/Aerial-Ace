@@ -1,4 +1,5 @@
 #file locations
+SERVER_FILE_LOCATION = "data/servers.json"
 STATS_FILE_LOCATION = 	"data/stats.json"
 FAV_FILE_LOCATION = 	"data/fav.json"
 
@@ -23,7 +24,7 @@ GRASS_TL = 		"https://cdn.discordapp.com/attachments/774499540938129429/86391165
 ELECTRIC_TL = 	"https://cdn.discordapp.com/attachments/774499540938129429/861608474978549770/my-image_35.png"
 PSYCHIC_TL = 	"https://cdn.discordapp.com/attachments/811873800131575850/857622026856824872/my-image_5.png"
 ROCK_TL = 		"https://cdn.discordapp.com/attachments/718008298837770290/900550270050787358/my-image_8.png"
-GROUND_TL = 	"https://cdn.discordapp.com/attachments/774499540938129429/859643005312172042/my-image_28.png"
+GROUND_TL = 	"https://cdn.discordapp.com/attachments/718008298837770290/866929735920254976/my-image_43.png"
 FIGHTING_TL = 	"https://media.discordapp.net/attachments/774499540938129429/872263310127558686/my-image_47.png"
 GHOST_TL = 		"https://media.discordapp.net/attachments/718008298837770290/844752635684454460/image0.png"
 DARK_TL = 		"https://cdn.discordapp.com/attachments/844211981099335680/857496260150558750/image0.png"

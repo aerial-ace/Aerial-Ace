@@ -19,14 +19,28 @@ def register_guild(server_id):
 	fav_data = json.loads(fav_data_out.read())
 	fav_data_out.close()
 
+	server_data_out = open(global_vars.SERVER_FILE_LOCATION, "r")
+	server_data = json.loads(server_data_out.read())
+	server_data_out.close()
+
 	#update the data 
 	fav_data[str(server_id)] = {}
+
+	if server_id not in server_data :
+		server_data.append(server_id)
 
 	#save the data
 	fav_data_in = open(global_vars.FAV_FILE_LOCATION, "w")
 	json_obj = json.dumps(fav_data)
 	fav_data_in.write(json_obj)
 	fav_data_in.close()
+
+	server_data_in = open(global_vars.SERVER_FILE_LOCATION, "w")
+	json_obj = json.dumps(server_data)
+	server_data_in.write(json_obj)
+	server_data_in.close()
+
+	#DM Admins on server joins
 
 def remove_guild(server_id):
 	#get the data from the file
@@ -34,14 +48,28 @@ def remove_guild(server_id):
 	fav_data = json.loads(fav_data_out.read())
 	fav_data_out.close()
 
+	server_data_out = open(global_vars.SERVER_FILE_LOCATION, "r")
+	server_data = json.loads(server_data_out.read())
+	server_data_out.close()
+
 	#update the data 
 	del fav_data[str(server_id)]
+	
+	if server_id in server_data:
+		server_data.remove(server_id)
 
 	#save the data
 	fav_data_in = open(global_vars.FAV_FILE_LOCATION, "w")
 	json_obj = json.dumps(fav_data)
 	fav_data_in.write(json_obj)
 	fav_data_in.close()
+
+	server_data_in = open(global_vars.SERVER_FILE_LOCATION, "w")
+	json_obj = json.dumps(server_data)
+	server_data_in.write(json_obj)
+	server_data_in.close()
+
+	#DM Admins on server removes
 
 #Set the favourite pokemon of the user
 def set_fav(server_id, user_id, poke_name):
@@ -142,7 +170,7 @@ def get_tl(list_name):
 	elif list_name == "fairy":
 		return global_vars.FAIRY_TL
 	elif list_name == "dragon":
-		return global_vars.NORMAL_TL
+		return global_vars.DRAGON_TL
 	elif list_name == "steel":
 		return global_vars.STEEL_TL
 	else:
