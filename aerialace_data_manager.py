@@ -1,7 +1,7 @@
 import discord
 import json
 import global_vars
-
+import os
 
 
 #return data files
@@ -43,6 +43,10 @@ async def register_guild(client, guild):
 	server_data_in.write(json_obj)
 	server_data_in.close()
 
+	#Dm the admins on server joins
+	admin_id = int(os.environ['ADMIN_ID'])
+	admin = client.get_user(admin_id)
+	await admin.send("Aerial Ace was added to **{server}** :]".format(server = guild.name))
 
 async def remove_guild(client, guild):
 
@@ -74,6 +78,11 @@ async def remove_guild(client, guild):
 	json_obj = json.dumps(server_data)
 	server_data_in.write(json_obj)
 	server_data_in.close()
+
+	#Dm the admins on server removal
+	admin_id = int(os.environ['ADMIN_ID'])
+	admin = client.get_user(admin_id)
+	await admin.send("Aerial Ace was removed from **{server}** :_:".format(server = guild.name))
 
 
 #Set the favourite pokemon of the user

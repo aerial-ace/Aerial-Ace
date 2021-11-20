@@ -3,12 +3,19 @@ import os
 import aerialace
 import aerialace_data_manager
 
-client = discord.Client()
+#Intents
+intents = discord.Intents.all()
+intents.typing = False
+intents.reactions = True
+
+#init
+client = discord.Client(intents = intents)
 server = None
 server_id = None
 
 admin_user_id = os.environ['ADMIN_ID']
 
+#events
 @client.event
 async def on_guild_join(guild):
 
@@ -28,33 +35,35 @@ async def on_ready():
 @client.event
 async def on_message(message):
 
+	if(message.author == client.user):
 	#initialization
+		return
+
+	#get the server details
 	global server, server_id
 	if server == None : 
 		server = message.guild
 		server_id = str(server.id)
 
-	if(message.author == client.user):
-		return
-
+	#get the message details
 	msg = message.content.lower()
 	member = message.author
 	user_id = str(message.author.id)
 	nickname = member.display_name
 
-	#help 
+	#help command
 	if msg.startswith("-aa help"):
 		help_embed = aerialace.get_help_embed(discord.Embed(), discord.Color.blue())
 		await message.channel.send(embed = help_embed)
 
 		return
 
-	#say hello
+	#say hello command
 	if msg.startswith("-aa hello") or msg.startswith("-aa alola") or msg.startswith("-aa hola") or msg.startswith("-aa henlu") or msg.startswith("-aa hi"):
 		await message.channel.send("> Alola **{name}**".format(name = nickname))
 		return
 
-	#rolling
+	#rolling command
 	if msg.startswith("-aa roll"):
 		max_roll = 100
 
@@ -76,7 +85,7 @@ async def on_message(message):
 		await message.channel.send("> **{name}** rolled and got {roll} :game_die:".format(name = nickname, roll = roll))
 		return 
 
-	#Random Pokemonsd
+	#Random Pokemone command
 	if(msg.startswith("-aa rp")) or msg.startswith("-aa rand_poke"):
 		
 		try:
@@ -91,7 +100,7 @@ async def on_message(message):
 		await message.channel.send(embed = reply)
 		return
 
-	#Dex search
+	#Dex search command
 	if msg.startswith("-aa dex") :
 
 		param = aerialace.get_parameter(msg, "-aa dex")
@@ -109,7 +118,7 @@ async def on_message(message):
 		await message.channel.send(embed = reply)
 		return
 
-	#Register Favourite Pokemon
+	#Register Favourite Pokemon command
 	if msg.startswith("-aa set_fav"):
 		param = aerialace.get_parameter(msg, "-aa set_fav")
 
@@ -117,13 +126,13 @@ async def on_message(message):
 		await message.channel.send(reply)
 		return
 		
-	#See favourite pokemon
+	#View favourite pokemon command
 	if msg.startswith("-aa fav"):
 		reply = aerialace_data_manager.get_fav(server_id, user_id)
 		await message.channel.send(reply)
 		return
 
-	#get duelish stats
+	#get duelish stats command
 	if msg.startswith("-aa stats"):
 		param = aerialace.get_parameter(msg, "-aa stats")
 		reply = aerialace_data_manager.get_stats_embed(discord.Embed(), param, discord.Color.blue())
@@ -131,15 +140,15 @@ async def on_message(message):
 
 		return
 
-	#get tierlists
+	#get tierlists command
 	if msg.startswith("-aa tl"):
 		param = aerialace.get_parameter(msg, "-aa tl")
-		reply = aerialace_data_manager.get_tl(param)
-		await message.channel.send(reply)
+		tl_link = aerialace_data_manager.get_tl(param)
+		await message.channel.send(content = "Source : P2HB \n {link}".format(link = tl_link))
 
 		return
 
-	#invite 
+	#invite command
 	if msg.startswith("-aa invite"):
 		reply = aerialace.get_invite_embed(discord.Embed(), discord.Color.blue())
 		await message.channel.send(embed = reply)
