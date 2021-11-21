@@ -49,7 +49,7 @@ async def on_message(message):
 	msg = message.content.lower()
 	member = message.author
 	user_id = str(message.author.id)
-	nickname = member.display_name
+	user_nick = member.display_name
 
 	#help command
 	if msg.startswith("-aa help"):
@@ -60,7 +60,7 @@ async def on_message(message):
 
 	#say hello command
 	if msg.startswith("-aa hello") or msg.startswith("-aa alola") or msg.startswith("-aa hola") or msg.startswith("-aa henlu") or msg.startswith("-aa hi"):
-		await message.channel.send("> Alola **{name}**".format(name = nickname))
+		await message.channel.send("> Alola **{name}**".format(name = user_nick))
 		return
 
 	#rolling command
@@ -82,7 +82,7 @@ async def on_message(message):
 
 		roll = aerialace.roll(max_roll)
 
-		await message.channel.send("> **{name}** rolled and got {roll} :game_die:".format(name = nickname, roll = roll))
+		await message.channel.send("> **{name}** rolled and got {roll} :game_die:".format(name = user_nick, roll = roll))
 		return 
 
 	#Random Pokemone command
@@ -158,19 +158,29 @@ async def on_message(message):
 	#register shiny commnad
 	if msg.startswith("-aa tag"):
 		tag = aerialace.get_parameter(msg, "-aa tag")
-		aerialace_data_manager.resiter_tag(server_id, user_id, tag)
+		reply = aerialace_data_manager.register_tag(server_id, user_id, user_nick, tag)
+
+		await message.channel.send(reply)
+
+		return
+
+	if msg.startswith("-aa tp"):
+		tag = aerialace.get_parameter(msg, "-aa tp")
+		reply = aerialace_data_manager.get_tag_hunters(server_id, tag)
+
+		await message.channel.send(reply)
+
+		return
+		
 
 	#Admins Only
 	#returns the json files of the data
 	if msg.startswith("-aa fetch_data_files"):
 		if user_id == admin_user_id:
-			data_files = aerialace_data_manager.get_data_files()
-			await message.channel.send(file = data_files["fav"], content = "fav.json")
-			await message.channel.send(file = data_files["stats"], content = "stats.json")
-			return
-		else:
-			await message.channel.send("> This command is to be used by admins only. Use ```-aa help```to get the list of commands that you can use")
-			
+			await aerialace_data_manager.get_data_files(client)
+
+		await message.channel.send("> Data files were sent to admins :}")
+
 		return
 
 	#command not found

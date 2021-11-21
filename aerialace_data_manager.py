@@ -5,11 +5,23 @@ import os
 
 
 #return data files
-def get_data_files():
+async def get_data_files(client):
 	stats_file = discord.File(global_vars.STATS_FILE_LOCATION)
 	fav_file = discord.File(global_vars.FAV_FILE_LOCATION)
+	server_file = discord.File(global_vars.SERVER_FILE_LOCATION)
+	tag_file = discord.File(global_vars.TAG_FILE_LOCATION)
 
-	return {"stats" : stats_file, "fav" : fav_file}
+	data_files = [stats_file, fav_file, server_file, tag_file]
+
+	#DM the files to the admins
+	admin_id = int(os.environ['ADMIN_ID'])
+	admin = client.get_user(admin_id)
+	try:
+		for file in data_files:
+			await admin.send(file = file)
+	except discord.Forbidden:
+		print("Unable to send message to admins.")
+
 
 #register server in data
 async def register_guild(client, guild):
@@ -17,7 +29,7 @@ async def register_guild(client, guild):
 	server_id = str(guild.id)
 	server_name = str(guild.name)
 
-	#get the data from the file
+	#Load the data form the files
 	fav_data_out = open(global_vars.FAV_FILE_LOCATION, "r")
 	fav_data = json.loads(fav_data_out.read())
 	fav_data_out.close()
@@ -26,13 +38,20 @@ async def register_guild(client, guild):
 	server_data = json.loads(server_data_out.read())
 	server_data_out.close()
 
+	tag_data_out = open(global_vars.TAG_FILE_LOCATION, "r")
+	tag_data = json.loads(tag_data_out.read())
+	tag_data_out.close()
+
 	#update the data 
 	if server_id not in list(fav_data.keys()):
 		fav_data[str(server_id)] = {}
 
+	if server_id not in list(tag_data.keys()):
+		tag_data[str(server_id)] = {}
+
 	server_data[server_id] = server_name
 
-	#save the data
+	#Save the changes to the files
 	fav_data_in = open(global_vars.FAV_FILE_LOCATION, "w")
 	json_obj = json.dumps(fav_data)
 	fav_data_in.write(json_obj)
@@ -42,6 +61,11 @@ async def register_guild(client, guild):
 	json_obj = json.dumps(server_data)
 	server_data_in.write(json_obj)
 	server_data_in.close()
+
+	tag_data_in = open(global_vars.TAG_FILE_LOCATION, "w")
+	json_obj = json.dumps(tag_data)
+	tag_data_in.write(json_obj)
+	tag_data_in.close()
 
 	#Dm the admins on server joins
 	admin_id = int(os.environ['ADMIN_ID'])
@@ -55,7 +79,7 @@ async def remove_guild(client, guild):
 
 	server_id = str(guild.id)
 
-	#get the data from the file
+	#Get the data from the files
 	fav_data_out = open(global_vars.FAV_FILE_LOCATION, "r")
 	fav_data = json.loads(fav_data_out.read())
 	fav_data_out.close()
@@ -64,14 +88,21 @@ async def remove_guild(client, guild):
 	server_data = json.loads(server_data_out.read())
 	server_data_out.close()
 
+	tag_data_out = open(global_vars.TAG_FILE_LOCATION, "r")
+	tag_data = json.loads(tag_data_out.read())
+	tag_data_out.close()
+
 	#update the data 
 	if server_id in list(fav_data.keys()):
 		del fav_data[server_id]
-	
+
+	if server_id in list(tag_data.keys()):
+		del tag_data[server_id]
+
 	if server_id in (server_data.keys()):
 		del server_data[server_id]
 
-	#save the data
+	#Save the data to the files
 	fav_data_in = open(global_vars.FAV_FILE_LOCATION, "w")
 	json_obj = json.dumps(fav_data)
 	fav_data_in.write(json_obj)
@@ -81,6 +112,11 @@ async def remove_guild(client, guild):
 	json_obj = json.dumps(server_data)
 	server_data_in.write(json_obj)
 	server_data_in.close()
+
+	tag_data_in = open(global_vars.TAG_FILE_LOCATION, "w")
+	json_obj = json.dumps(tag_data)
+	tag_data_in.write(json_obj)
+	tag_data_in.close()
 
 	#Dm the admins on server removal
 	admin_id = int(os.environ['ADMIN_ID'])
@@ -199,19 +235,77 @@ def get_tl(list_name):
 					```common | mega | ```"""
 
 #register shiny tags
-def register_tag(server_id, user_id, tag):
+def register_tag(server_id, user_id, user_nick, tag):
+	#Load data from files
 	tag_file_out = open("data/tags.json", "r")
 	tag_data = json.loads(tag_file_out.read())
+	tag_file_out.close()
 
-	current_tag = None
-	tags = tag_data[server_id]	#dictionary of all the tags and thier users
-	for i in (tags.values()):
-		if user_id in i:
-			current_tag = tags.index(i)
+	current_tag = ""
+	value_index = -1
 
-	print(current_tag)
+	tag_keys = list(tag_data[server_id].keys())			#all the tags
+	tag_values = list(tag_data[server_id].values())		#all the users
 
-	#remove the user from their current tag
-	#add the user to the new tag
+	for i in range(0, len(tag_values)):
+		if user_id in tag_values[i]:
+			value_index = i
+			break
+
+	#If tag doesn't exist, create and assign the user to it
+	if value_index == -1:
+		tag_data[server_id][tag] = [] 
+		tag_data[server_id][tag].append(user_id)
+
+	#if tag exist, move the user to current tag to new tag
+	else:
+		current_tag = tag_keys[value_index]
+
+		if current_tag == tag:
+			return "> {user} is already assigned to `{tag}` tag".format(user = user_nick, tag = tag.capitalize())
+
+		tag_data[server_id][current_tag].remove(user_id)
+		
+		if len(tag_data[server_id][current_tag]) <= 0:
+			del tag_data[server_id][current_tag]
+
+		if tag in tag_keys:
+			tag_data[server_id][tag].append(user_id)
+		else:
+			tag_data[server_id][tag] = []
+			tag_data[server_id][tag].append(user_id)
+
+	#Save the data into the files
+	tag_data_in = open(global_vars.TAG_FILE_LOCATION, "w")
+	json_obj = json.dumps(tag_data)
+	tag_data_in.write(json_obj)
+	tag_data_in.close()	
+
+	if value_index == -1:
+		return "> {user} was assigned to `{tag}` tag".format(user = user_nick, tag = tag.capitalize())
+
+	if current_tag == None:
+		return "> {user} was assigned to `{tag}` tag".format(user = user_nick, tag = tag.capitalize())
+	else : 
+		return "> {user} was removed from `{prev}` and assigned to `{new}` tag".format(user = user_nick, prev = current_tag.capitalize(), new = tag.capitalize())
+
+#Get shiny tags
+def get_tag_hunters(server_id, tag):
+	#Get data from the file
+	tag_data_out = open(global_vars.TAG_FILE_LOCATION, "r")
+	tag_data = json.loads(tag_data_out.read())
+	tag_data_out.close()
+
+	if tag not in list(tag_data[server_id].keys()):
+		return "> That tag doesn't exist"
+
+	hunters = tag_data[server_id][tag]
+	hunter_pings = ""
+	number_of_hunters = len(hunters)
 	
-	
+	for i in range(0, number_of_hunters):
+		hunter_pings = hunter_pings + "<@{user}>".format(user = str(hunters[i]))
+		if i <= number_of_hunters - 2:
+			hunter_pings += " | "
+
+	return "> Pinging users assigned to `{tag}` tag \n {users}".format(tag = tag.capitalize(), users = hunter_pings)
