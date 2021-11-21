@@ -1,5 +1,5 @@
 {
-	"venusaur" : "Sp.Attack | Sp.Defense | (Defense is optional)",
+	"venusaur" : "Defense | Sp.Attack | Sp.Defense",
 	"charizard" : "**Normal** : Attack | Sp.Attack | Speed \n**Mega X** : Attack | Sp.Attack | Speed \n**Mega Y** : Sp.Attack | Speed",
 	"blastoise" : "Attack | Defense | Sp.Attack | Sp.Defense",
 	"butterfree" : "Sp.Attack | Sp.Defense",
@@ -143,6 +143,7 @@
 	"infernape" : "Attack | Speed",
 	"empoleon" : "Attack | Sp.Attack | Sp.Defense",
 	"staraptor" : "Attack | Speed",
+	"bidoof" : "God needs nothing",
 	"bibarel" : "Haa, HP | Attack | Defense | Sp.Attack | Sp.Defense | Speed",
 	"luxray" : "HP | Attack | Defense",
 	"roserade" : "Sp.Attack | Sp.Defense | Speed",

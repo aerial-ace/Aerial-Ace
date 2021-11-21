@@ -155,6 +155,11 @@ async def on_message(message):
 		
 		return
 
+	#register shiny commnad
+	if msg.startswith("-aa tag"):
+		tag = aerialace.get_parameter(msg, "-aa tag")
+		aerialace_data_manager.resiter_tag(server_id, user_id, tag)
+
 	#Admins Only
 	#returns the json files of the data
 	if msg.startswith("-aa fetch_data_files"):

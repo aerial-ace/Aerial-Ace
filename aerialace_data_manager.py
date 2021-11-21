@@ -46,7 +46,10 @@ async def register_guild(client, guild):
 	#Dm the admins on server joins
 	admin_id = int(os.environ['ADMIN_ID'])
 	admin = client.get_user(admin_id)
-	await admin.send("Aerial Ace was added to **{server}** :]".format(server = guild.name))
+	try:
+		await admin.send("Aerial Ace was added to **{server}** :]".format(server = guild.name))
+	except discord.Forbidden:
+		print("Unable to send message to admins. Btw, Aerial Ace was added to **{server}** :]".format(server = guild.name))
 
 async def remove_guild(client, guild):
 
@@ -82,7 +85,11 @@ async def remove_guild(client, guild):
 	#Dm the admins on server removal
 	admin_id = int(os.environ['ADMIN_ID'])
 	admin = client.get_user(admin_id)
-	await admin.send("Aerial Ace was removed from **{server}** :_:".format(server = guild.name))
+
+	try:
+		await admin.send("Aerial Ace was removed from **{server}** :_:".format(server = guild.name))
+	except discord.Forbidden:
+		print("Unable to send message to the admin. Btw, Aerial Ace was removed from {server} :_:".format(server = guild.name))
 
 
 #Set the favourite pokemon of the user
@@ -190,3 +197,21 @@ def get_tl(list_name):
 	else:
 		return """> That tierlist was not found, these tierlists are availible
 					```common | mega | ```"""
+
+#register shiny tags
+def register_tag(server_id, user_id, tag):
+	tag_file_out = open("data/tags.json", "r")
+	tag_data = json.loads(tag_file_out.read())
+
+	current_tag = None
+	tags = tag_data[server_id]	#dictionary of all the tags and thier users
+	for i in (tags.values()):
+		if user_id in i:
+			current_tag = tags.index(i)
+
+	print(current_tag)
+
+	#remove the user from their current tag
+	#add the user to the new tag
+	
+	
