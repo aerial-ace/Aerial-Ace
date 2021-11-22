@@ -3,6 +3,7 @@ SERVER_FILE_LOCATION = "data/servers.json"
 STATS_FILE_LOCATION  = "data/stats.json"
 FAV_FILE_LOCATION 	 = "data/fav.json"
 TAG_FILE_LOCATION    = "data/tags.json"
+MOVESET_FILE_LOCATION = "data/moveset.json"
 
 #bot links
 INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=0&scope=bot"

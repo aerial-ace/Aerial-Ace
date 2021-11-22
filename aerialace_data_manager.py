@@ -191,6 +191,25 @@ def get_stats_embed(embd, pokemon, color):
 		embd.description += "> PROBABLY this pokemon is not good for battling"
 		return embd
 
+#get movesets
+async def get_moveset_embed(embd, poke, color):
+	moveset_file = open(global_vars.MOVESET_FILE_LOCATION, "r")
+	moveset_data = json.loads(moveset_file.read())
+	moveset_file.close()
+
+	pokemons = list(moveset_data.keys())
+	embd.color = color
+
+	if poke in pokemons:
+		embd.title = "{poke}'s moveset".format(poke = poke.capitalize())
+		embd.description = "{ms}".format(ms = moveset_data[poke])
+		return embd
+	else:
+		embd.title = "That pokemon was not found in the database"
+		embd.description = "> If the name is correct then"
+		embd.description += "> PROBABLY this pokemon is not good for battling"
+		return embd
+		
 #return tierlists
 def get_tl(list_name):
 
