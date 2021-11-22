@@ -32,6 +32,8 @@ def get_help_embed(embd, color):
 	embd.add_field(name = "View Favourite Pokemon", value = "`-aa fav`", inline = False)
 	embd.add_field(name = "Stats", value = "`-aa stats <Pokemon Name>`", inline = False)
 	embd.add_field(name = "Tierlists", value = "`-aa tl <tierlist type>`", inline = False)
+	embd.add_field(name = "Stats Check", value = "`-aa stats <pokemon>`", inline = False)
+	embd.add_field(name = "Moveset Check", value = "`-aa ms <pokemon>`", inline = False)
 
 	return embd
 
