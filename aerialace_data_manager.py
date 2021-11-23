@@ -255,6 +255,10 @@ def get_tl(list_name):
 
 #register shiny tags
 def register_tag(server_id, user_id, user_nick, tag):
+
+	if tag == "":
+		return "> Give a valid tag name like ```-aa tag espurr```"
+
 	#Load data from files
 	tag_file_out = open("data/tags.json", "r")
 	tag_data = json.loads(tag_file_out.read())
