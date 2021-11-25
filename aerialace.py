@@ -129,7 +129,11 @@ def roll(max):
 
 #get parameter from the message
 def get_parameter(msg, removable_command):
-	return msg.replace(removable_command, "").strip()
+	param = msg
+	for cmd in removable_command:
+		param = param.replace(cmd, "").strip()
+
+	return param
 
 #get random pokemon embed
 def get_random_pokemon_embed(embd, pokeData, color, server_id, user_id):

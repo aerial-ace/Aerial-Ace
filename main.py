@@ -114,9 +114,9 @@ async def on_message(message):
         return
 
     # Dex search command
-    if msg.startswith("-aa dex"):
+    if msg.startswith("-aa dex") or msg.startswith("-aa d"):
 
-        param = aerialace.get_parameter(msg, "-aa dex")
+        param = aerialace.get_parameter(msg, ["-aa dex", "-aa d"])
         pokeData = None
 
         try:
@@ -136,15 +136,15 @@ async def on_message(message):
         return
 
     # Register Favourite Pokemon command
-    if msg.startswith("-aa set_fav"):
-        param = aerialace.get_parameter(msg, "-aa set_fav")
+    if msg.startswith("-aa set_fav") or msg.startswith("-aa sf"):
+        param = aerialace.get_parameter(msg, ["-aa set_fav", "-aa sf"])
 
         reply = aerialace_data_manager.set_fav(server_id, user_id, param)
         await message.channel.send(reply)
         return
 
     # View favourite pokemon command
-    if msg.startswith("-aa fav"):
+    if msg.startswith("-aa fav") or msg.startswith("-aa f"):
         reply = aerialace_data_manager.get_fav(server_id, user_id)
         await message.channel.send(reply)
         return
