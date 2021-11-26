@@ -191,16 +191,16 @@ def get_dex_entry_embed(embd, pokeData, color):
     description = wrap_text(40, pokeData.p_info)
     description += "\n"
 
+    embd.add_field(name="Type(s)", value="{t}".format(
+        t=pokeData.p_types), inline=True)
+    embd.add_field(name="Ability(s)", value="{a}".format(
+        a=pokeData.p_abilities), inline=True)
     embd.add_field(name="Height", value="{h} m".format(
         h=pokeData.p_height), inline=True)
     embd.add_field(name="Weight", value="{w} kg".format(
         w=pokeData.p_weight), inline=True)
     embd.add_field(name="Region", value="{r}".format(
         r=pokeData.p_region), inline=True)
-    embd.add_field(name="Type(s)", value="{t}".format(
-        t=pokeData.p_types), inline=True)
-    embd.add_field(name="Ability(s)", value="{a}".format(
-        a=pokeData.p_abilities), inline=True)
 
     stats_string = "**HP** : {hp} | **ATK** : {atk} | **DEF** : {df} \n".format(
         hp=pokeData.p_stats["hp"], atk=pokeData.p_stats["attack"], df=pokeData.p_stats["defense"])
