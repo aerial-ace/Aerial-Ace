@@ -150,7 +150,7 @@ async def on_message(message):
 
     # get duelish stats command
     if msg.startswith("-aa stats "):
-        param = aerialace.get_parameter(msg, "-aa stats")
+        param = aerialace.get_parameter(msg, ["-aa stats"])
         reply = aerialace_data_manager.get_stats_embed(
             discord.Embed(), param, discord.Color.blue())
         await message.channel.send(embed=reply)
