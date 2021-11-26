@@ -1,3 +1,4 @@
+from os import name
 import random
 import requests
 import json
@@ -27,26 +28,22 @@ def get_help_embed(embd, color):
     embd.color = color
 
     # help fields
-    embd.add_field(name="Say Hello",
-                   value="`-aa Hello` `-aa Hola`", inline=False)
-    embd.add_field(
-        name="Rolling", value="`-aa roll` `-aa roll <upper limit>`", inline=False)
     embd.add_field(name="Random Pokemon",
                    value="`-aa rp` `-aa rand_poke`", inline=False)
     embd.add_field(name="View Dex Entry",
                    value="`-aa dex <pokedex id>` `-aa dex <pokemon name>`", inline=False)
+    embd.add_field(
+        name="Rolling", value="`-aa roll` `-aa roll <upper limit>`", inline=False)
     embd.add_field(name="Set Favourite Pokemon",
-                   value="`-aa set_fav <pokemon name>`", inline=False)
+                   value="`-aa set_fav <pokemon name>` or `-aa sf <pokemon name>`", inline=False)
     embd.add_field(name="View Favourite Pokemon",
                    value="`-aa fav`", inline=False)
-    embd.add_field(
-        name="Stats", value="`-aa stats <Pokemon Name>`", inline=False)
-    embd.add_field(name="Tierlists",
-                   value="`-aa tl <tierlist type>`", inline=False)
     embd.add_field(name="Stats Check",
                    value="`-aa stats <pokemon>`", inline=False)
-    embd.add_field(name="Moveset Check",
-                   value="`-aa ms <pokemon>`", inline=False)
+    embd.add_field(
+        name="Moveset Check", value="`-aa moveset <pokemon name>` or `-aa ms <pokemon name>`", inline=False)
+    embd.add_field(name="Tierlists",
+                   value="`-aa tierlist <tier type>` or `-aa tl <tier type>`", inline=False)
 
     return embd
 
