@@ -39,8 +39,7 @@ async def on_ready():
 @client.event
 async def on_message(message):
 
-    if (message.author == client.user):
-        # initialization
+    if message.author == client.user:
         return
 
     # get the server details
@@ -167,7 +166,7 @@ async def on_message(message):
         return
 
         # get tierlists command
-    if msg.stasrtswith("-aa tierlist") or msg.startswith("-aa tl"):
+    if msg.startswith("-aa tierlist") or msg.startswith("-aa tl"):
         param = aerialace.get_parameter(msg, ["tierlist", "-aa tl"])
         tl_link = aerialace_data_manager.get_tl(param)
         await message.channel.send(content="Source : P2HB \n {link}".format(
