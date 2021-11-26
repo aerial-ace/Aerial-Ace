@@ -94,7 +94,7 @@ async def on_message(message):
         return
 
     # Random Pokemone command
-    if (msg.startswith("-aa rp")) or msg.startswith("-aa rand_poke"):
+    if (msg.startswith("-aa rp ")) or msg.startswith("-aa rand_poke "):
 
         try:
             rand_poke = aerialace.get_random_poke()
@@ -167,7 +167,7 @@ async def on_message(message):
 
     # get tierlists command
     if msg.startswith("-aa tierlist ") or msg.startswith("-aa tl "):
-        param = aerialace.get_parameter(msg, ["tierlist", "-aa tl"])
+        param = aerialace.get_parameter(msg, ["-aa tierlist", "-aa tl"])
         tl_link = aerialace_data_manager.get_tl(param)
         await message.channel.send(content="Source : P2HB \n {link}".format(
             link=tl_link))
