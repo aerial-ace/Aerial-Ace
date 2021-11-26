@@ -188,7 +188,7 @@ def get_dex_entry_embed(embd, pokeData, color):
     embd.color = color
     embd.title = "**{0} : {1}**".format(pokeData.p_id, pokeData.p_name)
 
-    description = wrap_text(40, pokeData.p_info)
+    description = wrap_text(50, pokeData.p_info)
     description += "\n"
 
     embd.add_field(name="Height", value="{h} m".format(
