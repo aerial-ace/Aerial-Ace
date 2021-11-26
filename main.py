@@ -64,13 +64,13 @@ async def on_message(message):
         return
 
     # say hello command
-    if msg.startswith("-aa hello") or msg.startswith(
-            "-aa alola") or msg.startswith("-aa hola") or msg.startswith("-aa henlu") or msg.startswith("-aa hi"):
+    if msg.startswith("-aa hello") or msg.startswith("-aa alola") or msg.startswith("-aa hola") or msg.startswith("-aa henlu") or msg.startswith("-aa hi"):
         await message.channel.send("> Alola **{name}**".format(name=user_nick))
         return
 
     # rolling command
     if msg.startswith("-aa roll"):
+
         max_roll = 100
 
         try:
@@ -114,9 +114,9 @@ async def on_message(message):
         return
 
     # Dex search command
-    if msg.startswith("-aa dex") or msg.startswith("-aa d"):
+    if msg.startswith("-aa dex"):
 
-        param = aerialace.get_parameter(msg, ["-aa dex", "-aa d"])
+        param = aerialace.get_parameter(msg, ["-aa dex"])
         pokeData = None
 
         try:
@@ -159,16 +159,16 @@ async def on_message(message):
         return
 
         # get duelish stats command
-    if msg.startswith("-aa ms"):
-        poke = aerialace.get_parameter(msg, "-aa ms")
+    if msg.startswith("-aa moveset") or msg.startswith("-aa ms"):
+        poke = aerialace.get_parameter(msg, ["-aa ms", "-aa moveset"])
         reply = await aerialace_data_manager.get_moveset_embed(discord.Embed(), poke, discord.Color.blue())
         await message.channel.send(embed=reply)
 
         return
 
         # get tierlists command
-    if msg.startswith("-aa tl"):
-        param = aerialace.get_parameter(msg, "-aa tl")
+    if msg.stasrtswith("-aa tierlist") or msg.startswith("-aa tl"):
+        param = aerialace.get_parameter(msg, ["tierlist", "-aa tl"])
         tl_link = aerialace_data_manager.get_tl(param)
         await message.channel.send(content="Source : P2HB \n {link}".format(
             link=tl_link))
@@ -185,7 +185,7 @@ async def on_message(message):
 
     # register shiny commnad
     if msg.startswith("-aa tag"):
-        tag = aerialace.get_parameter(msg, "-aa tag")
+        tag = aerialace.get_parameter(msg, ["-aa tag"])
         reply = aerialace_data_manager.register_tag(server_id, user_id,
                                                     user_nick, tag)
 
@@ -193,8 +193,8 @@ async def on_message(message):
 
         return
 
-    if msg.startswith("-aa tp"):
-        tag = aerialace.get_parameter(msg, "-aa tp")
+    if msg.startswith("-aa tag_ping") or msg.startswith("-aa tp"):
+        tag = aerialace.get_parameter(msg, ["-aa tp", "-aa tag_ping"])
         reply = aerialace_data_manager.get_tag_hunters(server_id, tag)
 
         await message.channel.send(reply)
@@ -203,7 +203,7 @@ async def on_message(message):
 
     # Admins Only
     # returns the json files of the data
-    if msg.startswith("-aa fetch_data_files"):
+    if msg.startswith("-aa fetch_data_files") or msg.startswith("-aa fdf"):
         if user_id == admin_user_id:
             await aerialace_data_manager.get_data_files(client)
 
@@ -214,8 +214,7 @@ async def on_message(message):
     # command not found
     if msg.startswith("-aa "):
         await message.channel.send(
-            "> -aa what? That command doesn't exist! \n> See all the available commands by using ```-aa help```"
-        )
+            "> -aa what? That command doesn't exist! \n> See all the available commands by using ```-aa help```")
 
 
 token = os.environ['TOKEN']
