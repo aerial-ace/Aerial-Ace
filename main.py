@@ -113,9 +113,9 @@ async def on_message(message):
         return
 
     # Dex search command
-    if msg.startswith("-aa dex"):
+    if msg.startswith("-aa dex ") or msg.startswith("-aa d "):
 
-        param = aerialace.get_parameter(msg, ["-aa dex"])
+        param = aerialace.get_parameter(msg, ["-aa dex", "-aa d"])
         pokeData = None
 
         try:
@@ -135,7 +135,7 @@ async def on_message(message):
         return
 
     # Register Favourite Pokemon command
-    if msg.startswith("-aa set_fav") or msg.startswith("-aa sf"):
+    if msg.startswith("-aa set_fav ") or msg.startswith("-aa sf "):
         param = aerialace.get_parameter(msg, ["-aa set_fav", "-aa sf"])
 
         reply = aerialace_data_manager.set_fav(server_id, user_id, param)
@@ -149,7 +149,7 @@ async def on_message(message):
         return
 
     # get duelish stats command
-    if msg.startswith("-aa stats"):
+    if msg.startswith("-aa stats "):
         param = aerialace.get_parameter(msg, "-aa stats")
         reply = aerialace_data_manager.get_stats_embed(
             discord.Embed(), param, discord.Color.blue())
@@ -157,16 +157,16 @@ async def on_message(message):
 
         return
 
-        # get duelish stats command
-    if msg.startswith("-aa moveset") or msg.startswith("-aa ms"):
+    # get duelish stats command
+    if msg.startswith("-aa moveset ") or msg.startswith("-aa ms "):
         poke = aerialace.get_parameter(msg, ["-aa ms", "-aa moveset"])
         reply = await aerialace_data_manager.get_moveset_embed(discord.Embed(), poke, discord.Color.blue())
         await message.channel.send(embed=reply)
 
         return
 
-        # get tierlists command
-    if msg.startswith("-aa tierlist") or msg.startswith("-aa tl"):
+    # get tierlists command
+    if msg.startswith("-aa tierlist ") or msg.startswith("-aa tl "):
         param = aerialace.get_parameter(msg, ["tierlist", "-aa tl"])
         tl_link = aerialace_data_manager.get_tl(param)
         await message.channel.send(content="Source : P2HB \n {link}".format(
@@ -183,7 +183,7 @@ async def on_message(message):
         return
 
     # register shiny commnad
-    if msg.startswith("-aa tag"):
+    if msg.startswith("-aa tag "):
         tag = aerialace.get_parameter(msg, ["-aa tag"])
         reply = aerialace_data_manager.register_tag(server_id, user_id,
                                                     user_nick, tag)
@@ -192,7 +192,7 @@ async def on_message(message):
 
         return
 
-    if msg.startswith("-aa tag_ping") or msg.startswith("-aa tp"):
+    if msg.startswith("-aa tag_ping ") or msg.startswith("-aa tp "):
         tag = aerialace.get_parameter(msg, ["-aa tp", "-aa tag_ping"])
         reply = aerialace_data_manager.get_tag_hunters(server_id, tag)
 
