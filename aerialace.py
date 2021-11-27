@@ -20,50 +20,63 @@ class PokeData:
     p_info = ""
     p_stats = {}
 
+
 # for getting the help embed
-
-
 def get_help_embed(embd, color):
     embd.title = "Aerial Ace Help"
     embd.color = color
 
     # help fields
-    embd.add_field(name="Random Pokemon",
-                   value="`-aa rp` `-aa rand_poke`", inline=False)
-    embd.add_field(name="View Dex Entry",
-                   value="`-aa dex <pokedex id>` `-aa dex <pokemon name>`", inline=False)
     embd.add_field(
-        name="Rolling", value="`-aa roll` `-aa roll <upper limit>`", inline=False)
-    embd.add_field(name="Set Favourite Pokemon",
-                   value="`-aa set_fav <pokemon name>` or `-aa sf <pokemon name>`", inline=False)
-    embd.add_field(name="View Favourite Pokemon",
-                   value="`-aa fav`", inline=False)
-    embd.add_field(name="Stats Check",
-                   value="`-aa stats <pokemon>`", inline=False)
+        name="Random Pokemon", value="`-aa rp` `-aa rand_poke`", inline=False
+    )
     embd.add_field(
-        name="Moveset Check", value="`-aa moveset <pokemon name>` or `-aa ms <pokemon name>`", inline=False)
-    embd.add_field(name="Tierlists",
-                   value="`-aa tierlist <tier type>` or `-aa tl <tier type>`", inline=False)
+        name="View Dex Entry",
+        value="`-aa dex <pokedex id>` `-aa dex <pokemon name>`",
+        inline=False,
+    )
+    embd.add_field(
+        name="Rolling", value="`-aa roll` `-aa roll <upper limit>`", inline=False
+    )
+    embd.add_field(
+        name="Set Favourite Pokemon",
+        value="`-aa set_fav <pokemon name>` or `-aa sf <pokemon name>`",
+        inline=False,
+    )
+    embd.add_field(name="View Favourite Pokemon", value="`-aa fav`", inline=False)
+    embd.add_field(name="Stats Check", value="`-aa stats <pokemon>`", inline=False)
+    embd.add_field(
+        name="Moveset Check",
+        value="`-aa moveset <pokemon name>` or `-aa ms <pokemon name>`",
+        inline=False,
+    )
+    embd.add_field(
+        name="Tierlists",
+        value="`-aa tierlist <tier type>` or `-aa tl <tier type>`",
+        inline=False,
+    )
 
     return embd
 
+
 # for getting a pokemon of desired index
-
-
 def get_poke_by_id(id):
 
     poke = PokeData()
 
-    general_response = requests.get(
-        "https://pokeapi.co/api/v2/pokemon/{0}".format(id))
+    general_response = requests.get("https://pokeapi.co/api/v2/pokemon/{0}".format(id))
     data = json.loads(general_response.text)
 
     species_response = requests.get(
-        "https://pokeapi.co/api/v2/pokemon-species/{0}/".format(id))
+        "https://pokeapi.co/api/v2/pokemon-species/{0}/".format(id)
+    )
     species_data = json.loads(species_response.text)
 
     generation_response = requests.get(
-        "https://pokeapi.co/api/v2/generation/{name}/".format(name=species_data["generation"]["name"]))
+        "https://pokeapi.co/api/v2/generation/{name}/".format(
+            name=species_data["generation"]["name"]
+        )
+    )
     generation_data = json.loads(generation_response.text)
 
     poke.p_id = data["id"]
@@ -82,7 +95,7 @@ def get_poke_by_id(id):
         poke.p_types += types[i]["type"]["name"].capitalize()
 
         if i != len(types) - 1:
-            poke.p_types += ' | '
+            poke.p_types += " | "
 
     # get_region
     poke.p_region = generation_data["main_region"]["name"].capitalize()
@@ -94,7 +107,7 @@ def get_poke_by_id(id):
         poke.p_abilities += abilities[i]["ability"]["name"].capitalize()
 
         if i != len(abilities) - 1:
-            poke.p_abilities += ' | '
+            poke.p_abilities += " | "
 
     # get info
     allInfos = species_data["flavor_text_entries"]
@@ -118,9 +131,8 @@ def get_poke_by_id(id):
 
     return poke
 
+
 # for getting a random pokemon
-
-
 def get_random_poke():
 
     rand_pokemon_id = random.randint(1, 898)
@@ -129,9 +141,8 @@ def get_random_poke():
 
     return poke
 
+
 # for wraping text
-
-
 def wrap_text(width, text):
     wrapped_text = ""
     wrapper = TextWrapper(width)
@@ -141,16 +152,14 @@ def wrap_text(width, text):
 
     return wrapped_text
 
+
 # rolling
-
-
 def roll(max):
     roll = random.randint(0, max)
     return roll
 
+
 # get parameter from the message
-
-
 def get_parameter(msg, removable_command):
     param = msg
     for cmd in removable_command:
@@ -158,9 +167,8 @@ def get_parameter(msg, removable_command):
 
     return param
 
+
 # get random pokemon embed
-
-
 def get_random_pokemon_embed(embd, pokeData, color, server_id, user_id):
 
     embd.color = color
@@ -174,16 +182,19 @@ def get_random_pokemon_embed(embd, pokeData, color, server_id, user_id):
     fav_poke = ""
     fav_out = aerialace_data_manager.get_fav(server_id, user_id)
     if fav_out.startswith("> Your favourite pokemon is"):
-        fav_poke = fav_out.replace(
-            "> Your favourite pokemon is", "").strip().lower().replace("*", "")
+        fav_poke = (
+            fav_out.replace("> Your favourite pokemon is", "")
+            .strip()
+            .lower()
+            .replace("*", "")
+        )
         if pokeData.p_name.lower() == fav_poke:
             embd.set_footer(text="This pokemon is your favourite")
 
     return embd
 
+
 # get Dex entry embed
-
-
 def get_dex_entry_embed(embd, pokeData, color):
     embd.color = color
     embd.title = "**{0} : {1}**".format(pokeData.p_id, pokeData.p_name)
@@ -191,21 +202,28 @@ def get_dex_entry_embed(embd, pokeData, color):
     description = wrap_text(50, pokeData.p_info)
     description += "\n"
 
-    embd.add_field(name="Height", value="{h} m".format(
-        h=pokeData.p_height), inline=True)
-    embd.add_field(name="Weight", value="{w} kg".format(
-        w=pokeData.p_weight), inline=True)
-    embd.add_field(name="Region", value="{r}".format(
-        r=pokeData.p_region), inline=True)
-    embd.add_field(name="Type(s)", value="{t}".format(
-        t=pokeData.p_types), inline=True)
-    embd.add_field(name="Ability(s)", value="{a}".format(
-        a=pokeData.p_abilities), inline=True)
+    embd.add_field(
+        name="Height", value="{h} m".format(h=pokeData.p_height), inline=True
+    )
+    embd.add_field(
+        name="Weight", value="{w} kg".format(w=pokeData.p_weight), inline=True
+    )
+    embd.add_field(name="Region", value="{r}".format(r=pokeData.p_region), inline=True)
+    embd.add_field(name="Type(s)", value="{t}".format(t=pokeData.p_types), inline=True)
+    embd.add_field(
+        name="Ability(s)", value="{a}".format(a=pokeData.p_abilities), inline=True
+    )
 
     stats_string = "**HP** : {hp} | **ATK** : {atk} | **DEF** : {df} \n".format(
-        hp=pokeData.p_stats["hp"], atk=pokeData.p_stats["attack"], df=pokeData.p_stats["defense"])
+        hp=pokeData.p_stats["hp"],
+        atk=pokeData.p_stats["attack"],
+        df=pokeData.p_stats["defense"],
+    )
     stats_string += "**SPAT** : {spat} | **SPDF** : {spdf} | **SPD** : {spd}".format(
-        spat=pokeData.p_stats["special-attack"], spdf=pokeData.p_stats["special-defense"], spd=pokeData.p_stats["speed"])
+        spat=pokeData.p_stats["special-attack"],
+        spdf=pokeData.p_stats["special-defense"],
+        spd=pokeData.p_stats["speed"],
+    )
     embd.add_field(name="Stats", value=stats_string, inline=False)
 
     embd.description = description
@@ -213,16 +231,18 @@ def get_dex_entry_embed(embd, pokeData, color):
 
     return embd
 
+
 # get invite embed
-
-
 def get_invite_embed(embd, color):
     invite_link = global_vars.INVITE_LINK
     thumbnail_link = global_vars.AVATAR_LINK
 
     embd.title = "Invite Aerial Ace to your server"
-    embd.description = "[Click the link and select the server to add to.]({link})".format(
-        link=invite_link)
+    embd.description = (
+        "[Click the link and select the server to add to.]({link})".format(
+            link=invite_link
+        )
+    )
     embd.set_thumbnail(url=thumbnail_link)
     embd.color = color
 
