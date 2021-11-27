@@ -1,5 +1,8 @@
+from logging import PlaceHolder
 import discord
 import os
+
+from discord import user
 import aerialace
 import aerialace_data_manager
 
@@ -192,11 +195,26 @@ async def on_message(message):
 
         return
 
+    #ping user with tag command
     if msg.startswith("-aa tag_ping ") or msg.startswith("-aa tp "):
         tag = aerialace.get_parameter(msg, ["-aa tp", "-aa tag_ping"])
         reply = aerialace_data_manager.get_tag_hunters(server_id, tag)
 
         await message.channel.send(reply)
+
+        return
+
+
+    if msg.startswith("-aa log_battle ") or msg.startswith("-aa lb "):
+        players = aerialace.get_winner_looser(msg)     
+        reply = aerialace_data_manager.register_battle_log(server_id, players[0], players[1])
+        await message.channel.send(reply)
+        return 
+
+    if msg.startswith("-aa battle_score") or msg.startswith("-aa bs"):
+        score = aerialace_data_manager.get_battle_score(server_id, user_id)
+
+        await message.channel.send(score)
 
         return
 

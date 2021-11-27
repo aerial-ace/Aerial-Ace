@@ -10,8 +10,9 @@ async def get_data_files(client):
 	fav_file = discord.File(global_vars.FAV_FILE_LOCATION)
 	server_file = discord.File(global_vars.SERVER_FILE_LOCATION)
 	tag_file = discord.File(global_vars.TAG_FILE_LOCATION)
+	battle_log_file = discord.File(global_vars.BATTLE_LOG_FILE_LOCATION)
 
-	data_files = [stats_file, fav_file, server_file, tag_file]
+	data_files = [stats_file, fav_file, server_file, tag_file, battle_log_file]
 
 	#DM the files to the admins
 	admin_id = int(os.environ['ADMIN_ID'])
@@ -23,7 +24,7 @@ async def get_data_files(client):
 		print("Unable to send message to admins.")
 
 
-#register server in data
+#register server in the database
 async def register_guild(client, guild):
 	
 	server_id = str(guild.id)
@@ -42,12 +43,19 @@ async def register_guild(client, guild):
 	tag_data = json.loads(tag_data_out.read())
 	tag_data_out.close()
 
+	battle_data_file = open(global_vars.BATTLE_LOG_FILE_LOCATION, "r")
+	battle_data = json.loads(battle_data_file.read())
+	battle_data_file.close()
+
 	#update the data 
 	if server_id not in list(fav_data.keys()):
 		fav_data[str(server_id)] = {}
 
 	if server_id not in list(tag_data.keys()):
 		tag_data[str(server_id)] = {}
+
+	if server_id not in list(battle_data.keys()):
+		battle_data[str(server_id)] = {}
 
 	server_data[server_id] = server_name
 
@@ -67,6 +75,11 @@ async def register_guild(client, guild):
 	tag_data_in.write(json_obj)
 	tag_data_in.close()
 
+	battle_data_in = open(global_vars.BATTLE_LOG_FILE_LOCATION, "w")
+	json_obj = json.dumps(battle_data)
+	battle_data_in.write(json_obj)
+	battle_data_in.close()
+
 	#Dm the admins on server joins
 	admin_id = int(os.environ['ADMIN_ID'])
 	admin = client.get_user(admin_id)
@@ -75,6 +88,8 @@ async def register_guild(client, guild):
 	except discord.Forbidden:
 		print("Unable to send message to admins. Btw, Aerial Ace was added to **{server}** :]".format(server = guild.name))
 
+
+#remove server from the database
 async def remove_guild(client, guild):
 
 	server_id = str(guild.id)
@@ -92,15 +107,22 @@ async def remove_guild(client, guild):
 	tag_data = json.loads(tag_data_out.read())
 	tag_data_out.close()
 
+	battle_data_out = open(global_vars.BATTLE_FILE_LOCATION, "r")
+	battle_data = json.loads(battle_data_out.read())
+	battle_data_out.close()
+
 	#update the data 
 	if server_id in list(fav_data.keys()):
-		del fav_data[server_id]
+		del fav_data[str(server_id)]
 
 	if server_id in list(tag_data.keys()):
-		del tag_data[server_id]
+		del tag_data[str(server_id)]
 
-	if server_id in (server_data.keys()):
-		del server_data[server_id]
+	if server_id in list(server_data.keys()):
+		del server_data[str(server_id)]
+
+	if server_id in list(battle_data.keys()):
+		del battle_data[str(server_id)]
 
 	#Save the data to the files
 	fav_data_in = open(global_vars.FAV_FILE_LOCATION, "w")
@@ -117,6 +139,11 @@ async def remove_guild(client, guild):
 	json_obj = json.dumps(tag_data)
 	tag_data_in.write(json_obj)
 	tag_data_in.close()
+
+	battle_data_in = open(global_vars.BATTLE_FILE_LOCATION, "w")
+	json_obj = json.dumps(battle_data)
+	battle_data_in.write(json_obj)
+	battle_data_in.close()
 
 	#Dm the admins on server removal
 	admin_id = int(os.environ['ADMIN_ID'])
@@ -149,7 +176,7 @@ def set_fav(server_id, user_id, poke_name):
 	fav_data_in.close()
 
 	return "> Your favourite pokemon is now **{fav}**. Check it using ```-aa fav```".format(fav = poke_name)
-	
+
 
 #Get the favourite pokemon of the user
 def get_fav(server_id, user_id):
@@ -168,6 +195,7 @@ def get_fav(server_id, user_id):
 			return "> User was not found in the database, set you favourite using ```-aa set_fav <pokemon>```"
 	else:
 		return "> Server was not found!"
+
 
 #get duelish statss
 def get_stats_embed(embd, pokemon, color):
@@ -191,6 +219,7 @@ def get_stats_embed(embd, pokemon, color):
 		embd.description += "> PROBABLY this pokemon is not good for battling"
 		return embd
 
+
 #get movesets
 async def get_moveset_embed(embd, poke, color):
 	moveset_file = open(global_vars.MOVESET_FILE_LOCATION, "r")
@@ -209,7 +238,8 @@ async def get_moveset_embed(embd, poke, color):
 		embd.description = "> If the name is correct then"
 		embd.description += "> PROBABLY this pokemon is not good for battling"
 		return embd
-		
+
+
 #return tierlists
 def get_tl(list_name):
 
@@ -252,6 +282,7 @@ def get_tl(list_name):
 	else:
 		return """> That tierlist was not found, these tierlists are availible
 					```common | mega | ```"""
+
 
 #register shiny tags
 def register_tag(server_id, user_id, user_nick, tag):
@@ -312,6 +343,7 @@ def register_tag(server_id, user_id, user_nick, tag):
 	else : 
 		return "> {user} was removed from `{prev}` and assigned to `{new}` tag".format(user = user_nick, prev = current_tag.capitalize(), new = tag.capitalize())
 
+
 #Get shiny tags
 def get_tag_hunters(server_id, tag):
 	#Get data from the file
@@ -332,3 +364,52 @@ def get_tag_hunters(server_id, tag):
 			hunter_pings += " | "
 
 	return "> Pinging users assigned to `{tag}` tag \n {users}".format(tag = tag.capitalize(), users = hunter_pings)
+
+
+#Register Battle log
+def register_battle_log(server_id, winner, loser):
+	battle_file_out = open(global_vars.BATTLE_LOG_FILE_LOCATION, "r")
+	battle_data = json.loads(battle_file_out.read())
+	battle_file_out.close()
+
+	#{"user_id" : "wins"}
+	battle_records = battle_data[str(server_id)]
+	users = list(battle_records.keys())
+
+	if winner in users:
+		battle_data[server_id][winner] = str(int(battle_data[server_id][winner]) + 1)
+	else:
+		battle_data[server_id][winner] = "1"
+	
+	if loser in users:
+		battle_data[server_id][loser] = str(int(battle_data[server_id][loser]) - 1)
+	else:
+		battle_data[server_id][loser] = "-1"
+
+	#write the data
+	battle_file_in = open(global_vars.BATTLE_LOG_FILE_LOCATION, "w")
+	json_obj = json.dumps(battle_data)
+	battle_file_in.write(json_obj)
+	battle_file_in.close()
+
+	return "> <@{0}> won over <@{1}>. Scoreboard was updated".format(winner, loser)
+
+def get_battle_score(server_id, user_id):
+	battle_file_out = open(global_vars.BATTLE_LOG_FILE_LOCATION, "r")
+	battle_data = json.loads(battle_file_out.read())
+	battle_file_out.close()	
+
+	if server_id not in list(battle_data.keys()):
+		return "> Server was not found in database, dm your server id to DevGa.me#0176 please"
+
+	users = battle_data[server_id]
+
+	if user_id in users:
+		score = battle_data[server_id][user_id]
+		return "> Current score is **{score}**".format(score = score)
+	else:
+		return "> Register some battles first -_-"
+
+	
+
+

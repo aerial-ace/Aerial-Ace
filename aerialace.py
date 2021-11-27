@@ -1,5 +1,6 @@
 from os import name
 import random
+from discord import player
 import requests
 import json
 from textwrap import TextWrapper
@@ -167,6 +168,23 @@ def get_parameter(msg, removable_command):
 
     return param
 
+def get_winner_looser(msg):
+    param = get_parameter(msg, ["-aa log_battle", "-aa lb"])
+    players = param.split()
+    winner, loser = players
+    winner, loser = get_id_from_ping(winner), get_id_from_ping(loser)
+
+    return [winner, loser]
+
+#returns user id from ping
+def get_id_from_ping(ping):
+
+    id = ""
+    for i in ping:
+        if i.isnumeric():
+            id = id + i
+
+    return id
 
 # get random pokemon embed
 def get_random_pokemon_embed(embd, pokeData, color, server_id, user_id):
@@ -238,11 +256,7 @@ def get_invite_embed(embd, color):
     thumbnail_link = global_vars.AVATAR_LINK
 
     embd.title = "Invite Aerial Ace to your server"
-    embd.description = (
-        "[Click the link and select the server to add to.]({link})".format(
-            link=invite_link
-        )
-    )
+    embd.description = ("[Click the link and select the server to add to.]({link})".format(link=invite_link))
     embd.set_thumbnail(url=thumbnail_link)
     embd.color = color
 
