@@ -3,6 +3,7 @@ import discord
 import os
 
 from discord import user
+from discord import emoji
 import aerialace
 import aerialace_data_manager
 
@@ -13,7 +14,7 @@ intents.reactions = True
 
 # init
 client = discord.Client(intents=intents)
-server = None
+guild = None
 server_id = None
 
 admin_user_id = os.environ['ADMIN_ID']
@@ -46,10 +47,10 @@ async def on_message(message):
         return
 
     # get the server details
-    global server, server_id
-    if server == None:
-        server = message.guild
-        server_id = str(server.id)
+    global guild, server_id
+    if guild == None:
+        guild = message.guild
+        server_id = str(guild.id)
 
     # get the message details
     msg = message.content.lower()
@@ -207,8 +208,17 @@ async def on_message(message):
 
     if msg.startswith("-aa log_battle ") or msg.startswith("-aa lb "):
         players = aerialace.get_winner_looser(msg)     
-        reply = aerialace_data_manager.register_battle_log(server_id, players[0], players[1])
+
+        accepted = await aerialace.get_battle_acceptance(client, message, players[0], players[1])
+
+        reply = ""
+        if accepted:
+            reply = aerialace_data_manager.register_battle_log(server_id, players[0], players[1])
+        else:
+            reply = "> Battle Log was not accepted"
+
         await message.channel.send(reply)
+
         return 
 
     if msg.startswith("-aa battle_score") or msg.startswith("-aa bs"):

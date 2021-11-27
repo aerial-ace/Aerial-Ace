@@ -1,3 +1,4 @@
+from logging import log
 from os import name
 import random
 from discord import player
@@ -286,3 +287,19 @@ def get_invite_embed(embd, color):
     embd.color = color
 
     return embd
+
+
+#get battle acceptance
+async def get_battle_acceptance(client, message, winner, loser):
+
+    #send battle log request
+    log_msg = await message.channel.send("Logging <@{winner}> win over <@{loser}>. Click the checkmark to accept.".format(winner = winner, loser = loser))
+
+    accept_emoji = "☑️"
+    decline_emoji = "❌"
+
+    await log_msg.add_reaction(accept_emoji)
+    await log_msg.add_reaction(decline_emoji)
+
+    return False
+
