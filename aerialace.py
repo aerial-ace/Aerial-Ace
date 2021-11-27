@@ -29,23 +29,34 @@ def get_help_embed(embd, color):
 
     # help fields
     embd.add_field(
-        name="Random Pokemon", value="`-aa rp` `-aa rand_poke`", inline=False
+        name="Random Pokemon", 
+        value="`-aa rp` or `-aa rand_poke`", 
+        inline=False
     )
     embd.add_field(
         name="View Dex Entry",
-        value="`-aa dex <pokedex id>` `-aa dex <pokemon name>`",
-        inline=False,
+        value="`-aa dex <pokedex id>` or `-aa dex <pokemon name>`",
+        inline=False
     )
     embd.add_field(
-        name="Rolling", value="`-aa roll` `-aa roll <upper limit>`", inline=False
+        name="Rolling", 
+        value="`-aa roll` or `-aa roll <upper limit>`", 
+        inline=False
     )
     embd.add_field(
         name="Set Favourite Pokemon",
         value="`-aa set_fav <pokemon name>` or `-aa sf <pokemon name>`",
-        inline=False,
+        inline=False
     )
-    embd.add_field(name="View Favourite Pokemon", value="`-aa fav`", inline=False)
-    embd.add_field(name="Stats Check", value="`-aa stats <pokemon>`", inline=False)
+    embd.add_field(
+        name="View Favourite Pokemon", 
+        value="`-aa fav`", 
+        inline=False
+    )
+    embd.add_field(
+        name="Stats Check",
+        value="`-aa stats <pokemon>`", 
+        inline=False)
     embd.add_field(
         name="Moveset Check",
         value="`-aa moveset <pokemon name>` or `-aa ms <pokemon name>`",
@@ -54,7 +65,17 @@ def get_help_embed(embd, color):
     embd.add_field(
         name="Tierlists",
         value="`-aa tierlist <tier type>` or `-aa tl <tier type>`",
-        inline=False,
+        inline=False
+    )
+    embd.add_field(
+        name = "Add yourself to a tag",
+        value = "`-aa tag <tag>`",
+        inline = False
+    )
+    embd.add_field(
+        name = "Ping users assigned to a tag",
+        value = "`-aa tag_ping <tag>` or `-aa tp <tag>`",
+        inline = False
     )
 
     return embd
@@ -168,6 +189,8 @@ def get_parameter(msg, removable_command):
 
     return param
 
+
+# returns the winner and loser
 def get_winner_looser(msg):
     param = get_parameter(msg, ["-aa log_battle", "-aa lb"])
     players = param.split()
@@ -176,7 +199,8 @@ def get_winner_looser(msg):
 
     return [winner, loser]
 
-#returns user id from ping
+
+# returns user id from ping
 def get_id_from_ping(ping):
 
     id = ""
@@ -185,6 +209,7 @@ def get_id_from_ping(ping):
             id = id + i
 
     return id
+
 
 # get random pokemon embed
 def get_random_pokemon_embed(embd, pokeData, color, server_id, user_id):
