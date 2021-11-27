@@ -144,7 +144,7 @@ async def on_message(message):
         return
 
     # View favourite pokemon command
-    if msg.startswith("-aa fav") or msg.startswith("-aa f"):
+    if msg.startswith("-aa fav"):
         reply = aerialace_data_manager.get_fav(server_id, user_id)
         await message.channel.send(reply)
         return
