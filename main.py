@@ -98,7 +98,7 @@ async def on_message(message):
         return
 
     # Random Pokemone command
-    if (msg.startswith("-aa rp ")) or msg.startswith("-aa rand_poke "):
+    if (msg.startswith("-aa rp")) or msg.startswith("-aa rand_poke"):
 
         try:
             rand_poke = aerialace.get_random_poke()
