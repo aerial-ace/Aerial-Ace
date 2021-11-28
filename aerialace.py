@@ -292,6 +292,16 @@ def get_invite_embed(embd, color):
 #get battle acceptance
 async def get_battle_acceptance(client, message, winner, loser):
 
+    check_id = ""
+
+    if str(message.author.id) == winner:
+        check_id = loser
+    elif str(message.author.id) == loser:
+        check_id = winner
+    else:
+        await message.channel.send("> Who are you to do this. Let the players log thier battles.")
+        return "notapplicable"
+
     #send battle log request
     log_msg = await message.channel.send("Logging <@{winner}>'s win over <@{loser}>. Click the checkmark to accept.".format(winner = winner, loser = loser))
 
@@ -300,20 +310,13 @@ async def get_battle_acceptance(client, message, winner, loser):
 
     await log_msg.add_reaction(accept_emoji)
 
-    check_id = ""
-
-    if str(message.author.id) == winner:
-        check_id = loser
-    elif str(message.author.id) == loser:
-        check_id = winner
-
     def check(reaction, user):
         return str(user.id) == check_id and str(reaction.emoji) == accept_emoji
 
     try:
         reaction, user = await client.wait_for("reaction_add", timeout = 10.0, check = check)
     except:
-        return False
+        return "notaccepted"
     else:
-        return True
+        return "accepted"
 

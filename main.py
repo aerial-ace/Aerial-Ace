@@ -1,4 +1,4 @@
-from logging import PlaceHolder
+from logging import PlaceHolder, info
 import discord
 import os
 
@@ -209,13 +209,15 @@ async def on_message(message):
     if msg.startswith("-aa log_battle ") or msg.startswith("-aa lb "):
         players = aerialace.get_winner_looser(msg)     
 
-        accepted = await aerialace.get_battle_acceptance(client, message, players[0], players[1])
+        info = await aerialace.get_battle_acceptance(client, message, players[0], players[1])
 
         reply = ""
-        if accepted:
+        if info == "accepted":
             reply = aerialace_data_manager.register_battle_log(server_id, players[0], players[1])
-        else:
+        elif info == "not accepted":
             reply = "> Battle Log was not accepted"
+        else:
+            return
 
         await message.channel.send(reply)
 
@@ -226,6 +228,11 @@ async def on_message(message):
         score = aerialace_data_manager.get_battle_score(server_id, member)
 
         await message.channel.send(score)
+
+        return
+
+    if msg.startswith("-aa battle_lb") or msg.startswith("-aa blb"):
+        aerialace_data_manager.get_battle_leaderboard(server_id, member)
 
         return
 

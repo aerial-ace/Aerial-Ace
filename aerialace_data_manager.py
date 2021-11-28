@@ -2,6 +2,7 @@ import discord
 import json
 import global_vars
 import os
+from collections import OrderedDict
 
 
 #return data files
@@ -412,6 +413,16 @@ def get_battle_score(server_id, user):
 		return "> {user} has a battle score of **{score}**".format(user = user.name, score = score)
 	else:
 		return "> Register some battles first -_-"
+
+#return leaderboard
+def get_battle_leaderboard(server_id, user):
+	battle_file_out = open(global_vars.BATTLE_LOG_FILE_LOCATION, "r")
+	battle_data = json.loads(battle_file_out.read())
+	battle_file_out.close()
+
+	#{user_id : score}
+	orderedBattleData = dict(OrderedDict(sorted(battle_data.items(), key = lambda t: t[1])))
+	print(orderedBattleData)
 
 	
 
