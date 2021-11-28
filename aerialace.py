@@ -293,7 +293,7 @@ def get_invite_embed(embd, color):
 async def get_battle_acceptance(client, message, winner, loser):
 
     #send battle log request
-    log_msg = await message.channel.send("Logging <@{winner}> win over <@{loser}>. Click the checkmark to accept.".format(winner = winner, loser = loser))
+    log_msg = await message.channel.send("Logging <@{winner}>'s win over <@{loser}>. Click the checkmark to accept.".format(winner = winner, loser = loser))
 
     accept_emoji = "☑️"
     decline_emoji = "❌"

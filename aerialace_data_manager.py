@@ -394,10 +394,13 @@ def register_battle_log(server_id, winner, loser):
 
 	return "> <@{0}> won over <@{1}>. Scoreboard was updated".format(winner, loser)
 
-def get_battle_score(server_id, user_id):
+#return the battle score of the user
+def get_battle_score(server_id, user):
 	battle_file_out = open(global_vars.BATTLE_LOG_FILE_LOCATION, "r")
 	battle_data = json.loads(battle_file_out.read())
 	battle_file_out.close()	
+
+	user_id = str(user.id)
 
 	if server_id not in list(battle_data.keys()):
 		return "> Server was not found in database, dm your server id to DevGa.me#0176 please"
@@ -406,7 +409,7 @@ def get_battle_score(server_id, user_id):
 
 	if user_id in users:
 		score = battle_data[server_id][user_id]
-		return "> Current score is **{score}**".format(score = score)
+		return "> {user} has a battle score of **{score}**".format(user = user.name, score = score)
 	else:
 		return "> Register some battles first -_-"
 

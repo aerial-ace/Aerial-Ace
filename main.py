@@ -205,7 +205,7 @@ async def on_message(message):
 
         return
 
-
+    #logs the battle and update the leaderboard
     if msg.startswith("-aa log_battle ") or msg.startswith("-aa lb "):
         players = aerialace.get_winner_looser(msg)     
 
@@ -221,8 +221,9 @@ async def on_message(message):
 
         return 
 
+    #Display the battle score of the user
     if msg.startswith("-aa battle_score") or msg.startswith("-aa bs"):
-        score = aerialace_data_manager.get_battle_score(server_id, user_id)
+        score = aerialace_data_manager.get_battle_score(server_id, member)
 
         await message.channel.send(score)
 
