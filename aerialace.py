@@ -1,5 +1,5 @@
 from logging import log
-from os import name
+from os import name, times
 import random
 from discord import player
 import requests
@@ -299,7 +299,21 @@ async def get_battle_acceptance(client, message, winner, loser):
     decline_emoji = "❌"
 
     await log_msg.add_reaction(accept_emoji)
-    await log_msg.add_reaction(decline_emoji)
 
-    return False
+    check_id = ""
+
+    if str(message.author.id) == winner:
+        check_id = loser
+    elif str(message.author.id) == loser:
+        check_id = winner
+
+    def check(reaction, user):
+        return str(user.id) == check_id and str(reaction.emoji) == accept_emoji
+
+    try:
+        reaction, user = await client.wait_for("reaction_add", timeout = 10.0, check = check)
+    except:
+        return False
+    else:
+        return True
 
