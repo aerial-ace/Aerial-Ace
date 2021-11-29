@@ -10,8 +10,6 @@ intents.reactions = True
 
 # init
 client = discord.Client(intents=intents)
-guild = None
-server_id = None
 
 admin_user_id = os.environ['ADMIN_ID']
 
@@ -35,40 +33,39 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.author == client.user:
+
+    if message.author == client.user or message.content.lower().startswith("-aa") is False:
         return
 
-    # get the server details
-    global guild, server_id
-    if guild is not None:
-        guild = message.guild
-        server_id = str(guild.id)
+    guild = message.guild
+    server_id = str(guild.id)
 
     # get the message details
-    msg = message.content.lower()
+    msg = ((message.content.lower()).replace("-aa", "")).strip()
     member = message.author
     user_id = str(message.author.id)
     user_nick = member.display_name
 
+    print(msg)
+
     # help command
-    if msg.startswith("-aa help"):
-        help_embed = aerialace.get_help_embed(discord.Embed(),
-                                              discord.Color.blue())
+    if msg.startswith("help"):
+        help_embed = aerialace.get_help_embed(discord.Embed(), discord.Color.blue())
         await message.channel.send(embed=help_embed)
 
         return
 
     # say hello command
     hello_commands = ["hello", "alola", "hola", "henlu", "helu", "hi", "sup"]
-    if msg.startswith(i.replace("-aa", "").strip() for i in hello_commands):
+    if msg in hello_commands:
         await message.channel.send("> Alola **{name}**".format(name=user_nick))
         return
 
     # rolling command
-    if msg.startswith("-aa roll"):
+    if msg.startswith("roll"):
 
         try:
-            max_roll_str = aerialace.get_parameter(msg, "-aa roll")
+            max_roll_str = aerialace.get_parameter(msg, ["roll"])
 
             if max_roll_str == "":
                 max_roll = 100
@@ -84,12 +81,11 @@ async def on_message(message):
         roll = aerialace.roll(max_roll)
 
         await message.channel.send(
-            "> **{name}** rolled and got {roll} :game_die:".format(
-                name=user_nick, roll=roll))
+            "> **{name}** rolled and got {roll} :game_die:".format(name=user_nick, roll=roll))
         return
 
     # Random Pokemon command
-    if (msg.startswith("-aa rp")) or msg.startswith("-aa rand_poke"):
+    if (msg.startswith("rp")) or msg.startswith("rand_poke"):
 
         try:
             rand_poke = aerialace.get_random_poke()
@@ -106,9 +102,9 @@ async def on_message(message):
         return
 
     # Dex search command
-    if msg.startswith("-aa dex ") or msg.startswith("-aa d "):
+    if msg.startswith("dex ") or msg.startswith("d "):
 
-        param = aerialace.get_parameter(msg, ["-aa dex", "-aa d"])
+        param = aerialace.get_parameter(msg, ["dex", "d"])
 
         try:
             poke_data = aerialace.get_poke_by_id(param)
@@ -125,66 +121,62 @@ async def on_message(message):
         return
 
     # Register Favourite Pokemon command
-    if msg.startswith("-aa set_fav ") or msg.startswith("-aa sf "):
-        param = aerialace.get_parameter(msg, ["-aa set_fav", "-aa sf"])
+    if msg.startswith("set_fav ") or msg.startswith("sf "):
+        param = aerialace.get_parameter(msg, ["set_fav", "sf"])
 
         reply = aerialace_data_manager.set_fav(server_id, user_id, param)
         await message.channel.send(reply)
         return
 
     # View favourite pokemon command
-    if msg.startswith("-aa fav"):
+    if msg.startswith("fav"):
         reply = aerialace_data_manager.get_fav(server_id, user_id)
         await message.channel.send(reply)
         return
 
     # get duelish stats command
-    if msg.startswith("-aa stats "):
-        param = aerialace.get_parameter(msg, ["-aa stats"])
-        reply = aerialace_data_manager.get_stats_embed(
-            discord.Embed(), param, discord.Color.blue())
+    if msg.startswith("stats "):
+        param = aerialace.get_parameter(msg, ["stats"])
+        reply = aerialace_data_manager.get_stats_embed(discord.Embed(), param, discord.Color.blue())
         await message.channel.send(embed=reply)
 
         return
 
     # get duelish stats command
-    if msg.startswith("-aa moveset ") or msg.startswith("-aa ms "):
-        poke = aerialace.get_parameter(msg, ["-aa ms", "-aa moveset"])
+    if msg.startswith("moveset ") or msg.startswith("ms "):
+        poke = aerialace.get_parameter(msg, ["ms", "moveset"])
         reply = await aerialace_data_manager.get_moveset_embed(discord.Embed(), poke, discord.Color.blue())
         await message.channel.send(embed=reply)
 
         return
 
-    # get tierlists command
-    if msg.startswith("-aa tierlist ") or msg.startswith("-aa tl "):
-        param = aerialace.get_parameter(msg, ["-aa tierlist", "-aa tl"])
+    # get tierlist command
+    if msg.startswith("tierlist ") or msg.startswith("tl "):
+        param = aerialace.get_parameter(msg, ["tierlist", "tl"])
         tl_link = aerialace_data_manager.get_tl(param)
-        await message.channel.send(content="Source : P2HB \n {link}".format(
-            link=tl_link))
+        await message.channel.send(content="Source : P2HB \n {link}".format(link=tl_link))
 
         return
 
     # invite command
-    if msg.startswith("-aa invite"):
-        reply = aerialace.get_invite_embed(discord.Embed(),
-                                           discord.Color.blue())
+    if msg.startswith("invite"):
+        reply = aerialace.get_invite_embed(discord.Embed(), discord.Color.blue())
         await message.channel.send(embed=reply)
 
         return
 
     # register shiny command
-    if msg.startswith("-aa tag "):
-        tag = aerialace.get_parameter(msg, ["-aa tag"])
-        reply = aerialace_data_manager.register_tag(server_id, user_id,
-                                                    user_nick, tag)
+    if msg.startswith("tag "):
+        tag = aerialace.get_parameter(msg, ["tag"])
+        reply = aerialace_data_manager.register_tag(server_id, user_id, user_nick, tag)
 
         await message.channel.send(reply)
 
         return
 
     # ping user with tag command
-    if msg.startswith("-aa tag_ping ") or msg.startswith("-aa tp "):
-        tag = aerialace.get_parameter(msg, ["-aa tp", "-aa tag_ping"])
+    if msg.startswith("tag_ping ") or msg.startswith("tp "):
+        tag = aerialace.get_parameter(msg, ["tp", "tag_ping"])
         reply = aerialace_data_manager.get_tag_hunters(server_id, tag)
 
         await message.channel.send(reply)
@@ -192,14 +184,14 @@ async def on_message(message):
         return
 
     # logs the battle and update the leaderboard
-    if msg.startswith("-aa log_battle ") or msg.startswith("-aa lb "):
+    if msg.startswith("log_battle ") or msg.startswith("lb "):
         players = aerialace.get_winner_looser(msg)
 
         info = await aerialace.get_battle_acceptance(client, message, players[0], players[1])
 
         if info == "accepted":
             reply = aerialace_data_manager.register_battle_log(server_id, players[0], players[1])
-        elif info == "not accepted":
+        elif info == "notaccepted":
             reply = "> Battle Log was not accepted"
         else:
             return
@@ -209,21 +201,22 @@ async def on_message(message):
         return
 
         # Display the battle score of the user
-    if msg.startswith("-aa battle_score") or msg.startswith("-aa bs"):
+    if msg.startswith("battle_score") or msg.startswith("bs"):
+
         score = aerialace_data_manager.get_battle_score(server_id, member)
 
         await message.channel.send(score)
 
         return
 
-    if msg.startswith("-aa battle_lb") or msg.startswith("-aa blb"):
-        aerialace_data_manager.get_battle_leaderboard(server_id, member)
+    if msg.startswith("battle_lb") or msg.startswith("blb"):
+        #TODO : aerialace_data_manager.get_battle_leaderboard(server_id, member)
 
         return
 
     # Admins Only
     # returns the json files of the data
-    if msg.startswith("-aa fetch_data_files") or msg.startswith("-aa fdf"):
+    if msg.startswith("fetch_data_files") or msg.startswith("fdf"):
         if user_id == admin_user_id:
             await aerialace_data_manager.get_data_files(client)
 

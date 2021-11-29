@@ -1,7 +1,4 @@
-from logging import log
-from os import name, times
 import random
-from discord import player
 import requests
 import json
 from textwrap import TextWrapper
@@ -69,29 +66,29 @@ def get_help_embed(embd, color):
         inline=False
     )
     embd.add_field(
-        name = "Add yourself to a tag",
-        value = "`-aa tag <tag>`",
-        inline = False
+        name="Add yourself to a tag",
+        value="`-aa tag <tag>`",
+        inline=False
     )
     embd.add_field(
-        name = "Ping users assigned to a tag",
-        value = "`-aa tag_ping <tag>` or `-aa tp <tag>`",
-        inline = False
+        name="Ping users assigned to a tag",
+        value="`-aa tag_ping <tag>` or `-aa tp <tag>`",
+        inline=False
     )
 
     return embd
 
 
 # for getting a pokemon of desired index
-def get_poke_by_id(id):
+def get_poke_by_id(poke_id):
 
     poke = PokeData()
 
-    general_response = requests.get("https://pokeapi.co/api/v2/pokemon/{0}".format(id))
+    general_response = requests.get("https://pokeapi.co/api/v2/pokemon/{0}".format(poke_id))
     data = json.loads(general_response.text)
 
     species_response = requests.get(
-        "https://pokeapi.co/api/v2/pokemon-species/{0}/".format(id)
+        "https://pokeapi.co/api/v2/pokemon-species/{0}/".format(poke_id)
     )
     species_data = json.loads(species_response.text)
 
@@ -133,10 +130,10 @@ def get_poke_by_id(id):
             poke.p_abilities += " | "
 
     # get info
-    allInfos = species_data["flavor_text_entries"]
+    all_info = species_data["flavor_text_entries"]
     poke.p_info = "*NULL*"
 
-    for i in allInfos:
+    for i in all_info:
         if i["language"]["name"] == "en":
             poke.p_info = i["flavor_text"]
             break
@@ -177,9 +174,9 @@ def wrap_text(width, text):
 
 
 # rolling
-def roll(max):
-    roll = random.randint(0, max)
-    return roll
+def roll(upper_limit):
+    roll_value = random.randint(0, upper_limit)
+    return roll_value
 
 
 # get parameter from the message
@@ -193,7 +190,7 @@ def get_parameter(msg, removable_command):
 
 # returns the winner and loser
 def get_winner_looser(msg):
-    param = get_parameter(msg, ["-aa log_battle", "-aa lb"])
+    param = get_parameter(msg, ["log_battle", "lb"])
     players = param.split()
     winner, loser = players
     winner, loser = get_id_from_ping(winner), get_id_from_ping(loser)
@@ -204,74 +201,67 @@ def get_winner_looser(msg):
 # returns user id from ping
 def get_id_from_ping(ping):
 
-    id = ""
+    user_id = ""
     for i in ping:
         if i.isnumeric():
-            id = id + i
+            user_id = user_id + i
 
-    return id
-
+    return user_id
 
 # get random pokemon embed
-def get_random_pokemon_embed(embd, pokeData, color, server_id, user_id):
+def get_random_pokemon_embed(embd, poke_data, color, server_id, user_id):
 
     embd.color = color
-    embd.title = "**{0} : {1}**".format(pokeData.p_id, pokeData.p_name)
+    embd.title = "**{0} : {1}**".format(poke_data.p_id, poke_data.p_name)
 
-    description = wrap_text(40, pokeData.p_info)
+    description = wrap_text(40, poke_data.p_info)
     embd.description = description
-    embd.set_image(url=pokeData.image_link)
+    embd.set_image(url=poke_data.image_link)
 
     # Ugly, ik '_'
-    fav_poke = ""
     fav_out = aerialace_data_manager.get_fav(server_id, user_id)
     if fav_out.startswith("> Your favourite pokemon is"):
-        fav_poke = (
-            fav_out.replace("> Your favourite pokemon is", "")
-            .strip()
-            .lower()
-            .replace("*", "")
-        )
-        if pokeData.p_name.lower() == fav_poke:
+        fav_poke = (fav_out.replace("> Your favourite pokemon is", "").strip().lower().replace("*", ""))
+        if poke_data.p_name.lower() == fav_poke:
             embd.set_footer(text="This pokemon is your favourite")
 
     return embd
 
 
 # get Dex entry embed
-def get_dex_entry_embed(embd, pokeData, color):
+def get_dex_entry_embed(embd, poke_data, color):
     embd.color = color
-    embd.title = "**{0} : {1}**".format(pokeData.p_id, pokeData.p_name)
+    embd.title = "**{0} : {1}**".format(poke_data.p_id, poke_data.p_name)
 
-    description = wrap_text(50, pokeData.p_info)
+    description = wrap_text(50, poke_data.p_info)
     description += "\n"
 
     embd.add_field(
-        name="Height", value="{h} m".format(h=pokeData.p_height), inline=True
+        name="Height", value="{h} m".format(h=poke_data.p_height), inline=True
     )
     embd.add_field(
-        name="Weight", value="{w} kg".format(w=pokeData.p_weight), inline=True
+        name="Weight", value="{w} kg".format(w=poke_data.p_weight), inline=True
     )
-    embd.add_field(name="Region", value="{r}".format(r=pokeData.p_region), inline=True)
-    embd.add_field(name="Type(s)", value="{t}".format(t=pokeData.p_types), inline=True)
+    embd.add_field(name="Region", value="{r}".format(r=poke_data.p_region), inline=True)
+    embd.add_field(name="Type(s)", value="{t}".format(t=poke_data.p_types), inline=True)
     embd.add_field(
-        name="Ability(s)", value="{a}".format(a=pokeData.p_abilities), inline=True
+        name="Ability(s)", value="{a}".format(a=poke_data.p_abilities), inline=True
     )
 
     stats_string = "**HP** : {hp} | **ATK** : {atk} | **DEF** : {df} \n".format(
-        hp=pokeData.p_stats["hp"],
-        atk=pokeData.p_stats["attack"],
-        df=pokeData.p_stats["defense"],
+        hp=poke_data.p_stats["hp"],
+        atk=poke_data.p_stats["attack"],
+        df=poke_data.p_stats["defense"],
     )
     stats_string += "**SPAT** : {spat} | **SPDF** : {spdf} | **SPD** : {spd}".format(
-        spat=pokeData.p_stats["special-attack"],
-        spdf=pokeData.p_stats["special-defense"],
-        spd=pokeData.p_stats["speed"],
+        spat=poke_data.p_stats["special-attack"],
+        spdf=poke_data.p_stats["special-defense"],
+        spd=poke_data.p_stats["speed"],
     )
     embd.add_field(name="Stats", value=stats_string, inline=False)
 
     embd.description = description
-    embd.set_image(url=pokeData.image_link)
+    embd.set_image(url=poke_data.image_link)
 
     return embd
 
@@ -289,7 +279,7 @@ def get_invite_embed(embd, color):
     return embd
 
 
-#get battle acceptance
+# get battle acceptance
 async def get_battle_acceptance(client, message, winner, loser):
 
     check_id = ""
@@ -302,21 +292,20 @@ async def get_battle_acceptance(client, message, winner, loser):
         await message.channel.send("> Who are you to do this. Let the players log thier battles.")
         return "notapplicable"
 
-    #send battle log request
-    log_msg = await message.channel.send("Logging <@{winner}>'s win over <@{loser}>. Click the checkmark to accept.".format(winner = winner, loser = loser))
+    # send battle log request
+    log_msg = await message.channel.send("Logging <@{winner}>'s win over <@{loser}>. Click the checkmark to accept."
+                                         .format(winner=winner, loser=loser))
 
     accept_emoji = "☑️"
-    decline_emoji = "❌"
 
     await log_msg.add_reaction(accept_emoji)
 
-    def check(reaction, user):
-        return str(user.id) == check_id and str(reaction.emoji) == accept_emoji
+    def check(_reaction, _user):
+        return str(_user.id) == check_id and str(_reaction.emoji) == accept_emoji
 
     try:
-        reaction, user = await client.wait_for("reaction_add", timeout = 10.0, check = check)
-    except:
+        await client.wait_for("reaction_add", timeout=10.0, check=check)
+    except Exception as e:
         return "notaccepted"
     else:
         return "accepted"
-

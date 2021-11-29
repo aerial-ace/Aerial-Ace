@@ -1,8 +1,8 @@
 #file locations
 SERVER_FILE_LOCATION = "data/servers.json"
-STATS_FILE_LOCATION  = "data/stats.json"
-FAV_FILE_LOCATION 	 = "data/fav.json"
-TAG_FILE_LOCATION    = "data/tags.json"
+STATS_FILE_LOCATION = "data/stats.json"
+FAV_FILE_LOCATION = "data/fav.json"
+TAG_FILE_LOCATION = "data/tags.json"
 MOVESET_FILE_LOCATION = "data/moveset.json"
 BATTLE_LOG_FILE_LOCATION = "data/battle_log.json"
 
