@@ -46,8 +46,6 @@ async def on_message(message):
     user_id = str(message.author.id)
     user_nick = member.display_name
 
-    print(msg)
-
     # help command
     if msg.startswith("help"):
         help_embed = aerialace.get_help_embed(discord.Embed(), discord.Color.blue())
@@ -200,7 +198,7 @@ async def on_message(message):
 
         return
 
-        # Display the battle score of the user
+    # Display the battle score of the user
     if msg.startswith("battle_score") or msg.startswith("bs"):
 
         score = aerialace_data_manager.get_battle_score(server_id, member)
@@ -210,8 +208,8 @@ async def on_message(message):
         return
 
     if msg.startswith("battle_lb") or msg.startswith("blb"):
-        #TODO : aerialace_data_manager.get_battle_leaderboard(server_id, member)
-
+        reply = await aerialace_data_manager.get_battle_leaderboard_embed(client, guild)
+        await message.channel.send(embed=reply)
         return
 
     # Admins Only

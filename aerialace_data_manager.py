@@ -2,7 +2,7 @@ import discord
 import json
 import global_vars
 import os
-
+from collections import OrderedDict
 
 # return data files
 async def get_data_files(client):
@@ -218,7 +218,7 @@ def get_stats_embed(embd, pokemon, color):
         return embd
 
 
-# get movesets
+# get moveset
 async def get_moveset_embed(embd, poke, color):
     moveset_file = open(global_vars.MOVESET_FILE_LOCATION, "r")
     moveset_data = json.loads(moveset_file.read())
@@ -410,3 +410,39 @@ def get_battle_score(server_id, user):
         return "> {user} has a battle score of **{score}**".format(user=user.name, score=score)
     else:
         return "> Register some battles first -_-"
+
+# returns the battle leaderboard of the server
+async def get_battle_leaderboard_embed(client, guild):
+    battle_file_out = open(global_vars.BATTLE_LOG_FILE_LOCATION, "r")
+    battle_data = json.loads(battle_file_out.read())
+    battle_file_out.close()
+
+    server_id = str(guild.id)
+    server_name = guild.name
+
+    # {"user" : "wins"}
+    battle_records = battle_data[server_id]
+
+    sorted_battle_records = OrderedDict(sorted(battle_records.items(), key=lambda x: int(x[1]), reverse=True))
+
+    reply_embd = discord.Embed(title="{server_name}'s battle leaderboard".format(server_name=server_name), colour=discord.Colour.blue())
+    reply_embd.description = "```-Pos- | --------Name-------- | --Score-- \n\n"
+
+    MAX_LEADERBOARD_LISTINGS = 10
+    footer = ""
+
+    pos = 1
+    for i in sorted_battle_records:
+        if pos > MAX_LEADERBOARD_LISTINGS:
+            footer = "Some players were not mentioned in the leaderboard because of lower scores.\nSee your score with -aa bs"
+            break
+
+        player_name = client.get_user(int(i)).name
+        reply_embd.description += "{pos} | {name} | {score} \n".format(pos="{0}.".format(pos).ljust(5, " "), name=("{0}".format(player_name)).ljust(20, " "), score=("{0}".format(battle_records[i])))
+        pos = pos + 1
+
+    reply_embd.description += "```"
+    if footer != "":
+        reply_embd.set_footer(text=footer)
+
+    return reply_embd
