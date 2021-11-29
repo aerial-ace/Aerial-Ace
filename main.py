@@ -175,10 +175,40 @@ async def on_message(message):
     # ping user with tag command
     if msg.startswith("tag_ping ") or msg.startswith("tp "):
         tag = aerialace.get_parameter(msg, ["tp", "tag_ping"])
-        reply = aerialace_data_manager.get_tag_hunters(server_id, tag)
+        hunters = aerialace_data_manager.get_tag_hunters(server_id, tag)
+        if hunters is None:
+            reply = "> That tag doesn't exist"
+
+        hunter_pings = ""
+        number_of_hunters = len(hunters)
+
+        for i in range(0, number_of_hunters):
+            hunter_pings = hunter_pings + "<@{user}>".format(user=str(hunters[i]))
+            if i <= number_of_hunters - 2:
+                hunter_pings += " | "
+
+        reply = "> Pinging users assigned to `{tag}` tag \n\n {users}".format(tag=tag.capitalize(), users=hunter_pings)
 
         await message.channel.send(reply)
 
+        return
+
+    # see user assigned to tag
+    if msg.startswith("tag_show ") or msg.startswith("ts "):
+        tag = aerialace.get_parameter(msg, ["tag_show", "ts"])
+        hunters = aerialace_data_manager.get_tag_hunters(server_id, tag)
+        if hunters is None:
+            await message.channel.send("> That tag was not found")
+            return
+
+        reply = discord.Embed(colour=discord.Colour.blue())
+        reply.title = "Users assigned to `{tag}` tag".format(tag=tag.capitalize())
+        reply.description = ""
+
+        for i in hunters:
+            reply.description += "<@{hunter_id}>\n".format(hunter_id=i)
+
+        await message.channel.send(embed=reply)
         return
 
     # logs the battle and update the leaderboard

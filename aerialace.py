@@ -75,6 +75,26 @@ def get_help_embed(embd, color):
         value="`-aa tag_ping <tag>` or `-aa tp <tag>`",
         inline=False
     )
+    embd.add_field(
+        name="See users assigned to a tag",
+        value="`-aa tag_show <tag>` or `-aa ts <tag>`",
+        inline=False
+    )
+    embd.add_field(
+        name="Log Battles",
+        value="`-aa log_battle @winner @loser` or `-aa lb @winner @loser`",
+        inline=False
+    )
+    embd.add_field(
+        name="See battle score",
+        value="`-aa battle_score` or `-aa bs`",
+        inline=False
+    )
+    embd.add_field(
+        name="See Battle leaderboard of the server",
+        value="`-aa battle_lb` or `-aa blb`",
+        inline=False
+    )
 
     return embd
 

@@ -349,18 +349,10 @@ def get_tag_hunters(server_id, tag):
     tag_data_out.close()
 
     if tag not in list(tag_data[server_id].keys()):
-        return "> That tag doesn't exist"
+        return None
 
     hunters = tag_data[server_id][tag]
-    hunter_pings = ""
-    number_of_hunters = len(hunters)
-
-    for i in range(0, number_of_hunters):
-        hunter_pings = hunter_pings + "<@{user}>".format(user=str(hunters[i]))
-        if i <= number_of_hunters - 2:
-            hunter_pings += " | "
-
-    return "> Pinging users assigned to `{tag}` tag \n {users}".format(tag=tag.capitalize(), users=hunter_pings)
+    return hunters
 
 
 # Register Battle log
