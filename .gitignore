@@ -12,6 +12,9 @@ pip-selfcheck.json
 
 codes.txt
 
+#Pycharm
+.idea/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

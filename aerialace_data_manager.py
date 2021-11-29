@@ -25,13 +25,13 @@ async def get_data_files(client):
 		print("Unable to send message to admins.")
 
 
-#register server in the database
+# register server in the database
 async def register_guild(client, guild):
 	
 	server_id = str(guild.id)
 	server_name = str(guild.name)
 
-	#Load the data form the files
+	# Load the data form the files
 	fav_data_out = open(global_vars.FAV_FILE_LOCATION, "r")
 	fav_data = json.loads(fav_data_out.read())
 	fav_data_out.close()

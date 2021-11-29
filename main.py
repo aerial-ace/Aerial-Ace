@@ -1,9 +1,5 @@
-from logging import PlaceHolder, info
 import discord
 import os
-
-from discord import user
-from discord import emoji
 import aerialace
 import aerialace_data_manager
 
@@ -20,18 +16,15 @@ server_id = None
 admin_user_id = os.environ['ADMIN_ID']
 
 
-# events
 @client.event
-async def on_guild_join(guild):
-
-    await aerialace_data_manager.register_guild(client, guild)
+async def on_guild_join(guild_joined):
+    await aerialace_data_manager.register_guild(client, guild_joined)
     print("server was joined and registered")
 
 
 @client.event
-async def on_guild_remove(guild):
-
-    await aerialace_data_manager.remove_guild(client, guild)
+async def on_guild_remove(guild_removed):
+    await aerialace_data_manager.remove_guild(client, guild_removed)
     print("server was removed")
 
 
@@ -42,13 +35,12 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-
     if message.author == client.user:
         return
 
     # get the server details
     global guild, server_id
-    if guild == None:
+    if guild is not None:
         guild = message.guild
         server_id = str(guild.id)
 
@@ -67,14 +59,13 @@ async def on_message(message):
         return
 
     # say hello command
-    if msg.startswith("-aa hello") or msg.startswith("-aa alola") or msg.startswith("-aa hola") or msg.startswith("-aa henlu") or msg.startswith("-aa hi"):
+    hello_commands = ["hello", "alola", "hola", "henlu", "helu", "hi", "sup"]
+    if msg.startswith(i.replace("-aa", "").strip() for i in hello_commands):
         await message.channel.send("> Alola **{name}**".format(name=user_nick))
         return
 
     # rolling command
     if msg.startswith("-aa roll"):
-
-        max_roll = 100
 
         try:
             max_roll_str = aerialace.get_parameter(msg, "-aa roll")
@@ -82,12 +73,12 @@ async def on_message(message):
             if max_roll_str == "":
                 max_roll = 100
             elif int(max_roll_str) < 0:
-                raise Exception()
+                raise ValueError()
             else:
                 max_roll = int(max_roll_str)
-        except:
-            await message.channel.send(
-                "Enter a valid upper index! Like this : ```-aa roll 100```")
+        except TypeError or ValueError as e:
+            await message.channel.send("Enter a valid upper index! Like this : ```-aa roll 100```")
+            print(e)
             return
 
         roll = aerialace.roll(max_roll)
@@ -97,21 +88,19 @@ async def on_message(message):
                 name=user_nick, roll=roll))
         return
 
-    # Random Pokemone command
+    # Random Pokemon command
     if (msg.startswith("-aa rp")) or msg.startswith("-aa rand_poke"):
 
         try:
             rand_poke = aerialace.get_random_poke()
-        except Exception as excp:
+        except Exception as e:
             await message.channel.send(
-                "> Some error occured while fetching random pokemon, the details have been send to the appropriate peeps"
+                "> Some error occurred while fetching random pokemon, errors were registered"
             )
-            print("--Error while fetching random pokemon : {e}".format(e=excp))
+            print("--Error while fetching random pokemon : {exception}".format(exception=e))
             return
 
-        reply = aerialace.get_random_pokemon_embed(discord.Embed(), rand_poke,
-                                                   discord.Color.blue(),
-                                                   server_id, user_id)
+        reply = aerialace.get_random_pokemon_embed(discord.Embed(), rand_poke, discord.Color.blue(), server_id, user_id)
 
         await message.channel.send(embed=reply)
         return
@@ -120,20 +109,17 @@ async def on_message(message):
     if msg.startswith("-aa dex ") or msg.startswith("-aa d "):
 
         param = aerialace.get_parameter(msg, ["-aa dex", "-aa d"])
-        pokeData = None
 
         try:
-            pokeData = aerialace.get_poke_by_id(param)
-        except Exception as excp:
+            poke_data = aerialace.get_poke_by_id(param)
+        except Exception as e:
             await message.channel.send(
-                "> Mhan, that pokemon was not found in the pokedex, if you think this pokemon should be there in the dex, dm DevGa.me#0176"
+                "> Mhan, that pokemon was not found in the pokedex, if this is not desirable, dm DevGa.me#0176"
             )
-            print("--Error occured while showing a dex entry : {e}".format(
-                e=excp))
+            print("--Error occurred while showing a dex entry : {e}".format(e=e))
             return
 
-        reply = aerialace.get_dex_entry_embed(discord.Embed(), pokeData,
-                                              discord.Color.blue())
+        reply = aerialace.get_dex_entry_embed(discord.Embed(), poke_data, discord.Color.blue())
 
         await message.channel.send(embed=reply)
         return
@@ -186,7 +172,7 @@ async def on_message(message):
 
         return
 
-    # register shiny commnad
+    # register shiny command
     if msg.startswith("-aa tag "):
         tag = aerialace.get_parameter(msg, ["-aa tag"])
         reply = aerialace_data_manager.register_tag(server_id, user_id,
@@ -196,7 +182,7 @@ async def on_message(message):
 
         return
 
-    #ping user with tag command
+    # ping user with tag command
     if msg.startswith("-aa tag_ping ") or msg.startswith("-aa tp "):
         tag = aerialace.get_parameter(msg, ["-aa tp", "-aa tag_ping"])
         reply = aerialace_data_manager.get_tag_hunters(server_id, tag)
@@ -205,13 +191,12 @@ async def on_message(message):
 
         return
 
-    #logs the battle and update the leaderboard
+    # logs the battle and update the leaderboard
     if msg.startswith("-aa log_battle ") or msg.startswith("-aa lb "):
-        players = aerialace.get_winner_looser(msg)     
+        players = aerialace.get_winner_looser(msg)
 
         info = await aerialace.get_battle_acceptance(client, message, players[0], players[1])
 
-        reply = ""
         if info == "accepted":
             reply = aerialace_data_manager.register_battle_log(server_id, players[0], players[1])
         elif info == "not accepted":
@@ -221,9 +206,9 @@ async def on_message(message):
 
         await message.channel.send(reply)
 
-        return 
+        return
 
-    #Display the battle score of the user
+        # Display the battle score of the user
     if msg.startswith("-aa battle_score") or msg.startswith("-aa bs"):
         score = aerialace_data_manager.get_battle_score(server_id, member)
 
