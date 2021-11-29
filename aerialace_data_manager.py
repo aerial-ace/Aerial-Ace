@@ -233,12 +233,12 @@ async def get_moveset_embed(embd, poke, color):
         return embd
     else:
         embd.title = "That pokemon was not found in the database"
-        embd.description = "> If the name is correct then"
+        embd.description = "> If the name is correct then \n"
         embd.description += "> PROBABLY this pokemon is not good for battling"
         return embd
 
 
-# return tierlists
+# return tierlist
 def get_tl(list_name):
     if list_name == "rare":
         return global_vars.RARE_TL
