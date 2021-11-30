@@ -13,7 +13,6 @@ client = discord.Client(intents=intents)
 
 admin_user_id = os.environ['ADMIN_ID']
 
-
 @client.event
 async def on_guild_join(guild_joined):
     await aerialace_data_manager.register_guild(client, guild_joined)
@@ -29,6 +28,7 @@ async def on_guild_remove(guild_removed):
 @client.event
 async def on_ready():
     print("Logged in as {0.user}".format(client))
+    await aerialace_data_manager.cache_data()
     await aerialace.start_rich_presence_cycle(client, 15)
 
 
@@ -127,7 +127,7 @@ async def on_message(message):
     if msg.startswith("set_fav ") or msg.startswith("sf "):
         param = aerialace.get_parameter(msg, ["set_fav", "sf"])
 
-        reply = aerialace_data_manager.set_fav(server_id, user_id, param)
+        reply = await aerialace_data_manager.set_fav(server_id, user_id, param)
         await message.channel.send(reply)
         return
 
@@ -171,7 +171,7 @@ async def on_message(message):
     # register shiny command
     if msg.startswith("tag "):
         tag = aerialace.get_parameter(msg, ["tag"])
-        reply = aerialace_data_manager.register_tag(server_id, user_id, user_nick, tag)
+        reply = await aerialace_data_manager.register_tag(server_id, user_id, user_nick, tag)
 
         await message.channel.send(reply)
 
@@ -224,7 +224,7 @@ async def on_message(message):
         info = await aerialace.get_battle_acceptance(client, message, players[0], players[1])
 
         if info == "accepted":
-            reply = aerialace_data_manager.register_battle_log(server_id, players[0], players[1])
+            reply = await aerialace_data_manager.register_battle_log(server_id, players[0], players[1])
         elif info == "notaccepted":
             reply = "> Battle Log was not accepted"
         else:

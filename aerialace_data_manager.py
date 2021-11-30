@@ -4,6 +4,13 @@ import global_vars
 import os
 from collections import OrderedDict
 
+# data containers
+cached_stats_data = {}
+cached_moveset_data = {}
+cached_tag_data = {}
+cached_fav_data = {}
+cached_battle_data = {}
+
 # return data files
 async def get_data_files(client):
     stats_file = discord.File(global_vars.STATS_FILE_LOCATION)
@@ -23,6 +30,53 @@ async def get_data_files(client):
     except discord.Forbidden:
         print("Unable to send message to admins.")
 
+# caches the data that remains unchanged
+async def cache_data():
+    global cached_stats_data, cached_moveset_data, cached_tag_data, cached_fav_data, cached_battle_data
+
+    cached_stats_data = get_all_stats()
+    cached_moveset_data = get_all_moveset()
+    cached_tag_data = get_all_tags()
+    cached_fav_data = get_all_favs()
+    cached_battle_data = get_all_battles()
+
+# returns all the stats from stats file
+def get_all_stats():
+    stats_file = open(global_vars.STATS_FILE_LOCATION, "r")
+    stats_data_raw = stats_file.read()
+    stats_data = json.loads(stats_data_raw)
+
+    return stats_data
+
+# return all the moveset from the moveset file
+def get_all_moveset():
+    ms_file = open(global_vars.MOVESET_FILE_LOCATION, "r")
+    ms_data_raw = ms_file.read()
+    ms_data = json.loads(ms_data_raw)
+
+    return ms_data
+
+# return all tags from the tag file
+def get_all_tags():
+    tag_file = open(global_vars.TAG_FILE_LOCATION, "r")
+    tag_data_raw = tag_file.read()
+    tag_data = json.loads(tag_data_raw)
+
+    return tag_data
+
+# return all the battles from the battle file
+def get_all_battles():
+    battle_file = open(global_vars.BATTLE_LOG_FILE_LOCATION, "r")
+    battle_data = json.loads(battle_file.read())
+
+    return battle_data
+
+# returns all the favs from the fav file
+def get_all_favs():
+    fav_file = open(global_vars.FAV_FILE_LOCATION, "r")
+    fav_file_data = json.loads(fav_file.read())
+
+    return fav_file_data
 
 # register server in the database
 async def register_guild(client, guild):
@@ -156,7 +210,7 @@ async def remove_guild(client, guild):
 
 
 # Set the favourite pokemon of the user
-def set_fav(server_id, user_id, poke_name):
+async def set_fav(server_id, user_id, poke_name):
     if poke_name == "":
         return "> Breh, give a pokemon name as a parameter like ```-aa set_fav espurr```"
 
@@ -174,40 +228,40 @@ def set_fav(server_id, user_id, poke_name):
     fav_data_in.write(json_obj)
     fav_data_in.close()
 
+    # update the cached data
+    await cache_data()
+
     return "> Your favourite pokemon is now **{fav}**. Check it using ```-aa fav```".format(fav=poke_name)
 
 
 # Get the favourite pokemon of the user
 def get_fav(server_id, user_id):
-    fav_data_raw = open(global_vars.FAV_FILE_LOCATION, "r").read()  # string data from the json file
-    fav_data = json.loads(fav_data_raw)  # dictionary data from the json file
+    global cached_fav_data
 
-    server_list = list(fav_data.keys())  # all the registered servers
+    server_list = list(cached_fav_data.keys())  # all the registered servers
 
     if server_id in server_list:
-        users = list(fav_data[server_id].keys())
+        users = list(cached_fav_data[server_id].keys())
         if user_id in users:
-            fav_poke = fav_data[server_id][user_id]
+            fav_poke = cached_fav_data[server_id][user_id]
             return "> Your favourite pokemon is **{}**".format(fav_poke.capitalize())
         else:
             return "> User was not found in the database, set you favourite using ```-aa set_fav <pokemon>```"
     else:
-        return "> Server was not found!"
+        return "> Server was not found! Dm DevGa.me#0176 smh"
 
 
 # get duelish stats
 def get_stats_embed(embd, pokemon, color):
-    stats_file = open(global_vars.STATS_FILE_LOCATION, "r")
-    stats_data_raw = stats_file.read()
-    stats_data = json.loads(stats_data_raw)
+    global cached_stats_data
 
-    pokemons = list(stats_data.keys())
+    pokemons = list(cached_stats_data.keys())
     embd.color = color
 
     if pokemon in pokemons:
         embd.title = "{poke}'s Stats".format(poke=pokemon.capitalize())
         embd.description = "HP, Defense, Sp.Defense and Speed are `The more the better` stats \n"
-        embd.add_field(name="Stats", value="{stats}".format(stats=stats_data[pokemon]), inline=False)
+        embd.add_field(name="Stats", value="{stats}".format(stats=cached_stats_data[pokemon]), inline=False)
 
         return embd
 
@@ -220,16 +274,14 @@ def get_stats_embed(embd, pokemon, color):
 
 # get moveset
 async def get_moveset_embed(embd, poke, color):
-    moveset_file = open(global_vars.MOVESET_FILE_LOCATION, "r")
-    moveset_data = json.loads(moveset_file.read())
-    moveset_file.close()
+    global cached_moveset_data
 
-    pokemons = list(moveset_data.keys())
+    pokemons = list(cached_moveset_data.keys())
     embd.color = color
 
     if poke in pokemons:
         embd.title = "{poke}'s moveset".format(poke=poke.capitalize())
-        embd.description = "{ms}".format(ms=moveset_data[poke])
+        embd.description = "{ms}".format(ms=cached_moveset_data[poke])
         return embd
     else:
         embd.title = "That pokemon was not found in the database"
@@ -281,7 +333,7 @@ def get_tl(list_name):
 
 
 # register shiny tags
-def register_tag(server_id, user_id, user_nick, tag):
+async def register_tag(server_id, user_id, user_nick, tag):
     if tag == "":
         return "> Give a valid tag name like ```-aa tag espurr```"
 
@@ -330,6 +382,9 @@ def register_tag(server_id, user_id, user_nick, tag):
     tag_data_in.write(json_obj)
     tag_data_in.close()
 
+    # cache the updated files
+    await cache_data()
+
     if value_index == -1:
         return "> {user} was assigned to `{tag}` tag".format(user=user_nick, tag=tag.capitalize())
 
@@ -343,25 +398,23 @@ def register_tag(server_id, user_id, user_nick, tag):
 
 # Get shiny tags
 def get_tag_hunters(server_id, tag):
-    # Get data from the file
-    tag_data_out = open(global_vars.TAG_FILE_LOCATION, "r")
-    tag_data = json.loads(tag_data_out.read())
-    tag_data_out.close()
+    global cached_tag_data
 
-    if tag not in list(tag_data[server_id].keys()):
+    if tag not in list(cached_tag_data[server_id].keys()):
         return None
 
-    hunters = tag_data[server_id][tag]
+    hunters = cached_tag_data[server_id][tag]
     return hunters
 
 
 # Register Battle log
-def register_battle_log(server_id, winner, loser):
+async def register_battle_log(server_id, winner, loser):
+    # open the battle file
     battle_file_out = open(global_vars.BATTLE_LOG_FILE_LOCATION, "r")
     battle_data = json.loads(battle_file_out.read())
     battle_file_out.close()
 
-    # {"user_id" : "wins"}
+    # get data from the battle file as {"user_id" : "wins"}
     battle_records = battle_data[str(server_id)]
     users = list(battle_records.keys())
 
@@ -381,39 +434,39 @@ def register_battle_log(server_id, winner, loser):
     battle_file_in.write(json_obj)
     battle_file_in.close()
 
+    # cache the data
+    await cache_data()
+
     return "> <@{0}> won over <@{1}>. Scoreboard was updated".format(winner, loser)
 
 
 # return the battle score of the user
 def get_battle_score(server_id, user):
-    battle_file_out = open(global_vars.BATTLE_LOG_FILE_LOCATION, "r")
-    battle_data = json.loads(battle_file_out.read())
-    battle_file_out.close()
+    global cached_battle_data
 
     user_id = str(user.id)
 
-    if server_id not in list(battle_data.keys()):
+    if server_id not in list(cached_battle_data.keys()):
         return "> Server was not found in database, dm your server id to DevGa.me#0176 please"
 
-    users = battle_data[server_id]
+    users = cached_battle_data[server_id]
 
     if user_id in users:
-        score = battle_data[server_id][user_id]
+        score = cached_battle_data[server_id][user_id]
         return "> {user} has a battle score of **{score}**".format(user=user.name, score=score)
     else:
         return "> Register some battles first -_-"
 
+
 # returns the battle leaderboard of the server
 async def get_battle_leaderboard_embed(client, guild):
-    battle_file_out = open(global_vars.BATTLE_LOG_FILE_LOCATION, "r")
-    battle_data = json.loads(battle_file_out.read())
-    battle_file_out.close()
+    global cached_battle_data
 
     server_id = str(guild.id)
     server_name = guild.name
 
     # {"user" : "wins"}
-    battle_records = battle_data[server_id]
+    battle_records = cached_battle_data[server_id]
 
     sorted_battle_records = OrderedDict(sorted(battle_records.items(), key=lambda x: int(x[1]), reverse=True))
 
