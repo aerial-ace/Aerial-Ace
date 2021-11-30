@@ -1,7 +1,11 @@
 import discord
 import os
-import aerialace
-import aerialace_data_manager
+
+from bot import aerialace
+from bot import aerialace_data_manager
+from bot import aerialace_init_manager
+from bot import aerialace_cache_manager
+from bot import aerialace_battle_manager
 
 # Intents
 intents = discord.Intents.all()
@@ -15,20 +19,20 @@ admin_user_id = os.environ['ADMIN_ID']
 
 @client.event
 async def on_guild_join(guild_joined):
-    await aerialace_data_manager.register_guild(client, guild_joined)
+    await aerialace_init_manager.register_guild(client, guild_joined)
     print("server was joined and registered")
 
 
 @client.event
 async def on_guild_remove(guild_removed):
-    await aerialace_data_manager.remove_guild(client, guild_removed)
+    await aerialace_init_manager.remove_guild(client, guild_removed)
     print("server was removed")
 
 
 @client.event
 async def on_ready():
     print("Logged in as {0.user}".format(client))
-    await aerialace_data_manager.cache_data()
+    await aerialace_cache_manager.cache_data()
     await aerialace.start_rich_presence_cycle(client, 15)
 
 
@@ -224,7 +228,7 @@ async def on_message(message):
         info = await aerialace.get_battle_acceptance(client, message, players[0], players[1])
 
         if info == "accepted":
-            reply = await aerialace_data_manager.register_battle_log(server_id, players[0], players[1])
+            reply = await aerialace_battle_manager.register_battle_log(server_id, players[0], players[1])
         elif info == "notaccepted":
             reply = "> Battle Log was not accepted"
         else:
@@ -237,14 +241,14 @@ async def on_message(message):
     # Display the battle score of the user
     if msg.startswith("battle_score") or msg.startswith("bs"):
 
-        score = aerialace_data_manager.get_battle_score(server_id, member)
+        score = aerialace_battle_manager.get_battle_score(server_id, member)
 
         await message.channel.send(score)
 
         return
 
     if msg.startswith("battle_lb") or msg.startswith("blb"):
-        reply = await aerialace_data_manager.get_battle_leaderboard_embed(client, guild)
+        reply = await aerialace_battle_manager.get_battle_leaderboard_embed(client, guild)
         await message.channel.send(embed=reply)
         return
 
@@ -252,7 +256,7 @@ async def on_message(message):
     # returns the json files of the data
     if msg.startswith("fetch_data_files") or msg.startswith("fdf"):
         if user_id == admin_user_id:
-            await aerialace_data_manager.get_data_files(client)
+            await aerialace_data_manager.send_data_files(client)
 
         await message.channel.send("> Data files were sent to admins :}")
 

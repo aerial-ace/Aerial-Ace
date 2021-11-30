@@ -4,8 +4,9 @@ import discord
 import requests
 import json
 from textwrap import TextWrapper
-import global_vars
-import aerialace_data_manager
+
+from bot import global_vars
+from bot import aerialace_data_manager
 
 
 class PokeData:
