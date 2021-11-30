@@ -304,6 +304,7 @@ def get_dex_entry_embed(embd, poke_data, color):
 
     embd.description = description
     embd.set_image(url=poke_data.image_link)
+
     footer_text = "Some pokemon are not searchable by their common names due to the limitation in the api used! Their ids work though."
     embd.set_footer(text=wrap_text(max_character_width, footer_text))
 
