@@ -28,7 +28,7 @@ async def on_guild_remove(guild_removed):
 
 @client.event
 async def on_ready():
-    await aerialace.set_rich_presence(client)
+    await aerialace.start_rich_presence_cycle(client, 15)
     print("Logged in as {0.user}".format(client))
 
 
@@ -182,18 +182,19 @@ async def on_message(message):
     if msg.startswith("tag_ping ") or msg.startswith("tp "):
         tag = aerialace.get_parameter(msg, ["tp", "tag_ping"])
         hunters = aerialace_data_manager.get_tag_hunters(server_id, tag)
+
         if hunters is None:
             reply = "> That tag doesn't exist"
+        else:
+            hunter_pings = ""
+            number_of_hunters = len(hunters)
 
-        hunter_pings = ""
-        number_of_hunters = len(hunters)
+            for i in range(0, number_of_hunters):
+                hunter_pings = hunter_pings + "<@{user}>".format(user=str(hunters[i]))
+                if i <= number_of_hunters - 2:
+                    hunter_pings += " | "
 
-        for i in range(0, number_of_hunters):
-            hunter_pings = hunter_pings + "<@{user}>".format(user=str(hunters[i]))
-            if i <= number_of_hunters - 2:
-                hunter_pings += " | "
-
-        reply = "> Pinging users assigned to `{tag}` tag \n\n {users}".format(tag=tag.capitalize(), users=hunter_pings)
+            reply = "> Pinging users assigned to `{tag}` tag \n\n {users}".format(tag=tag.capitalize(), users=hunter_pings)
 
         await message.channel.send(reply)
 

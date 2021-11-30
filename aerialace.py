@@ -1,5 +1,5 @@
+import asyncio
 import random
-
 import discord
 import requests
 import json
@@ -21,6 +21,12 @@ class PokeData:
     p_info = ""
     p_stats = {}
 
+# starts the rich presence cycle
+async def start_rich_presence_cycle(client, repeat_time):
+    await set_rich_presence(client)
+    while True:
+        await asyncio.sleep(repeat_time)
+        await set_rich_presence(client)
 
 # set rich presence
 async def set_rich_presence(client):
