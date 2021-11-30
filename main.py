@@ -38,10 +38,10 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.lower().startswith("-aa") is False and message.content != "<@!908384747393286174>":
+    if message.content.lower().startswith("-aa") is False and (message.content != "<@!908384747393286174>" and message.content != "<@908384747393286174>"):
         return
 
-    if message.content == "<@!908384747393286174>":
+    if message.content == "<@!908384747393286174>" or message.content == "<@908384747393286174>":
         await message.channel.send("> Aerial Ace prefix is `-aa`.\n> Try `-aa help` :3")
         return
 
