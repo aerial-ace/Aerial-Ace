@@ -83,7 +83,7 @@ async def on_message(message):
                 raise ValueError()
             else:
                 max_roll = int(max_roll_str)
-        except TypeError or ValueError as e:
+        except Exception as e:
             await message.channel.send("Enter a valid upper index! Like this : ```-aa roll 100```")
             print(e)
             return

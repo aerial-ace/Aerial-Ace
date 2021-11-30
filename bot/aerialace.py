@@ -21,6 +21,7 @@ class PokeData:
     image_link = ""
     p_info = ""
     p_stats = {}
+    p_evolution_chain = ""
 
 # starts the rich presence cycle
 async def start_rich_presence_cycle(client, repeat_time):
@@ -121,7 +122,6 @@ def get_help_embed(embd, color):
 
     return embd
 
-
 # for getting a pokemon of desired index
 def get_poke_by_id(poke_id):
 
@@ -130,17 +130,14 @@ def get_poke_by_id(poke_id):
     general_response = requests.get("https://pokeapi.co/api/v2/pokemon/{0}".format(poke_id))
     data = json.loads(general_response.text)
 
-    species_response = requests.get(
-        "https://pokeapi.co/api/v2/pokemon-species/{0}/".format(poke_id)
-    )
+    species_response = requests.get("https://pokeapi.co/api/v2/pokemon-species/{0}/".format(poke_id))
     species_data = json.loads(species_response.text)
 
-    generation_response = requests.get(
-        "https://pokeapi.co/api/v2/generation/{name}/".format(
-            name=species_data["generation"]["name"]
-        )
-    )
+    generation_response = requests.get("https://pokeapi.co/api/v2/generation/{name}/".format(name=species_data["generation"]["name"]))
     generation_data = json.loads(generation_response.text)
+
+    evolution_response = requests.get(species_data["evolution_chain"]["url"])
+    evolution_data = json.loads(evolution_response.text)
 
     poke.p_id = data["id"]
 
@@ -173,7 +170,6 @@ def get_poke_by_id(poke_id):
     # get info
     all_info = species_data["flavor_text_entries"]
     poke.p_info = "*NULL*"
-
     for i in all_info:
         if i["language"]["name"] == "en":
             poke.p_info = i["flavor_text"]
@@ -184,14 +180,30 @@ def get_poke_by_id(poke_id):
 
     # get stats
     stats = data["stats"]
-
     for i in range(0, len(stats)):
         stat_name = stats[i]["stat"]["name"]
         stat_value = stats[i]["base_stat"]
         poke.p_stats[stat_name] = stat_value
 
-    return poke
+    # get evolution chain
+    evolution_chain = []
+    chain_data = evolution_data["chain"]
+    while chain_data != "":
+        evolution_chain.append(chain_data["species"]["name"])
+        try:
+            chain_data = chain_data["evolves_to"][0]
+        except Exception as e:
+            break
 
+    for i in range(0, len(evolution_chain)):
+        poke.p_evolution_chain += evolution_chain[i].capitalize()
+
+        if i > len(evolution_chain) - 2:
+            break
+        else:
+            poke.p_evolution_chain += "\n"
+
+    return poke
 
 # for getting a random pokemon
 def get_random_poke():
@@ -201,7 +213,6 @@ def get_random_poke():
     poke = get_poke_by_id(rand_pokemon_id)
 
     return poke
-
 
 # for wraping text
 def wrap_text(width, text):
@@ -213,12 +224,10 @@ def wrap_text(width, text):
 
     return wrapped_text
 
-
 # rolling
 def roll(upper_limit):
     roll_value = random.randint(0, upper_limit)
     return roll_value
-
 
 # get parameter from the message
 def get_parameter(msg, removable_command):
@@ -228,7 +237,6 @@ def get_parameter(msg, removable_command):
 
     return param
 
-
 # returns the winner and loser
 def get_winner_looser(msg):
     param = get_parameter(msg, ["log_battle", "lb"])
@@ -237,7 +245,6 @@ def get_winner_looser(msg):
     winner, loser = get_id_from_ping(winner), get_id_from_ping(loser)
 
     return [winner, loser]
-
 
 # returns user id from ping
 def get_id_from_ping(ping):
@@ -267,7 +274,6 @@ def get_random_pokemon_embed(embd, poke_data, color, server_id, user_id):
             embd.set_footer(text="This pokemon is your favourite")
 
     return embd
-
 
 # get Dex entry embed
 def get_dex_entry_embed(embd, poke_data, color):
@@ -306,20 +312,18 @@ def get_dex_entry_embed(embd, poke_data, color):
     )
     embd.add_field(
         name="Evolution",
-        value="Base State \n Evolved Form",
+        value="{evolution_chain}".format(evolution_chain=poke_data.p_evolution_chain),
         inline=True
     )
 
-    stats_string = "**HP** : {hp} | **ATK** : {atk} | **DEF** : {df} \n".format(
-        hp=poke_data.p_stats["hp"],
-        atk=poke_data.p_stats["attack"],
-        df=poke_data.p_stats["defense"],
-    )
-    stats_string += "**SPAT** : {spat} | **SPDF** : {spdf} | **SPD** : {spd}".format(
-        spat=poke_data.p_stats["special-attack"],
-        spdf=poke_data.p_stats["special-defense"],
-        spd=poke_data.p_stats["speed"],
-    )
+    stats_string = "```"
+    stats_string += "HP  : {hp}".format(hp=poke_data.p_stats["hp"]).ljust(11, " ") + "| " + "Sp.Atk : {spat}".format(spat=poke_data.p_stats["special-attack"]).ljust(13, " ")
+    stats_string += "\n"
+    stats_string += "Atk : {atk}".format(atk=poke_data.p_stats["attack"]).ljust(11, " ") + "| " + "Sp.Def : {spdf}".format(spdf=poke_data.p_stats["special-defense"]).ljust(13, " ")
+    stats_string += "\n"
+    stats_string += "Def : {df}".format(df=poke_data.p_stats["defense"]).ljust(11, " ") + "| " + "Speed  : {spd}".format(spd=poke_data.p_stats["speed"]).ljust(13, " ")
+    stats_string += "```"
+
     embd.add_field(name="Stats", value=stats_string, inline=False)
 
     embd.description = description
@@ -329,7 +333,6 @@ def get_dex_entry_embed(embd, poke_data, color):
     embd.set_footer(text=wrap_text(max_character_width, footer_text))
 
     return embd
-
 
 # get invite embed
 def get_invite_embed(embd, color):
@@ -342,7 +345,6 @@ def get_invite_embed(embd, color):
     embd.color = color
 
     return embd
-
 
 # get battle acceptance
 async def get_battle_acceptance(client, message, winner, loser):
