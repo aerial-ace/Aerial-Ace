@@ -270,10 +270,12 @@ def get_random_pokemon_embed(embd, poke_data, color, server_id, user_id):
 
 # get Dex entry embed
 def get_dex_entry_embed(embd, poke_data, color):
+    max_character_width = 40
+
     embd.color = color
     embd.title = "**{0} : {1}**".format(poke_data.p_id, poke_data.p_name)
 
-    description = wrap_text(40, poke_data.p_info)
+    description = wrap_text(max_character_width, poke_data.p_info)
     description += "\n"
 
     embd.add_field(
@@ -302,6 +304,8 @@ def get_dex_entry_embed(embd, poke_data, color):
 
     embd.description = description
     embd.set_image(url=poke_data.image_link)
+    footer_text = "Some pokemon are not searchable by their common names due to the limitation in the api used! Their ids work though."
+    embd.set_footer(text=wrap_text(max_character_width, footer_text))
 
     return embd
 
