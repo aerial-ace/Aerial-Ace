@@ -279,15 +279,34 @@ def get_dex_entry_embed(embd, poke_data, color):
     description += "\n"
 
     embd.add_field(
-        name="Height", value="{h} m".format(h=poke_data.p_height), inline=True
+        name="Height",
+        value="{h} m".format(h=poke_data.p_height),
+        inline=True
     )
     embd.add_field(
-        name="Weight", value="{w} kg".format(w=poke_data.p_weight), inline=True
+        name="Weight",
+        value="{w} kg".format(w=poke_data.p_weight),
+        inline=True
     )
-    embd.add_field(name="Region", value="{r}".format(r=poke_data.p_region), inline=True)
-    embd.add_field(name="Type(s)", value="{t}".format(t=poke_data.p_types), inline=True)
     embd.add_field(
-        name="Ability(s)", value="{a}".format(a=poke_data.p_abilities), inline=True
+        name="Region",
+        value="{r}".format(r=poke_data.p_region),
+        inline=True
+    )
+    embd.add_field(
+        name="Type(s)",
+        value="{t}".format(t=poke_data.p_types),
+        inline=True
+    )
+    embd.add_field(
+        name="Ability(s)",
+        value="{a}".format(a=poke_data.p_abilities),
+        inline=True
+    )
+    embd.add_field(
+        name="Evolution",
+        value="Base State \n Evolved Form",
+        inline=True
     )
 
     stats_string = "**HP** : {hp} | **ATK** : {atk} | **DEF** : {df} \n".format(
