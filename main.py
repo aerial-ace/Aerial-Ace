@@ -108,9 +108,8 @@ async def on_message(message):
         return
 
     # Dex search command
-    if msg.startswith("dex ") or msg.startswith("d "):
-
-        param = aerialace.get_parameter(msg, ["dex", "d"])
+    if msg.startswith("dex "):
+        param = aerialace.get_parameter(msg, ["dex"])
 
         try:
             poke_data = aerialace.get_poke_by_id(param)
