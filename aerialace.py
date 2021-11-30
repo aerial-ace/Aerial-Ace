@@ -152,24 +152,22 @@ def get_poke_by_id(poke_id):
 
     # get types
     types = data["types"]
-
     for i in range(0, len(types)):
         poke.p_types += types[i]["type"]["name"].capitalize()
 
         if i != len(types) - 1:
-            poke.p_types += " | "
+            poke.p_types += "\n"
 
     # get_region
     poke.p_region = generation_data["main_region"]["name"].capitalize()
 
     # get abilities
     abilities = data["abilities"]
-
     for i in range(0, len(abilities)):
         poke.p_abilities += abilities[i]["ability"]["name"].capitalize()
 
         if i != len(abilities) - 1:
-            poke.p_abilities += " | "
+            poke.p_abilities += "\n"
 
     # get info
     all_info = species_data["flavor_text_entries"]
@@ -275,7 +273,7 @@ def get_dex_entry_embed(embd, poke_data, color):
     embd.color = color
     embd.title = "**{0} : {1}**".format(poke_data.p_id, poke_data.p_name)
 
-    description = wrap_text(50, poke_data.p_info)
+    description = wrap_text(40, poke_data.p_info)
     description += "\n"
 
     embd.add_field(
