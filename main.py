@@ -28,6 +28,7 @@ async def on_guild_remove(guild_removed):
 
 @client.event
 async def on_ready():
+    await aerialace.set_rich_presence(client)
     print("Logged in as {0.user}".format(client))
 
 

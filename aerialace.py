@@ -1,4 +1,6 @@
 import random
+
+import discord
 import requests
 import json
 from textwrap import TextWrapper
@@ -19,6 +21,20 @@ class PokeData:
     p_info = ""
     p_stats = {}
 
+
+# set rich presence
+async def set_rich_presence(client):
+    rand = random.randint(1, 3)
+    status = discord.Status.online
+    if rand == 1:
+        playing_game = discord.Game(name="DevGa.me's shitty games")
+        await client.change_presence(activity=playing_game, status=status)
+    elif rand == 2:
+        watching_prefix = discord.Activity(name="prefix : -aa", type=3)
+        await client.change_presence(activity=watching_prefix, status=status)
+    else:
+        listening_prefix = discord.Activity(name="-aa help", type=3)
+        await client.change_presence(activity=listening_prefix, status=status)
 
 # for getting the help embed
 def get_help_embed(embd, color):
