@@ -35,7 +35,14 @@ async def on_ready():
 @client.event
 async def on_message(message):
 
-    if message.author == client.user or message.content.lower().startswith("-aa") is False:
+    if message.author == client.user:
+        return
+
+    if message.content.lower().startswith("-aa") is False and message.content != "<@!908384747393286174>":
+        return
+
+    if message.content == "<@!908384747393286174>":
+        await message.channel.send("> Aerial Ace prefix is `-aa`.\n> Try `-aa help` :3")
         return
 
     guild = message.guild
@@ -108,9 +115,7 @@ async def on_message(message):
         try:
             poke_data = aerialace.get_poke_by_id(param)
         except Exception as e:
-            await message.channel.send(
-                "> Mhan, that pokemon was not found in the pokedex, if this is not desirable, dm DevGa.me#0176"
-            )
+            await message.channel.send("> Mhan, that pokemon was not found in the pokedex")
             print("--Error occurred while showing a dex entry : {e}".format(e=e))
             return
 
@@ -254,10 +259,8 @@ async def on_message(message):
         return
 
     # command not found
-    if msg.startswith("-aa "):
-        await message.channel.send(
-            "> -aa what? That command doesn't exist! \n> See all the available commands by using ```-aa help```")
-
+    await message.channel.send("> -aa what? That command doesn't exist! \n"
+                               "> See all the available commands by using ```-aa help```")
 
 token = os.environ['TOKEN']
 
