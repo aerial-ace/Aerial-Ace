@@ -33,7 +33,7 @@ async def set_rich_presence(client):
     rand = random.randint(1, 3)
     status = discord.Status.online
     if rand == 1:
-        playing_game = discord.Game(name="DevGa.me's shitty games")
+        playing_game = discord.Game(name="Dev's shitty games")
         await client.change_presence(activity=playing_game, status=status)
     elif rand == 2:
         watching_prefix = discord.Activity(name="prefix: -aa", type=3)
