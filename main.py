@@ -125,7 +125,7 @@ async def on_message(message):
         return
 
     # Register Favourite Pokemon command
-    if msg.startswith("set_fav ") or msg.startswith("sf "):
+    if msg.startswith("set_fav") or msg.startswith("sf"):
         param = aerialace.get_parameter(msg, ["set_fav", "sf"])
 
         reply = await aerialace_data_manager.set_fav(server_id, user_id, param)
@@ -139,7 +139,7 @@ async def on_message(message):
         return
 
     # get duelish stats command
-    if msg.startswith("stats "):
+    if msg.startswith("stats"):
         param = aerialace.get_parameter(msg, ["stats"])
         reply = aerialace_data_manager.get_stats_embed(discord.Embed(), param, discord.Color.blue())
         await message.channel.send(embed=reply)
@@ -147,7 +147,7 @@ async def on_message(message):
         return
 
     # get duelish stats command
-    if msg.startswith("moveset ") or msg.startswith("ms "):
+    if msg.startswith("moveset") or msg.startswith("ms"):
         poke = aerialace.get_parameter(msg, ["ms", "moveset"])
         reply = await aerialace_data_manager.get_moveset_embed(discord.Embed(), poke, discord.Color.blue())
         await message.channel.send(embed=reply)
@@ -155,7 +155,7 @@ async def on_message(message):
         return
 
     # get tierlist command
-    if msg.startswith("tierlist ") or msg.startswith("tl "):
+    if msg.startswith("tierlist") or msg.startswith("tl"):
         param = aerialace.get_parameter(msg, ["tierlist", "tl"])
         tl_link = aerialace_data_manager.get_tl(param)
         await message.channel.send(content="Source : P2HB \n {link}".format(link=tl_link))
@@ -170,7 +170,7 @@ async def on_message(message):
         return
 
     # register shiny command
-    if msg.startswith("tag "):
+    if msg.startswith("tag"):
         tag = aerialace.get_parameter(msg, ["tag"])
         reply = await aerialace_data_manager.register_tag(server_id, user_id, user_nick, tag)
 
@@ -179,7 +179,7 @@ async def on_message(message):
         return
 
     # ping user with tag command
-    if msg.startswith("tag_ping ") or msg.startswith("tp "):
+    if msg.startswith("tag_ping") or msg.startswith("tp"):
         tag = aerialace.get_parameter(msg, ["tp", "tag_ping"])
         hunters = aerialace_data_manager.get_tag_hunters(server_id, tag)
 

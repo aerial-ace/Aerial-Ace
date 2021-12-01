@@ -3,13 +3,13 @@ import json
 from bot import global_vars
 
 # data containers
-cached_stats_data = {}
-cached_moveset_data = {}
-cached_tag_data = {}
-cached_fav_data = {}
-cached_battle_data = {}
+cached_stats_data = None
+cached_moveset_data = None
+cached_tag_data = None
+cached_fav_data = None
+cached_battle_data = None
 
-# caches the data that remains unchanged
+# caches the data
 async def cache_data():
     global cached_stats_data, cached_moveset_data, cached_tag_data, cached_fav_data, cached_battle_data
 

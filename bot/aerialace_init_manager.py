@@ -3,6 +3,7 @@ import json
 import os
 
 from bot import global_vars
+from bot import aerialace_cache_manager
 
 # register server in the database
 async def register_guild(client, guild):
@@ -58,6 +59,9 @@ async def register_guild(client, guild):
     json_obj = json.dumps(battle_data)
     battle_data_in.write(json_obj)
     battle_data_in.close()
+
+    # cache the new data
+    await aerialace_cache_manager.cache_data()
 
     # Dm the admins on server joins
     admin_id = int(os.environ['ADMIN_ID'])
@@ -122,6 +126,9 @@ async def remove_guild(client, guild):
     json_obj = json.dumps(battle_data)
     battle_data_in.write(json_obj)
     battle_data_in.close()
+
+    # cache the new data
+    await aerialace_cache_manager.cache_data()
 
     # Dm the admins on server removal
     admin_id = int(os.environ['ADMIN_ID'])
