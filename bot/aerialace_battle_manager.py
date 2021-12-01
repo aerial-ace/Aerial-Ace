@@ -79,8 +79,10 @@ async def get_battle_leaderboard_embed(client, guild):
         if pos > max_leaderboard_listings:
             footer = "Some players were not mentioned in the leaderboard because of lower scores.\nSee your score with -aa bs"
             break
-
-        player_name = client.get_user(int(i)).name
+        try:
+            player_name = client.get_user(int(i)).name
+        except:
+            player_name = "Not Found"
         reply_embd.description += "{pos} | {name} | {score} \n".format(pos=" {0}.".format(pos).ljust(5, " "), name=("{0}".format(player_name)).ljust(20, " "), score=("{0}".format(battle_records[i]).ljust(9, " ")))
         pos = pos + 1
 

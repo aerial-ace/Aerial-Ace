@@ -24,7 +24,6 @@ async def send_data_files(client):
     except discord.Forbidden:
         print("Unable to send message to admins.")
 
-
 # Set the favourite pokemon of the user
 async def set_fav(server_id, user_id, poke_name):
     if poke_name == "":
@@ -49,7 +48,6 @@ async def set_fav(server_id, user_id, poke_name):
 
     return "> Your favourite pokemon is now **{fav}**. Check it using ```-aa fav```".format(fav=poke_name)
 
-
 # Get the favourite pokemon of the user
 def get_fav(server_id, user_id):
     cached_fav_data = aerialace_cache_manager.cached_fav_data
@@ -66,9 +64,14 @@ def get_fav(server_id, user_id):
     else:
         return "> Server was not found! Dm DevGa.me#0176 smh"
 
-
 # get duelish stats
 def get_stats_embed(embd, pokemon, color):
+    if pokemon == "":
+        embd.title = "Gib pokemon name as a param when :/"
+        embd.description = "Try this : \n"
+        embd.description += "```-aa stats solgaleo```"
+        return embd
+
     cached_stats_data = aerialace_cache_manager.cached_stats_data
 
     pokemons = list(cached_stats_data.keys())
@@ -87,9 +90,14 @@ def get_stats_embed(embd, pokemon, color):
         embd.description += "> PROBABLY this pokemon is not good for battling"
         return embd
 
-
 # get moveset
 async def get_moveset_embed(embd, poke, color):
+    if poke == "":
+        embd.title = "Gib pokemon name as a param when :/"
+        embd.description = "Try this : \n"
+        embd.description += "```-aa moveset zekrom```"
+        return embd
+
     cached_moveset_data = aerialace_cache_manager.cached_moveset_data
 
     pokemons = list(cached_moveset_data.keys())
@@ -104,7 +112,6 @@ async def get_moveset_embed(embd, poke, color):
         embd.description = "> If the name is correct then \n"
         embd.description += "> PROBABLY this pokemon is not good for battling"
         return embd
-
 
 # return tierlist
 def get_tl(list_name):
@@ -146,7 +153,6 @@ def get_tl(list_name):
         return global_vars.STEEL_TL
     else:
         return """> That tierlist was not found, these tierlists are available```common | mega | fire```"""
-
 
 # register shiny tags
 async def register_tag(server_id, user_id, user_nick, tag):
@@ -210,7 +216,6 @@ async def register_tag(server_id, user_id, user_nick, tag):
         return "> {user} was removed from `{prev}` and assigned to `{new}` tag".format(user=user_nick,
                                                                                        prev=current_tag.capitalize(),
                                                                                        new=tag.capitalize())
-
 
 # Get shiny tags
 def get_tag_hunters(server_id, tag):
