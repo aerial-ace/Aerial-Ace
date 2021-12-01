@@ -25,7 +25,7 @@ Aerial Ace is a helper bot for [poketwo](https://github.com/poketwo/poketwo) whi
 * `-aa tag_ping <tag>` pings the users currently tagged to the provided tag.
 * `-aa stats <pokemon name>` displays the best stats for the provided pokemon.
 * `-aa moveset <pokemon name>` displays the best moveset of the provided pokemon.
-* `-aa tierlist <tier type>` displays the tierlist of that type. Availible types are `common`, `mega`, `rare`, `<any pokemon type>`
-* `-aa log_battle @winner @loser` logs the battle in the leaderboard
-* `-aa battle_score` displays the current battle score the user
-* `-aa battle_lb` displays the battle leaderboard of the server
+* `-aa tierlist <tier type>` displays the tierlist of that type. Availible types are `common`, `mega`, `rare`, `water`.
+* `-aa log_battle @winner @loser` logs the battle in the leaderboard.
+* `-aa battle_score` displays the current battle score the user.
+* `-aa battle_lb` displays the battle leaderboard of the server.
