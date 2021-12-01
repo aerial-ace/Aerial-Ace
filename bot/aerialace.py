@@ -146,8 +146,8 @@ def get_poke_by_id(poke_id):
     poke.p_name = data["name"].capitalize()
 
     # get height and weight
-    poke.p_height = float(data["height"])
-    poke.p_weight = float(data["weight"])
+    poke.p_height = float(data["height"]) / 10
+    poke.p_weight = float(data["weight"]) / 10
 
     # get types
     types = data["types"]

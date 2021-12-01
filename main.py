@@ -73,7 +73,6 @@ async def on_message(message):
 
     # rolling command
     if msg.startswith("roll"):
-
         try:
             max_roll_str = aerialace.get_parameter(msg, ["roll"])
 
@@ -100,9 +99,7 @@ async def on_message(message):
         try:
             rand_poke = aerialace.get_random_poke()
         except Exception as e:
-            await message.channel.send(
-                "> Some error occurred while fetching random pokemon, errors were registered"
-            )
+            await message.channel.send("> Some error occurred while fetching random pokemon, errors were registered")
             print("--Error while fetching random pokemon : {exception}".format(exception=e))
             return
 
