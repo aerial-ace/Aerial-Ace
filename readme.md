@@ -1,5 +1,8 @@
 # Aerial-Ace
 
+![Python](https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge)
+![Python](https://img.shields.io/badge/Status-online-green?style=for-the-badge)
+
 Aerial Ace is a helper bot for [poketwo](https://github.com/poketwo/poketwo) which provide various functionalities on top of being a pokedex.
 
 **Prefix** : `-aa`
