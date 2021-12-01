@@ -21,6 +21,7 @@ class PokeData:
     image_link = ""
     p_info = ""
     p_stats = {}
+    p_total_stats = 0
     p_evolution_chain = ""
 
 # starts the rich presence cycle
@@ -183,6 +184,7 @@ def get_poke_by_id(poke_id):
     for i in range(0, len(stats)):
         stat_name = stats[i]["stat"]["name"]
         stat_value = stats[i]["base_stat"]
+        poke.p_total_stats += stat_value
         poke.p_stats[stat_name] = stat_value
 
     # get evolution chain
@@ -324,7 +326,7 @@ def get_dex_entry_embed(embd, poke_data, color):
     stats_string += "Def : {df}".format(df=poke_data.p_stats["defense"]).ljust(11, " ") + "| " + "Speed  : {spd}".format(spd=poke_data.p_stats["speed"]).ljust(13, " ")
     stats_string += "```"
 
-    embd.add_field(name="Stats", value=stats_string, inline=False)
+    embd.add_field(name="Stats (Total : {total_stats})".format(total_stats=poke_data.p_total_stats), value=stats_string, inline=False)
 
     embd.description = description
     embd.set_image(url=poke_data.image_link)
