@@ -170,7 +170,7 @@ async def on_message(message):
         return
 
     # register shiny command
-    if msg.startswith("tag"):
+    if msg.startswith("tag "):
         tag = aerialace.get_parameter(msg, ["tag"])
         reply = await aerialace_data_manager.register_tag(server_id, user_id, user_nick, tag)
 
