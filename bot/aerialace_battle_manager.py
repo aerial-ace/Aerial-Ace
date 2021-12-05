@@ -33,13 +33,13 @@ async def register_battle_log(server_id, winner, loser):
     battle_file_in.close()
 
     # cache the data
-    await aerialace_cache_manager.cache_data()
+    await aerialace_cache_manager.cache_data(init=False)
 
     return "> <@{0}> won over <@{1}>. Scoreboard was updated".format(winner, loser)
 
 
 # return the battle score of the user
-def get_battle_score(server_id, user):
+async def get_battle_score(server_id, user):
     cached_battle_data = aerialace_cache_manager.cached_battle_data
 
     user_id = str(user.id)

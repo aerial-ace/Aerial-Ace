@@ -61,7 +61,7 @@ async def register_guild(client, guild):
     battle_data_in.close()
 
     # cache the new data
-    await aerialace_cache_manager.cache_data()
+    await aerialace_cache_manager.cache_data(init=False)
 
     # Dm the admins on server joins
     admin_id = int(os.environ['ADMIN_ID'])
@@ -128,7 +128,7 @@ async def remove_guild(client, guild):
     battle_data_in.close()
 
     # cache the new data
-    await aerialace_cache_manager.cache_data()
+    await aerialace_cache_manager.cache_data(init=False)
 
     # Dm the admins on server removal
     admin_id = int(os.environ['ADMIN_ID'])

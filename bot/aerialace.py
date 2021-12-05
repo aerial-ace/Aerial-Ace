@@ -46,9 +46,9 @@ async def set_rich_presence(client):
         await client.change_presence(activity=listening_prefix, status=status)
 
 # for getting the help embed
-def get_help_embed(embd, color):
+def get_help_embed():
+    embd = discord.Embed(color=global_vars.NORMAL_COLOR)
     embd.title = "Aerial Ace Help"
-    embd.color = color
 
     # help fields
     embd.add_field(
@@ -124,14 +124,19 @@ def get_help_embed(embd, color):
     return embd
 
 # for getting a pokemon of desired index
-def get_poke_by_id(poke_id):
+async def get_poke_by_id(poke_id):
+
+    if poke_id == "":
+        return None
 
     poke = PokeData()
 
-    general_response = requests.get("https://pokeapi.co/api/v2/pokemon/{0}".format(poke_id))
-    data = json.loads(general_response.text)
+    general_link = "https://pokeapi.co/api/v2/pokemon/{0}".format(poke_id)
+    general_response = requests.get(general_link)
+    general_data = json.loads(general_response.text)
 
-    species_response = requests.get("https://pokeapi.co/api/v2/pokemon-species/{0}/".format(poke_id))
+    species_link = general_data["species"]["url"]
+    species_response = requests.get(species_link)
     species_data = json.loads(species_response.text)
 
     generation_response = requests.get("https://pokeapi.co/api/v2/generation/{name}/".format(name=species_data["generation"]["name"]))
@@ -140,17 +145,17 @@ def get_poke_by_id(poke_id):
     evolution_response = requests.get(species_data["evolution_chain"]["url"])
     evolution_data = json.loads(evolution_response.text)
 
-    poke.p_id = data["id"]
+    poke.p_id = general_data["id"]
 
     # get name
-    poke.p_name = data["name"].capitalize()
+    poke.p_name = general_data["name"].capitalize()
 
     # get height and weight
-    poke.p_height = float(data["height"]) / 10
-    poke.p_weight = float(data["weight"]) / 10
+    poke.p_height = float(general_data["height"]) / 10
+    poke.p_weight = float(general_data["weight"]) / 10
 
     # get types
-    types = data["types"]
+    types = general_data["types"]
     for i in range(0, len(types)):
         poke.p_types += types[i]["type"]["name"].capitalize()
 
@@ -161,7 +166,7 @@ def get_poke_by_id(poke_id):
     poke.p_region = generation_data["main_region"]["name"].capitalize()
 
     # get abilities
-    abilities = data["abilities"]
+    abilities = general_data["abilities"]
     for i in range(0, len(abilities)):
         poke.p_abilities += abilities[i]["ability"]["name"].capitalize()
 
@@ -177,10 +182,10 @@ def get_poke_by_id(poke_id):
             break
 
     # get image_link
-    poke.image_link = data["sprites"]["front_default"]
+    poke.image_link = general_data["sprites"]["front_default"]
 
     # get stats
-    stats = data["stats"]
+    stats = general_data["stats"]
     for i in range(0, len(stats)):
         stat_name = stats[i]["stat"]["name"]
         stat_value = stats[i]["base_stat"]
@@ -194,7 +199,7 @@ def get_poke_by_id(poke_id):
         evolution_chain.append(chain_data["species"]["name"])
         try:
             chain_data = chain_data["evolves_to"][0]
-        except Exception as e:
+        except:
             break
 
     for i in range(0, len(evolution_chain)):
@@ -208,15 +213,15 @@ def get_poke_by_id(poke_id):
     return poke
 
 # for getting a random pokemon
-def get_random_poke():
+async def get_random_poke():
 
     rand_pokemon_id = random.randint(1, 898)
 
-    poke = get_poke_by_id(rand_pokemon_id)
+    poke = await get_poke_by_id(rand_pokemon_id)
 
     return poke
 
-# for wraping text
+# for wrapping text
 def wrap_text(width, text):
     wrapped_text = ""
     wrapper = TextWrapper(width)
@@ -226,13 +231,23 @@ def wrap_text(width, text):
 
     return wrapped_text
 
-# rolling
-def roll(upper_limit):
-    roll_value = random.randint(0, upper_limit)
-    return roll_value
+async def get_roll(username, upper_limit):
+    try:
+        if upper_limit == "":
+            max_roll = 100
+        elif int(upper_limit) < 0:
+            raise ValueError()
+        else:
+            max_roll = int(upper_limit)
+    except Exception as e:
+        return "Enter a valid upper index! Like this : ```-aa roll 100```"
+
+    roll_value = random.randint(0, max_roll)
+
+    return "> **{name}** rolled and got {roll} :game_die:".format(name=username, roll=roll_value)
 
 # get parameter from the message
-def get_parameter(msg, removable_command):
+async def get_parameter(msg, removable_command):
     param = msg
     for cmd in removable_command:
         param = param.replace(cmd, "").strip()
@@ -240,16 +255,16 @@ def get_parameter(msg, removable_command):
     return param
 
 # returns the winner and loser
-def get_winner_looser(msg):
-    param = get_parameter(msg, ["log_battle", "lb"])
+async def get_winner_looser(msg):
+    param = await get_parameter(msg, ["log_battle", "lb"])
     players = param.split()
     winner, loser = players
-    winner, loser = get_id_from_ping(winner), get_id_from_ping(loser)
+    winner, loser = await get_id_from_ping(winner), await get_id_from_ping(loser)
 
     return [winner, loser]
 
 # returns user id from ping
-def get_id_from_ping(ping):
+async def get_id_from_ping(ping):
 
     user_id = ""
     for i in ping:
@@ -259,9 +274,9 @@ def get_id_from_ping(ping):
     return user_id
 
 # get random pokemon embed
-def get_random_pokemon_embed(embd, poke_data, color, server_id, user_id):
+async def get_random_pokemon_embed(poke_data, server_id, user_id):
 
-    embd.color = color
+    embd = discord.Embed(color=global_vars.NORMAL_COLOR)
     embd.title = "**{0} : {1}**".format(poke_data.p_id, poke_data.p_name)
 
     description = wrap_text(40, poke_data.p_info)
@@ -269,7 +284,7 @@ def get_random_pokemon_embed(embd, poke_data, color, server_id, user_id):
     embd.set_image(url=poke_data.image_link)
 
     # Ugly, ik '_'
-    fav_out = aerialace_data_manager.get_fav(server_id, user_id)
+    fav_out = await aerialace_data_manager.get_fav(server_id, user_id)
     if fav_out.startswith("> Your favourite pokemon is"):
         fav_poke = (fav_out.replace("> Your favourite pokemon is", "").strip().lower().replace("*", ""))
         if poke_data.p_name.lower() == fav_poke:
@@ -278,10 +293,13 @@ def get_random_pokemon_embed(embd, poke_data, color, server_id, user_id):
     return embd
 
 # get Dex entry embed
-def get_dex_entry_embed(embd, poke_data, color):
+async def get_dex_entry_embed(poke_data):
     max_character_width = 40
 
-    embd.color = color
+    if poke_data is None:
+        return get_info_embd("Gib pokemon name as a parameter when :/", "> Provide a pokemon name like ```-aa dex aron```", color=global_vars.ERROR_COLOR)
+
+    embd = discord.Embed(color=global_vars.NORMAL_COLOR)
     embd.title = "**{0} : {1}**".format(poke_data.p_id, poke_data.p_name)
 
     description = wrap_text(max_character_width, poke_data.p_info)
@@ -319,9 +337,9 @@ def get_dex_entry_embed(embd, poke_data, color):
     )
 
     stats_string = "```"
-    stats_string += "HP  : {hp}".format(hp=poke_data.p_stats["hp"]).ljust(11, " ") + "| " + "Sp.Atk : {spat}".format(spat=poke_data.p_stats["special-attack"]).ljust(13, " ")
+    stats_string += "HP  : {hp}".format(hp=poke_data.p_stats["hp"]).ljust(11, " ") + "| " + "Sp.Atk : {spatk}".format(spatk=poke_data.p_stats["special-attack"]).ljust(13, " ")
     stats_string += "\n"
-    stats_string += "Atk : {atk}".format(atk=poke_data.p_stats["attack"]).ljust(11, " ") + "| " + "Sp.Def : {spdf}".format(spdf=poke_data.p_stats["special-defense"]).ljust(13, " ")
+    stats_string += "Atk : {atk}".format(atk=poke_data.p_stats["attack"]).ljust(11, " ") + "| " + "Sp.Def : {spdef}".format(spdef=poke_data.p_stats["special-defense"]).ljust(13, " ")
     stats_string += "\n"
     stats_string += "Def : {df}".format(df=poke_data.p_stats["defense"]).ljust(11, " ") + "| " + "Speed  : {spd}".format(spd=poke_data.p_stats["speed"]).ljust(13, " ")
     stats_string += "```"
@@ -337,7 +355,7 @@ def get_dex_entry_embed(embd, poke_data, color):
     return embd
 
 # get invite embed
-def get_invite_embed(embd, color):
+async def get_invite_embed(embd, color):
     invite_link = global_vars.INVITE_LINK
     thumbnail_link = global_vars.AVATAR_LINK
 
@@ -358,7 +376,7 @@ async def get_battle_acceptance(client, message, winner, loser):
     elif str(message.author.id) == loser:
         check_id = winner
     else:
-        await message.channel.send("> Who are you to do this. Let the players log thier battles.")
+        await message.channel.send("> Who are you to do this. Let the players log their battles.")
         return "notapplicable"
 
     # send battle log request
@@ -374,7 +392,43 @@ async def get_battle_acceptance(client, message, winner, loser):
 
     try:
         await client.wait_for("reaction_add", timeout=10.0, check=check)
-    except Exception as e:
+    except:
         return "notaccepted"
     else:
         return "accepted"
+
+# returns a info embed
+async def get_info_embd(title, error, color):
+    embd = discord.Embed()
+
+    embd.colour = color
+    embd.title = title
+    embd.description = error
+
+    return embd
+
+# check if any message is a rare catch message
+async def determine_rare_catch(msg):
+    rare_catch_message_structure = "Congratulations {ping}! You caught a level {level} {poke}!"
+
+    rare_words = rare_catch_message_structure.split()
+    catch_info_indices = [1, 6, 7]
+    catch_info = []
+
+    msg_words = msg.split()
+
+    for i in range(0, len(rare_words)):
+        if i in catch_info_indices:
+            catch_info.append(msg_words[i])
+        else:
+            if msg_words[i] != rare_words[i]:
+                return None
+            else:
+                continue
+
+    return catch_info
+
+# for waiting
+async def waiter(time: float):
+    await asyncio.sleep(time)
+    print("Times up")
