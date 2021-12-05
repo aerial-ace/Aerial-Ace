@@ -14,6 +14,7 @@ RARITY_FILE_LOCATION = "data/poke_rarity.json"
 NORMAL_COLOR = discord.Color.blue()
 ERROR_COLOR = discord.Color.red()
 WARNING_COLOR = discord.Color.orange()
+RARE_CATCH_COLOR = discord.Color.gold()
 
 # bot links
 INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=0&scope=bot"

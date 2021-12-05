@@ -1,5 +1,8 @@
 import asyncio
+import datetime
 import random
+import time
+
 import discord
 import requests
 import json
@@ -398,12 +401,15 @@ async def get_battle_acceptance(client, message, winner, loser):
         return "accepted"
 
 # returns a info embed
-async def get_info_embd(title, error, color):
+async def get_info_embd(title, error, color, footer=None):
     embd = discord.Embed()
 
     embd.colour = color
     embd.title = title
     embd.description = error
+
+    if footer is not None:
+        embd.set_footer(text=footer)
 
     return embd
 
@@ -417,18 +423,33 @@ async def determine_rare_catch(msg):
 
     msg_words = msg.split()
 
-    for i in range(0, len(rare_words)):
-        if i in catch_info_indices:
-            catch_info.append(msg_words[i])
-        else:
-            if msg_words[i] != rare_words[i]:
-                return None
+    try:
+        for i in range(0, len(rare_words)):
+            if i in catch_info_indices:
+                catch_info.append(msg_words[i].replace("!", ""))
             else:
-                continue
+                if msg_words[i] != rare_words[i]:
+                    return None
+                else:
+                    continue
+    except:
+        return
 
     return catch_info
 
+async def get_rare_catch_embd(_ping, _pokemon, _level):
+    embd = discord.Embed(colour=global_vars.RARE_CATCH_COLOR)
+    embd.title = ":star2: Rare Catch Detected :star2:"
+    embd.description = f"{_ping} caught a level {_level} `{_pokemon.capitalize()}`\n"
+    embd.description += f"Congratulations :tada:"
+
+    _date: str = datetime.date.today().strftime("%d %b %y")
+    _time: str = datetime.date.today().strftime("%I:%M %p")
+
+    embd.set_footer(text=f"{_date} at {_time}")
+    return embd
+
 # for waiting
-async def waiter(time: float):
-    await asyncio.sleep(time)
+async def waiter(_time: float):
+    await asyncio.sleep(_time)
     print("Times up")

@@ -1,3 +1,5 @@
+import datetime
+
 import discord
 import os
 
@@ -41,8 +43,20 @@ async def on_ready():
 @client.event
 async def on_message(message):
 
-    #if str(message.author.id) == admin_user_id:
-        #await aerialace.determine_rare_catch(message.content)
+    if str(message.author.id) == poketwo_user_id:
+        catch_info = await aerialace.determine_rare_catch(message.content)
+        if catch_info is None:
+            return
+        ping = catch_info[0]
+        pokemon_caught = catch_info[2].lower()
+        level = catch_info[1]
+
+        if aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "legendary" or aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "mythical":
+            rare_catch_embed = await aerialace.get_rare_catch_embd(ping, pokemon_caught, level)
+            await message.channel.send(embed=rare_catch_embed)
+            return
+        else:
+            return
 
     # ignore messages sent by the bot
     if message.author == client.user:
