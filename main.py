@@ -1,5 +1,3 @@
-import datetime
-
 import discord
 import os
 
@@ -123,6 +121,7 @@ async def on_message(message):
 
         poke_data = await aerialace.get_poke_by_id(poke_id)
         reply = await aerialace.get_dex_entry_embed(poke_data)
+
         await message.channel.send(embed=reply)
 
         return
@@ -145,6 +144,7 @@ async def on_message(message):
     if msg.startswith("stats"):
         poke = await aerialace.get_parameter(msg, ["stats"])
         reply = await aerialace_data_manager.get_stats_embed(poke)
+
         await message.channel.send(embed=reply)
 
         return
@@ -160,7 +160,8 @@ async def on_message(message):
     # get tierlist command
     if msg.startswith("tierlist") or msg.startswith("tl"):
         poke = await aerialace.get_parameter(msg, ["tierlist", "tl"])
-        tl_link = await aerialace_data_manager.get_tl(poke)
+
+        tl_link = aerialace_data_manager.get_tl(poke)
         await message.channel.send(content="Source : P2HB \n {link}".format(link=tl_link))
 
         return
@@ -230,6 +231,7 @@ async def on_message(message):
     # Display the battle score of the user
     if msg.startswith("battle_score") or msg.startswith("bs"):
         reply = await aerialace_battle_manager.get_battle_score(server_id, member)
+
         await message.channel.send(reply)
         return
 

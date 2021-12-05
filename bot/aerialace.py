@@ -1,7 +1,6 @@
 import asyncio
 import datetime
 import random
-import time
 
 import discord
 import requests
@@ -128,6 +127,9 @@ def get_help_embed():
 
 # for getting a pokemon of desired index
 async def get_poke_by_id(poke_id):
+
+    if poke_id == "":
+        return None
 
     if poke_id == "":
         return None
