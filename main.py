@@ -1,11 +1,13 @@
 import discord
 import os
+import asyncio
 
 from bot import aerialace
 from bot import aerialace_data_manager
 from bot import aerialace_init_manager
 from bot import aerialace_cache_manager
 from bot import aerialace_battle_manager
+from bot import global_vars
 
 # Intents
 intents = discord.Intents.all()
@@ -16,6 +18,7 @@ intents.reactions = True
 client = discord.Client(intents=intents)
 
 admin_user_id = os.environ['ADMIN_ID']
+poketwo_user_id = os.environ['POKETWO_ID']
 
 @client.event
 async def on_guild_join(guild_joined):
@@ -32,19 +35,25 @@ async def on_guild_remove(guild_removed):
 @client.event
 async def on_ready():
     print("Logged in as {0.user}".format(client))
-    await aerialace_cache_manager.cache_data()
+    await aerialace_cache_manager.cache_data(init=True)
     await aerialace.start_rich_presence_cycle(client, 15)
 
 
 @client.event
 async def on_message(message):
 
+    if str(message.author.id) == admin_user_id:
+        await aerialace.determine_rare_catch(message.content)
+
+    # ignore messages sent by the bot
     if message.author == client.user:
         return
 
+    # ignore commands not meant for the bot
     if message.content.lower().startswith("-aa") is False and (message.content != "<@!908384747393286174>" and message.content != "<@908384747393286174>"):
         return
 
+    # respond to pings
     if message.content == "<@!908384747393286174>" or message.content == "<@908384747393286174>":
         await message.channel.send("> Aerial Ace prefix is `-aa`.\n> Try `-aa help` :3")
         return
@@ -56,11 +65,11 @@ async def on_message(message):
     msg = ((message.content.lower()).replace("-aa", "")).strip()
     member = message.author
     user_id = str(message.author.id)
-    user_nick = member.display_name
+    user_name = member.display_name
 
     # help command
     if msg.startswith("help"):
-        help_embed = aerialace.get_help_embed(discord.Embed(), discord.Color.blue())
+        help_embed = aerialace.get_help_embed()
         await message.channel.send(embed=help_embed)
 
         return
@@ -68,67 +77,52 @@ async def on_message(message):
     # say hello command
     hello_commands = ["hello", "alola", "hola", "henlu", "helu", "hi", "sup"]
     if msg in hello_commands:
-        await message.channel.send("> Alola **{name}**".format(name=user_nick))
+        await message.channel.send("> Alola **{name}**".format(name=user_name))
         return
 
     # rolling command
     if msg.startswith("roll"):
-        try:
-            max_roll_str = aerialace.get_parameter(msg, ["roll"])
+        upper_limit = await aerialace.get_parameter(msg, ["roll"])
+        reply = await aerialace.get_roll(user_name, upper_limit)
+        await message.channel.send(reply)
 
-            if max_roll_str == "":
-                max_roll = 100
-            elif int(max_roll_str) < 0:
-                raise ValueError()
-            else:
-                max_roll = int(max_roll_str)
-        except Exception as e:
-            await message.channel.send("Enter a valid upper index! Like this : ```-aa roll 100```")
-            print(e)
-            return
-
-        roll = aerialace.roll(max_roll)
-
-        await message.channel.send(
-            "> **{name}** rolled and got {roll} :game_die:".format(name=user_nick, roll=roll))
         return
 
     # Random Pokemon command
     if (msg.startswith("rp")) or msg.startswith("rand_poke"):
 
         try:
-            rand_poke = aerialace.get_random_poke()
+            rand_poke = await aerialace.get_random_poke()
         except Exception as e:
             await message.channel.send("> Some error occurred while fetching random pokemon, errors were registered")
             print("--Error while fetching random pokemon : {exception}".format(exception=e))
             return
 
-        reply = aerialace.get_random_pokemon_embed(discord.Embed(), rand_poke, discord.Color.blue(), server_id, user_id)
+        reply = await aerialace.get_random_pokemon_embed(rand_poke, server_id, user_id)
 
         await message.channel.send(embed=reply)
         return
 
     # Dex search command
-    if msg.startswith("dex "):
-        param = aerialace.get_parameter(msg, ["dex"])
+    if msg.startswith("dex"):
 
+        poke = await aerialace.get_parameter(msg, ["dex"])
         try:
-            poke_data = aerialace.get_poke_by_id(param)
-        except Exception as e:
-            await message.channel.send("> Mhan, that pokemon was not found in the pokedex")
-            print("--Error occurred while showing a dex entry : {e}".format(e=e))
-            return
+            poke_id = aerialace_cache_manager.cached_alt_name_data[poke]
+        except:
+            poke_id = poke
 
-        reply = aerialace.get_dex_entry_embed(discord.Embed(), poke_data, discord.Color.blue())
 
+        poke_data = aerialace.get_poke_by_id(poke_id)
+        reply = aerialace.get_dex_entry_embed(poke_data)
         await message.channel.send(embed=reply)
         return
 
     # Register Favourite Pokemon command
     if msg.startswith("set_fav") or msg.startswith("sf"):
-        param = aerialace.get_parameter(msg, ["set_fav", "sf"])
+        poke = await aerialace.get_parameter(msg, ["set_fav", "sf"])
 
-        reply = await aerialace_data_manager.set_fav(server_id, user_id, param)
+        reply = await aerialace_data_manager.set_fav(server_id, user_id, poke)
         await message.channel.send(reply)
         return
 
@@ -140,24 +134,24 @@ async def on_message(message):
 
     # get duelish stats command
     if msg.startswith("stats"):
-        param = aerialace.get_parameter(msg, ["stats"])
-        reply = aerialace_data_manager.get_stats_embed(discord.Embed(), param, discord.Color.blue())
+        poke = await aerialace.get_parameter(msg, ["stats"])
+        reply = aerialace_data_manager.get_stats_embed(poke)
         await message.channel.send(embed=reply)
 
         return
 
-    # get duelish stats command
+    # get duelish moveset command
     if msg.startswith("moveset") or msg.startswith("ms"):
-        poke = aerialace.get_parameter(msg, ["ms", "moveset"])
-        reply = await aerialace_data_manager.get_moveset_embed(discord.Embed(), poke, discord.Color.blue())
+        poke = await aerialace.get_parameter(msg, ["ms", "moveset"])
+        reply = await aerialace_data_manager.get_moveset_embed(poke)
         await message.channel.send(embed=reply)
 
         return
 
     # get tierlist command
     if msg.startswith("tierlist") or msg.startswith("tl"):
-        param = aerialace.get_parameter(msg, ["tierlist", "tl"])
-        tl_link = aerialace_data_manager.get_tl(param)
+        poke = await aerialace.get_parameter(msg, ["tierlist", "tl"])
+        tl_link = aerialace_data_manager.get_tl(poke)
         await message.channel.send(content="Source : P2HB \n {link}".format(link=tl_link))
 
         return
@@ -169,22 +163,22 @@ async def on_message(message):
 
         return
 
-    # register shiny command
+    # register tags
     if msg.startswith("tag "):
-        tag = aerialace.get_parameter(msg, ["tag"])
-        reply = await aerialace_data_manager.register_tag(server_id, user_id, user_nick, tag)
-
+        tag = await aerialace.get_parameter(msg, ["tag"])
+        reply = await aerialace_data_manager.register_tag(server_id, user_id, user_name, tag)
         await message.channel.send(reply)
 
         return
 
     # ping user with tag command
     if msg.startswith("tag_ping") or msg.startswith("tp"):
-        tag = aerialace.get_parameter(msg, ["tp", "tag_ping"])
+        tag = await aerialace.get_parameter(msg, ["tp", "tag_ping"])
         hunters = aerialace_data_manager.get_tag_hunters(server_id, tag)
 
         if hunters is None:
-            reply = "> That tag doesn't exist"
+            reply = aerialace.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), global_vars.WARNING_COLOR)
+            await message.channel.send(embed=reply)
         else:
             hunter_pings = ""
             number_of_hunters = len(hunters)
@@ -196,32 +190,21 @@ async def on_message(message):
 
             reply = "> Pinging users assigned to `{tag}` tag \n\n {users}".format(tag=tag.capitalize(), users=hunter_pings)
 
-        await message.channel.send(reply)
+            await message.channel.send(reply)
 
         return
 
     # see user assigned to tag
     if msg.startswith("tag_show ") or msg.startswith("ts "):
-        tag = aerialace.get_parameter(msg, ["tag_show", "ts"])
+        tag = await aerialace.get_parameter(msg, ["tag_show", "ts"])
         hunters = aerialace_data_manager.get_tag_hunters(server_id, tag)
-        if hunters is None:
-            await message.channel.send("> That tag was not found")
-            return
-
-        reply = discord.Embed(colour=discord.Colour.blue())
-        reply.title = "Users assigned to `{tag}` tag".format(tag=tag.capitalize())
-        reply.description = ""
-
-        for i in hunters:
-            reply.description += "<@{hunter_id}>\n".format(hunter_id=i)
-
+        reply = aerialace_data_manager.get_show_hunters_embd(tag=tag, hunters=hunters)
         await message.channel.send(embed=reply)
         return
 
     # logs the battle and update the leaderboard
     if msg.startswith("log_battle ") or msg.startswith("lb "):
         players = aerialace.get_winner_looser(msg)
-
         info = await aerialace.get_battle_acceptance(client, message, players[0], players[1])
 
         if info == "accepted":
@@ -237,11 +220,8 @@ async def on_message(message):
 
     # Display the battle score of the user
     if msg.startswith("battle_score") or msg.startswith("bs"):
-
-        score = aerialace_battle_manager.get_battle_score(server_id, member)
-
-        await message.channel.send(score)
-
+        reply = aerialace_battle_manager.get_battle_score(server_id, member)
+        await message.channel.send(reply)
         return
 
     if msg.startswith("battle_lb") or msg.startswith("blb"):
@@ -254,8 +234,9 @@ async def on_message(message):
     if msg.startswith("fetch_data_files") or msg.startswith("fdf"):
         if user_id == admin_user_id:
             await aerialace_data_manager.send_data_files(client)
-
-        await message.channel.send("> Data files were sent to admins :}")
+            await message.channel.send("> Data files were sent to admins :}")
+        else:
+            await message.channel.send("You are not supposed to use that command :/")
 
         return
 

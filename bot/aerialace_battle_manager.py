@@ -33,7 +33,7 @@ async def register_battle_log(server_id, winner, loser):
     battle_file_in.close()
 
     # cache the data
-    await aerialace_cache_manager.cache_data()
+    await aerialace_cache_manager.cache_data(init=False)
 
     return "> <@{0}> won over <@{1}>. Scoreboard was updated".format(winner, loser)
 
