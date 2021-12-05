@@ -119,7 +119,13 @@ async def on_message(message):
         except:
             poke_id = poke
 
-        poke_data = await aerialace.get_poke_by_id(poke_id)
+        try:
+            poke_data = await aerialace.get_poke_by_id(poke_id)
+        except:
+            reply = await aerialace.get_info_embd("Pokemon not found", f"Dex entry for id : `{poke_id}` was not found in the pokedex.\n Most uncommon ids follow this format : \n```-aa dex gallade-mega\n-aa dex meowstic-female\n-aa dex deoxys-defense```", global_vars.ERROR_COLOR)
+            await message.channel.send(embed=reply)
+            return
+
         reply = await aerialace.get_dex_entry_embed(poke_data)
 
         await message.channel.send(embed=reply)
@@ -161,7 +167,7 @@ async def on_message(message):
     if msg.startswith("tierlist") or msg.startswith("tl"):
         poke = await aerialace.get_parameter(msg, ["tierlist", "tl"])
 
-        tl_link = aerialace_data_manager.get_tl(poke)
+        tl_link = await aerialace_data_manager.get_tl(poke)
         await message.channel.send(content="Source : P2HB \n {link}".format(link=tl_link))
 
         return
