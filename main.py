@@ -8,6 +8,8 @@ from bot import aerialace_cache_manager
 from bot import aerialace_battle_manager
 from bot import global_vars
 
+"""Use for function folding is suggested :/"""
+
 # Intents
 intents = discord.Intents.all()
 intents.typing = False
@@ -44,17 +46,20 @@ async def on_message(message):
     # detect rare catch message
     if str(message.author.id) == poketwo_user_id:
         catch_info = await aerialace.determine_rare_catch(message.content)
+
+        # return if not a rare catch
         if catch_info is None:
             return
+
+        # get the rare catch details
         ping = catch_info[0]
-        pokemon_caught = catch_info[2].lower()
         level = catch_info[1]
+        pokemon_caught = catch_info[2].lower()
+        catch_type = catch_info[3].lower()
 
-        if aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "legendary" or aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "mythical":
-
-            rare_catch_embed = await aerialace.get_rare_catch_embd(message, ping, pokemon_caught, level)
+        if aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "legendary" or aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "mythical" or aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "ultra beast":
+            rare_catch_embed = await aerialace.get_rare_catch_embd(message, ping, pokemon_caught, level, catch_type)
             await message.channel.send(embed=rare_catch_embed)
-
             return
         else:
             return
@@ -68,7 +73,7 @@ async def on_message(message):
         return
 
     # respond to pings
-    if message.content == "<@!908384747393286174>" or message.content == "<@908384747393286174>":
+    if message.content.strip() == "<@!908384747393286174>" or message.content == "<@908384747393286174>":
         await message.channel.send("> Aerial Ace prefix is `-aa`.\n> Try `-aa help` :3")
         return
 
@@ -114,7 +119,6 @@ async def on_message(message):
 
     # Dex search command
     if msg.startswith("dex"):
-
         poke = await aerialace.get_parameter(msg, ["dex"])
 
         try:
@@ -125,9 +129,9 @@ async def on_message(message):
         try:
             poke_data = await aerialace.get_poke_by_id(poke_id)
         except Exception as e:
-            reply = await aerialace.get_info_embd("Pokemon not found", f"Dex entry for id : `{poke_id}` was not found in the pokedex.\n Most uncommon ids follow this format : \n```-aa dex gallade-mega\n-aa dex meowstic-female\n-aa dex deoxys-defense\n-aa dex necrozma-dawn\n-aa dex calyrex-shadow-rider```\nIf you still think this pokemon is missing, report it at official server", global_vars.ERROR_COLOR)
+            reply = await aerialace.get_info_embd("Pokemon not found", f"Dex entry for id : `{poke_id}` was not found in the pokedex.\n Most uncommon ids follow this format : \n```-aa dex gallade-mega\n-aa dex meowstic-female\n-aa dex deoxys-defense\n-aa dex necrozma-dawn\n-aa dex calyrex-shadow-rider\n-aa dex cinderace-gmax```\nIf you still think this pokemon is missing, report it at official server", global_vars.ERROR_COLOR)
             await message.channel.send(embed=reply)
-            print(f"-----Error showing dex entry{e}")
+            print(f"-----Error showing dex entry : {e}")
             return
 
         reply = await aerialace.get_dex_entry_embed(poke_data)
@@ -245,16 +249,19 @@ async def on_message(message):
         await message.channel.send(reply)
         return
 
+    # Display the battle leaderboard of the server
     if msg.startswith("battle_lb") or msg.startswith("blb"):
         reply = await aerialace_battle_manager.get_battle_leaderboard_embed(client, guild)
         await message.channel.send(embed=reply)
         return
 
+    # Display the about embed
     if msg.startswith("about"):
         reply = await aerialace.get_bot_info_embd()
         await message.channel.send(embed=reply)
         return
 
+    # Start a sleeping sessions
     if msg.startswith("sleep"):
         await message.channel.send("Waiting....")
         await aerialace.waiter(30)
@@ -277,5 +284,4 @@ async def on_message(message):
                                "> See all the available commands by using ```-aa help```")
 
 token = os.environ['TOKEN']
-
 client.run(token)

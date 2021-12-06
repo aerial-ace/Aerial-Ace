@@ -222,7 +222,7 @@ async def get_poke_by_id(poke_id):
     # get rarity
     try:
         rarity = aerialace_cache_manager.cached_rarity_data[poke.p_name.lower()]
-        if rarity == "mythical" or rarity == "legendary" or rarity == "Ultra Beast":
+        if rarity == "mythical" or rarity == "legendary" or rarity == "ultra beast":
             poke.p_rarity = rarity.capitalize()
         else:
             poke.p_rarity = None
@@ -258,7 +258,7 @@ async def get_roll(username, upper_limit):
             raise ValueError()
         else:
             max_roll = int(upper_limit)
-    except Exception as e:
+    except:
         return "Enter a valid upper index! Like this : ```-aa roll 100```"
 
     roll_value = random.randint(0, max_roll)
@@ -431,45 +431,69 @@ async def get_info_embd(title, error, color, footer=None):
 
 # check if any message is a rare catch message
 async def determine_rare_catch(msg):
-    rare_catch_message_structure = "Congratulations {ping}! You caught a level {level} {poke}!"
 
-    rare_words = rare_catch_message_structure.split()
-    catch_info_indices = [1, 6, 7]
-    catch_info = []
+    star_catch_keywords = ["Congratulations", "{ping}", "You", "caught", "a", "level", "{level}", "{pokemon}", "These"]
+
+    """
+    1. Determine rare catch, shiny catch or normal catch
+    2. If rare catch, get rare catch details.
+    3. If shiny catch, get shiny catch details
+    4. If normal catch, return
+    5. return catch details ["type_of_catch", "user_who_caught", "pokemon", "level"]    
+    """
 
     msg_words = msg.split()
 
+    catch_info_indices = [1, 6, 7, 8]
+    catch_info = []
+
     try:
-        for i in range(0, len(rare_words)):
+        for i in range(0, len(star_catch_keywords)):
             if i in catch_info_indices:
-                catch_info.append(msg_words[i].replace("!", ""))
+                try:
+                    catch_info.append(msg_words[i].replace("!", "").replace(".", ""))
+                except:
+                    catch_info.append("Normal")
             else:
-                if msg_words[i] != rare_words[i]:
+                if msg_words[i] != star_catch_keywords[i]:
                     return None
                 else:
                     continue
     except:
-        return
+        return None
+
+    if catch_info[3] == "These":
+        catch_info[3] = "Shiny"
 
     return catch_info
 
-async def get_rare_catch_embd(_message, _ping, _pokemon, _level):
+async def get_rare_catch_embd(_message, _ping, _pokemon, _level, _type):
+
+    # TODO : Add some kind of rare and shiny sighting counter
+
     embd = discord.Embed(colour=global_vars.RARE_CATCH_COLOR)
-    embd.title = ":star2: Rare Catch Detected :star2:"
-    embd.description = f"{_ping} caught a level {_level} `{_pokemon.capitalize()}`\n"
-    embd.description += f"Congratulations :tada:\n"
+
+    if _type == "normal":
+        embd.title = ":star2: Rare Catch Detected :star2:"
+        embd.description = f"{_ping} caught a level {_level} `{_pokemon.capitalize()}`\n"
+    elif _type == "shiny":
+        embd.title = ":star2: Shiny Catch Detected :star2:"
+        embd.description = f"{_ping} caught a level {_level} **SHINY** `{_pokemon.capitalize()}`\n"
+
+    embd.description += f"Congratulations :tada: :tada:\n"
 
     try:
         await _message.pin()
         embd.description += "This catch was pinned to this channel"
-    except Exception as e:
+    except:
         embd.description += "Unable to pin this catch :/"
 
-    _date: str = datetime.date.today().strftime("%d %b %y")
+    _date = datetime.date.today().strftime("%d %b %y")
     _time_object = datetime.datetime.now(datetime.timezone.utc)
     _time = _time_object.strftime("%I:%M %p UTC")
 
     embd.set_footer(text=f"{_date} at {_time}")
+
     return embd
 
 async def get_bot_info_embd():
