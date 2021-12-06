@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import pytz
 import random
 
 import discord
@@ -446,7 +447,8 @@ async def get_rare_catch_embd(_ping, _pokemon, _level):
     embd.description += f"Congratulations :tada:"
 
     _date: str = datetime.date.today().strftime("%d %b %y")
-    _time: str = datetime.date.today().strftime("%I:%M %p")
+    _time_object = datetime.datetime.now(datetime.timezone.utc)
+    _time = _time_object.strftime("%I:%M %p UTC")
 
     embd.set_footer(text=f"{_date} at {_time}")
     return embd
