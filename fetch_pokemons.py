@@ -1,7 +1,7 @@
 import requests
 import json
 
-def get_pokemons(index: int, file):
+def get_pokemon(index: int, file):
     main_url = "https://pokeapi.co/api/v2/pokemon/{index}".format(index=index)
     poke_req = requests.get(main_url)
     poke_data = json.loads(poke_req.text)
@@ -22,12 +22,13 @@ def main():
     file = open("data/poke_rarity.json", "a")
 
     for i in range(381, 899):
-        get_pokemons(i, file)
-        if i%10 == 0:
+        get_pokemon(i, file)
+        if i % 10 == 0:
             file.close()
             file = open("data/poke_rarity.json", "a")
 
     file.close()
+
 
 if __name__ == "__main__":
     main()
