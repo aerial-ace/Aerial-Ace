@@ -1,6 +1,5 @@
 import asyncio
 import datetime
-import pytz
 import random
 
 import discord
@@ -440,11 +439,17 @@ async def determine_rare_catch(msg):
 
     return catch_info
 
-async def get_rare_catch_embd(_ping, _pokemon, _level):
+async def get_rare_catch_embd(_message, _ping, _pokemon, _level):
     embd = discord.Embed(colour=global_vars.RARE_CATCH_COLOR)
     embd.title = ":star2: Rare Catch Detected :star2:"
     embd.description = f"{_ping} caught a level {_level} `{_pokemon.capitalize()}`\n"
-    embd.description += f"Congratulations :tada:"
+    embd.description += f"Congratulations :tada:\n"
+
+    try:
+        await _message.pin()
+        embd.description += "This catch was pinned to this channel"
+    except Exception as e:
+        embd.description += "Unable to pin this catch :/"
 
     _date: str = datetime.date.today().strftime("%d %b %y")
     _time_object = datetime.datetime.now(datetime.timezone.utc)
