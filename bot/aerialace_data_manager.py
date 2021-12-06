@@ -243,3 +243,4 @@ async def get_show_hunters_embd(tag, hunters):
         embd.description += "<@{hunter_id}>\n".format(hunter_id=i)
 
     return embd
+

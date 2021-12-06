@@ -9,6 +9,7 @@ from textwrap import TextWrapper
 
 from bot import global_vars
 from bot import aerialace_data_manager
+from bot import aerialace_cache_manager
 
 
 class PokeData:
@@ -25,6 +26,7 @@ class PokeData:
     p_stats = {}
     p_total_stats = 0
     p_evolution_chain = ""
+    p_rarity = ""
 
 # starts the rich presence cycle
 async def start_rich_presence_cycle(client, repeat_time):
@@ -206,7 +208,6 @@ async def get_poke_by_id(poke_id):
             chain_data = chain_data["evolves_to"][0]
         except:
             break
-
     for i in range(0, len(evolution_chain)):
         poke.p_evolution_chain += evolution_chain[i].capitalize()
 
@@ -214,6 +215,16 @@ async def get_poke_by_id(poke_id):
             break
         else:
             poke.p_evolution_chain += "\n"
+
+    # get rarity
+    try:
+        rarity = aerialace_cache_manager.cached_rarity_data[poke.p_name.lower()]
+        if rarity == "mythical" or rarity == "legendary":
+            poke.p_rarity = rarity.capitalize()
+        else:
+            poke.p_rarity = None
+    except:
+        poke.p_rarity = None
 
     return poke
 
@@ -354,8 +365,8 @@ async def get_dex_entry_embed(poke_data):
     embd.description = description
     embd.set_image(url=poke_data.image_link)
 
-    footer_text = "Some pokemon are not searchable by their common names due to the limitation in the api used! Their ids work though."
-    embd.set_footer(text=wrap_text(max_character_width, footer_text))
+    if poke_data.p_rarity is not None:
+        embd.set_footer(text=f"Rarity : {poke_data.p_rarity}")
 
     return embd
 

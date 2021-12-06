@@ -41,6 +41,7 @@ async def on_ready():
 @client.event
 async def on_message(message):
 
+    # detect rare catch message
     if str(message.author.id) == poketwo_user_id:
         catch_info = await aerialace.determine_rare_catch(message.content)
         if catch_info is None:
@@ -123,9 +124,10 @@ async def on_message(message):
 
         try:
             poke_data = await aerialace.get_poke_by_id(poke_id)
-        except:
-            reply = await aerialace.get_info_embd("Pokemon not found", f"Dex entry for id : `{poke_id}` was not found in the pokedex.\n Most uncommon ids follow this format : \n```-aa dex gallade-mega\n-aa dex meowstic-female\n-aa dex deoxys-defense```", global_vars.ERROR_COLOR)
+        except Exception as e:
+            reply = await aerialace.get_info_embd("Pokemon not found", f"Dex entry for id : `{poke_id}` was not found in the pokedex.\n Most uncommon ids follow this format : \n```-aa dex gallade-mega\n-aa dex meowstic-female\n-aa dex deoxys-defense\n-aa dex necrozma-dawn\n-aa dex calyrex-shadow-rider```\nIf you still think this pokemon is missing, report it at official server", global_vars.ERROR_COLOR)
             await message.channel.send(embed=reply)
+            print(f"-----Error showing dex entry{e}")
             return
 
         reply = await aerialace.get_dex_entry_embed(poke_data)
