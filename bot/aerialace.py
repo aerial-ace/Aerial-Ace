@@ -125,6 +125,9 @@ def get_help_embed():
         inline=False
     )
 
+    embd.set_thumbnail(url=global_vars.AVATAR_LINK)
+    embd.set_footer(text="Invite using -aa invite")
+
     return embd
 
 # for getting a pokemon of desired index
@@ -219,7 +222,7 @@ async def get_poke_by_id(poke_id):
     # get rarity
     try:
         rarity = aerialace_cache_manager.cached_rarity_data[poke.p_name.lower()]
-        if rarity == "mythical" or rarity == "legendary":
+        if rarity == "mythical" or rarity == "legendary" or rarity == "Ultra Beast":
             poke.p_rarity = rarity.capitalize()
         else:
             poke.p_rarity = None
@@ -467,6 +470,30 @@ async def get_rare_catch_embd(_message, _ping, _pokemon, _level):
     _time = _time_object.strftime("%I:%M %p UTC")
 
     embd.set_footer(text=f"{_date} at {_time}")
+    return embd
+
+async def get_bot_info_embd():
+    embd = discord.Embed(colour=global_vars.NORMAL_COLOR)
+    embd.title = "ABOUT - Aerial Ace"
+    embd.description = "Aerial Ace = Poketwo helper bot + pokedex"
+    embd.add_field(
+        name="Support Server",
+        value=f"[Link to the support server]({global_vars.SUPPORT_SERVER_LINK})",
+        inline=False
+    )
+    embd.add_field(
+        name="Get Started",
+        value="Ping the bot or type `-aa help`",
+        inline=False
+    )
+    embd.add_field(
+        name="Source Code",
+        value="Complete Source Cod, of Aerial Ace is public.\nThis means anyone can host their own version of the bot.\nHowever check the license before proceeding with running your own version of the bot\n[Link to the github repository](https://github.com/Devanshu19/)",
+        inline=False
+    )
+
+    embd.set_thumbnail(url=global_vars.AVATAR_LINK)
+
     return embd
 
 # for waiting

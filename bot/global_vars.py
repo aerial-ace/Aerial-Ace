@@ -19,6 +19,7 @@ RARE_CATCH_COLOR = discord.Color.gold()
 # bot links
 INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=0&scope=bot"
 AVATAR_LINK = "https://cdn.discordapp.com/avatars/908384747393286174/312dafe2a71e0338db6f2ef5315899a7.webp"
+SUPPORT_SERVER_LINK = "https://discord.gg/4mPdqevgsH"
 
 # tierlist links
 RARE_TL = "https://media.discordapp.net/attachments/793689115689353247/854410331988426772/image0.png"

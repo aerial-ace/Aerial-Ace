@@ -250,6 +250,11 @@ async def on_message(message):
         await message.channel.send(embed=reply)
         return
 
+    if msg.startswith("about"):
+        reply = await aerialace.get_bot_info_embd()
+        await message.channel.send(embed=reply)
+        return
+
     if msg.startswith("sleep"):
         await message.channel.send("Waiting....")
         await aerialace.waiter(30)

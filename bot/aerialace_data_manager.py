@@ -233,7 +233,7 @@ async def get_tag_hunters(server_id, tag):
 async def get_show_hunters_embd(tag, hunters):
 
     if hunters is None:
-        return aerialace.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), global_vars.WARNING_COLOR)
+        return await aerialace.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), global_vars.WARNING_COLOR)
 
     embd = discord.Embed(color=global_vars.NORMAL_COLOR)
     embd.title = "Users assigned to `{tag}` tag".format(tag=tag.capitalize())
