@@ -152,6 +152,12 @@ async def get_tl(list_name):
         return global_vars.DRAGON_TL
     elif list_name == "steel":
         return global_vars.STEEL_TL
+    elif list_name == "flying":
+        return global_vars.FLYING_TL
+    elif list_name == "poison":
+        return global_vars.POISON_TL
+    elif list_name == "bug":
+        return global_vars.BUG_TL
     else:
         return """> That tierlist was not found, these tierlists are available```common | mega | fire```"""
 

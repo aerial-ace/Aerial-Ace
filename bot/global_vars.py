@@ -41,5 +41,6 @@ STEEL_TL = "https://cdn.discordapp.com/attachments/793689115689353247/8980674794
 DRAGON_TL = "https://cdn.discordapp.com/attachments/774499540938129429/859643005312172042/my-image_28.png"
 ICE_TL = "https://media.discordapp.net/attachments/774499540938129429/850456657120591943/my-image_9.png?width=793&height=473"
 FAIRY_TL = "https://cdn.discordapp.com/attachments/774499540938129429/863030732754255892/my-image_41.png"
-
-
+FLYING_TL = "https://media.discordapp.net/attachments/774499540938129429/887928654116552724/my-image.png?width=316&height=300"
+POISON_TL = "https://media.discordapp.net/attachments/774499540938129429/846577512356249620/my-image_2.png"
+BUG_TL = "https://media.discordapp.net/attachments/774499540938129429/845692957214375966/image0.png?width=400&height=274"
