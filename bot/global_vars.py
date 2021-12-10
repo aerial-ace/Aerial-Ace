@@ -1,4 +1,13 @@
+import os
 import discord
+
+# Bot data
+TOKEN = os.environ["TOKEN"]
+ADMIN_ID = os.environ["ADMIN_ID"]
+POKETWO_ID = os.environ["POKETWO_ID"]
+
+# Mongo Data
+MONGO_URI = os.environ["MONGO"]
 
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"
@@ -17,7 +26,7 @@ WARNING_COLOR = discord.Color.orange()
 RARE_CATCH_COLOR = discord.Color.gold()
 
 # bot links
-INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=0&scope=bot"
+INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=534723951680&scope=bot"
 AVATAR_LINK = "https://cdn.discordapp.com/avatars/908384747393286174/312dafe2a71e0338db6f2ef5315899a7.webp"
 SUPPORT_SERVER_LINK = "https://discord.gg/4mPdqevgsH"
 

@@ -5,6 +5,7 @@ import json
 from bot import aerialace
 from bot import global_vars
 from bot import aerialace_cache_manager
+from bot import mongo_manager
 
 # return data files
 async def send_data_files(client):
@@ -166,6 +167,38 @@ async def register_tag(server_id, user_id, user_nick, tag):
 
     if tag == "":
         return "> Gib a tag name when? Like this ```-aa tag Ralts```"
+
+    query = {"server_id" : server_id}
+
+    """
+    {
+        object_id : "10000000000000",
+        "server_id" : "10000000000000000",
+        "tags" : {
+            "tag_id" : ["user_id_1", "user_id_2"]
+        }
+    }
+    """
+
+    server_document = mongo_manager.manager.get_data("tags", query)
+
+    server_document["tags"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # Load data from files
     tag_file_out = open("data/tags.json", "r")

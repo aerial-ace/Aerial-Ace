@@ -266,7 +266,7 @@ async def get_roll(username, upper_limit):
     return "> **{name}** rolled and got {roll} :game_die:".format(name=username, roll=roll_value)
 
 # get parameter from the message
-async def get_parameter(msg, removable_command):
+async def get_parameter(msg, removable_command) -> str:
     param = msg
     for cmd in removable_command:
         param = param.replace(cmd, "").strip()
@@ -451,7 +451,7 @@ async def determine_rare_catch(msg):
         for i in range(0, len(star_catch_keywords)):
             if i in catch_info_indices:
                 try:
-                    catch_info.append(msg_words[i].replace("!", "").replace(".", ""))
+                    catch_info.append(msg_words[i].replace("!", "").replace(".", "").replace("♂️", "").replace("♀️", ""))
                 except:
                     catch_info.append("Normal")
             else:
