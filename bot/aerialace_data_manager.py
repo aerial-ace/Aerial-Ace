@@ -171,6 +171,7 @@ async def register_tag(server_id, user_id, user_nick, tag):
     query = {"server_id" : server_id}
 
     """
+    Structure : 
     {
         object_id : "10000000000000",
         "server_id" : "10000000000000000",
@@ -180,83 +181,50 @@ async def register_tag(server_id, user_id, user_nick, tag):
     }
     """
 
-    server_document = mongo_manager.manager.get_data("tags", query)
+    server_document = mongo_manager.manager.get_all_data("tags", query)
 
-    server_document["tags"]
+    details = server_document[0]
 
+    tag_data = details["tags"]
+    tags = list(tag_data.keys())
+    users = list(tag_data.values())
 
+    old_tag = ""
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # Load data from files
-    tag_file_out = open("data/tags.json", "r")
-    tag_data = json.loads(tag_file_out.read())
-    tag_file_out.close()
-
-    current_tag = ""
-    value_index = -1
-
-    tag_keys = list(tag_data[server_id].keys())  # all the tags
-    tag_values = list(tag_data[server_id].values())  # all the users
-
-    for i in range(0, len(tag_values)):
-        if user_id in tag_values[i]:
-            value_index = i
+    for i in range(0, len(users)):
+        if user_id in users[i]:
+            old_tag = tags[i]
             break
 
-    # If tag doesn't exist, create and assign the user to it
-    if value_index == -1:
-        tag_data[server_id][tag] = []
-        tag_data[server_id][tag].append(user_id)
+    if old_tag == tag:
+        return f"> **{user_nick}** is already assigned to `{tag.capitalize()}` tag"
 
-    # if tag exist, move the user to current tag to new tag
+    if old_tag != "":
+        # remove user from current tag
+        tag_data[old_tag].remove(user_id)
+
+        # remove empty tags
+        if len(tag_data[old_tag]) <= 0:
+            del tag_data[old_tag]
+
+    try:
+        users_assigned_to_new_tag = tag_data[tag]
+    except:
+        tag_data[tag] = []
+        users_assigned_to_new_tag = []
+
+    users_assigned_to_new_tag.append(user_id)
+
+    tag_data[tag] = users_assigned_to_new_tag 
+
+    updated_data = {"tags" : tag_data}
+
+    mongo_manager.manager.update_all_data("tags", {"server_id" : server_id}, updated_data)
+
+    if old_tag == "":
+        return f"> **{user_nick}** was assigned to `{tag.capitalize()}` tag"
     else:
-        current_tag = tag_keys[value_index]
-
-        if current_tag == tag:
-            return "> {user} is already assigned to `{tag}` tag".format(user=user_nick, tag=tag.capitalize())
-
-        tag_data[server_id][current_tag].remove(user_id)
-
-        if len(tag_data[server_id][current_tag]) <= 0:
-            del tag_data[server_id][current_tag]
-
-        if tag in tag_keys:
-            tag_data[server_id][tag].append(user_id)
-        else:
-            tag_data[server_id][tag] = []
-            tag_data[server_id][tag].append(user_id)
-
-    # Save the data into the files
-    tag_data_in = open(global_vars.TAG_FILE_LOCATION, "w")
-    json_obj = json.dumps(tag_data)
-    tag_data_in.write(json_obj)
-    tag_data_in.close()
-
-    # cache the updated files
-    await aerialace_cache_manager.cache_data(init=False)
-
-    if value_index == -1:
-        return "> {user} was assigned to `{tag}` tag".format(user=user_nick, tag=tag.capitalize())
-
-    if current_tag is None:
-        return "> {user} was assigned to `{tag}` tag".format(user=user_nick, tag=tag.capitalize())
-    else:
-        return "> {user} was removed from `{prev}` and assigned to `{new}` tag".format(user=user_nick,
-                                                                                       prev=current_tag.capitalize(),
-                                                                                       new=tag.capitalize())
+        return f"> **{user_nick}** was removed from `{old_tag.capitalize()}` and assigned to `{tag.capitalize()}` tag"
 
 # Get shiny tags
 async def get_tag_hunters(server_id, tag):

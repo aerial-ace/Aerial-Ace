@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, results
 from pymongo import cursor
 
 from data_uploader import MongoManager
@@ -18,7 +18,7 @@ class MongoManager:
 
         return True
 
-    def get_data(self, collection_name : str, query : dict) -> cursor:
+    def get_all_data(self, collection_name : str, query : dict) -> cursor:
 
         try:
             result_cursor = self.db[collection_name].find(query)
@@ -38,6 +38,9 @@ class MongoManager:
             return False
 
         return True
+
+    def update_all_data(self, col_name : str, query : dict, updated_data: dict):
+        self.db[col_name].update_many(query, {"$set" : updated_data})
 
 
 manager = None

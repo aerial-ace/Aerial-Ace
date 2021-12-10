@@ -302,13 +302,6 @@ async def get_random_pokemon_embed(poke_data, server_id, user_id):
     embd.description = description
     embd.set_image(url=poke_data.image_link)
 
-    # Ugly, ik '_'
-    fav_out = await aerialace_data_manager.get_fav(server_id, user_id)
-    if fav_out.startswith("> Your favourite pokemon is"):
-        fav_poke = (fav_out.replace("> Your favourite pokemon is", "").strip().lower().replace("*", ""))
-        if poke_data.p_name.lower() == fav_poke:
-            embd.set_footer(text="This pokemon is your favourite")
-
     return embd
 
 # get Dex entry embed
@@ -440,7 +433,19 @@ async def determine_rare_catch(msg):
     3. If shiny catch, get shiny catch details
     4. If normal catch, return
     5. return catch details ["type_of_catch", "user_who_caught", "pokemon", "level"]    
+
+    Sample Catch Message :: 
+
+    Congratulations @Dev! You caught a level 1 Darkrai! Added to Pokédex. You received 35 Pokécoins!
+
+    These colour seen unusual
+
     """
+
+    removables = ["Added to Pokédex. You received 35 Pokécoins!", "Attack", "Defense", "Speed", "Complete"]
+
+    for i in removables:
+        msg = msg.replace(i, "")
 
     msg_words = msg.split()
 
@@ -453,7 +458,8 @@ async def determine_rare_catch(msg):
                 try:
                     catch_info.append(msg_words[i].replace("!", "").replace(".", "").replace("♂️", "").replace("♀️", ""))
                 except:
-                    catch_info.append("Normal")
+                    catch_info.append("normal")
+                    break
             else:
                 if msg_words[i] != star_catch_keywords[i]:
                     return None
@@ -463,7 +469,9 @@ async def determine_rare_catch(msg):
         return None
 
     if catch_info[3] == "These":
-        catch_info[3] = "Shiny"
+        catch_info[3] = "shiny"
+    else:
+        catch_info[3] = "normal"
 
     return catch_info
 
@@ -472,6 +480,8 @@ async def get_rare_catch_embd(_message, _ping, _pokemon, _level, _type):
     # TODO : Add some kind of rare and shiny sighting counter
 
     embd = discord.Embed(colour=global_vars.RARE_CATCH_COLOR)
+
+    #print(_type)
 
     if _type == "normal":
         embd.title = ":star2: Rare Catch Detected :star2:"
