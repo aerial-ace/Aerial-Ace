@@ -61,11 +61,16 @@ async def on_message(message):
         pokemon_caught = catch_info[2].lower()
         catch_type = catch_info[3].lower()
 
-        if aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "legendary" or aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "mythical" or aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "ultra beast":
+        if catch_type == "normal":
+            if aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "legendary" or aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "mythical" or aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "ultra beast":
+                rare_catch_embed = await aerialace.get_rare_catch_embd(message, ping, pokemon_caught, level, catch_type)
+                await message.channel.send(embed=rare_catch_embed)
+                return
+            else:
+                return
+        else:
             rare_catch_embed = await aerialace.get_rare_catch_embd(message, ping, pokemon_caught, level, catch_type)
             await message.channel.send(embed=rare_catch_embed)
-            return
-        else:
             return
 
     # ignore messages sent by the bot
@@ -180,16 +185,10 @@ async def on_message(message):
     # register tags
     if msg.startswith("tag "):
 
-        reply = await aerialace.get_info_embd("Oops, what a bummer",
-                                              "The commands releated to data are disabled for a lil bit. Sorry for that :/",
-                                              color=global_vars.ERROR_COLOR, footer="Other commands work though.")
-
-        """
         tag = await aerialace.get_parameter(msg, ["tag"])
         reply = await aerialace_data_manager.register_tag(server_id, user_id, user_name, tag)
-        """
 
-        await message.channel.send(embed=reply)
+        await message.channel.send(reply)
 
         return
 
@@ -312,7 +311,7 @@ async def on_message(message):
 
             length = mongo_manager.manager.get_documents_length("servers", {key : value})
 
-            query = mongo_manager.manager.get_data("servers", {})
+            query = mongo_manager.manager.get_all_data("servers", {})
 
             print(f"searched query was {key} {value}")
 
@@ -322,6 +321,13 @@ async def on_message(message):
             print(length)
 
             return
+
+    if msg.startswith("gd"):
+        param = await aerialace.get_parameter(msg, ["gd"])
+        data = mongo_manager.manager.get_all_data(param, {})
+
+        for i in data:
+            print(i)
 
     # command not found
     await message.channel.send("> -aa what? That command doesn't exist! \n"
