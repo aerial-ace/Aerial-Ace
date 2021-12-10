@@ -50,7 +50,8 @@ async def init_mongo(mongo_uri : str, database_name : str):
 
     try:
         manager = MongoManager(mongo_uri, database_name)
-    except:
+    except Exception as e:
+        print(f"Error while loading database {e}")
         return False
 
     return True

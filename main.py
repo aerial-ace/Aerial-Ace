@@ -48,7 +48,7 @@ async def on_ready():
 async def on_message(message):
 
     # detect rare catch message
-    if str(message.author.id) == admin_user_id:
+    if str(message.author.id) == poketwo_user_id:
         catch_info = await aerialace.determine_rare_catch(message.content)
 
         # return if not a rare catch
