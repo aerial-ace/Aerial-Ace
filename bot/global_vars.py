@@ -9,6 +9,11 @@ POKETWO_ID = os.environ["POKETWO_ID"]
 # Mongo Data
 MONGO_URI = os.environ["MONGO"]
 
+# bot links
+INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=534723951680&scope=bot"
+AVATAR_LINK = "https://cdn.discordapp.com/avatars/908384747393286174/312dafe2a71e0338db6f2ef5315899a7.webp"
+SUPPORT_SERVER_LINK = "https://discord.gg/4mPdqevgsH"
+
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"
 STATS_FILE_LOCATION = "data/stats.json"
@@ -25,10 +30,10 @@ ERROR_COLOR = discord.Color.red()
 WARNING_COLOR = discord.Color.orange()
 RARE_CATCH_COLOR = discord.Color.gold()
 
-# bot links
-INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=534723951680&scope=bot"
-AVATAR_LINK = "https://cdn.discordapp.com/avatars/908384747393286174/312dafe2a71e0338db6f2ef5315899a7.webp"
-SUPPORT_SERVER_LINK = "https://discord.gg/4mPdqevgsH"
+# Reactions
+PIKA_WOW = "https://cdn.discordapp.com/attachments/911547825274388511/918840026094247976/pika_woo.png"
+JIRACHI_WOW = "https://cdn.discordapp.com/attachments/911547825274388511/918840025477681152/jirachi_wow.png"
+PIKA_SHOCK = "https://cdn.discordapp.com/attachments/911547825274388511/918840025746137158/pika_shock.png"
 
 # tierlist links
 RARE_TL = "https://media.discordapp.net/attachments/793689115689353247/854410331988426772/image0.png"

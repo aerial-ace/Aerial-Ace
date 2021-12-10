@@ -481,14 +481,14 @@ async def get_rare_catch_embd(_message, _ping, _pokemon, _level, _type):
 
     embd = discord.Embed(colour=global_vars.RARE_CATCH_COLOR)
 
-    #print(_type)
-
     if _type == "normal":
         embd.title = ":star2: Rare Catch Detected :star2:"
         embd.description = f"{_ping} caught a level {_level} `{_pokemon.capitalize()}`\n"
+        embd.set_image(url=global_vars.JIRACHI_WOW)
     elif _type == "shiny":
         embd.title = ":star2: Shiny Catch Detected :star2:"
         embd.description = f"{_ping} caught a level {_level} **SHINY** `{_pokemon.capitalize()}`\n"
+        embd.set_image(url=global_vars.PIKA_SHOCK)
 
     embd.description += f"Congratulations :tada: :tada:\n"
 
