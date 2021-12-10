@@ -1,11 +1,14 @@
 import discord
 import os
 
+from discord import user
+from pymongo import mongo_client
+
 from bot import aerialace
 from bot import aerialace_data_manager
 from bot import aerialace_init_manager
 from bot import aerialace_cache_manager
-from bot import aerialace_battle_manager
+from bot import mongo_manager
 from bot import global_vars
 
 """Use for function folding is suggested :/"""
@@ -18,8 +21,8 @@ intents.reactions = True
 # init
 client = discord.Client(intents=intents)
 
-admin_user_id = os.environ['ADMIN_ID']
-poketwo_user_id = os.environ['POKETWO_ID']
+admin_user_id = global_vars.ADMIN_ID
+poketwo_user_id = global_vars.POKETWO_ID
 
 @client.event
 async def on_guild_join(guild_joined):
@@ -36,6 +39,7 @@ async def on_guild_remove(guild_removed):
 @client.event
 async def on_ready():
     print("Logged in as {0.user}".format(client))
+    await mongo_manager.init_mongo(global_vars.MONGO_URI, "aerialace")
     await aerialace_cache_manager.cache_data(init=True)
     await aerialace.start_rich_presence_cycle(client, 15)
 
@@ -69,11 +73,11 @@ async def on_message(message):
         return
 
     # ignore commands not meant for the bot
-    if message.content.lower().startswith("-aa") is False and (message.content != "<@!908384747393286174>" and message.content != "<@908384747393286174>"):
+    if message.content.lower().startswith("-aa") is False and (message.content.strip() != "<@!908384747393286174>" and message.content.strip() != "<@908384747393286174>"):
         return
 
     # respond to pings
-    if message.content.strip() == "<@!908384747393286174>" or message.content == "<@908384747393286174>":
+    if message.content.strip() == "<@!908384747393286174>" or message.content.strip() == "<@908384747393286174>":
         await message.channel.send("> Aerial Ace prefix is `-aa`.\n> Try `-aa help` :3")
         return
 
@@ -140,20 +144,6 @@ async def on_message(message):
 
         return
 
-    # Register Favourite Pokemon command
-    if msg.startswith("set_fav") or msg.startswith("sf"):
-        poke = await aerialace.get_parameter(msg, ["set_fav", "sf"])
-
-        reply = await aerialace_data_manager.set_fav(server_id, user_id, poke)
-        await message.channel.send(reply)
-        return
-
-    # View favourite pokemon command
-    if msg.startswith("fav"):
-        reply = await aerialace_data_manager.get_fav(server_id, user_id)
-        await message.channel.send(reply)
-        return
-
     # get duelish stats command
     if msg.startswith("stats"):
         poke = await aerialace.get_parameter(msg, ["stats"])
@@ -189,14 +179,26 @@ async def on_message(message):
 
     # register tags
     if msg.startswith("tag "):
+
+        reply = await aerialace.get_info_embd("Oops, what a bummer",
+                                              "The commands releated to data are disabled for a lil bit. Sorry for that :/",
+                                              color=global_vars.ERROR_COLOR, footer="Other commands work though.")
+
+        """
         tag = await aerialace.get_parameter(msg, ["tag"])
         reply = await aerialace_data_manager.register_tag(server_id, user_id, user_name, tag)
-        await message.channel.send(reply)
+        """
+
+        await message.channel.send(embed=reply)
 
         return
 
     # ping user with tag command
     if msg.startswith("tag_ping") or msg.startswith("tp"):
+        reply = await aerialace.get_info_embd("Oops, what a bummer",
+                                              "The commands releated to data are disabled for a lil bit. Sorry for that :/",
+                                              color=global_vars.ERROR_COLOR, footer="Other commands work though.")
+        """
         tag = await aerialace.get_parameter(msg, ["tp", "tag_ping"])
         hunters = await aerialace_data_manager.get_tag_hunters(server_id, tag)
 
@@ -215,19 +217,33 @@ async def on_message(message):
             reply = "> Pinging users assigned to `{tag}` tag \n\n {users}".format(tag=tag.capitalize(), users=hunter_pings)
 
             await message.channel.send(reply)
+        """
+
+        await message.channel.send(embed=reply)
 
         return
 
     # see user assigned to tag
     if msg.startswith("tag_show ") or msg.startswith("ts "):
+        reply = await aerialace.get_info_embd("Oops, what a bummer",
+                                              "The commands releated to data are disabled for a lil bit. Sorry for that :/",
+                                              color=global_vars.ERROR_COLOR, footer="Other commands work though.")
+        """
         tag = await aerialace.get_parameter(msg, ["tag_show", "ts"])
         hunters = await aerialace_data_manager.get_tag_hunters(server_id, tag)
         reply = await aerialace_data_manager.get_show_hunters_embd(tag=tag, hunters=hunters)
+        """
         await message.channel.send(embed=reply)
         return
 
     # logs the battle and update the leaderboard
     if msg.startswith("log_battle ") or msg.startswith("lb "):
+
+        reply = await aerialace.get_info_embd("Oops, what a bummer",
+                                              "The commands releated to data are disabled for a lil bit. Sorry for that :/",
+                                              color=global_vars.ERROR_COLOR, footer="Other commands work though.")
+
+        """
         players = await aerialace.get_winner_looser(msg)
         info = await aerialace.get_battle_acceptance(client, message, players[0], players[1])
 
@@ -237,21 +253,27 @@ async def on_message(message):
             reply = "> Battle Log was not accepted"
         else:
             return
+        """
 
-        await message.channel.send(reply)
+        await message.channel.send(embed=reply)
 
         return
 
     # Display the battle score of the user
     if msg.startswith("battle_score") or msg.startswith("bs"):
-        reply = await aerialace_battle_manager.get_battle_score(server_id, member)
+        reply = await aerialace.get_info_embd("Oops, what a bummer", "The commands releated to data are disabled for a lil bit. Sorry for that :/", color=global_vars.ERROR_COLOR, footer="Other commands work though.")
+        #reply = await aerialace_battle_manager.get_battle_score(server_id, member)
 
-        await message.channel.send(reply)
+        await message.channel.send(embed=reply)
         return
 
     # Display the battle leaderboard of the server
     if msg.startswith("battle_lb") or msg.startswith("blb"):
-        reply = await aerialace_battle_manager.get_battle_leaderboard_embed(client, guild)
+
+        reply = await aerialace.get_info_embd("Oops, what a bummer", "The commands releated to data are disabled for a lil bit. Sorry for that :/", color=global_vars.ERROR_COLOR, footer="Other commands work though.")
+
+        #reply = await aerialace_battle_manager.get_battle_leaderboard_embed(client, guild)
+
         await message.channel.send(embed=reply)
         return
 
@@ -261,14 +283,18 @@ async def on_message(message):
         await message.channel.send(embed=reply)
         return
 
+    # Admins Only
+
     # Start a sleeping sessions
     if msg.startswith("sleep"):
-        await message.channel.send("Waiting....")
-        await aerialace.waiter(30)
-        await message.channel.send("Times up....")
+        if user_id == admin_user_id:
+            await message.channel.send("Waiting....")
+            await aerialace.waiter(30)
+            await message.channel.send("Times up....")
+        else:
+            await message.channel.send("You are not supposed to use that command :/")
         return
 
-    # Admins Only
     # returns the json files of the data
     if msg.startswith("fetch_data_files") or msg.startswith("fdf"):
         if user_id == admin_user_id:
@@ -277,11 +303,28 @@ async def on_message(message):
         else:
             await message.channel.send("You are not supposed to use that command :/")
 
-        return
+    if msg.startswith("contains"):
+        if user_id == admin_user_id:
+            param = await aerialace.get_parameter(msg, ["contains"])
+            key, value = param.split()
+
+            value = value.capitalize()
+
+            length = mongo_manager.manager.get_documents_length("servers", {key : value})
+
+            query = mongo_manager.manager.get_data("servers", {})
+
+            print(f"searched query was {key} {value}")
+
+            for i in query:
+                print(i)
+
+            print(length)
+
+            return
 
     # command not found
     await message.channel.send("> -aa what? That command doesn't exist! \n"
                                "> See all the available commands by using ```-aa help```")
 
-token = os.environ['TOKEN']
-client.run(token)
+client.run(global_vars.TOKEN)
