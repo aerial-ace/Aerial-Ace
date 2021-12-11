@@ -228,12 +228,28 @@ async def register_tag(server_id, user_id, user_nick, tag):
 
 # Get shiny tags
 async def get_tag_hunters(server_id, tag):
-    cached_tag_data = aerialace_cache_manager.cached_tag_data
+    
+    query = {"server_id" : server_id}
 
-    if tag not in list(cached_tag_data[server_id].keys()):
-        return None
+    data_cursor = mongo_manager.manager.get_all_data("tags", query)
 
-    hunters = cached_tag_data[server_id][tag]
+    """
+    {
+        "object_id" : 100000000000000000,
+        "server_id" : "10000000000000000",
+        "tags" : {
+            "tag_name" : ["hunter_id_1", "hunter_id_2"]
+        }
+    }
+    """
+
+    tag_data = data_cursor[0]["tags"]
+
+    try:
+        hunters = tag_data[tag]
+    except:
+        hunters = None
+
     return hunters
 
 # Get show hunters embed

@@ -186,11 +186,8 @@ async def on_message(message):
 
     # ping user with tag command
     if msg.startswith("tag_ping") or msg.startswith("tp"):
-        reply = await aerialace.get_info_embd("Oops, what a bummer",
-                                              "The commands releated to data are disabled for a lil bit. Sorry for that :/",
-                                              color=global_vars.ERROR_COLOR, footer="Other commands work though.")
-        """
-        tag = await aerialace.get_parameter(msg, ["tp", "tag_ping"])
+        
+        tag = await aerialace.get_parameter(msg, ["tag_ping", "tp"])
         hunters = await aerialace_data_manager.get_tag_hunters(server_id, tag)
 
         if hunters is None:
@@ -208,22 +205,16 @@ async def on_message(message):
             reply = "> Pinging users assigned to `{tag}` tag \n\n {users}".format(tag=tag.capitalize(), users=hunter_pings)
 
             await message.channel.send(reply)
-        """
-
-        await message.channel.send(embed=reply)
 
         return
 
     # see user assigned to tag
     if msg.startswith("tag_show ") or msg.startswith("ts "):
-        reply = await aerialace.get_info_embd("Oops, what a bummer",
-                                              "The commands releated to data are disabled for a lil bit. Sorry for that :/",
-                                              color=global_vars.ERROR_COLOR, footer="Other commands work though.")
-        """
+
         tag = await aerialace.get_parameter(msg, ["tag_show", "ts"])
         hunters = await aerialace_data_manager.get_tag_hunters(server_id, tag)
         reply = await aerialace_data_manager.get_show_hunters_embd(tag=tag, hunters=hunters)
-        """
+        
         await message.channel.send(embed=reply)
         return
 
