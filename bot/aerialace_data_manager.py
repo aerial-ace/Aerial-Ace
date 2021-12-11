@@ -1,76 +1,15 @@
 import discord
-import os
-import json
 
 from bot import aerialace
 from bot import global_vars
 from bot import aerialace_cache_manager
 from bot import mongo_manager
 
-# return data files
-async def send_data_files(client):
-    stats_file = discord.File(global_vars.STATS_FILE_LOCATION)
-    fav_file = discord.File(global_vars.FAV_FILE_LOCATION)
-    server_file = discord.File(global_vars.SERVER_FILE_LOCATION)
-    tag_file = discord.File(global_vars.TAG_FILE_LOCATION)
-    battle_log_file = discord.File(global_vars.BATTLE_LOG_FILE_LOCATION)
-
-    data_files = [stats_file, fav_file, server_file, tag_file, battle_log_file]
-
-    # DM the files to the admins
-    admin_id = int(os.environ['ADMIN_ID'])
-    admin = client.get_user(admin_id)
-    try:
-        for file in data_files:
-            await admin.send(file=file)
-    except discord.Forbidden:
-        print("Unable to send message to admins.")
-
-# Set the favourite pokemon of the user
-async def set_fav(server_id, user_id, poke_name):
-    if poke_name == "":
-        return "> Breh, give a pokemon name as a parameter like ```-aa set_fav espurr```"
-
-    # get the data from the file
-    fav_data_out = open(global_vars.FAV_FILE_LOCATION, "r")
-    fav_data = json.loads(fav_data_out.read())
-    fav_data_out.close()
-
-    # update the data
-    fav_data[server_id][user_id] = poke_name
-
-    # save the data
-    fav_data_in = open(global_vars.FAV_FILE_LOCATION, "w")
-    json_obj = json.dumps(fav_data)
-    fav_data_in.write(json_obj)
-    fav_data_in.close()
-
-    # update the cached data
-    await aerialace_cache_manager.cache_data(init=False)
-
-    return "> Your favourite pokemon is now **{fav}**. Check it using ```-aa fav```".format(fav=poke_name)
-
-# Get the favourite pokemon of the user
-async def get_fav(server_id, user_id):
-    cached_fav_data = aerialace_cache_manager.cached_fav_data
-
-    server_list = list(cached_fav_data.keys())  # all the registered servers
-
-    if server_id in server_list:
-        users = list(cached_fav_data[server_id].keys())
-        if user_id in users:
-            fav_poke = cached_fav_data[server_id][user_id]
-            return "> Your favourite pokemon is **{}**".format(fav_poke.capitalize())
-        else:
-            return "> User was not found in the database, set you favourite using ```-aa set_fav <pokemon>```"
-    else:
-        return "> Server was not found! Dm DevGa.me#0176 smh"
-
 # get duelish stats
 async def get_stats_embed(pokemon):
 
     if pokemon == "":
-        return aerialace.get_info_embd("Gib pokemon name as a param when :/", "A pokemon name is required for this command. Try this ```-aa stats Solgaleo```", global_vars.ERROR_COLOR)
+        return await aerialace.get_info_embd("Gib pokemon name as a param when :/", "A pokemon name is required for this command. Try this ```-aa stats Solgaleo```", global_vars.ERROR_COLOR)
 
     embd = discord.Embed()
 
@@ -96,7 +35,7 @@ async def get_stats_embed(pokemon):
 async def get_moveset_embed(poke):
 
     if poke == "":
-        return aerialace.get_info_embd("Gib pokemon name as a param when :/", "A pokemon name is required for this command, try this ```-aa moveset Zekrom```", global_vars.ERROR_COLOR)
+        return await aerialace.get_info_embd("Gib pokemon name as a param when :/", "A pokemon name is required for this command, try this ```-aa moveset Zekrom```", global_vars.ERROR_COLOR)
 
     embd = discord.Embed()
 

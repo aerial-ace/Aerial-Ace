@@ -2,92 +2,119 @@ import discord
 import json
 from collections import OrderedDict
 
+from bot import mongo_manager
+from bot import aerialace
 from bot import global_vars
-from bot import aerialace_cache_manager
 
 # Register Battle log
-async def register_battle_log(server_id, winner, loser):
-    # open the battle file
-    battle_file_out = open(global_vars.BATTLE_LOG_FILE_LOCATION, "r")
-    battle_data = json.loads(battle_file_out.read())
-    battle_file_out.close()
+async def register_battle_log(server_id, winner, looser):
 
-    # get data from the battle file as {"user_id" : "wins"}
-    battle_records = battle_data[str(server_id)]
-    users = list(battle_records.keys())
+    query = {"server_id" : server_id}
+    data_cursor = mongo_manager.manager.get_all_data("battles", query)
 
-    if winner in users:
-        battle_data[server_id][winner] = str(int(battle_data[server_id][winner]) + 1)
-    else:
-        battle_data[server_id][winner] = "1"
+    """
+    {
+        "object_id" : 10000000,
+        "server_id" : "1000000",
+        "battles" : {
+            "user_id" : wins
+        }
+    }
+    """
 
-    if loser in users:
-        battle_data[server_id][loser] = str(int(battle_data[server_id][loser]) - 1)
-    else:
-        battle_data[server_id][loser] = "-1"
+    try:
+        battle_data = data_cursor[0]["logs"]
+        users = list(battle_data.keys())
 
-    # write the data
-    battle_file_in = open(global_vars.BATTLE_LOG_FILE_LOCATION, "w")
-    json_obj = json.dumps(battle_data)
-    battle_file_in.write(json_obj)
-    battle_file_in.close()
+        if winner not in users:
+            battle_data[winner] = 1
+        else:
+            battle_data[winner] = battle_data[winner] + 1
 
-    # cache the data
-    await aerialace_cache_manager.cache_data(init=False)
+        if looser not in users:
+            battle_data[looser] = -1
+        else:
+            battle_data[looser] = battle_data[looser] - 1
 
-    return "> <@{0}> won over <@{1}>. Scoreboard was updated".format(winner, loser)
+        updated_data = {"logs" : battle_data}
+
+        mongo_manager.manager.update_all_data("battles", query, updated_data)
+
+        return f"> GG, <@{winner}> won over <@{looser}>. Scoreboard was updated."
+
+    except Exception as e:
+        print(f"Error while logging battle : {e}")
 
 
 # return the battle score of the user
 async def get_battle_score(server_id, user):
-    cached_battle_data = aerialace_cache_manager.cached_battle_data
-
     user_id = str(user.id)
 
-    if server_id not in list(cached_battle_data.keys()):
-        return "> Server was not found in database, dm your server id to DevGa.me#0176 please"
+    query = {"server_id" : server_id}
+    data_cursor = mongo_manager.manager.get_all_data("battles", query)
 
-    users = cached_battle_data[server_id]
+    """
+    {
+        "object_id" : 1000000,
+        "server_id" : "100000",
+        "logs" : {
+            "user_id" : 10
+        }
+    }
+    """
 
-    if user_id in users:
-        score = cached_battle_data[server_id][user_id]
-        return "> {user} has a battle score of **{score}**".format(user=user.name, score=score)
-    else:
-        return "> Register some battles first -_-"
+    try:
+        battle_data = data_cursor[0]["logs"]
+        users = (battle_data.keys())
+
+        if user_id not in users:
+            return "> Register some battles first -_-"
+        else:
+            score = battle_data[user_id]
+            return f"> {user.name} has a battle score of **{score}**"
+
+    except Exception as e:
+        print(f"Error while showing battle score : {e}")
+        return "> Error showing battle score :(, error were registered though."
 
 
 # returns the battle leaderboard of the server
 async def get_battle_leaderboard_embed(client, guild):
-    cached_battle_data = aerialace_cache_manager.cached_battle_data
-
     server_id = str(guild.id)
     server_name = guild.name
 
-    # {"user" : "wins"}
-    battle_records = cached_battle_data[server_id]
+    query = {"server_id" : server_id}
+    data_cursor = mongo_manager.manager.get_all_data("battles", query)
 
-    sorted_battle_records = OrderedDict(sorted(battle_records.items(), key=lambda x: int(x[1]), reverse=True))
+    try:
+        battle_records = data_cursor[0]["logs"]
 
-    reply_embd = discord.Embed(title="{server_name}'s battle leaderboard".format(server_name=server_name), colour=discord.Colour.blue())
-    reply_embd.description = "```-Pos- | --------Name-------- | --Score-- \n\n"
+        sorted_battle_records = OrderedDict(sorted(battle_records.items(), key=lambda x: int(x[1]), reverse=True))
 
-    max_leaderboard_listings = 10
-    footer = ""
+        reply_embd = discord.Embed(title="{server_name}'s battle leaderboard".format(server_name=server_name), colour=discord.Colour.blue())
+        reply_embd.description = "```-Pos- | --------Name-------- | --Score-- \n\n"
 
-    pos = 1
-    for i in sorted_battle_records:
-        if pos > max_leaderboard_listings:
-            footer = "Some players were not mentioned in the leaderboard because of lower scores.\nSee your score with -aa bs"
-            break
-        try:
-            player_name = client.get_user(int(i)).name
-        except:
-            player_name = "Not Found"
-        reply_embd.description += "{pos} | {name} | {score} \n".format(pos=" {0}.".format(pos).ljust(5, " "), name=("{0}".format(player_name)).ljust(20, " "), score=("{0}".format(battle_records[i]).ljust(9, " ")))
-        pos = pos + 1
+        max_leaderboard_listings = 10
+        footer = ""
 
-    reply_embd.description += "```"
-    if footer != "":
-        reply_embd.set_footer(text=footer)
+        pos = 1
+        for i in sorted_battle_records:
+            if pos > max_leaderboard_listings:
+                footer = "Some players were not mentioned in the leaderboard because of lower scores.\nSee your score with -aa bs"
+                break
+            try:
+                player_name = client.get_user(int(i)).name
+            except:
+                player_name = "Not Found"
+                # TODO : Remove this user from leaderboards
+            reply_embd.description += "{pos} | {name} | {score} \n".format(pos=" {0}.".format(pos).ljust(5, " "), name=("{0}".format(player_name)).ljust(20, " "), score=("{0}".format(battle_records[i]).ljust(9, " ")))
+            pos = pos + 1
 
-    return reply_embd
+        reply_embd.description += "```"
+        if footer != "":
+            reply_embd.set_footer(text=footer)
+
+        return reply_embd
+    except Exception as e:
+        print(f"Error while showing battle leaderboard : {e}")
+        return await aerialace.get_info_embd("Oops", "Error occured while showing battle leaderboards :|", global_vars.ERROR_COLOR, "These errors were registered")

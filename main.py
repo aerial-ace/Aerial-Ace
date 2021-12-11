@@ -8,6 +8,7 @@ from bot import aerialace
 from bot import aerialace_data_manager
 from bot import aerialace_init_manager
 from bot import aerialace_cache_manager
+from bot import aerialace_battle_manager
 from bot import mongo_manager
 from bot import global_vars
 
@@ -221,11 +222,6 @@ async def on_message(message):
     # logs the battle and update the leaderboard
     if msg.startswith("log_battle ") or msg.startswith("lb "):
 
-        reply = await aerialace.get_info_embd("Oops, what a bummer",
-                                              "The commands releated to data are disabled for a lil bit. Sorry for that :/",
-                                              color=global_vars.ERROR_COLOR, footer="Other commands work though.")
-
-        """
         players = await aerialace.get_winner_looser(msg)
         info = await aerialace.get_battle_acceptance(client, message, players[0], players[1])
 
@@ -235,26 +231,23 @@ async def on_message(message):
             reply = "> Battle Log was not accepted"
         else:
             return
-        """
 
-        await message.channel.send(embed=reply)
+        await message.channel.send(reply)
 
         return
 
     # Display the battle score of the user
     if msg.startswith("battle_score") or msg.startswith("bs"):
-        reply = await aerialace.get_info_embd("Oops, what a bummer", "The commands releated to data are disabled for a lil bit. Sorry for that :/", color=global_vars.ERROR_COLOR, footer="Other commands work though.")
-        #reply = await aerialace_battle_manager.get_battle_score(server_id, member)
+        
+        reply = await aerialace_battle_manager.get_battle_score(server_id, member)
 
-        await message.channel.send(embed=reply)
+        await message.channel.send(reply)
         return
 
     # Display the battle leaderboard of the server
     if msg.startswith("battle_lb") or msg.startswith("blb"):
 
-        reply = await aerialace.get_info_embd("Oops, what a bummer", "The commands releated to data are disabled for a lil bit. Sorry for that :/", color=global_vars.ERROR_COLOR, footer="Other commands work though.")
-
-        #reply = await aerialace_battle_manager.get_battle_leaderboard_embed(client, guild)
+        reply = await aerialace_battle_manager.get_battle_leaderboard_embed(client, guild)
 
         await message.channel.send(embed=reply)
         return
@@ -277,40 +270,15 @@ async def on_message(message):
             await message.channel.send("You are not supposed to use that command :/")
         return
 
-    # returns the json files of the data
-    if msg.startswith("fetch_data_files") or msg.startswith("fdf"):
+    if msg.startswith("gd"):
         if user_id == admin_user_id:
-            await aerialace_data_manager.send_data_files(client)
-            await message.channel.send("> Data files were sent to admins :}")
-        else:
-            await message.channel.send("You are not supposed to use that command :/")
+            param = await aerialace.get_parameter(msg, ["gd"])
+            data = mongo_manager.manager.get_all_data(param, {})
 
-    if msg.startswith("contains"):
-        if user_id == admin_user_id:
-            param = await aerialace.get_parameter(msg, ["contains"])
-            key, value = param.split()
-
-            value = value.capitalize()
-
-            length = mongo_manager.manager.get_documents_length("servers", {key : value})
-
-            query = mongo_manager.manager.get_all_data("servers", {})
-
-            print(f"searched query was {key} {value}")
-
-            for i in query:
+            for i in data:
                 print(i)
 
-            print(length)
-
-            return
-
-    if msg.startswith("gd"):
-        param = await aerialace.get_parameter(msg, ["gd"])
-        data = mongo_manager.manager.get_all_data(param, {})
-
-        for i in data:
-            print(i)
+        return
 
     # command not found
     await message.channel.send("> -aa what? That command doesn't exist! \n"
