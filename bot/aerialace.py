@@ -425,53 +425,79 @@ async def get_info_embd(title, error, color, footer=None):
 # check if any message is a rare catch message
 async def determine_rare_catch(msg):
 
-    star_catch_keywords = ["Congratulations", "{ping}", "You", "caught", "a", "level", "{level}", "{pokemon}", "These"]
-
     """
-    1. Determine rare catch, shiny catch or normal catch
-    2. If rare catch, get rare catch details.
-    3. If shiny catch, get shiny catch details
-    4. If normal catch, return
-    5. return catch details ["type_of_catch", "user_who_caught", "pokemon", "level"]    
-
-    Sample Catch Message :: 
-
-    Congratulations @Dev! You caught a level 1 Darkrai! Added to Pokédex. You received 35 Pokécoins!
-
-    These colour seen unusual
-
+    1. Determine if catch message, else return None
+    2. Determine shiny catch or normal catch.
+    3. Shiny Catch : 
+        remove all the unnecessary text
+        get the catch data
+        return the catch data
+    4. Normal Catch : 
+        Remove the shit
+        Get required data from the remaining message
+        return the data
     """
 
-    removables = ["Added to Pokédex. You received 35 Pokécoins!", "Attack", "Defense", "Speed", "Complete"]
+    message = msg.replace("!", "").replace(".", "").replace("♂️", "").replace("♀️", "")     # remove the shit
+    message_words = message.split()  
 
-    for i in removables:
-        msg = msg.replace(i, "")
+    is_shiny = True
+    catch_info = {}
 
-    msg_words = msg.split()
+    catch_keywords = ["Congratulations", "You", "caught", "a", "level"]
+    shiny_keywords = ["These", "colors", "seem", "unusual"]
 
-    catch_info_indices = [1, 6, 7, 8]
-    catch_info = []
 
-    try:
-        for i in range(0, len(star_catch_keywords)):
-            if i in catch_info_indices:
-                try:
-                    catch_info.append(msg_words[i].replace("!", "").replace(".", "").replace("♂️", "").replace("♀️", ""))
-                except:
-                    catch_info.append("normal")
-                    break
-            else:
-                if msg_words[i] != star_catch_keywords[i]:
-                    return None
-                else:
-                    continue
-    except:
-        return None
+    # determines whether this message is a catch message by checking the presence of the all catch keywords
+    for catch_keyword in catch_keywords:
+        if catch_keyword not in message_words:
+            return None # Not a catch message
 
-    if catch_info[3] == "These":
-        catch_info[3] = "shiny"
+    
+    # determine shiny catch by checking the presence of all the shiny keywords
+    for shiny_keyword in shiny_keywords:
+        if shiny_keyword not in message_words:
+            is_shiny = False
+
+    extra_text = ["Shiny streak reset.", "Added to Pokédex. You received 35 Pokécoins!", "These colors seem unusual... ✨", ".", "!", "(", ")"]
+
+    info_text = msg
+    for extra in extra_text:
+        info_text = info_text.replace(extra, "")
+
+    info_words = info_text.split()
+
+    catch_info["user"] = info_words[1] 
+    catch_info["level"] = info_words[6]
+    catch_info["pokemon"] = ""
+    catch_info["type"] = ""
+
+    if info_words[-1].isnumeric():
+        info_words.remove(info_words[-1])
+
+    pokemon_name_words = info_words[7:]
+
+    if is_shiny:
+        catch_info["type"] = "shiny"
+        catch_info["pokemon"] = ""
+        for i in pokemon_name_words:
+            catch_info["pokemon"] = catch_info["pokemon"] + f"{i.capitalize()} "
+        catch_info["pokemon"] = catch_info["pokemon"].strip()
+        return catch_info
     else:
-        catch_info[3] = "normal"
+        catch_info["pokemon"] = ""
+        for i in pokemon_name_words:
+            catch_info["pokemon"] += i.strip().capitalize() + " "
+            try:
+                if aerialace_cache_manager.cached_rarity_data[i.lower()] in ["legendary", "mythical", "ultra beast"]:
+                    catch_info["type"] = "rare"
+                    catch_info["pokemon"] = catch_info["pokemon"].strip()
+                    break
+            except:
+                continue
+
+    if catch_info["type"] == "":
+        return None
 
     return catch_info
 
@@ -481,13 +507,13 @@ async def get_rare_catch_embd(_message, _ping, _pokemon, _level, _type):
 
     embd = discord.Embed(colour=global_vars.RARE_CATCH_COLOR)
 
-    if _type == "normal":
+    if _type == "rare":
         embd.title = ":star2: Rare Catch Detected :star2:"
-        embd.description = f"{_ping} caught a level {_level} `{_pokemon.capitalize()}`\n"
+        embd.description = f"{_ping} caught a level {_level} `{_pokemon}`\n"
         embd.set_image(url=global_vars.JIRACHI_WOW)
     elif _type == "shiny":
         embd.title = ":star2: Shiny Catch Detected :star2:"
-        embd.description = f"{_ping} caught a level {_level} **SHINY** `{_pokemon.capitalize()}`\n"
+        embd.description = f"{_ping} caught a level {_level} **SHINY** `{_pokemon}`\n"
         embd.set_image(url=global_vars.PIKA_SHOCK)
 
     embd.description += f"Congratulations :tada: :tada:\n"
