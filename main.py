@@ -48,30 +48,25 @@ async def on_ready():
 async def on_message(message):
 
     # detect rare catch message
-    if str(message.author.id) == poketwo_user_id:
+    if str(message.author.id) == admin_user_id:
         catch_info = await aerialace.determine_rare_catch(message.content)
+
+        print(catch_info)
 
         # return if not a rare catch
         if catch_info is None:
             return
 
         # get the rare catch details
-        ping = catch_info[0]
-        level = catch_info[1]
-        pokemon_caught = catch_info[2].lower()
-        catch_type = catch_info[3].lower()
 
-        if catch_type == "normal":
-            if aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "legendary" or aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "mythical" or aerialace_cache_manager.cached_rarity_data[pokemon_caught] == "ultra beast":
-                rare_catch_embed = await aerialace.get_rare_catch_embd(message, ping, pokemon_caught, level, catch_type)
-                await message.channel.send(embed=rare_catch_embed)
-                return
-            else:
-                return
-        else:
-            rare_catch_embed = await aerialace.get_rare_catch_embd(message, ping, pokemon_caught, level, catch_type)
-            await message.channel.send(embed=rare_catch_embed)
-            return
+        if catch_info["type"] == "shiny":
+            reply = await aerialace.get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "shiny")
+        elif catch_info["type"] == "rare":
+            reply = await aerialace.get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "rare")
+
+        await message.channel.send(embed=reply)
+
+        return
 
     # ignore messages sent by the bot
     if message.author == client.user:
