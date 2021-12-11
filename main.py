@@ -264,7 +264,7 @@ async def on_message(message):
     if msg.startswith("sleep"):
         if user_id == admin_user_id:
             await message.channel.send("Waiting....")
-            await aerialace.waiter(30)
+            await aerialace.waiter(60)
             await message.channel.send("Times up....")
         else:
             await message.channel.send("You are not supposed to use that command :/")
@@ -281,7 +281,7 @@ async def on_message(message):
         return
 
     # command not found
-    await message.channel.send("> -aa what? That command doesn't exist! \n"
-                               "> See all the available commands by using ```-aa help```")
+    error_embed = await aerialace.get_info_embd("Command Not Found", "-aa what? That command doesn't exist! \n See the available commands by using ```-aa help```", global_vars.ERROR_COLOR)
+    await message.channel.send(embed=error_embed)
 
 client.run(global_vars.TOKEN)

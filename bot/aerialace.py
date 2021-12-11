@@ -559,4 +559,3 @@ async def get_bot_info_embd():
 # for waiting
 async def waiter(_time: float):
     await asyncio.sleep(_time)
-    print("Times up")
