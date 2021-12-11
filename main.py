@@ -76,7 +76,8 @@ async def on_message(message):
 
     # respond to pings
     if message.content.strip() == "<@!908384747393286174>" or message.content.strip() == "<@908384747393286174>":
-        await message.channel.send("> Aerial Ace prefix is `-aa`.\n> Try `-aa help` :3")
+        info_embed = await aerialace.get_info_embd("Aerial Ace", "Aerial Ace prefix is `-aa`.\nTry `-aa help` :3", global_vars.NORMAL_COLOR)
+        await message.channel.send(embed=info_embed)
         return
 
     guild = message.guild
