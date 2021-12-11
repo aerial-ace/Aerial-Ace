@@ -1,5 +1,4 @@
 import discord
-import json
 from collections import OrderedDict
 
 from bot import mongo_manager
@@ -45,7 +44,6 @@ async def register_battle_log(server_id, winner, looser):
     except Exception as e:
         print(f"Error while logging battle : {e}")
 
-
 # return the battle score of the user
 async def get_battle_score(server_id, user):
     user_id = str(user.id)
@@ -76,7 +74,6 @@ async def get_battle_score(server_id, user):
     except Exception as e:
         print(f"Error while showing battle score : {e}")
         return "> Error showing battle score :(, error were registered though."
-
 
 # returns the battle leaderboard of the server
 async def get_battle_leaderboard_embed(client, guild):
