@@ -1,8 +1,11 @@
 import asyncio
 import datetime
 import random
+import re
 
 import discord
+from discord.errors import PrivilegedIntentsRequired
+from discord.state import ConnectionState
 import requests
 import json
 from textwrap import TextWrapper
@@ -559,6 +562,40 @@ async def get_bot_info_embd():
     embd.set_thumbnail(url=global_vars.AVATAR_LINK)
 
     return embd
+
+async def get_daycare_info(user_name : str, param : str):
+    
+    if param == "":
+        return "> Daycare price calculator format : \n > ```-aa dc <price/level> <level_1> <level_2> ... <level_n>```"
+
+    param_words = param.strip().split()
+
+    try:
+        # get the values from the message
+        price = int(param_words[0])
+        levels = [int(lvl) for lvl in param_words[1:]]
+        levels_left = []
+
+        for level in levels:
+            level_left = 100 - level
+
+            if level_left < 0:
+                return "> Is this me, or you also see a level value more than 100! :eyes:"
+
+            levels_left.append(level_left)
+
+        # calculate the overall price
+        overall_cost = 0
+
+        for level in levels_left:
+            overall_cost = overall_cost + (level * price)
+
+        return f"> {user_name}, total daycare cost would be `{overall_cost}` pokecoins"
+
+    except Exception as e:
+        print(f"Error while getting daycare info : {e}")
+        return f"Error occured while calculating the cost, make sure your values follow this format ```-aa dc <price> <level_1> <level_2>...<level_n>```"
+
 
 # for waiting
 async def waiter(_time: float):

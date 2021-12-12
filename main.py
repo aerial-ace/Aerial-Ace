@@ -234,6 +234,16 @@ async def on_message(message):
 
         return
  
+    # daycare price calculator
+    if msg.startswith("dc"):
+        """format -aa dc <price per level> <level> <level> <level>"""
+        param = await aerialace.get_parameter(msg, ["dc"])
+        reply = await aerialace.get_daycare_info(user_name, param)
+
+        await message.channel.send(reply)
+
+        return
+
     # logs the battle and update the leaderboard
     if msg.startswith("log_battle ") or msg.startswith("lb "):
 
