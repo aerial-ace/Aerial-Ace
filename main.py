@@ -70,6 +70,10 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    if message.content.lower().startswith("--a") or message.content.lower().startswith("--aa"):
+        await message.channel.send("> Trying to use aerial ace? Try `-aa help`")
+        return
+
     # ignore commands not meant for the bot
     if message.content.lower().startswith("-aa") is False and (message.content.strip() != "<@!908384747393286174>" and message.content.strip() != "<@908384747393286174>"):
         return
@@ -211,7 +215,7 @@ async def on_message(message):
         return
 
     # see user assigned to tag
-    if msg.startswith("tag_show ") or msg.startswith("ts "):
+    if msg.startswith("tag_show") or msg.startswith("ts"):
 
         tag = await aerialace.get_parameter(msg, ["tag_show", "ts"])
         hunters = await aerialace_data_manager.get_tag_hunters(server_id, tag)
@@ -220,6 +224,16 @@ async def on_message(message):
         await message.channel.send(embed=reply)
         return
 
+    # view current tag
+    if msg.startswith("tag_view") or msg.startswith("tv"):
+        tag = await aerialace_data_manager.get_tag(server_id, user_id)
+        if tag is None:
+            await message.channel.send("You are not assigned to any tag, do it by using ```-aa tag <tag>```")
+        else:
+            await message.channel.send(f"> {user_name} is assigned to `{tag.capitalize()}` tag")
+
+        return
+ 
     # logs the battle and update the leaderboard
     if msg.startswith("log_battle ") or msg.startswith("lb "):
 
