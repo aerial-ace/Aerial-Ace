@@ -89,9 +89,9 @@ async def get_battle_leaderboard_embed(client, guild):
         sorted_battle_records = OrderedDict(sorted(battle_records.items(), key=lambda x: int(x[1]), reverse=True))
 
         reply_embd = discord.Embed(title="{server_name}'s battle leaderboard".format(server_name=server_name), colour=discord.Colour.blue())
-        reply_embd.description = "```-Pos- | --------Name-------- | --Score-- \n\n"
+        reply_embd.description = "```-Pos- | -Score- | -Name- \n\n"
 
-        max_leaderboard_listings = 10
+        max_leaderboard_listings = 15
         footer = ""
 
         pos = 1
@@ -104,7 +104,7 @@ async def get_battle_leaderboard_embed(client, guild):
             except:
                 player_name = "Not Found"
                 # TODO : Remove this user from leaderboards
-            reply_embd.description += "{pos} | {name} | {score} \n".format(pos=" {0}.".format(pos).ljust(5, " "), name=("{0}".format(player_name)).ljust(20, " "), score=("{0}".format(battle_records[i]).ljust(9, " ")))
+            reply_embd.description += "{pos} | {score} | {name} \n".format(pos=" {0}.".format(pos).ljust(5, " "), name=("{0}".format(player_name)).ljust(20, " "), score=("{0}".format(battle_records[i]).ljust(7, " ")))
             pos = pos + 1
 
         reply_embd.description += "```"
