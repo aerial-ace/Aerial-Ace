@@ -206,3 +206,22 @@ async def get_show_hunters_embd(tag, hunters):
 
     return embd
 
+async def get_tag(server_id, user_id):
+
+    query = {"server_id" : server_id}
+
+    data_cursor = mongo_manager.manager.get_all_data("tags", query)
+
+    tag_data = data_cursor[0]["tags"]
+    tags = list(tag_data.keys())
+    users = list(tag_data.values())
+
+    index = None
+    for i in range(0, len(users)):
+        if user_id in users[i]: 
+            index = i
+
+    if index is None:
+        return None
+    else:
+        return tags[index]
