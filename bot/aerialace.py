@@ -379,13 +379,17 @@ async def get_invite_embed(embd, color):
     return embd
 
 # get battle acceptance
-async def get_battle_acceptance(client, message, winner, loser):
+async def get_battle_acceptance(client, message, winner, looser):
 
     check_id = ""
 
+    if winner == looser:
+        await message.channel.send("> Breh, Stop it")
+        return "notapplicable"
+
     if str(message.author.id) == winner:
-        check_id = loser
-    elif str(message.author.id) == loser:
+        check_id = looser
+    elif str(message.author.id) == looser:
         check_id = winner
     else:
         await message.channel.send("> Who are you to do this. Let the players log their battles.")
@@ -393,7 +397,7 @@ async def get_battle_acceptance(client, message, winner, loser):
 
     # send battle log request
     log_msg = await message.channel.send("Logging <@{winner}>'s win over <@{loser}>. Click the checkmark to accept."
-                                         .format(winner=winner, loser=loser))
+                                         .format(winner=winner, loser=looser))
 
     accept_emoji = "☑️"
 
