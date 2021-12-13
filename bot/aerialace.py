@@ -491,12 +491,12 @@ async def determine_rare_catch(msg):
         for i in pokemon_name_words:
             catch_info["pokemon"] += i.strip().capitalize() + " "
             try:
-                if aerialace_cache_manager.cached_rarity_data[i.lower()] in ["legendary", "mythical", "ultra beast"]:
+                if i.lower() == "galarian" or i.lower() == "alolan" or aerialace_cache_manager.cached_rarity_data[i.lower()] in ["legendary", "mythical", "ultra beast"]:
                     catch_info["type"] = "rare"
-                    catch_info["pokemon"] = catch_info["pokemon"].strip()
-                    break
             except:
                 continue
+
+    print(catch_info)
 
     if catch_info["type"] == "":
         return None
@@ -511,7 +511,7 @@ async def get_rare_catch_embd(_message, _ping, _pokemon, _level, _type):
 
     if _type == "rare":
         embd.title = ":star2: Rare Catch Detected :star2:"
-        embd.description = f"{_ping} caught a level {_level} `{_pokemon}`\n"
+        embd.description = f"{_ping} caught a level {_level} `{_pokemon.strip()}`\n"
         embd.set_image(url=global_vars.JIRACHI_WOW)
     elif _type == "shiny":
         embd.title = ":star2: Shiny Catch Detected :star2:"
@@ -558,7 +558,7 @@ async def get_bot_info_embd():
 
     return embd
 
-async def get_daycare_price(user_name : str, param : str):
+async def get_daycare_info(user_name : str, param : str):
     
     if param == "":
         return "> Daycare price calculator format : \n > ```-aa dc <price/level> <level_1> <level_2> ... <level_n>```"
