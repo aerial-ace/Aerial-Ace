@@ -74,16 +74,6 @@ def get_help_embed():
         inline=False
     )
     embd.add_field(
-        name="Set Favourite Pokemon",
-        value="`-aa set_fav <pokemon name>` or `-aa sf <pokemon name>`",
-        inline=False
-    )
-    embd.add_field(
-        name="View Favourite Pokemon", 
-        value="`-aa fav`", 
-        inline=False
-    )
-    embd.add_field(
         name="Stats Check",
         value="`-aa stats <pokemon>`", 
         inline=False)
@@ -125,6 +115,11 @@ def get_help_embed():
     embd.add_field(
         name="See Battle leaderboard of the server",
         value="`-aa battle_lb` or `-aa blb`",
+        inline=False
+    )
+    embd.add_field(
+        name="Daycare price calculator",
+        value="`-aa dc <price/level> <levels_1> <level_2> ... <level_n>",
         inline=False
     )
 
@@ -563,7 +558,7 @@ async def get_bot_info_embd():
 
     return embd
 
-async def get_daycare_info(user_name : str, param : str):
+async def get_daycare_price(user_name : str, param : str):
     
     if param == "":
         return "> Daycare price calculator format : \n > ```-aa dc <price/level> <level_1> <level_2> ... <level_n>```"
