@@ -226,7 +226,7 @@ async def get_poke_by_id(poke_id):
         else:
             poke.p_rarity = "Common"
     except:
-        poke.p_rarity = "----"
+        poke.p_rarity = None
 
     return poke
 
@@ -506,8 +506,6 @@ async def determine_rare_catch(msg):
                     catch_info["type"] = "rare"
             except:
                 continue
-
-    print(catch_info)
 
     if catch_info["type"] == "":
         return None
