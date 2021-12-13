@@ -119,7 +119,7 @@ def get_help_embed():
     )
     embd.add_field(
         name="Daycare price calculator",
-        value="`-aa dc <price/level> <levels_1> <level_2> ... <level_n>",
+        value="`-aa dc <price/level> <levels_1> <level_2> ... <level_n>`",
         inline=False
     )
 
