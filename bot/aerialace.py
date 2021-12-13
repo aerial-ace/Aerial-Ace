@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+from os import name
 import random
 import re
 
@@ -223,9 +224,9 @@ async def get_poke_by_id(poke_id):
         if rarity == "mythical" or rarity == "legendary" or rarity == "ultra beast":
             poke.p_rarity = rarity.capitalize()
         else:
-            poke.p_rarity = None
+            poke.p_rarity = "Common"
     except:
-        poke.p_rarity = None
+        poke.p_rarity = "----"
 
     return poke
 
@@ -298,6 +299,16 @@ async def get_random_pokemon_embed(poke_data, server_id, user_id):
 
     description = wrap_text(40, poke_data.p_info)
     embd.description = description
+    embd.add_field(
+        name="Region",
+        value=f"{poke_data.p_region}",
+        inline=True
+    )
+    embd.add_field(
+        name="Rarity",
+        value=f"{poke_data.p_rarity}",
+        inline=True
+    )
     embd.set_image(url=poke_data.image_link)
 
     return embd
