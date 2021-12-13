@@ -1,8 +1,4 @@
 import discord
-import os
-
-from discord import user
-from pymongo import mongo_client
 
 from bot import aerialace
 from bot import aerialace_data_manager
