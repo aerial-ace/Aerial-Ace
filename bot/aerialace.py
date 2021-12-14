@@ -58,7 +58,7 @@ async def set_rich_presence(client):
 # for getting the help embed
 def get_help_embed():
     embd = discord.Embed(color=global_vars.NORMAL_COLOR)
-    embd.title = "Aerial Ace Help"
+    embd.title = "__Aerial Ace Help__"
 
     # help fields
     embd.add_field(
@@ -552,7 +552,7 @@ async def get_rare_catch_embd(_message, _ping, _pokemon, _level, _type):
 # returns the about embed of the bot
 async def get_bot_info_embd():
     embd = discord.Embed(colour=global_vars.NORMAL_COLOR)
-    embd.title = "ABOUT - Aerial Ace"
+    embd.title = "__ABOUT - Aerial Ace__"
     embd.description = "Aerial Ace = Poketwo helper bot + pokedex"
     embd.add_field(
         name="Support Server",
@@ -566,7 +566,7 @@ async def get_bot_info_embd():
     )
     embd.add_field(
         name="Source Code",
-        value="Complete Source Cod, of Aerial Ace is public.\nThis means anyone can host their own version of the bot.\nHowever check the license before proceeding with running your own version of the bot\n[Link to the github repository](https://github.com/Devanshu19/)",
+        value=wrap_text(50, f"Aerial Ace is planned to be Open Source. However, the source is not available to the public just yet but it will be in future. Once the source is made public, the link will be available here (in this about embed) or you can follow to get updates about it on [Github]({global_vars.GITHUB_PROFILE_LINK})"),
         inline=False
     )
 

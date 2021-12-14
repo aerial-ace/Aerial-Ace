@@ -97,6 +97,7 @@ async def on_message(message):
     if reminder_roll == 13:
         help_us_embed = await aerialace.get_help_us_embed()
         await message.channel.send(embed=help_us_embed)
+        print("Help us embed was shown")
 
     # help command
     if msg.startswith("help"):
