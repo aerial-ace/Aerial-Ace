@@ -1,10 +1,12 @@
 import asyncio
 import datetime
-from os import name
+from os import name, times
 import random
 import re
 
 import discord
+from discord import colour
+from discord import embeds
 from discord.errors import PrivilegedIntentsRequired
 from discord.state import ConnectionState
 import requests
@@ -423,15 +425,18 @@ async def get_battle_acceptance(client, message, winner, looser):
         return "accepted"
 
 # returns a info embed
-async def get_info_embd(title, error, color, footer=None):
+async def get_info_embd(title, desc, color, footer=None, show_tumbnail=False):
     embd = discord.Embed()
 
     embd.colour = color
     embd.title = title
-    embd.description = error
+    embd.description = desc
 
     if footer is not None:
         embd.set_footer(text=footer)
+
+    if show_tumbnail is True:
+        embd.set_thumbnail(url=f"{global_vars.AVATAR_LINK}")
 
     return embd
 
@@ -512,6 +517,7 @@ async def determine_rare_catch(msg):
 
     return catch_info
 
+# returns the embed containing the rare catch info
 async def get_rare_catch_embd(_message, _ping, _pokemon, _level, _type):
 
     # TODO : Add some kind of rare and shiny sighting counter
@@ -543,6 +549,7 @@ async def get_rare_catch_embd(_message, _ping, _pokemon, _level, _type):
 
     return embd
 
+# returns the about embed of the bot
 async def get_bot_info_embd():
     embd = discord.Embed(colour=global_vars.NORMAL_COLOR)
     embd.title = "ABOUT - Aerial Ace"
@@ -567,6 +574,7 @@ async def get_bot_info_embd():
 
     return embd
 
+# returns the daycare cost info embed
 async def get_daycare_info(user_name : str, param : str):
     
     if param == "":
@@ -600,6 +608,28 @@ async def get_daycare_info(user_name : str, param : str):
         print(f"Error while getting daycare info : {e}")
         return f"Error occured while calculating the cost, make sure your values follow this format ```-aa dc <price> <level_1> <level_2>...<level_n>```"
 
+# returns the help us embed
+async def get_help_us_embed():
+    embd = await get_info_embd(
+                title="Help in making Aerial Ace better",
+                desc="Remember, Aerial Ace depends on its users to improve its functionality and fix bugs. \nYou are always welcomed to suggest any features and report any bugs.\nHead over to the support server for that (:",
+                color=global_vars.NORMAL_COLOR,
+                footer="Use -aa support_server or -aa ss to join the support server"
+    )
+
+    return embd
+
+# returns the support server embed
+async def get_support_server_embed():
+    link = global_vars.SUPPORT_SERVER_LINK
+    embd = await get_info_embd(
+        title="__Support Server__",
+        desc=f"Join the support server for reporting bugs, suggesting features,\ngetting help...you got it.\n[Click here to join]({link})",
+        color=global_vars.NORMAL_COLOR,
+        show_tumbnail=True
+    )
+
+    return embd
 
 # for waiting
 async def waiter(_time: float):

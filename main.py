@@ -1,4 +1,5 @@
 import discord
+import random
 
 from bot import aerialace
 from bot import aerialace_data_manager
@@ -90,6 +91,12 @@ async def on_message(message):
     member = message.author
     user_id = str(message.author.id)
     user_name = member.display_name
+
+    # help us reminder
+    reminder_roll = random.randint(1, 50)
+    if reminder_roll == 13:
+        help_us_embed = await aerialace.get_help_us_embed()
+        await message.channel.send(embed=help_us_embed)
 
     # help command
     if msg.startswith("help"):
@@ -279,6 +286,11 @@ async def on_message(message):
     if msg.startswith("about"):
         reply = await aerialace.get_bot_info_embd()
         await message.channel.send(embed=reply)
+        return
+
+    if msg.startswith("support_server") or msg.startswith("ss"):
+        embd = await aerialace.get_support_server_embed()
+        await message.channel.send(embed=embd)
         return
 
     # Admins Only
