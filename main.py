@@ -179,6 +179,14 @@ async def on_message(message):
 
         return
 
+    # get nature of any pokemon
+    if msg.startswith("nature"):
+        poke = await aerialace.get_parameter(msg, ["nature"])
+        reply = await aerialace_data_manager.get_nature_embed(poke)
+
+        await message.channel.send(embed=reply)
+        return
+
     # invite command
     if msg.startswith("invite"):
         reply = await aerialace.get_invite_embed(discord.Embed(), discord.Color.blue())
