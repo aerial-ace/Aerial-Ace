@@ -1,7 +1,13 @@
-# Aerial-Ace
 
-![Python](https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge)
-![Python](https://img.shields.io/badge/Status-online-green?style=for-the-badge)
+<h1 align="center">Aerial Ace</h1>
+<h2 align="center">
+  <a href="https://img.shields.io/badge/Status-online-green?style=for-the-badge">
+    <img src="https://img.shields.io/badge/Status-online-green?style=for-the-badge" alt="Status" />
+  </a>
+  <a href="https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge">
+    <img src="https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge" alt="Status" />
+  </a>
+</h2>
 
 Aerial Ace is a helper bot for [poketwo](https://github.com/poketwo/poketwo) which provide various functionalities on top of being a Pokédex.
 
