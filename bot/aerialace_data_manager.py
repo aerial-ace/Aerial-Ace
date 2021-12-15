@@ -58,7 +58,7 @@ async def get_moveset_embed(poke):
         return embd
 
 # get nature 
-async def get_nature(poke: str):
+async def get_nature_embed(poke: str):
 
     if poke == "":
         return await aerialace.get_info_embd("Gib pokemon name as a param when :/", "A pokemon name is required for this command, try this ```-aa nature Nihilego```", global_vars.ERROR_COLOR)
@@ -68,7 +68,7 @@ async def get_nature(poke: str):
     try:
         nature = aerialace_cache_manager.cached_nature_data[poke]
         embd.title = "{poke}'s nature".format(poke=poke.capitalize())
-        embd.description = f"{nature}"
+        embd.description = f"```{nature}```"
         embd.color = global_vars.NORMAL_COLOR
     except:
         embd.title = "That pokemon was not found in the database"

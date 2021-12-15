@@ -25,6 +25,7 @@ MOVESET_FILE_LOCATION = "data/moveset.json"
 BATTLE_LOG_FILE_LOCATION = "data/battle_log.json"
 ALT_NAME_FILE_LOCATION = "data/poke_alt_names.json"
 RARITY_FILE_LOCATION = "data/poke_rarity.json"
+NATURE_FILE_LOCATION = "data/nature.json"
 
 # colors
 NORMAL_COLOR = discord.Color.blue()
