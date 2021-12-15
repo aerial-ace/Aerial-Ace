@@ -7,15 +7,17 @@ cached_stats_data = None
 cached_moveset_data = None
 cached_alt_name_data = None
 cached_rarity_data = None
+cached_nature_data = None
 
 # caches the data
 async def cache_data(init=False):
-    global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data
+    global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data
 
     cached_stats_data = get_all_stats()
     cached_moveset_data = get_all_moveset()
     cached_alt_name_data = get_all_alt_names()
     cached_rarity_data = get_all_rarity_data()
+    cached_nature_data = get_all_nature_data()
 
 # returns all the stats from stats file
 def get_all_stats():
@@ -46,3 +48,9 @@ def get_all_rarity_data():
     rarity_data = json.loads(rarity_file.read())
 
     return rarity_data
+
+def get_all_nature_data():
+    nature_file = open(global_vars.NATURE_FILE_LOCATION, "r")
+    nature_data = json.loads(nature_file.read())
+
+    return nature_data

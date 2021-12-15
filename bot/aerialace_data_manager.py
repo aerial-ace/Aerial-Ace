@@ -1,4 +1,7 @@
+from os import name
+from typing import NamedTuple
 import discord
+from discord import colour
 
 from bot import aerialace
 from bot import global_vars
@@ -53,6 +56,28 @@ async def get_moveset_embed(poke):
         embd.description = "> If the name is correct then \n"
         embd.description += "> PROBABLY this pokemon is not good for battling"
         return embd
+
+# get nature 
+async def get_nature(poke: str):
+
+    if poke == "":
+        return await aerialace.get_info_embd("Gib pokemon name as a param when :/", "A pokemon name is required for this command, try this ```-aa nature Nihilego```", global_vars.ERROR_COLOR)
+
+    embd = discord.Embed()
+
+    try:
+        nature = aerialace_cache_manager.cached_nature_data[poke]
+        embd.title = "{poke}'s nature".format(poke=poke.capitalize())
+        embd.description = f"{nature}"
+        embd.color = global_vars.NORMAL_COLOR
+    except:
+        embd.title = "That pokemon was not found in the database"
+        embd.description = "> If the name is correct then \n"
+        embd.description += "> PROBABLY this pokemon is not good for battling"
+        embd.color = global_vars.ERROR_COLOR
+    
+    return embd
+
 
 # return tierlist
 async def get_tl(list_name):
@@ -206,6 +231,7 @@ async def get_show_hunters_embd(tag, hunters):
 
     return embd
 
+# returns the tag assigned to the user
 async def get_tag(server_id, user_id):
 
     query = {"server_id" : server_id}
