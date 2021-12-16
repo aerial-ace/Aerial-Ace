@@ -25,6 +25,7 @@
 * Add tags to your name and ping them for anything from favourite collections to shiny hunts.
 * View the best stats of Pokémon for battling.
 * View the best moveset of any Pokémon for battling.
+* View the best nature of any Pokémon for battling.
 * View pokemon tierlists.
 * Register Battles and view leaderboards.
 
@@ -37,6 +38,7 @@
 * `-aa tag_show <tag>` shows the users currently tagged to the provided tag.
 * `-aa stats <pokemon name>` displays the best stats for the provided Pokémon.
 * `-aa moveset <pokemon name>` displays the best moveset of the provided Pokémon.
+* `-aa nature <pokemon name>` displays the best nature of the provided Pokémon.
 * `-aa tierlist <tier type>` displays the tierlist of that type. Available types are `common`, `mega`, `rare`, `water`.
 * `-aa log_battle @winner @loser` logs the battle in the leaderboard.
 * `-aa battle_score` displays the current battle score the user.
