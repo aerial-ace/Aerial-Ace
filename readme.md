@@ -43,3 +43,8 @@
 * `-aa log_battle @winner @loser` logs the battle in the leaderboard.
 * `-aa battle_score` displays the current battle score the user.
 * `-aa battle_lb` displays the battle leaderboard of the server.
+
+<hr />
+<h2 align="center">
+  <a href="https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=274878295104&scope=bot">Invite</a> | <a href="https://top.gg/bot/908384747393286174">Vote</a> | <a href="https://discord.gg/CUvsyarbUC">Support Server</a>
+</h2>
