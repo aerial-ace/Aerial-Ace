@@ -1,5 +1,9 @@
+<h1 align="center">
+  <img src="https://user-images.githubusercontent.com/66104268/146304164-cd2fd647-54f2-4269-99c5-158db840ac5f.png" style="width : 50; height : auto;" />
+</h1>
 
 <h1 align="center">Aerial Ace</h1>
+
 <h2 align="center">
   <a href="https://img.shields.io/badge/Status-online-green?style=for-the-badge">
     <img src="https://img.shields.io/badge/Status-online-green?style=for-the-badge" alt="Status" />
@@ -9,15 +13,15 @@
   </a>
 </h2>
 
-Aerial Ace is a helper bot for [poketwo](https://github.com/poketwo/poketwo) which provide various functionalities on top of being a Pokédex.
-
-**Prefix** : `-aa`
+<p align="center">
+  Aerial Ace is a helper bot for <a href="https://github.com/poketwo/poketwo">Poketwo</a> which provide various functionalities on top of being a Pokédex.<br><br>
+  <b>Prefix</b> : `-aa`
+</p>
 
 ### Features
 
 * View Dex entry of any Pokémon.
 * View random Pokémon and read about them.
-* Set and View your favourite Pokémon.
 * Add tags to your name and ping them for anything from favourite collections to shiny hunts.
 * View the best stats of Pokémon for battling.
 * View the best moveset of any Pokémon for battling.
