@@ -571,7 +571,7 @@ async def get_bot_info_embd():
     )
     embd.add_field(
         name="Source Code",
-        value=wrap_text(50, f"Aerial Ace is planned to be Open Source. However, the source is not available to the public just yet but it will be in future. Once the source is made public, the link will be available here (in this about embed) or you can follow to get updates about it on [Github]({global_vars.GITHUB_PROFILE_LINK})"),
+        value=wrap_text(50, f"Aerial Ace is Open Source and is under GNU v3 Licenes.\nSource Code is available [here]({global_vars.REPO_LINK})\n Github repo stars and follow are appreciated :3 \n My Github Profile : [Devanshu19]({global_vars.GITHUB_PROFILE_LINK})"),
         inline=False
     )
 

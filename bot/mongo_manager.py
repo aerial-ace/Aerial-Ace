@@ -1,8 +1,6 @@
 from pymongo import MongoClient, results
 from pymongo import cursor
 
-from data_uploader import MongoManager
-
 class MongoManager:
 
     def __init__(self, mongo_uri : str, db_name : str) :
