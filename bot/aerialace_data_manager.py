@@ -24,7 +24,7 @@ async def get_stats_embed(pokemon):
     if pokemon in all_pokemon:
         embd.title = "{poke}'s Stats".format(poke=pokemon.capitalize())
         embd.description = "HP, Defense, Sp.Defense and Speed are `The more the better` stats \n"
-        embd.add_field(name="Stats", value="{stats}".format(stats=cached_stats_data[pokemon]), inline=False)
+        embd.add_field(name="Stats", value="```{stats}```".format(stats=cached_stats_data[pokemon]), inline=False)
 
         return embd
 
@@ -49,7 +49,7 @@ async def get_moveset_embed(poke):
 
     if poke in all_pokemon:
         embd.title = "{poke}'s moveset".format(poke=poke.capitalize())
-        embd.description = "{ms}".format(ms=cached_moveset_data[poke])
+        embd.description = "```{ms}```".format(ms=cached_moveset_data[poke])
         return embd
     else:
         embd.title = "That pokemon was not found in the database"
