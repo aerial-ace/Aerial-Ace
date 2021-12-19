@@ -297,6 +297,13 @@ async def on_message(message):
         await message.channel.send(embed=reply)
         return
 
+    # Vote command
+    if msg.startswith("vote"):
+        embd = await aerialace.get_info_embd("Vote for Aerial Ace :3", f"Help Aerial Ace by voting [here]({global_vars.VOTE_LINK})", color=global_vars.NORMAL_COLOR, footer="Thanks if you voted (:", show_tumbnail=True)
+        await message.channel.send(embed=embd)
+        return
+
+    # Support Server Link
     if msg.startswith("support_server") or msg.startswith("ss"):
         embd = await aerialace.get_support_server_embed()
         await message.channel.send(embed=embd)

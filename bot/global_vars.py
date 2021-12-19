@@ -15,6 +15,7 @@ AVATAR_LINK = "https://cdn.discordapp.com/avatars/908384747393286174/312dafe2a71
 SUPPORT_SERVER_LINK = "https://discord.gg/4mPdqevgsH"
 REPO_LINK = "https://github.com/Devanshu19/Aerial-Ace"
 GITHUB_PROFILE_LINK = "https://github.com/Devanshu19/"
+VOTE_LINK = "https://top.gg/bot/908384747393286174/"
 
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"
