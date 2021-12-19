@@ -86,6 +86,11 @@ def get_help_embed():
         inline=False,
     )
     embd.add_field(
+        name="View best Nature",
+        value="`-aa nature <pokemon name>`",
+        inline=False
+    )
+    embd.add_field(
         name="Tierlists",
         value="`-aa tierlist <tier type>` or `-aa tl <tier type>`",
         inline=False
