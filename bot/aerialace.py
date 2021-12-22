@@ -482,7 +482,7 @@ async def determine_rare_catch(msg):
         if shiny_keyword not in message_words:
             is_shiny = False
 
-    extra_text = ["Shiny streak reset.", "Added to Pokédex. You received 35 Pokécoins!", "These colors seem unusual... ✨", ".", "!", "(", ")", "*"]
+    extra_text = ["+1 Shiny chain!","Shiny streak reset.", "Added to Pokédex. You received 35 Pokécoins!", "These colors seem unusual... ✨", ".", "!", "(", ")", "*"]
 
     info_text = msg
     for extra in extra_text:
