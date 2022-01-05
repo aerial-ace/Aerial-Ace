@@ -1,3 +1,4 @@
+import asyncio
 import discord
 import random
 
@@ -12,7 +13,7 @@ from bot import global_vars
 """Use for function folding is suggested :/"""
 
 # Intents
-intents = discord.Intents.all()
+intents = discord.Intents.default()
 intents.typing = False
 intents.reactions = True
 
@@ -132,6 +133,7 @@ async def on_message(message):
 
     # Dex search command
     if msg.startswith("dex"):
+
         poke = await aerialace.get_parameter(msg, ["dex"])
 
         try:
