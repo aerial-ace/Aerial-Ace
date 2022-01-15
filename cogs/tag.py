@@ -1,6 +1,9 @@
+from multiprocessing.connection import answer_challenge
+import config
 from discord.ext import commands
 
 from cog_helpers import tag_helper
+from cog_helpers import general_helper
 
 class TagSystem(commands.Cog):
     def __init__(self, bot) -> None:
@@ -22,18 +25,52 @@ class TagSystem(commands.Cog):
     @commands.guild_only()
     @commands.command(name="tag_ping", aliases=["tp"])
     async def tag_ping(self, ctx, tag: str):
-        hunters = await tag_helper.get_tag_hunters(str(ctx.guild.id), tag)
+        hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
 
         if hunters is None:
-            await ctx.send(f"No one is assigned to `{tag.capitalize()}` tag")
+            reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), config.WARNING_COLOR)
+            await ctx.send(embed=reply)
             return
-        
+
+        number_of_hunters = len(hunters)
         pings = ""
 
-        for hunter in hunters:
-            pings += f"<@{hunter}>"
+        for i in range(0, number_of_hunters):
+            pings = pings + "<@{user}>".format(user=str(hunters[i]))
+            if i <= number_of_hunters - 2:
+                pings += " | "
 
-        await ctx.send(f"Pinging users assigned to `{tag.capitalize()}` \n{pings}")
+        await ctx.send(f"Pinging users assigned to `{tag.capitalize()}` tag\n{pings}")
+
+    @tag_ping.error
+    async def tag_ping_handler(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            reply = await general_helper.get_info_embd("Gib a tag as a parameter when :/", "This command requires a tag as a parameter.\n```>>tag_ping Espurr```", config.ERROR_COLOR)
+            await ctx.reply(embed=reply)
+        else:
+            await ctx.send(error)
+
+    @commands.guild_only()
+    @commands.command(name="tag_show", aliases=["ts"])
+    async def tag_show(self, ctx, tag : str):
+        hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
+
+        if hunters is None:
+            reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), config.WARNING_COLOR)
+            await ctx.reply(embed=reply)
+            return
+
+        reply = await tag_helper.get_show_hunters_embd(tag, hunters)
+
+        await ctx.send(embed=reply)
+
+    @tag_show.error
+    async def tag_show_handler(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            reply = await general_helper.get_info_embd("Gib a tag as a parameter when :/", "This command requires a tag as a parameter.\n```>>tag_show Darumaka```", config.ERROR_COLOR)
+            await ctx.reply(embed=reply)
+        else:
+            await ctx.send(error)
 
 def setup(bot):
     bot.add_cog(TagSystem(bot))

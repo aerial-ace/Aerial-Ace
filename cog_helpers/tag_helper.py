@@ -1,4 +1,8 @@
+import discord
+
+from cog_helpers import general_helper
 from managers import mongo_manager
+import config
 
 # register shiny tags
 async def register_tag(server_id, user, tag):
@@ -53,7 +57,7 @@ async def register_tag(server_id, user, tag):
 
     updated_data = {"tags" : tag_data}
 
-    mongo_manager.manager.update_all_data("tags", {"server_id" : server_id}, updated_data)
+    mongo_manager.manager.update_all_data("tags", {"server_id" : str(server_id)}, updated_data)
 
     if old_tag == "":
         return f"> **{user.name}** was assigned to `{tag.capitalize()}` tag"
@@ -63,7 +67,7 @@ async def register_tag(server_id, user, tag):
 # Get shiny tags
 async def get_tag_hunters(server_id, tag):
     
-    query = {"server_id" : server_id}
+    query = {"server_id" : str(server_id)}
 
     data_cursor = mongo_manager.manager.get_all_data("tags", query)
 
@@ -82,6 +86,17 @@ async def get_tag_hunters(server_id, tag):
         hunters = tag_data[tag]
     except Exception as e:
         hunters = None
-        print(e)
 
     return hunters    
+
+# Get show hunters embed
+async def get_show_hunters_embd(tag, hunters):
+
+    embd = discord.Embed(color=config.NORMAL_COLOR)
+    embd.title = "Users assigned to `{tag}` tag".format(tag=tag.capitalize())
+    embd.description = ""
+
+    for i in hunters:
+        embd.description += "<@{hunter_id}>\n".format(hunter_id=i)
+
+    return embd
