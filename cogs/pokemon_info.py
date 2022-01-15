@@ -50,5 +50,23 @@ class Pokemon_Info(commands.Cog):
         else:
             await ctx.send(error)
 
+    @commands.guild_only()
+    @commands.command(name="tierlist", aliases=["tl"])
+    async def tierlist(self, ctx, tier : str):
+        try:
+            tier_link = config.TIER_LINK[tier]
+        except:
+            await ctx.reply(f"That is not a tier. Enter a good tier like `rare`, `mega`, `common`, `steel`, `fighting`")
+            return
+
+        await ctx.send(tier_link)
+
+    @tierlist.error
+    async def tierlist_handler(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            await ctx.reply("Give a tier name as a parameter :/ Like `rare`, `common`, `mega`, `steel`, `fighting`")
+        else:
+            await ctx.send(error)
+
 def setup(bot):
     bot.add_cog(Pokemon_Info(bot))
