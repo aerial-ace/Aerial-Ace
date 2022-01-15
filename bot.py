@@ -10,7 +10,8 @@ initial_cogs = [
     "cogs.utility",
     "cogs.pokedex",
     "cogs.pokemon_info",
-    "cogs.tag"
+    "cogs.tag",
+    "cogs.weakness"
 ]
 
 @bot.event

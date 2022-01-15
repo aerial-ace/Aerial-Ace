@@ -8,16 +8,20 @@ cached_moveset_data = None
 cached_alt_name_data = None
 cached_rarity_data = None
 cached_nature_data = None
+cached_type_data = None
+cached_weakness_data = None
 
 # caches the data
 async def cache_data():
-    global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data
+    global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data, cached_weakness_data, cached_type_data
 
     cached_stats_data = get_all_stats()
     cached_moveset_data = get_all_moveset()
     cached_alt_name_data = get_all_alt_names()
     cached_rarity_data = get_all_rarity_data()
     cached_nature_data = get_all_nature_data()
+    cached_type_data = get_all_type_data()
+    cached_weakness_data = get_all_weakness_data()
 
 # returns all the stats from stats file
 def get_all_stats():
@@ -54,3 +58,15 @@ def get_all_nature_data():
     nature_data = json.loads(nature_file.read())
 
     return nature_data
+
+def get_all_type_data():
+    with open(config.TYPE_FILE_LOCATION, "r") as type_file:
+        type_data = json.loads(type_file.read())
+        
+        return type_data
+
+def get_all_weakness_data():
+    with open(config.WEAKNESS_FILE_LOCATION, "r") as weakness_file:
+        weakness_data = json.loads(weakness_file.read())
+        
+        return weakness_data

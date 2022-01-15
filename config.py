@@ -27,6 +27,8 @@ BATTLE_LOG_FILE_LOCATION = "data/battle_log.json"
 ALT_NAME_FILE_LOCATION = "data/poke_alt_names.json"
 RARITY_FILE_LOCATION = "data/poke_rarity.json"
 NATURE_FILE_LOCATION = "data/nature.json"
+TYPE_FILE_LOCATION = "data/type_data.json"
+WEAKNESS_FILE_LOCATION = "data/weakness_data.json"
 
 # colors
 NORMAL_COLOR = discord.Color.blue()
