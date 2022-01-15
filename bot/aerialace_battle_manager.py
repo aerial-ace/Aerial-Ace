@@ -89,7 +89,7 @@ async def get_battle_leaderboard_embed(client, guild):
         sorted_battle_records = OrderedDict(sorted(battle_records.items(), key=lambda x: int(x[1]), reverse=True))
 
         reply_embd = discord.Embed(title="{server_name}'s battle leaderboard".format(server_name=server_name), colour=discord.Colour.blue())
-        reply_embd.description = "```-Pos- | -Score- | -Name- \n\n"
+        reply_embd.description = "`-Pos- | -Score- | -Name-` \n\n"
 
         max_leaderboard_listings = 15
         footer = ""
@@ -99,15 +99,13 @@ async def get_battle_leaderboard_embed(client, guild):
             if pos > max_leaderboard_listings:
                 footer = "Some players were not mentioned in the leaderboard because of lower scores.\nSee your score with -aa bs"
                 break
-            try:
-                player_name = client.get_user(int(i)).name
-            except:
-                player_name = "Not Found"
-                # TODO : Remove this user from leaderboards
-            reply_embd.description += "{pos} | {score} | {name} \n".format(pos=" {0}.".format(pos).ljust(5, " "), name=("{0}".format(player_name)).ljust(20, " "), score=("{0}".format(battle_records[i]).ljust(7, " ")))
+
+            player_name = f"<@{i}>"
+            # TODO : Remove this user from leaderboards
+            
+            reply_embd.description += "`{pos} | {score} |` {name} \n".format(pos=" {0}.".format(pos).ljust(5, " "), name=("{0}".format(player_name)).ljust(20, " "), score=("{0}".format(battle_records[i]).ljust(7, " ")))
             pos = pos + 1
 
-        reply_embd.description += "```"
         if footer != "":
             reply_embd.set_footer(text=footer)
 

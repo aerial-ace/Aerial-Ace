@@ -275,6 +275,9 @@ async def on_message(message):
 
         await message.channel.send(reply)
 
+        embd = await aerialace.get_info_embd(":email: Info", "Battle leaderboard (previously broken, is now fixed with some glue and ducktape.) See leaderboard by using ```-aa blb```Any logs that were made during this time are saved and will show up in the leaderboard.", color=global_vars.NORMAL_COLOR, footer="Thanks for understanding :]", show_tumbnail=True)
+        await message.channel.send(embed=embd)
+
         return
 
     # Display the battle score of the user
