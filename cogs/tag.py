@@ -72,5 +72,23 @@ class TagSystem(commands.Cog):
         else:
             await ctx.send(error)
 
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    @commands.command(name="tag_remove", aliases=["tr"])
+    async def tag_remove(self, ctx, user_id : int):
+        reply = await tag_helper.remove_user(ctx.guild.id, user_id)
+        await ctx.send(reply)
+
+    @tag_remove.error
+    async def tag_remove_helper(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            reply = await general_helper.get_info_embd("Gib a user_id as a parameter when :/", "This command requires a user_id as a parameter.\n```>>tag_remove 716390085896962058```", config.ERROR_COLOR)
+            await ctx.reply(embed=reply)
+        elif isinstance(error, commands.errors.MissingPermissions):
+            reply = "Be a Admin when?"
+            await ctx.reply(reply)
+        else:
+            await ctx.send(error)
+
 def setup(bot):
     bot.add_cog(TagSystem(bot))

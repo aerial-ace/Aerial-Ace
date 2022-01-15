@@ -1,3 +1,4 @@
+from http import server
 import discord
 
 from cog_helpers import general_helper
@@ -100,3 +101,46 @@ async def get_show_hunters_embd(tag, hunters):
         embd.description += "<@{hunter_id}>\n".format(hunter_id=i)
 
     return embd
+
+async def remove_user(server_id, user_id : int):
+    
+    query = {"server_id" : str(server_id)}
+
+    mongo_cursor = mongo_manager.manager.get_all_data("tags", query)
+
+    """
+    {
+        "server_id" : "10000000000000000",
+        "tags" : {
+            "tag_name" : ["hunter_id_1", "hunter_id_2"]
+        }
+    }
+    """
+
+    tag_data = mongo_cursor[0]["tags"]
+    tags = list(tag_data.keys())
+    users = list(tag_data.values())
+
+    old_tag = ""
+
+    for i in range(0, len(users)):
+        if str(user_id) in users[i]:
+            old_tag = tags[i]
+            break
+
+    if old_tag == "":
+        return f"> <@{user_id}> is not assigned to any tag."
+    else:
+        # remove user from current tag
+        tag_data[old_tag].remove(str(user_id))
+
+        # remove empty tags
+        if len(tag_data[old_tag]) <= 0:
+            del tag_data[old_tag]
+
+    updated_tag = {"tags" : tag_data}
+
+    mongo_manager.manager.update_all_data("tags", query, updated_tag)
+
+    return f"> <@{user_id}> was removed from `{old_tag.capitalize()}` tag"
+
