@@ -299,7 +299,7 @@ async def get_id_from_ping(ping):
     return user_id
 
 # get random pokemon embed
-async def get_random_pokemon_embed(poke_data, server_id, user_id):
+async def get_random_pokemon_embed(poke_data):
 
     embd = discord.Embed(color=global_vars.NORMAL_COLOR)
     embd.title = "**{0} : {1}**".format(poke_data.p_id, poke_data.p_name)

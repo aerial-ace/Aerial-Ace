@@ -9,6 +9,7 @@ class PokeDex(commands.Cog):
         self.bot = bot
 
     @commands.command()
+    @commands.guild_only()
     async def dex(self, ctx, poke):
 
         try:
@@ -25,10 +26,18 @@ class PokeDex(commands.Cog):
     @dex.error
     async def dex_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            await ctx.reply(":no: Give a pokemon name or id as a parameter")
+            reply = await general_helper.get_info_embd(title="Error!!", desc="Please provide a `Pokemon_Name` or `Pokemon_ID` as a parameter", footer="Try [dex necrozma-dawn", color=config.ERROR_COLOR)
+            await ctx.reply(embed=reply)
         else:
-            print(error)
+            await ctx.reply(error)
 
+    @commands.guild_only()
+    @commands.command(name="random_poke", aliases=["rp"])
+    async def random_poke(self, ctx):
+        poke_data = await pokedex_helper.get_random_poke()
+        reply = await pokedex_helper.get_random_pokemon_embed(poke_data)
+
+        await ctx.send(embed=reply)
 
 def setup(bot):
     bot.add_cog(PokeDex(bot))
