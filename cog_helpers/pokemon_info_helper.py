@@ -58,7 +58,7 @@ async def get_nature_embed(poke: str):
         embd.description += "> PROBABLY this pokemon is not good for battling"
         embd.color = config.ERROR_COLOR
     
-    return embds
+    return embd
 
 # return tierlist
 async def get_tl(list_name):
