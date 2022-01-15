@@ -4,7 +4,7 @@ import json
 import random
 
 import config
-from cog_helpers import cache_helper
+from managers import cache_manager
 from cog_helpers import general_helper
 
 # data structure used to store pokemon data
@@ -31,7 +31,7 @@ async def get_poke_by_id(poke_id):
         return None
 
     try:
-        poke_id = cache_helper.cached_alt_name_data[poke_id]
+        poke_id = cache_manager.cached_alt_name_data[poke_id]
     except:
         poke_id = poke_id
 
@@ -117,7 +117,7 @@ async def get_poke_by_id(poke_id):
 
     # get rarity
     try:
-        rarity = cache_helper.cached_rarity_data[poke.p_name.lower()]
+        rarity = cache_manager.cached_rarity_data[poke.p_name.lower()]
         if rarity == "mythical" or rarity == "legendary" or rarity == "ultra beast":
             poke.p_rarity = rarity.capitalize()
         else:

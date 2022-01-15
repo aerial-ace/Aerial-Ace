@@ -1,17 +1,19 @@
 from discord.ext import commands
 
 import config
-from cog_helpers import cache_helper
+from managers import cache_manager
 
-bot = commands.Bot(command_prefix="[", description="Aerial Ace")
+bot = commands.Bot(command_prefix=">>", description="Aerial Ace")
 
 initial_cogs = [
-    "cogs.pokedex"
+    "cogs.utility",
+    "cogs.pokedex",
+    "cogs.pokemon_info"
 ]
 
 @bot.event
 async def on_ready():
-    await cache_helper.cache_data()
+    await cache_manager.cache_data()
     print(f"Logged in as {bot.user}")
 
 @bot.event
