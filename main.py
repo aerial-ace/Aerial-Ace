@@ -337,4 +337,4 @@ async def on_message(message):
     error_embed = await aerialace.get_info_embd("Command Not Found", "-aa what? That command doesn't exist! \n See the available commands by using ```-aa help```", global_vars.ERROR_COLOR)
     await message.channel.send(embed=error_embed)
 
-client.run(global_vars.TOKEN)
+#client.run(global_vars.TOKEN)

@@ -102,7 +102,7 @@ async def get_battle_leaderboard_embed(client, guild):
             try:
                 player_name = client.get_user(int(i)).name
             except:
-                player_name = "Not Found"
+                player_name = i
                 # TODO : Remove this user from leaderboards
             reply_embd.description += "{pos} | {score} | {name} \n".format(pos=" {0}.".format(pos).ljust(5, " "), name=("{0}".format(player_name)).ljust(20, " "), score=("{0}".format(battle_records[i]).ljust(7, " ")))
             pos = pos + 1
