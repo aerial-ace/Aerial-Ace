@@ -28,3 +28,12 @@ async def get_info_embd(title, desc, color, footer=None, show_tumbnail=False):
         embd.set_thumbnail(url=f"{config.AVATAR_LINK}")
 
     return embd
+
+async def get_user_id_from_ping(ping):
+    user_id = ping
+
+    ping_chars = ["<", "!", "@", ">"]
+    for char in ping_chars:
+        user_id = user_id.replace(char, "")
+
+    return user_id
