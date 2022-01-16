@@ -2,6 +2,7 @@ from discord.ext import commands
 
 from cog_helpers import general_helper
 from cog_helpers import battle_helper
+import config
 
 class BattleSystem(commands.Cog):
 
@@ -29,6 +30,33 @@ class BattleSystem(commands.Cog):
 
         await ctx.send(reply)
 
+    @log_battle.error
+    async def log_battle_handler(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            reply = general_helper.get_info_embd("Missing Argument Error!", "This command requries user pings as a parameter. Like this :```>>lb @Wumpus @Dumpus```", color=config.ERROR_COLOR)
+            await ctx.reply(reply)
+        else:
+            await ctx.send(error)
+
+    @commands.guild_only()
+    @commands.command(name="battle_lb", aliases=["blb"])
+    async def battle_lb(self, ctx):
+        reply = await battle_helper.get_battle_leaderboard_embed(self.bot, ctx.guild)
+        await ctx.send(embed=reply)
+
+    @battle_lb.error
+    async def battle_lb_handler(self, ctx, error):
+        await ctx.send(error)
+
+    @commands.guild_only()
+    @commands.command(name="battle_score", aliases=["bs"])
+    async def battle_score(self, ctx):
+        reply = await battle_helper.get_battle_score(ctx.guild.id, ctx.author)
+        await ctx.send(reply)
+
+    @battle_score.error
+    async def battle_score_handler(self, ctx, error):
+        await ctx.send(error)
 
 def setup(bot):
     bot.add_cog(BattleSystem(bot))
