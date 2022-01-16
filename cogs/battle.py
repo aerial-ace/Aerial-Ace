@@ -1,3 +1,6 @@
+from ast import alias
+from turtle import color
+from unicodedata import name
 from discord.ext import commands
 
 from cog_helpers import general_helper
@@ -33,8 +36,8 @@ class BattleSystem(commands.Cog):
     @log_battle.error
     async def log_battle_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = general_helper.get_info_embd("Missing Argument Error!", "This command requries user pings as a parameter. Like this :```>>lb @Wumpus @Dumpus```", color=config.ERROR_COLOR)
-            await ctx.reply(reply)
+            reply = await general_helper.get_info_embd("Missing Argument Error!", "This command requries user pings as a parameter. Like this :```>>lb @Wumpus @Dumpus```", color=config.ERROR_COLOR)
+            await ctx.reply(embed=reply)
         else:
             await ctx.send(error)
 
@@ -57,6 +60,20 @@ class BattleSystem(commands.Cog):
     @battle_score.error
     async def battle_score_handler(self, ctx, error):
         await ctx.send(error)
+
+    @commands.guild_only()
+    @commands.command(name="battle_remove", aliases=["br"])
+    async def battle_remove(self, ctx, user_id: int):
+        reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user_id)
+        await ctx.send(reply)
+
+    @battle_remove.error
+    async def battle_remove_handler(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            reply = await general_helper.get_info_embd("Missing Argument Error!", "This command requires user_id as a parameter. Like this```>>br 716390085896962058```", color=config.ERROR_COLOR)
+            await ctx.reply(embed=reply)
+        else:
+            await ctx.send(error)
 
 def setup(bot):
     bot.add_cog(BattleSystem(bot))
