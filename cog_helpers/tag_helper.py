@@ -1,4 +1,5 @@
 from http import server
+from os import stat
 import discord
 
 from cog_helpers import general_helper
@@ -144,3 +145,68 @@ async def remove_user(server_id, user_id : int):
 
     return f"> <@{user_id}> was removed from `{old_tag.capitalize()}` tag"
 
+async def set_afk(server_id : str, user_id : str, state : str):
+
+    query = {"server_id" : server_id}
+
+    mongo_cursor = mongo_manager.manager.get_all_data("tags", query)
+
+    """
+    {
+        "server_id" : "00000000000000000",
+        "tags" : {
+            "tag" : ["user", "user"]
+        }
+    }
+    """
+
+    tag_data = mongo_cursor[0]["tags"]
+
+    tags = list(tag_data.keys())
+    users = list(tag_data.values())
+
+    if state == "on":
+        current_tag = None
+
+        # get the current tag
+        for i in range(0, len(users)):
+            if user_id in users[i]:
+                current_tag = tags[i]
+
+        if current_tag is None:
+            return "> `AFK State` is either already **On** or you are not assigned to any tag"
+
+        tag_data[current_tag].remove(user_id)
+        new_user_id = f"/{user_id}"
+
+        tag_data[current_tag].append(new_user_id)
+
+        updated_data = {"tags" : tag_data}
+
+        mongo_manager.manager.update_all_data("tags", query, updated_data)
+
+        return "> You won't pinged now.."
+
+    else:
+        current_tag = None
+
+        # get the current tag
+        for i in range(0, len(users)):
+            if f"/{user_id}" in users[i]:
+                current_tag = tags[i]
+
+        if current_tag is None:
+            return "> `AFK State` is either already **Off** or you are not assigned to any tag"
+
+        tag_data[current_tag].remove(f"/{user_id}")
+        new_user_id = user_id
+
+        tag_data[current_tag].append(new_user_id)
+
+        updated_data = {"tags" : tag_data}
+
+        mongo_manager.manager.update_all_data("tags", query, updated_data)
+
+        return "> AFK removed, you will recieve pings now." 
+
+    

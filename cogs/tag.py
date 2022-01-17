@@ -1,7 +1,6 @@
-from multiprocessing.connection import answer_challenge
-import config
 from discord.ext import commands
 
+import config
 from cog_helpers import tag_helper
 from cog_helpers import general_helper
 
@@ -36,7 +35,7 @@ class TagSystem(commands.Cog):
         pings = ""
 
         for i in range(0, number_of_hunters):
-            pings = pings + "<@{user}>".format(user=str(hunters[i]))
+            pings = pings + f"<@{str(hunters[i])}>"
             if i <= number_of_hunters - 2:
                 pings += " | "
 
@@ -89,6 +88,20 @@ class TagSystem(commands.Cog):
             await ctx.reply(reply)
         else:
             await ctx.send(error)
+
+    @commands.guild_only()
+    @commands.command()
+    async def afk(self, ctx, state):
+
+        if state.lower() not in ["on", "off"]:
+            return
+
+        reply = await tag_helper.set_afk(str(ctx.guild.id), str(ctx.author.id), state.lower())
+        await ctx.send(reply)
+
+    @afk.error
+    async def afk_handler(self, ctx, error):
+        await ctx.send(error)
 
 def setup(bot):
     bot.add_cog(TagSystem(bot))

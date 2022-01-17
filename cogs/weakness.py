@@ -6,9 +6,13 @@ from managers import cache_manager
 all_types = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water"]
 
 class Weakness(commands.Cog):
+
+    """Weakness data Manager"""
+
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.guild_only()
     @commands.command(name="weakness", aliases=["weak"])
     async def get_weakness(self, ctx, *params):
 
@@ -93,7 +97,6 @@ class Weakness(commands.Cog):
             )
 
         await ctx.send(embed=embed)
-
 
 def setup(bot):
     bot.add_cog(Weakness(bot))

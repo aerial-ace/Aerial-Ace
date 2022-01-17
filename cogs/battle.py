@@ -1,6 +1,3 @@
-from ast import alias
-from turtle import color
-from unicodedata import name
 from discord.ext import commands
 
 from cog_helpers import general_helper

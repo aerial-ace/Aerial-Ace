@@ -7,6 +7,7 @@ from managers import mongo_manager
 bot = commands.Bot(command_prefix=">>", description="Aerial Ace")
 
 initial_cogs = [
+    "cogs.admin",
     "cogs.utility",
     "cogs.pokedex",
     "cogs.pokemon_info",
@@ -23,9 +24,6 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-
-    if message.author.id != int(config.ADMIN_ID):
-        return
 
     await bot.process_commands(message)
 
