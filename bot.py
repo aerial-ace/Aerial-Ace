@@ -3,6 +3,9 @@ from discord.ext import commands
 import config
 from managers import cache_manager
 from managers import mongo_manager
+from managers import init_manager
+
+from checkers import rare_catch_detection
 
 bot = commands.Bot(command_prefix=">>", description="Aerial Ace")
 
@@ -16,6 +19,15 @@ initial_cogs = [
     "cogs.battle"
 ]
 
+
+@bot.event
+async def on_guild_join(guild):
+    init_manager.register_guild(bot, guild)
+
+@bot.event 
+async def on_guild_remove(guild):
+    init_manager.remove_guild(bot, guild)
+
 @bot.event
 async def on_ready():
     await mongo_manager.init_mongo(config.MONGO_URI, "aerialace")
@@ -24,6 +36,8 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
+
+    await rare_catch_detection.rare_check(message)
 
     await bot.process_commands(message)
 

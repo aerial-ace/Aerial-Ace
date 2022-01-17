@@ -1,8 +1,5 @@
-from http import server
-from os import stat
 import discord
 
-from cog_helpers import general_helper
 from managers import mongo_manager
 import config
 
@@ -103,6 +100,7 @@ async def get_show_hunters_embd(tag, hunters):
 
     return embd
 
+# remove user from their tag
 async def remove_user(server_id, user_id : int):
     
     query = {"server_id" : str(server_id)}
@@ -145,6 +143,7 @@ async def remove_user(server_id, user_id : int):
 
     return f"> <@{user_id}> was removed from `{old_tag.capitalize()}` tag"
 
+# set the afk status of the user
 async def set_afk(server_id : str, user_id : str, state : str):
 
     query = {"server_id" : server_id}
@@ -208,5 +207,3 @@ async def set_afk(server_id : str, user_id : str, state : str):
         mongo_manager.manager.update_all_data("tags", query, updated_data)
 
         return "> AFK removed, you will recieve pings now." 
-
-    
