@@ -1,3 +1,6 @@
+⚠️ | Bot is going through official verification process. As unverified bots are not allowed to join more than 100 servers, you might be unable to invite Aerial Ace. The invite links will start to work as soon as bot gets verified. Thanks for understanding :]
+:---: | :---
+
 <h1 align="center">
   <img src="https://user-images.githubusercontent.com/66104268/146304164-cd2fd647-54f2-4269-99c5-158db840ac5f.png" style="width : 50; height : auto;" />
 </h1>
@@ -26,8 +29,10 @@
 * View the best stats of Pokémon for battling.
 * View the best moveset of any Pokémon for battling.
 * View the best nature of any Pokémon for battling.
+* View the Pokémon's type weaknesses.
 * View pokemon tierlists.
 * Register Battles and view leaderboards.
+* Rare catch detection System
 
 ### Commands
 * `-aa roll <upper limit>` rolls a dice.
@@ -39,6 +44,7 @@
 * `-aa stats <pokemon name>` displays the best stats for the provided Pokémon.
 * `-aa moveset <pokemon name>` displays the best moveset of the provided Pokémon.
 * `-aa nature <pokemon name>` displays the best nature of the provided Pokémon.
+* `-aa weakness <pokemon name>` displays the type weaknesses of the provided Pokémon.
 * `-aa tierlist <tier type>` displays the tierlist of that type. Available types are `common`, `mega`, `rare`, `water`.
 * `-aa log_battle @winner @loser` logs the battle in the leaderboard.
 * `-aa battle_score` displays the current battle score the user.
