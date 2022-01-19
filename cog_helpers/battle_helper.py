@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from http import server
 import discord
 
 from managers import mongo_manager
