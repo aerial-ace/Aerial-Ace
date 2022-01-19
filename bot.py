@@ -22,11 +22,11 @@ initial_cogs = [
 
 @bot.event
 async def on_guild_join(guild):
-    init_manager.register_guild(bot, guild)
+    await init_manager.register_guild(bot, guild)
 
 @bot.event 
 async def on_guild_remove(guild):
-    init_manager.remove_guild(bot, guild)
+    await init_manager.remove_guild(bot, guild)
 
 @bot.event
 async def on_ready():
