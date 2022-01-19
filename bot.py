@@ -7,7 +7,7 @@ from managers import init_manager
 
 from checkers import rare_catch_detection
 
-bot = commands.Bot(command_prefix=">>", description="Aerial Ace")
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(">>"), description="Aerial Ace")
 
 initial_cogs = [
     "cogs.admin",
@@ -36,6 +36,12 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
+
+    if message.author == bot.user :
+        return
+
+    if message.guild.id != 751076697884852389:
+        return
 
     await rare_catch_detection.rare_check(message)
 

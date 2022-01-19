@@ -1,12 +1,15 @@
 from discord.ext import commands
 
 from cog_helpers import utility_helper
-from cog_helpers import general_helper
-import config
 
 class Utility(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
+
+    @commands.guild_only()
+    @commands.command(name="ping")
+    async def ping(self, ctx):
+        await ctx.send(f"Bot Latency (aka Ping) is : `{round(self.bot.latency, 5) * 1000}`ms")
 
     @commands.guild_only()
     @commands.command()
@@ -23,7 +26,7 @@ class Utility(commands.Cog):
 
     @commands.command(name="support_server", aliases=["ss"])
     async def support_server(self, ctx):
-        reply = await general_helper.get_info_embd("Support Server Links", f"To join support server, use this [link]({config.SUPPORT_SERVER_LINK})", color=config.NORMAL_COLOR, show_tumbnail=True)
+        reply = await utility_helper.get_support_server_embed()
         await ctx.send(embed=reply)
 
     @commands.command(name="about")
@@ -38,7 +41,7 @@ class Utility(commands.Cog):
 
     @commands.command(name="invite", aliases=["inv"])
     async def invite(self, ctx):
-        reply = await utility_helper.get_support_server_embed()
+        reply = await utility_helper.get_invite_embed()
         await ctx.send(embed=reply)
 
 def setup(bot):
