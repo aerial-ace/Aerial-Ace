@@ -1,7 +1,8 @@
-from distutils import errors
 from discord.ext import commands
 
 from cog_helpers import utility_helper
+from cog_helpers import general_helper
+import config
 
 class Utility(commands.Cog):
     def __init__(self, bot) -> None:
@@ -19,6 +20,11 @@ class Utility(commands.Cog):
             await ctx.reply("Gib a interger as an argument like `>>roll 69`")
         else:
             await ctx.reply(error)
+
+    @commands.command(name="support_server", aliases=["ss"])
+    async def support_server(self, ctx):
+        reply = await general_helper.get_info_embd("Support Server Links", f"To join support server, use this [link]({config.SUPPORT_SERVER_LINK})", color=config.NORMAL_COLOR, show_tumbnail=True)
+        await ctx.send(reply)
 
 def setup(bot):
     bot.add_cog(Utility(bot))

@@ -6,24 +6,26 @@ import config
 
 # detect rare catch message
 async def rare_check(message):    
-    if str(message.author.id) == config.ADMIN_ID:
-        try:
-            catch_info = await determine_rare_catch(message.content)
-
-            # return if not a rare catch
-            if catch_info is None:
-                return
-
-            # get the rare catch details
-            if catch_info["type"] == "shiny":
-                reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "shiny")
-            elif catch_info["type"] == "rare":
-                reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "rare")
-
-            await message.channel.send(embed=reply)
-        except Exception as e:
-            print(f"Error while determining rare dex {e}")
+    if str(message.author.id) != config.POKETWO_ID:
         return
+    
+    try:
+        catch_info = await determine_rare_catch(message.content)
+
+        # return if not a rare catch
+        if catch_info is None:
+            return
+
+        # get the rare catch details
+        if catch_info["type"] == "shiny":
+            reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "shiny")
+        elif catch_info["type"] == "rare":
+            reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "rare")
+
+        await message.channel.send(embed=reply)
+    except Exception as e:
+        print(f"Error while determining rare dex {e}")
+    return
 
 # check if any message is a rare catch message
 async def determine_rare_catch(msg):
