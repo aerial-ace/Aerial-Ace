@@ -10,7 +10,7 @@ class Utility(commands.Cog):
     @commands.command(name="ping")
     async def ping(self, ctx):
         await ctx.send(f"Bot Latency (aka Ping) is : `{round(self.bot.latency, 5) * 1000}`ms")
-        
+
     @commands.guild_only()
     @commands.command()
     async def roll(self, ctx, max_value : int = 100):

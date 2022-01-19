@@ -8,6 +8,7 @@ from managers import init_manager
 from checkers import rare_catch_detection
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(">>"), description="Aerial Ace")
+bot.remove_command("help")
 
 initial_cogs = [
     "cogs.admin",
@@ -16,7 +17,8 @@ initial_cogs = [
     "cogs.pokemon_info",
     "cogs.tag",
     "cogs.weakness",
-    "cogs.battle"
+    "cogs.battle",
+    "cogs.help"
 ]
 
 
