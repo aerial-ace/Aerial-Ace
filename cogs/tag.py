@@ -101,6 +101,11 @@ class TagSystem(commands.Cog):
 
     @afk.error
     async def afk_handler(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            reply = await general_helper.get_info_embd("Missing Argument Error!", "This command requires `State` as a parameter. Like this```>>afk on [off]```", color=config.ERROR_COLOR)
+            await ctx.reply(embed=reply)
+            return
+
         await ctx.send(error)
 
 def setup(bot):
