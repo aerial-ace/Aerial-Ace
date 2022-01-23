@@ -1,5 +1,3 @@
-from copy import error
-from email import message
 from discord.ext import commands
 
 from managers import mongo_manager
@@ -16,10 +14,14 @@ class AdminSystem(commands.Cog):
         try:
             mongo_cursor = mongo_manager.manager.get_all_data(collection, query)
         except Exception as e:
-            await ctx.reply(error)
+            await ctx.reply(f"```{e}```")
             return
         
-        data = mongo_cursor[0]
+        try:
+            data = mongo_cursor[0]
+        except Exception as e:
+            await ctx.reply(f"```{e}```")
+            return
 
         reply = f"""
         __{collection.capitalize()}'s data__ in {server_id}
