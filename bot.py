@@ -7,7 +7,7 @@ from config import TOKEN, MONGO_URI, TEST_TOKEN
 
 from checkers import rare_catch_detection
 
-is_test = True
+is_test = False
 test_prefix = "aa."
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("aa."), description="Aerial Ace")

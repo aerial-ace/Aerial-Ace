@@ -14,6 +14,10 @@ class FunModule(commands.Cog):
 
         """Kill someone by showing gifs"""
 
+        if target == ctx.author : 
+            await ctx.reply("I was unable to find a suicide gif, but dw, you **successfully** killed yourself :]")
+            return
+
         reply = await fun_helper.get_kill_embed(ctx.author.name, target.name)
 
         await ctx.send(embed=reply)
@@ -32,6 +36,11 @@ class FunModule(commands.Cog):
     async def hit(self, ctx, target : discord.Member):
 
         """Hit someone by showing gifs"""
+
+        if ctx.author == target:
+            reply = discord.Embed(title=f"{ctx.author.name} slapped {ctx.author.name} then, {ctx.author.name} slapped {ctx.author.name} :/ What a mess.").set_image(url="https://cdn.discordapp.com/attachments/893732055421157396/934808056343191552/psyduck-hit-smash.gif")
+            await ctx.send(embed=reply)
+            return
 
         reply = await fun_helper.get_hit_embed(ctx.author.name, target.name)
         await ctx.send(embed=reply)
