@@ -3,6 +3,7 @@ import discord
 
 # Bot data
 TOKEN = os.environ["TOKEN"]
+TEST_TOKEN = os.environ["TEST_TOKEN"]
 ADMIN_ID = os.environ["ADMIN_ID"]
 POKETWO_ID = os.environ["POKETWO_ID"]
 

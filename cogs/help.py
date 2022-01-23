@@ -35,7 +35,7 @@ all_commands = {
         "`>>ping` displays the current bot latency",
         "`>>support_server[ss]` displays the link for the support server",
         "`>>vote` displays the vote link for the bot",
-        "`>>invite` displays the invite link for the bot",
+        "`>>invite` displays the invite link for the bot"
     ]
 }
 
@@ -83,7 +83,7 @@ class HelpCommand(commands.Cog):
         embd = discord.Embed(title=f"__{category.capitalize()} Help__", color=config.NORMAL_COLOR)
         embd.description = "All the commands in this category"
         embd.add_field(
-            name="Commands",
+            name="Commands : ",
             value="\n".join(cmds),
             inline=False
         )
