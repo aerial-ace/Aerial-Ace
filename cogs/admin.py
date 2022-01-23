@@ -1,8 +1,12 @@
 from discord.ext import commands
+import discord
 
 from managers import mongo_manager
 
 class AdminSystem(commands.Cog):
+
+    bot : commands.Bot = None
+
     def __init__(self, bot):        
         self.bot = bot
 
@@ -31,7 +35,6 @@ class AdminSystem(commands.Cog):
         """
 
         await ctx.send(reply)
-
-
+        
 def setup(bot):
     bot.add_cog(AdminSystem(bot))

@@ -17,7 +17,7 @@ class Pokemon_Info(commands.Cog):
     @stats.error
     async def stats_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", "A pokemon name is required for this command. Try this ```>>stats Solgaleo```", config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", f"A pokemon name is required for this command. Try this ```{ctx.prefix}stats Solgaleo```", config.ERROR_COLOR)
             await ctx.reply(embed=reply)
         else:
             await ctx.send(error)
@@ -31,7 +31,7 @@ class Pokemon_Info(commands.Cog):
     @moveset.error
     async def moveset_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", "A pokemon name is required for this command, try this ```>>moveset Zekrom```", config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", f"A pokemon name is required for this command, try this ```{ctx.prefix}moveset Zekrom```", config.ERROR_COLOR)
             await ctx.reply(embed=reply)
         else:
             await ctx.send(error)
@@ -45,7 +45,7 @@ class Pokemon_Info(commands.Cog):
     @nature.error
     async def nature_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", "A pokemon name is required for this command, try this ```>>nature Nihilego```", config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", f"A pokemon name is required for this command, try this ```{ctx.prefix}nature Nihilego```", config.ERROR_COLOR)
             await ctx.send(embed=reply)
         else:
             await ctx.send(error)

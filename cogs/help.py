@@ -8,34 +8,34 @@ all_categories = ["dex", "info", "battle", "tag", "misc"]
 
 all_commands = {
     "dex" : [
-        "`>>dex <PokemonName>` displays the dex entry of the pokemon.",
-        "`>>random_poke[rp]` displays a random pokemon with **some** info about it.",
+        "`{prefix}dex <PokemonName>` displays the dex entry of the pokemon.",
+        "`{prefix}random_poke[rp]` displays a random pokemon with **some** info about it.",
     ],
     "info" : [
-        "`>>stats <PokemonName>` displays the must have stats for dueling of the pokemon.",
-        "`>>moveset[ms] <PokemonName>` displays the must have moveset for dueling of the pokemon.",
-        "`>>nature <PokemonName>` displays the must have nature for dueling of the pokemon.",
-        "`>>weakness[weak] <PokemonName or type combination>` displays the **type** weakness of the pokemon."
+        "`{prefix}stats <PokemonName>` displays the must have stats for dueling of the pokemon.",
+        "`{prefix}moveset[ms] <PokemonName>` displays the must have moveset for dueling of the pokemon.",
+        "`{prefix}nature <PokemonName>` displays the must have nature for dueling of the pokemon.",
+        "`{prefix}weakness[weak] <PokemonName or type combination>` displays the **type** weakness of the pokemon."
     ],
     "battle" : [
-        "`>>log_battle[lb] @winner @loser` logs the battle.",
-        "`>>battle_score[bs]` displays the current battle score of the user.",
-        "`>>battle_lb[blb] displays the battle leaderboard of the server.`",
-        "`>>battle_remove[br] <User_id>` removes the user from the battle board (Admin Only)"
+        "`{prefix}log_battle[lb] @winner @loser` logs the battle.",
+        "`{prefix}battle_score[bs]` displays the current battle score of the user.",
+        "`{prefix}battle_lb[blb] displays the battle leaderboard of the server.`",
+        "`{prefix}battle_remove[br] <User_id>` removes the user from the battle board (Admin Only)"
     ],
     "tag" : [
-        "`>>tag <tag>` assigns the user to the tag provided.",
-        "`>>tag_ping[tp] <tag>` pings the users assigned to the tag provided.",
-        "`>>tag_show[ts] <tag>` displays the users assigned to the tag provided.",
-        "`>>afk <on/off>` set the afk",
-        "`>>tag_remove <UserId>` removes the user from their tag (Admin Only)."
+        "`{prefix}tag <tag>` assigns the user to the tag provided.",
+        "`{prefix}tag_ping[tp] <tag>` pings the users assigned to the tag provided.",
+        "`{prefix}tag_show[ts] <tag>` displays the users assigned to the tag provided.",
+        "`{prefix}afk <on/off>` set the afk",
+        "`{prefix}tag_remove <UserId>` removes the user from their tag (Admin Only)."
     ],
     "misc" : [
-        "`>>roll <UpperLimit>` rolls a die",
-        "`>>ping` displays the current bot latency",
-        "`>>support_server[ss]` displays the link for the support server",
-        "`>>vote` displays the vote link for the bot",
-        "`>>invite` displays the invite link for the bot"
+        "`{prefix}roll <UpperLimit>` rolls a die",
+        "`{prefix}ping` displays the current bot latency",
+        "`{prefix}support_server[ss]` displays the link for the support server",
+        "`{prefix}vote` displays the vote link for the bot",
+        "`{prefix}invite` displays the invite link for the bot"
     ]
 }
 
@@ -49,19 +49,19 @@ class HelpCommand(commands.Cog):
     async def help(self, ctx, category=None, command=None):
 
         if category is None:
-            reply = await self.get_help_embed()
+            reply = await self.get_help_embed(ctx)
             await ctx.send(embed=reply)
             return
 
         if command is None:
-            reply = await self.get_category_help_embed(category.lower())
+            reply = await self.get_category_help_embed(ctx, category.lower())
             await ctx.send(embed=reply)
             return
 
-    async def get_help_embed(self) -> discord.Embed:
+    async def get_help_embed(self, ctx) -> discord.Embed:
 
         embd = discord.Embed(title="__HELP - Aerial Ace__", color=config.NORMAL_COLOR)
-        embd.description = "Send `>>help <category>` where category can be one from these : "
+        embd.description = f"Send `{ctx.prefix}help <category>` where category can be one from these : "
         embd.add_field(
             name="Categories",
             value="\n".join(all_categories),
@@ -72,13 +72,16 @@ class HelpCommand(commands.Cog):
 
         return embd
 
-    async def get_category_help_embed(self, category) -> discord.Embed:
+    async def get_category_help_embed(self, ctx, category) -> discord.Embed:
 
         if category not in all_categories:
-            reply = await general_helper.get_info_embd("Not Found Error!", "This category was not found, do `>>help` for all the categories", color=config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Not Found Error!", f"This category was not found, do `{ctx.prefix}help` for all the categories", color=config.ERROR_COLOR)
             return reply
 
         cmds = all_commands[category]
+
+        for i in range(0, len(cmds)):
+            cmds[i] = cmds[i].format(prefix=ctx.prefix)
 
         embd = discord.Embed(title=f"__{category.capitalize()} Help__", color=config.NORMAL_COLOR)
         embd.description = "All the commands in this category"
