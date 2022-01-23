@@ -11,6 +11,7 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or(">>"), description=
 bot.remove_command("help")
 
 initial_cogs = [
+    "cogs.presence_cycle",
     "cogs.admin",
     "cogs.utility",
     "cogs.pokedex",
