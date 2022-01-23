@@ -33,7 +33,7 @@ class BattleSystem(commands.Cog):
     @log_battle.error
     async def log_battle_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Missing Argument Error!", f"This command requries user pings as a parameter. Like this :```{ctx.prefix}lb @Wumpus @Dumpus```", color=config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requries user pings as a parameter. Like this :```{ctx.prefix}lb @Wumpus @Dumpus```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
         else:
             await ctx.send(error)
@@ -67,7 +67,7 @@ class BattleSystem(commands.Cog):
     @battle_remove.error
     async def battle_remove_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Missing Argument Error!", f"This command requires user_id as a parameter. Like this```{ctx.prefix}br 716390085896962058```", color=config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user_id as a parameter. Like this```{ctx.prefix}br 716390085896962058```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
         else:
             await ctx.send(error)

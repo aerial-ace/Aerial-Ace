@@ -44,7 +44,7 @@ class TagSystem(commands.Cog):
     @tag_ping.error
     async def tag_ping_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Gib a tag as a parameter when :/", f"This command requires a tag as a parameter.\n```{ctx.prefix}tag_ping Espurr```", config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a tag as a parameter.\n```{ctx.prefix}tag_ping Espurr```", config.ERROR_COLOR)
             await ctx.reply(embed=reply)
         else:
             await ctx.send(error)
@@ -66,7 +66,7 @@ class TagSystem(commands.Cog):
     @tag_show.error
     async def tag_show_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Gib a tag as a parameter when :/", f"This command requires a tag as a parameter.\n```{ctx.prefix}tag_show Darumaka```", config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a tag as a parameter.\n```{ctx.prefix}tag_show Darumaka```", config.ERROR_COLOR)
             await ctx.reply(embed=reply)
         else:
             await ctx.send(error)
@@ -81,7 +81,7 @@ class TagSystem(commands.Cog):
     @tag_remove.error
     async def tag_remove_helper(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Gib a user_id as a parameter when :/", f"This command requires a user_id as a parameter.\n```{ctx.prefix}tag_remove 716390085896962058```", config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a user_id as a parameter.\n```{ctx.prefix}tag_remove 716390085896962058```", config.ERROR_COLOR)
             await ctx.reply(embed=reply)
         elif isinstance(error, commands.errors.MissingPermissions):
             reply = "Be a Admin when?"
@@ -102,7 +102,7 @@ class TagSystem(commands.Cog):
     @afk.error
     async def afk_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Missing Argument Error!", f"This command requires `State` as a parameter. Like this```{ctx.prefix}afk on [off]```", color=config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires `State` as a parameter. Like this```{ctx.prefix}afk on [off]```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
             return
 

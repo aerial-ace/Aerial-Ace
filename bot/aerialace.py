@@ -325,7 +325,7 @@ async def get_dex_entry_embed(poke_data):
     max_character_width = 40
 
     if poke_data is None:
-        return get_info_embd("Gib pokemon name as a parameter when :/", "> Provide a pokemon name like ```-aa dex aron```", color=global_vars.ERROR_COLOR)
+        return get_info_embd("Breh, Whats this?", "> Provide a pokemon name like ```-aa dex aron```", color=global_vars.ERROR_COLOR)
 
     embd = discord.Embed(color=global_vars.NORMAL_COLOR)
     embd.title = "**{0} : {1}**".format(poke_data.p_id, poke_data.p_name)
