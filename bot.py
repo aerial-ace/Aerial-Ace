@@ -10,7 +10,7 @@ from checkers import rare_catch_detection
 is_test = True
 test_prefix = "aa."
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or("-aa "), description="Aerial Ace")
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("aa."), description="Aerial Ace")
 bot.remove_command("help")
 
 initial_cogs = [
@@ -18,6 +18,7 @@ initial_cogs = [
     "cogs.admin",
     "cogs.utility",
     "cogs.pokedex",
+    "cogs.fun",
     "cogs.pokemon_info",
     "cogs.tag",
     "cogs.weakness",
