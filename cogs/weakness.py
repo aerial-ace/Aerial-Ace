@@ -58,17 +58,17 @@ class Weakness(commands.Cog):
 
         for type in list(overall_weakness.keys()):
             if overall_weakness[type] > 2:
-                weakness_tiers["super weak"] = weakness_tiers["super weak"] + type.capitalize() + " | "
+                weakness_tiers["super weak"] = weakness_tiers["super weak"] + type.capitalize() + " - "
             elif overall_weakness[type] > 1:
-                weakness_tiers["weak"] = weakness_tiers["weak"] + type.capitalize() + " | "
+                weakness_tiers["weak"] = weakness_tiers["weak"] + type.capitalize() + " - "
             elif overall_weakness[type] == 1:
-                weakness_tiers["neutral"] = weakness_tiers["neutral"] + type.capitalize() + " | "
+                weakness_tiers["neutral"] = weakness_tiers["neutral"] + type.capitalize() + " - "
             elif overall_weakness[type] > 0.5:
-                weakness_tiers["resistive"] = weakness_tiers["resistive"] + type.capitalize() + " | "
+                weakness_tiers["resistive"] = weakness_tiers["resistive"] + type.capitalize() + " - "
             elif overall_weakness[type] > 0:
-                weakness_tiers["super resistive"] = weakness_tiers["super resistive"] + type.capitalize() + " | "
+                weakness_tiers["super resistive"] = weakness_tiers["super resistive"] + type.capitalize() + " - "
             else:
-                weakness_tiers["immune"] = weakness_tiers["immune"] + type.capitalize() + " | "
+                weakness_tiers["immune"] = weakness_tiers["immune"] + type.capitalize() + " - "
 
         # prepare the embed heading
         heading = ""
@@ -95,6 +95,9 @@ class Weakness(commands.Cog):
                 value=weakness_tiers[tier],
                 inline=False
             )
+
+            if type_input is False:
+                embed.set_thumbnail(url=f"https://play.pokemonshowdown.com/sprites/xyani/{params[0].lower()}.gif")
 
         await ctx.send(embed=embed)
 
