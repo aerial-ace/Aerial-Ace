@@ -3,11 +3,12 @@ from discord.ext import commands
 from managers import cache_manager
 from managers import mongo_manager
 from managers import init_manager
+from cogs import mail as mail_manager
 from config import TOKEN, MONGO_URI, TEST_TOKEN
 
 from checkers import rare_catch_detection
 
-is_test = False
+is_test = True
 test_prefix = "aa."
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("-aa "), description="Aerial Ace")
@@ -16,14 +17,15 @@ bot.remove_command("help")
 initial_cogs = [
     "cogs.presence_cycle",
     "cogs.admin",
+    "cogs.help",
+    "cogs.mail",
     "cogs.utility",
     "cogs.pokedex",
-    "cogs.fun",
     "cogs.pokemon_info",
     "cogs.tag",
     "cogs.weakness",
-    "cogs.battle",
-    "cogs.help"
+    "cogs.fun",
+    "cogs.battle"
 ]
 
 @bot.event
@@ -46,9 +48,16 @@ async def on_message(message):
     if message.author == bot.user :
         return
 
+    # detect rare catches from the poketwo bot
     await rare_catch_detection.rare_check(message)
 
+    # process commands
     await bot.process_commands(message)
+
+@bot.listen("on_command_completion")
+async def after_command(ctx : commands.Context):
+    if ctx.command.name != "help" and ctx.command.name != "mail":
+        await mail_manager.process_mail(ctx)
 
 def main():
     for cog in initial_cogs:

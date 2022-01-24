@@ -1,3 +1,4 @@
+from ast import alias
 import discord
 from discord.ext import commands
 
@@ -39,6 +40,11 @@ all_commands = {
     ]
 }
 
+all_admin_commands = [
+    "`{prefix}mail_state <On/Off>` sets the mail reminder state. Turning it off will not remind users about mails",
+    "`{prefix}show_date[sd] <Collection> <Server_ID>` shows the mondo db data of the server in the provided collection"
+]
+
 class HelpCommand(commands.Cog):
 
     def __init__(self, bot) -> None:
@@ -46,7 +52,7 @@ class HelpCommand(commands.Cog):
 
     @commands.guild_only()
     @commands.command(name="help", aliases=["h"])
-    async def help(self, ctx, category=None, command=None):
+    async def send_help(self, ctx, category=None, command=None):
 
         if category is None:
             reply = await self.get_help_embed(ctx)
@@ -94,6 +100,23 @@ class HelpCommand(commands.Cog):
         embd.set_thumbnail(url=config.AVATAR_LINK)
 
         return embd
+
+    @commands.is_owner()
+    @commands.command(name="admin_help", aliases=["ah"])
+    async def send_admin_help(self, ctx):
+        embd = discord.Embed(title="Admin Help Panel", color=config.NORMAL_COLOR)
+        embd.description = "These commands can be used by bot owners only"
+
+        cmds = "\n".join(all_admin_commands)
+
+        for cmd in all_admin_commands:
+            embd.add_field(
+                name = "Commands : ",
+                value=cmds,
+                inline=False
+            )
+
+        await ctx.send(embd)
 
 def setup(bot):
     bot.add_cog(HelpCommand(bot))
