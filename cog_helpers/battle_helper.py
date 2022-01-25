@@ -1,14 +1,47 @@
-import discord
 from collections import OrderedDict
+import discord
 
-from bot import mongo_manager
-from bot import aerialace
-from bot import global_vars
+from managers import mongo_manager
+from cog_helpers import general_helper
+import config
+
+async def get_battle_acceptance(bot, ctx, winner, loser):
+
+    check_id = ""
+
+    if winner == loser:
+        await ctx.send("> Breh, Stop it")
+        return "notapplicable"
+
+    if str(ctx.author.id) == winner:
+        check_id = loser
+    elif str(ctx.author.id) == loser:
+        check_id = winner
+    else:
+        await ctx.send("> Who are you to do this. Let the players log their battles.")
+        return "notapplicable"
+
+    # send battle log request
+    log_msg = await ctx.send("Logging <@{winner}>'s win over <@{loser}>. Click the checkmark to accept.".format(winner=winner, loser=loser))
+
+    accept_emoji = "☑️"
+
+    await log_msg.add_reaction(accept_emoji)
+
+    def check(_reaction, _user):
+        return str(_user.id) == check_id and str(_reaction.emoji) == accept_emoji
+
+    try:
+        await bot.wait_for("reaction_add", timeout=10.0, check=check)
+    except:
+        return "notaccepted"
+    else:
+        return "accepted"
 
 # Register Battle log
 async def register_battle_log(server_id, winner, looser):
 
-    query = {"server_id" : server_id}
+    query = {"server_id" : str(server_id)}
     data_cursor = mongo_manager.manager.get_all_data("battles", query)
 
     """
@@ -43,10 +76,12 @@ async def register_battle_log(server_id, winner, looser):
 
     except Exception as e:
         print(f"Error while logging battle : {e}")
+        return "error"
 
 # return the battle score of the user
 async def get_battle_score(server_id, user):
     user_id = str(user.id)
+    server_id = str(server_id)
 
     query = {"server_id" : server_id}
     data_cursor = mongo_manager.manager.get_all_data("battles", query)
@@ -76,7 +111,7 @@ async def get_battle_score(server_id, user):
         return "> Error showing battle score :(, error were registered though."
 
 # returns the battle leaderboard of the server
-async def get_battle_leaderboard_embed(client, guild):
+async def get_battle_leaderboard_embed(bot, guild):
     server_id = str(guild.id)
     server_name = guild.name
 
@@ -100,10 +135,7 @@ async def get_battle_leaderboard_embed(client, guild):
                 footer = "Some players were not mentioned in the leaderboard because of lower scores.\nSee your score with -aa bs"
                 break
 
-            player_name = f"<@{i}>"
-            # TODO : Remove this user from leaderboards
-            
-            reply_embd.description += "`{pos} | {score} |` {name} \n".format(pos=" {0}.".format(pos).ljust(5, " "), name=("{0}".format(player_name)).ljust(20, " "), score=("{0}".format(battle_records[i]).ljust(7, " ")))
+            reply_embd.description += "`{pos} | {score} |` <@{id}> \n".format(pos=" {0}.".format(pos).ljust(5, " "), id=i, score=("{0}".format(battle_records[i]).ljust(7, " ")))
             pos = pos + 1
 
         if footer != "":
@@ -112,4 +144,41 @@ async def get_battle_leaderboard_embed(client, guild):
         return reply_embd
     except Exception as e:
         print(f"Error while showing battle leaderboard : {e}")
-        return await aerialace.get_info_embd("Oops", "Error occured while showing battle leaderboards :|", global_vars.ERROR_COLOR, "These errors were registered")
+        return await general_helper.get_info_embd("Oops", "Error occured while showing battle leaderboards :|", config.ERROR_COLOR, "These errors were registered")
+
+# removes the user from the leaderboard
+async def remove_user_from_battleboard(server_id, user_id : int):
+    server_id = str(server_id)
+    user_id = str(user_id)
+
+    query = {"server_id" : server_id}
+
+    mongo_cursor = mongo_manager.manager.get_all_data("battles", query)
+
+    battle_data = mongo_cursor[0]["logs"]
+
+    """
+    {
+        "server_id" : "1000000",
+        "logs" : {
+            "user_id" : wins
+        }
+    }
+    """
+
+    users = list(battle_data.keys())
+
+    if user_id in users:
+        del(battle_data[user_id])
+    else:
+        return "> That user is not in the leaderboard"
+
+    updated_data = {"logs" : battle_data}
+
+    mongo_manager.manager.update_all_data("battles", query, updated_data)
+
+    return f"> <@{user_id}> was removed from the battle board."
+
+
+
+

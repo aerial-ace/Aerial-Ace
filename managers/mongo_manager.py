@@ -1,4 +1,4 @@
-from pymongo import MongoClient, results
+from pymongo import MongoClient
 from pymongo import cursor
 
 class MongoManager:
