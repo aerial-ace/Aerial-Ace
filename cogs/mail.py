@@ -17,26 +17,26 @@ class MailModule(commands.Cog):
         embd.description = "Available Mails are shown here, mails keep you updated with all the new bug fixes and features in the bot"
 
         embd.add_field(
-            name="This is one mail subject",
-            value="This is where all the content of that mail is shown. For example, if you rate nyaonix on the cuteness meter, it will score a 10/10 :3",
+            name="FIX : Battle leaderboard",
+            value=f"Battle leaderboard, previously broken is now fixed. Use `{ctx.prefix}blb` to view it",
             inline=False
         )
         
         embd.add_field(
-            name="This is another mail subject",
-            value="This is where all the content of that mail is shown. For example, if you rate nyaonix on the cuteness meter, it will score a 10/10 :3",
+            name="Fun Commands Module",
+            value=f"Commands like `{ctx.prefix}kill` and `{ctx.prefix}hit` are now available. ||Totally not inspired by owo||",
             inline=False
         )
 
         embd.add_field(
-            name="This is another mail subject",
-            value="This is where all the content of that mail is shown. For example, if you rate nyaonix on the cuteness meter, it will score a 10/10 :3",
+            name="Bot Latency",
+            value=f"Check the bots ping using `{ctx.prefix}ping`",
             inline=False
         )
 
         embd.add_field(
-            name="This is another mail subject",
-            value="This is where all the content of that mail is shown. For example, if you rate nyaonix on the cuteness meter, it will score a 10/10 :3",
+            name="Admin Commands",
+            value=f"Added commands for Admins to remove users from battleboard or from any tag. Use `{ctx.prefix}tag_remove` and `{ctx.prefix}battle_remove` commands to do remove inactive users.",
             inline=False
         )
 
@@ -68,7 +68,7 @@ mail_module = None
 async def process_mail(ctx):
 
         embd = discord.Embed(title="Mail Box", color=config.NORMAL_COLOR)
-        embd.description = ":email: Mail Box is not empty, check the new mails using `-aa mail`"
+        embd.description = ":email: Check the new mails using `-aa mail`"
         await ctx.send(embed=embd)
 
 def setup(bot):
