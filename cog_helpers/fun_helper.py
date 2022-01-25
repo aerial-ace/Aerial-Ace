@@ -5,14 +5,17 @@ import config
 
 links = {
     "kill" : {
-        "Good Job {user}, you killed {target}" : "https://cdn.discordapp.com/attachments/893732055421157396/934774416569679882/giphy-1.gif"
+        "Good Job {user}, you killed {target}" : "https://i.imgur.com/blvCv4k.gif",
+        "{user} ~~crushed~~ killed {target}" : "https://i.imgur.com/NNYGnLe.gif"
     },
     "hit" : {
-        "{user} tried hitting {target} but got nerfed, LMAO" : "https://cdn.discordapp.com/attachments/893732055421157396/934784086973759588/ash-hit-mewtwo.gif",
-        "{user} slapped {target}, Nicely Done O.O" : "https://cdn.discordapp.com/attachments/893732055421157396/934790956392267776/froakie-hit.gif",
-        "{user} punched {target}, :100:/:100:" : "https://cdn.discordapp.com/attachments/893732055421157396/934793006047981568/e3e.gif",
-        "{user} is hitting {target}, others are enjoying" : "https://cdn.discordapp.com/attachments/893732055421157396/934790953011650580/meowth-pokemon.gif",
-        "{user} is hitting {target} and i am recording it" : "https://cdn.discordapp.com/attachments/893732055421157396/934790953816977478/0564771d6608409c5ed9f2e182dac44d83282758_hq.gif"
+        "{user} tried hitting {target} but got nerfed, LMAO" : "https://i.imgur.com/Xg0zYp7.gif",
+        "{user} slapped {target}, Nicely Done O.O" : "https://i.imgur.com/vF3Lr8v.gif",
+        "{user} punched {target}, :100:/:100:" : "https://i.imgur.com/d8p2sms.gif",
+        "{user} is hitting {target}, others are enjoying" : "https://i.imgur.com/jqKDrMX.gif",
+        "{user} is hitting {target} and i am recording it" : "https://i.imgur.com/Vey97DY.gif",
+        "{user} kicked {target}, nice" : "https://i.imgur.com/0uXSS3N.gif",
+        "{user} => {target} + punch" : "https://i.imgur.com/KNX3dOA.gif"
     }
 }
 
