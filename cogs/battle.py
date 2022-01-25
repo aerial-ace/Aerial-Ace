@@ -11,9 +11,10 @@ class BattleSystem(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.cooldown(1, 25, commands.BucketType.user)
     @commands.guild_only()
     @commands.command(name="log_battle", aliases=["lb"])
-    async def log_battle(self, ctx, winner, loser):
+    async def log_battle(self, ctx : commands.Context, winner, loser):
         winner_id = await general_helper.get_user_id_from_ping(winner)
         loser_id = await general_helper.get_user_id_from_ping(loser)
 
@@ -23,8 +24,10 @@ class BattleSystem(commands.Cog):
             reply = await battle_helper.register_battle_log(ctx.guild.id, winner_id, loser_id)
         elif info == "notaccepted":
             reply = "> Battle log wasn't accepted."
+            ctx.command.reset_cooldown(ctx)
         elif info == "error":
             reply = f"> Error occured while logging battles :/"
+            ctx.command.reset_cooldown(ctx)
         else:
             return
 
