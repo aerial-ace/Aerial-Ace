@@ -6,6 +6,8 @@ import config
 # register shiny tags
 async def register_tag(server_id, user, tag):
 
+    tag = tag.lower()
+
     query = {"server_id" : str(server_id)}
 
     """
@@ -66,6 +68,7 @@ async def register_tag(server_id, user, tag):
 # Get shiny tags
 async def get_tag_hunters(server_id, tag):
     
+    tag = tag.lower()
     query = {"server_id" : str(server_id)}
 
     data_cursor = mongo_manager.manager.get_all_data("tags", query)

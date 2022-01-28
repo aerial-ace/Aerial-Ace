@@ -54,7 +54,7 @@ class Pokemon_Info(commands.Cog):
     @commands.command(name="tierlist", aliases=["tl"])
     async def tierlist(self, ctx, tier : str):
         try:
-            tier_link = config.TIER_LINK[tier]
+            tier_link = config.TIER_LINK[tier.lower()]
         except:
             await ctx.reply(f"That is not a tier. Enter a good tier like `rare`, `mega`, `common`, `steel`, `fighting`")
             return

@@ -80,6 +80,8 @@ class HelpCommand(commands.Cog):
 
     async def get_category_help_embed(self, ctx, category) -> discord.Embed:
 
+        category = category.lower()
+
         if category not in all_categories:
             reply = await general_helper.get_info_embd("Not Found Error!", f"This category was not found, do `{ctx.prefix}help` for all the categories", color=config.ERROR_COLOR)
             return reply

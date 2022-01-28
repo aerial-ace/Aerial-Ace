@@ -16,6 +16,8 @@ class Weakness(commands.Cog):
     @commands.command(name="weakness", aliases=["weak"])
     async def get_weakness(self, ctx, *params):
 
+        params = [p.lower() for p in params]
+
         # determine the type of input
         type_input = (True if params[0] in all_types else False)
 

@@ -11,7 +11,7 @@ from checkers import rare_catch_detection
 is_test = False
 test_prefix = "aa."
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or("-aa "), description="Aerial Ace")
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("-aa "), description="Aerial Ace", case_insensitive=True)
 bot.remove_command("help")
 
 initial_cogs = [
