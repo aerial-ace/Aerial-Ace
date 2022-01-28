@@ -37,6 +37,7 @@
 ### Commands
 * `-aa roll <upper limit>` rolls a dice.
 * `-aa dex <pokemon name>` displays the Pokédex entry of the provided Pokémon.
+* `-aa kill @user` and `-aa hit @user` cz, why not :3
 * `-aa rand_poke` displays a random Pokémon from the dex.
 * `-aa tag <tag>` tags you to the provided tag.
 * `-aa tag_ping <tag>` pings the users currently tagged to the provided tag.
@@ -63,7 +64,6 @@
     <img src="https://user-images.githubusercontent.com/66104268/151563996-900fd7b2-c612-4021-b123-8ae14883227b.png" style="width:42%; height:auto;"><br>
     <img src="https://user-images.githubusercontent.com/66104268/151565865-58887a3f-8278-48e6-a805-dd0b0886a207.png" style="width:55%; height:auto;">
     <img src="https://user-images.githubusercontent.com/66104268/151566097-17e84297-d151-475f-8d32-21d4245302cf.png" style="width:25%; height:auto;">
-
   </div>
 </div>
 
