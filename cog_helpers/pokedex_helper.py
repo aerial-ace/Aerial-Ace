@@ -30,7 +30,8 @@ async def get_poke_by_id(poke_id):
     if poke_id == "":
         return None
     else:
-        poke_id = poke_id.lower()
+        if type(poke_id) is not int:
+            poke_id = poke_id.lower()
 
     try:
         poke_id = cache_manager.cached_alt_name_data[poke_id]
