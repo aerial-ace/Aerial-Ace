@@ -11,7 +11,7 @@ POKETWO_ID = os.environ["POKETWO_ID"]
 MONGO_URI = os.environ["MONGO"]
 
 # bot links
-INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=534723951680&scope=bot"
+INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=277025647680&scope=bot%20applications.commands"
 AVATAR_LINK = "https://cdn.discordapp.com/avatars/908384747393286174/312dafe2a71e0338db6f2ef5315899a7.webp"
 SUPPORT_SERVER_LINK = "https://discord.gg/4mPdqevgsH"
 REPO_LINK = "https://github.com/Devanshu19/Aerial-Ace"
