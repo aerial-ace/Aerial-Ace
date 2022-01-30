@@ -5,7 +5,7 @@ from discord.ext import commands
 import config
 from cog_helpers import general_helper
 
-all_categories = ["dex", "info", "battle", "tag", "misc"]
+all_categories = ["dex", "info", "battle", "tag", "fun", "misc"]
 
 all_commands = {
     "dex" : [
@@ -30,6 +30,9 @@ all_commands = {
         "`{prefix}tag_show[ts] <tag>` displays the users assigned to the tag provided.",
         "`{prefix}afk <on/off>` set the afk",
         "`{prefix}tag_remove <UserId>` removes the user from their tag (Admin Only)."
+    ],
+    "fun" : [
+        "`{prefix}hit @target`, `{prefix}kill @target`, `{prefix}pat @target`, `{prefix}dance [@target]`, `{prefix}tease @target` \nNo explanation is needed for these ig :3"
     ],
     "misc" : [
         "`{prefix}roll <UpperLimit>` rolls a die",
