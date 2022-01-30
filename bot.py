@@ -8,10 +8,12 @@ from config import TOKEN, MONGO_URI, TEST_TOKEN
 
 from checkers import rare_catch_detection
 
-is_test = False
-test_prefix = "aa."
+is_test = True
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or("-aa "), description="Aerial Ace", case_insensitive=True)
+def prefix_callable(bot, message):
+    return [f"<@{bot.user.id}>", "<@!{bot.user.id}>", "-aa ", "aa."]
+
+bot = commands.Bot(command_prefix=prefix_callable, description="Aerial Ace", case_insensitive=True)
 bot.remove_command("help")
 
 initial_cogs = [
@@ -69,5 +71,4 @@ if __name__ == "__main__":
     if is_test is False:
         bot.run(TOKEN, bot=True, reconnect=True)
     else:
-        bot.command_prefix = commands.when_mentioned_or(test_prefix)
         bot.run(TEST_TOKEN, bot=True, reconnect=True)
