@@ -1,5 +1,4 @@
 import random
-from turtle import heading
 import discord
 
 import config

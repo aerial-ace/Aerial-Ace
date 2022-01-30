@@ -1,4 +1,3 @@
-from ast import alias
 import discord
 from discord.ext import commands
 
