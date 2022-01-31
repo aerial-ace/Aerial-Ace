@@ -8,7 +8,7 @@ from config import TOKEN, MONGO_URI, TEST_TOKEN
 
 from checkers import rare_catch_detection
 
-is_test = True
+is_test = False
 
 def prefix_callable(bot, message):
     return [f"<@{bot.user.id}>", "<@!{bot.user.id}>", "-aa ", "aa."]
