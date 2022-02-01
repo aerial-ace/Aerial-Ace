@@ -10,6 +10,10 @@ POKETWO_ID = os.environ["POKETWO_ID"]
 # Mongo Data
 MONGO_URI = os.environ["MONGO"]
 
+# Logging details
+SUPPORT_SERVER_ID = 751076697884852389
+SERVER_JOIN_LOG_CHANNEL_ID = 938032583726497812
+
 # bot links
 INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=277025647680&scope=bot%20applications.commands"
 AVATAR_LINK = "https://cdn.discordapp.com/avatars/908384747393286174/312dafe2a71e0338db6f2ef5315899a7.webp"

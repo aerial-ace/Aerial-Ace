@@ -43,7 +43,7 @@ class MailModule(commands.Cog):
 # Mail reminder
 async def process_mail(ctx):
 
-        prob : int = 30
+        prob : int = -1
         roll = random.randint(0, 100)
 
         if roll > 0 and roll < prob:

@@ -12,7 +12,7 @@ class Presence(commands.Cog):
     activity = cycle([
         discord.Activity(name="Dev's Shitty Games", type=discord.ActivityType.playing, status=discord.Status.online),
         discord.Activity(name="-aa help", type=discord.ActivityType.listening, status=discord.Status.online),
-        discord.Activity(name="you [:", type=discord.ActivityType.watching, status=discord.Status.online)
+        discord.Activity(name="aa.help:", type=discord.ActivityType.watching, status=discord.Status.online)
     ])
 
     def __init__(self, bot) -> None:
