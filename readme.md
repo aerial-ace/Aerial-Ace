@@ -1,6 +1,3 @@
-⚠️ | Bot is going through official verification process. As unverified bots are not allowed to join more than 100 servers, you might be unable to invite Aerial Ace. The invite links will start to work as soon as bot gets verified. Thanks for understanding :]
-:---: | :---
-
 <h1 align="center">
   <img src="https://user-images.githubusercontent.com/66104268/146304164-cd2fd647-54f2-4269-99c5-158db840ac5f.png" style="width : 50; height : auto;" />
 </h1>
