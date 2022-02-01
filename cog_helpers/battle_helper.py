@@ -101,7 +101,7 @@ async def get_battle_score(server_id, user):
         users = (battle_data.keys())
 
         if user_id not in users:
-            return "> Register some battles first -_-"
+            return "> No registered battles were found -_-"
         else:
             score = battle_data[user_id]
             return f"> {user.name} has a battle score of **{score}**"

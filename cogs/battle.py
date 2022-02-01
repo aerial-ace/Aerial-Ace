@@ -1,3 +1,4 @@
+from discord import Member
 from discord.ext import commands
 
 from cog_helpers import general_helper
@@ -10,6 +11,8 @@ class BattleSystem(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+
+    """Log battles"""
 
     @commands.cooldown(1, 25, commands.BucketType.user)
     @commands.guild_only()
@@ -41,6 +44,8 @@ class BattleSystem(commands.Cog):
         else:
             await ctx.send(error)
 
+    """View Battleboard"""
+
     @commands.guild_only()
     @commands.command(name="battle_lb", aliases=["blb"])
     async def battle_lb(self, ctx):
@@ -51,15 +56,23 @@ class BattleSystem(commands.Cog):
     async def battle_lb_handler(self, ctx, error):
         await ctx.send(error)
 
+    """View Battle Score"""
+
     @commands.guild_only()
     @commands.command(name="battle_score", aliases=["bs"])
-    async def battle_score(self, ctx):
-        reply = await battle_helper.get_battle_score(ctx.guild.id, ctx.author)
-        await ctx.send(reply)
+    async def battle_score(self, ctx, user : Member = None):
+        if user is None:
+            reply = await battle_helper.get_battle_score(ctx.guild.id, ctx.author)
+            await ctx.send(reply)
+        else:
+            reply = await battle_helper.get_battle_score(ctx.guild.id, user)
+            await ctx.send(reply)
 
     @battle_score.error
     async def battle_score_handler(self, ctx, error):
         await ctx.send(error)
+
+    """Remove user from battle leaderboard"""
 
     @commands.guild_only()
     @commands.command(name="battle_remove", aliases=["br"])
