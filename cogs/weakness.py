@@ -99,7 +99,7 @@ class Weakness(commands.Cog):
             )
 
             if type_input is False:
-                embed.set_thumbnail(url=f"https://play.pokemonshowdown.com/sprites/xyani/{params[0].lower()}.gif")
+                embed.set_thumbnail(url=f"https://play.pokemonshowdown.com/sprites/gen5ani/{params[0].lower()}.gif")
 
         await ctx.send(embed=embed)
 

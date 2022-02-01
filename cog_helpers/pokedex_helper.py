@@ -216,7 +216,9 @@ async def get_dex_entry_embed(poke_data):
     embd.add_field(name="Stats (Total : {total_stats})".format(total_stats=poke_data.p_total_stats), value=stats_string, inline=False)
 
     embd.description = description
-    embd.set_image(url=poke_data.image_link)
+    image_link = f"https://play.pokemonshowdown.com/sprites/gen5ani/{poke_data.p_name.lower()}.gif".replace("mega-x", "megax")
+    print(image_link)
+    embd.set_image(url=image_link)
 
     if poke_data.p_rarity is not None:
         embd.set_footer(text=f"Rarity : {poke_data.p_rarity}")
