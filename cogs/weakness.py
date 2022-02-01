@@ -98,8 +98,10 @@ class Weakness(commands.Cog):
                 inline=False
             )
 
+            image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{params[0].lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
+
             if type_input is False:
-                embed.set_thumbnail(url=f"https://play.pokemonshowdown.com/sprites/gen5ani/{params[0].lower()}.gif")
+                embed.set_thumbnail(url=image_link)
 
         await ctx.send(embed=embed)
 
