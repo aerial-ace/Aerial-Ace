@@ -1,10 +1,11 @@
 import discord
+from discord.ext import commands
 
 from managers import mongo_manager
 import config
 
 # register server in the database
-async def register_guild(bot, guild):
+async def register_guild(bot : commands.Bot, guild : discord.Guild):
 
     """Add empty server data to the database and inform the admins"""
 
@@ -33,17 +34,28 @@ async def register_guild(bot, guild):
         entry = {"server_id" : server_id, "logs" : {}}
         mongo_manager.manager.add_data("battles", entry)
 
-    # Dm the admins on server joins
-    admin_id = int(config.ADMIN_ID)
-    admin = bot.get_user(admin_id)
-    try:
-        await admin.send("Aerial Ace was added to **{server}** :]".format(server=guild.name))
-    except discord.Forbidden:
-        print(
-            "Unable to send message to admins. Btw, Aerial Ace was added to **{server}** :]".format(server=guild.name))
+    # Log it in support server
+    log_channel : discord.TextChannel = bot.get_guild(config.SUPPORT_SERVER_ID).get_channel(config.SERVER_JOIN_LOG_CHANNEL_ID)
+
+    embed = discord.Embed(title="Server Added <:yay_yay:932361191928500284>", color=discord.Color.green())
+    embed.add_field(
+        name="Server Name",
+        value=guild.name,
+        inline=False
+    )
+    embed.add_field(
+        name="Server Count",
+        value=len(bot.guilds),
+        inline=False
+    )
+
+    embed.set_thumbnail(url=config.AVATAR_LINK)
+
+    await log_channel.send(embed=embed)
+
 
 # remove server from the database
-async def remove_guild(bot, guild):
+async def remove_guild(bot : commands.Bot, guild : discord.Guild):
 
     """Remove the server's data from the database and inform the admins"""
 
@@ -57,11 +69,20 @@ async def remove_guild(bot, guild):
 
     mongo_manager.manager.remove_all_data("battles", query)
 
-    # Dm the admins on server removal
-    admin_id = int(config.ADMIN_ID)
-    admin = bot.get_user(admin_id)
+    log_channel : discord.TextChannel = bot.get_guild(config.SUPPORT_SERVER_ID).get_channel(config.SERVER_JOIN_LOG_CHANNEL_ID)
 
-    try:
-        await admin.send("Aerial Ace was removed from **{server}** :_:".format(server=guild.name))
-    except discord.Forbidden:
-        print("Unable to send message to the admin. Btw, Aerial Ace was removed from {server} :_:".format(server=guild.name))
+    embed = discord.Embed(title="Server Removed <:sedCat:933061761337270292>", color=discord.Color.red())
+    embed.add_field(
+        name="Server Name",
+        value=guild.name,
+        inline=False
+    )
+    embed.add_field(
+        name="Server Count",
+        value=len(bot.guilds),
+        inline=False
+    )
+
+    embed.set_thumbnail(url=config.AVATAR_LINK)
+
+    await log_channel.send(embed=embed)

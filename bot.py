@@ -8,8 +8,10 @@ from config import TOKEN, MONGO_URI, TEST_TOKEN
 
 from checkers import rare_catch_detection
 
+# determines whether to run the bot in local, or global mode
 is_test = False
 
+# for getting the prefix
 def prefix_callable(bot, message):
     return [f"<@{bot.user.id}>", "<@!{bot.user.id}>", "-aa ", "aa."]
 
