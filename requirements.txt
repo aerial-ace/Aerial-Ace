@@ -1,4 +1,4 @@
-discord.py
+py-cord
 requests
 TextWrapper
 pymongo[srv]

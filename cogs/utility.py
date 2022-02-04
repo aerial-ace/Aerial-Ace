@@ -33,7 +33,7 @@ class Utility(commands.Cog):
 
     @commands.command(name="about")
     async def about(self, ctx):
-        reply = await utility_helper.get_about_embed()
+        reply = await utility_helper.get_about_embed(ctx)
         await ctx.send(embed=reply)
 
     @commands.command(name="vote")
