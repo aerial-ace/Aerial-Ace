@@ -13,6 +13,7 @@ MONGO_URI = os.environ["MONGO"]
 # Logging details
 SUPPORT_SERVER_ID = 751076697884852389
 SERVER_JOIN_LOG_CHANNEL_ID = 938032583726497812
+SUGGESTION_LOG_CHANNEL_ID = 938352848448659466
 
 # bot links
 INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=277025647680&scope=bot%20applications.commands"

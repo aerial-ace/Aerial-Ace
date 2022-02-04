@@ -1,6 +1,8 @@
 from discord.ext import commands
 
+import config
 from cog_helpers import utility_helper
+from cog_helpers.general_helper import get_info_embd
 
 class Utility(commands.Cog):
     def __init__(self, bot) -> None:
@@ -44,5 +46,19 @@ class Utility(commands.Cog):
         reply = await utility_helper.get_invite_embed()
         await ctx.send(embed=reply)
 
+    @commands.cooldown(1, 60 * 60, type=commands.BucketType.user)
+    @commands.command(name="suggest")
+    async def suggest(self, ctx, *message):
+        await utility_helper.register_suggestion(ctx, message)
+        await ctx.send("Thanks a lot for suggesting something, your suggestion is sent to devs :]")
+
+    @suggest.error
+    async def suggest_handler(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            reply = await get_info_embd(title="Breh, whats this?", desc="You must provide a suggestion too :/", footer="You can only suggest once an hour, Like this ``````", color=config.ERROR_COLOR)
+            await ctx.reply(embed=reply)
+        else:
+            await ctx.reply(error)
+            
 def setup(bot):
     bot.add_cog(Utility(bot))
