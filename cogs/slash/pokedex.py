@@ -1,35 +1,36 @@
+import discord
 from discord.ext import commands
-
-from discord_slash import SlashContext, SlashCommandOptionType
-from discord_slash import cog_ext
-from discord_slash.utils.manage_commands import create_option
+from discord.commands import slash_command
+from discord.commands import Option
 
 from cog_helpers import pokedex_helper
-from cog_helpers import weakness_helper
 
-class Pokedex_Slash_Module(commands.Cog):
-    
-    @cog_ext.cog_slash(name="dex", description="Returns the dex entry of the pokemon", options=[
-        create_option(name="name_or_id", description="Enter the name of the pokemon", option_type=SlashCommandOptionType.STRING, required=True)
-    ])
-    async def dex(self, ctx : SlashContext, name_or_id : str):
-        data = await pokedex_helper.get_poke_by_id(name_or_id)
-        reply = await pokedex_helper.get_dex_entry_embed(data)
+class PokedexSlash(commands.Cog):
 
-        await ctx.send(embed=reply)
+    """Bot's latency"""
 
-    
-    @cog_ext.cog_slash(name="ping", description="Get the bot's latency")
-    async def ping(self, ctx: SlashContext):
-        await ctx.send(str(ctx.bot.latency))
+    @slash_command(name="ping", guild_ids=[751076697884852389])
+    async def ping(self, ctx):
+        ping = str(round(ctx.bot.latency * 1000, 2))
+        await ctx.respond(f"Pong! Took {ping} ms")
 
-    @cog_ext.cog_slash(name="weak", description="Returns the type weakness of the pokemon", options=[
-        create_option(name="pokemon", description="Name of the pokemon", option_type=SlashCommandOptionType.STRING, required=True)
-    ])
-    async def weakness(self, ctx:SlashContext, pokemon):
-        embd = await weakness_helper.get_weakness_embed(ctx, [pokemon])
+    """Dex entry of the pokemon"""
 
-        await ctx.send(embed=embd)
+    @slash_command(name="dex", description="Shows the dex entry of the pokemon", guild_ids=[751076697884852389])
+    async def dex(self, ctx, pokemon : Option(str)):
+        poke = await pokedex_helper.get_poke_by_id(pokemon)
+        reply = await pokedex_helper.get_dex_entry_embed(poke)
+
+        await ctx.respond(embed=reply)
+
+    """Random Pokemon Slash Command"""
+
+    @slash_command(name="random_pokemon", description="Shows a randomly choosen pokemon", guild_ids=[751076697884852389])
+    async def random_pokemon(self, ctx):
+        poke = await pokedex_helper.get_random_poke()
+        reply = await pokedex_helper.get_random_pokemon_embed(poke)
+
+        await ctx.respond(embed=reply)
 
 def setup(bot : commands.Bot):
-    bot.add_cog(Pokedex_Slash_Module())
+    bot.add_cog(PokedexSlash())
