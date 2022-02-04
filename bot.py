@@ -9,13 +9,13 @@ from config import TOKEN, MONGO_URI, TEST_TOKEN
 from checkers import rare_catch_detection
 
 # determines whether to run the bot in local, or global mode
-is_test = False
+is_test = True
 
 # for getting the prefix
 def prefix_callable(bot, message):
-    return [f"<@{bot.user.id}>", "<@!{bot.user.id}>", "-aa ", "aa."]
+    return ["-aa ", "aa."]
 
-bot = commands.Bot(command_prefix=prefix_callable, description="Aerial Ace", case_insensitive=True)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(prefix_callable), description="Aerial Ace", case_insensitive=True, )
 bot.remove_command("help")
 
 initial_cogs = [
