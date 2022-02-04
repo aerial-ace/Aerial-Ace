@@ -8,7 +8,7 @@ class PokeInfoSlash(commands.Cog):
     """For getting best duel stats"""
 
     @slash_command(name="stats", description="Returns the best duel stats of the pokemon", guild_ids=[751076697884852389])
-    async def stats(self, ctx, pokemon : Option(str, description="Name of the pokemon")):
+    async def stats(self, ctx, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_stats_embed(pokemon)
 
@@ -17,7 +17,7 @@ class PokeInfoSlash(commands.Cog):
     """For getting best duel moveset"""
 
     @slash_command(name="moveset", description="Returns the best moveset of the pokemon", guild_ids=[751076697884852389])
-    async def moveset(self, ctx, pokemon : Option(str, description="Name of the pokemon")):
+    async def moveset(self, ctx, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_moveset_embed(pokemon)
 
@@ -26,7 +26,7 @@ class PokeInfoSlash(commands.Cog):
     """For getting the best duel nature"""
 
     @slash_command(name="nature", description="Returns the best nature for the pokemon", guild_ids=[751076697884852389])
-    async def nature(self, ctx, pokemon : Option(str, description="Name of the pokemon")):
+    async def nature(self, ctx, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_nature_embed(pokemon)
 
@@ -35,7 +35,7 @@ class PokeInfoSlash(commands.Cog):
     """For getting the weakness"""
 
     @slash_command(name="weak", description="Returns the type weaknesses of the pokemon", guild_ids=[751076697884852389])
-    async def weakness(self, ctx, pokemon : Option(str, description="Name of the pokemon")):
+    async def weakness(self, ctx, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_weakness_embed([pokemon])
 

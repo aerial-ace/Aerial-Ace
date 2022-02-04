@@ -21,6 +21,9 @@ async def get_stats_embed(pokemon):
         embd.description = "HP, Defense, Sp.Defense and Speed are `The more the better` stats \n"
         embd.add_field(name="Stats", value="```{stats}```".format(stats=cached_stats_data[pokemon]), inline=False)
 
+        image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{pokemon.lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
+        embd.set_thumbnail(url=image_link)
+
         return embd
 
     else:
@@ -42,6 +45,10 @@ async def get_moveset_embed(poke):
     if poke in all_pokemon:
         embd.title = "{poke}'s moveset".format(poke=poke.capitalize())
         embd.description = "```{ms}```".format(ms=cached_moveset_data[poke])
+
+        image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{poke.lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
+        embd.set_thumbnail(url=image_link)
+
         return embd
     else:
         embd.title = "That pokemon was not found in the database"
@@ -59,6 +66,9 @@ async def get_nature_embed(poke: str):
         embd.title = "{poke}'s nature".format(poke=poke.capitalize())
         embd.description = f"```{nature}```"
         embd.color = config.NORMAL_COLOR
+
+        image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{poke.lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
+        embd.set_thumbnail(url=image_link)
     except:
         embd.title = "That pokemon was not found in the database"
         embd.description = "> If the name is correct then \n"
