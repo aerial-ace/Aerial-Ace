@@ -19,17 +19,23 @@ bot = commands.Bot(command_prefix=prefix_callable, description="Aerial Ace", cas
 bot.remove_command("help")
 
 initial_cogs = [
-    "cogs.presence_cycle",
-    "cogs.admin",
-    "cogs.help",
-    "cogs.mail",
-    "cogs.utility",
-    "cogs.pokedex",
-    "cogs.pokemon_info",
-    "cogs.tag",
-    "cogs.weakness",
-    "cogs.fun",
-    "cogs.battle"
+    "presence_cycle",
+    "admin",
+    "help",
+    "mail",
+    "utility",
+    "pokedex",
+    "pokemon_info",
+    "tag",
+    "weakness",
+    "fun",
+    "battle"
+]
+
+initial_slash_cogs = [
+    "pokedex",
+    "pokeinfo",
+    "tag"
 ]
 
 @bot.event
@@ -65,7 +71,10 @@ async def after_command(ctx : commands.Context):
 
 def main():
     for cog in initial_cogs:
-        bot.load_extension(cog)
+        bot.load_extension(f"cogs.{cog}")
+
+    for slash_cog in initial_slash_cogs:
+        bot.load_extension(f"cogs.slash.{slash_cog}")
 
 if __name__ == "__main__":
     main()
@@ -73,4 +82,4 @@ if __name__ == "__main__":
     if is_test is False:
         bot.run(TOKEN, bot=True, reconnect=True)
     else:
-        bot.run(TEST_TOKEN, bot=True, reconnect=True)
+        bot.run(TEST_TOKEN)

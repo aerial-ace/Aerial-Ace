@@ -66,7 +66,7 @@ async def register_tag(server_id, user, tag):
         return f"> **{user.name}** was removed from `{old_tag.capitalize()}` and assigned to `{tag.capitalize()}` tag"
 
 # Get shiny tags
-async def get_tag_hunters(server_id, tag):
+async def get_tag_hunters(server_id, tag) -> list:
     
     tag = tag.lower()
     query = {"server_id" : str(server_id)}
