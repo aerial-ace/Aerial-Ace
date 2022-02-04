@@ -5,7 +5,7 @@ from discord.commands import slash_command, Option
 import config
 from cog_helpers import tag_helper
 
-class TagModule(commands.Cog):
+class TagSystemSlash(commands.Cog):
 
     """For registering tags"""
 
@@ -65,4 +65,4 @@ class TagModule(commands.Cog):
         await ctx.respond(reply)
 
 def setup(bot : commands.Bot):
-    bot.add_cog(TagModule())
+    bot.add_cog(TagSystemSlash())

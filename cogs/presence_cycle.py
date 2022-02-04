@@ -5,7 +5,7 @@ import discord
 
 class Presence(commands.Cog):
 
-    loop_time = 15
+    presence_change_time = 15
 
     bot : commands.Bot = None
 
@@ -22,7 +22,9 @@ class Presence(commands.Cog):
     def cog_unload(self):
         self.update_presence.cancel()
 
-    @tasks.loop(seconds=loop_time)
+    """For changing Presence"""
+
+    @tasks.loop(seconds=presence_change_time)
     async def update_presence(self):
         await self.set_presence()  
 
