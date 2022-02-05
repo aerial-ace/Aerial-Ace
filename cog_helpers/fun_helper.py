@@ -93,8 +93,6 @@ async def get_dance_embed(user, target = None):
     heading = all_headings[roll]
     link = all_links[roll]
 
-    print(f"Type of user is {type(user)} and type of target is {type(target)}")
-
     embd = discord.Embed(title=heading.format(user=user.name, target=target.name), color=config.NORMAL_COLOR)
     embd.set_image(url=link)
 

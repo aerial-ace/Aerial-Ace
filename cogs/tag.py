@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord import Member
 
 import config
 from cog_helpers import tag_helper
@@ -43,7 +44,7 @@ class TagSystem(commands.Cog):
             if i <= number_of_hunters - 2:
                 pings += " | "
 
-        await ctx.send(f"Pinging users assigned to `{tag.capitalize()}` tag\n{pings}")
+        await ctx.send(f"Pinging users assigned to `{tag.capitalize()}` tag\n\n{pings}")
 
     @tag_ping.error
     async def tag_ping_handler(self, ctx, error):
@@ -82,8 +83,8 @@ class TagSystem(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     @commands.command(name="tag_remove", aliases=["tr"])
-    async def tag_remove(self, ctx, user_id : int):
-        reply = await tag_helper.remove_user(ctx.guild.id, user_id)
+    async def tag_remove(self, ctx, user : Member):
+        reply = await tag_helper.remove_user(ctx.guild.id, user)
         await ctx.send(reply)
 
     @tag_remove.error

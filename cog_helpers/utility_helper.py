@@ -3,8 +3,6 @@ import random
 
 import config
 
-from discord.ext import commands
-
 # returns a value for roll
 async def roll(max_value, user) -> str:
 
@@ -20,65 +18,65 @@ async def get_about_embed(ctx) -> discord.Embed:
     embd.description = "Aerial Ace = Pokedex + Poketwo Helper Bot"
 
     embd.add_field(
-        name="<:arrow_yellow:939409297639616524>Prefix",
+        name=f"{config.BULLET_EMOJI}Prefix",
         value="`-aa ` and `aa.`",
         inline=True
     )
     embd.add_field(
-        name="<:arrow_yellow:939409297639616524>Support Server",
+        name=f"{config.BULLET_EMOJI}Support Server",
         value=f"[Click here]({config.SUPPORT_SERVER_LINK})",
         inline=True
     )
     embd.add_field(
-        name="<:arrow_yellow:939409297639616524>Vote Link",
+        name=f"{config.BULLET_EMOJI}Vote Link",
         value=f"[Click Here]({config.VOTE_LINK})",
         inline=True
     )
 
     embd.add_field(
-        name="<:arrow_yellow:939409297639616524>Servers",
+        name=f"{config.BULLET_EMOJI}Servers",
         value=len(ctx.bot.guilds),
         inline=True
     )
 
     embd.add_field(
-        name="<:arrow_yellow:939409297639616524>Invite",
+        name=f"{config.BULLET_EMOJI}Invite",
         value=f"[Click here]({config.INVITE_LINK})",
         inline=True
     )
 
     embd.add_field(
-        name="<:arrow_yellow:939409297639616524>Ping",
+        name=f"{config.BULLET_EMOJI}Ping",
         value=str(round(ctx.bot.latency * 100, 2)),
         inline=True
     )
 
     embd.add_field(
-        name="<:arrow_yellow:939409297639616524>Language",
+        name=f"{config.BULLET_EMOJI}Language",
         value="Python 3.10",
         inline=True
     )
 
     embd.add_field(
-        name="<:arrow_yellow:939409297639616524>Library",
+        name=f"{config.BULLET_EMOJI}Library",
         value="[py-cord](https://github.com/Pycord-Development/pycord)",
         inline=True
     )
 
     embd.add_field(
-        name="<:arrow_yellow:939409297639616524>Repository",
+        name=f"{config.BULLET_EMOJI}Repository",
         value=f"[Click here]({config.REPO_LINK})",
         inline=True
     )
 
     embd.add_field(
-        name="<:arrow_yellow:939409297639616524>Source Details",
+        name=f"{config.BULLET_EMOJI}Source Details",
         value=f"**Aerial Ace** is an open source project released under GNU GPL v3 license.\nComplete source of the project is available on the github page (links above).\nRepo stars are appreciated :3",
         inline=False
     )
 
     embd.add_field(
-        name="<:arrow_yellow:939409297639616524>Made with <3 by **DevGa.me**",
+        name=f"{config.BULLET_EMOJI}Made with <3 by **DevGa.me**",
         value=f"**Discord** : `DevGa.me#0176`\n**Github** : [Devanshu19]({config.GITHUB_PROFILE_LINK})",
         inline=False
     )
@@ -90,7 +88,8 @@ async def get_about_embed(ctx) -> discord.Embed:
 # returns the vote embed
 async def get_vote_embed() -> discord.Embed:
     embd = discord.Embed(title="__Vote for Aerial Ace__", color=config.NORMAL_COLOR)
-    embd.description = f"You can help Aerial Ace by voting for it [here]({config.VOTE_LINK})\n**Thank you** if you voted :3"
+    embd.description = f"You can help Aerial Ace by voting for it.\n**Thank you** if you voted :3\n"
+    embd.description += f"Vote Link : [Click here]({config.VOTE_LINK})"
     embd.set_thumbnail(url=config.AVATAR_LINK)
 
     return embd
@@ -98,7 +97,7 @@ async def get_vote_embed() -> discord.Embed:
 # returns the support server embed
 async def get_support_server_embed() -> discord.Embed:
     embd = discord.Embed(title="__Support Server__", color=config.NORMAL_COLOR)
-    embd.description = f"Join the support server for reporting bugs, suggesting features,\ngetting help...you got it.\n\n[Click here to join]({config.SUPPORT_SERVER_LINK})"
+    embd.description = f"Join the support server for reporting bugs, suggesting features,\ngetting help...you got it.\n[Click here to join]({config.SUPPORT_SERVER_LINK})"
     embd.set_thumbnail(url=config.AVATAR_LINK)
 
     return embd
@@ -106,7 +105,8 @@ async def get_support_server_embed() -> discord.Embed:
 # returns the invite embed
 async def get_invite_embed() -> discord.Embed:
     embd = discord.Embed(title="__Invite - Aerial Ace__", color=config.NORMAL_COLOR)
-    embd.description = f"[Click Here]({config.INVITE_LINK}) to invite Aerial Ace to your server."
+    embd.description = "Invite Aerial Ace to your server using this link : \n\n"
+    embd.description += f"Link : [Click Here]({config.INVITE_LINK})"
     embd.set_thumbnail(url=config.AVATAR_LINK)
 
     return embd

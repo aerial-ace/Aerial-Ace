@@ -32,13 +32,11 @@ async def register_tag(server_id, user, tag):
 
     for i in range(0, len(users)):
         if str(user.id) in users[i] or f"/{user.id}" in users[i]:
-            print(old_tag)
             old_tag = tags[i]
             break
 
     if old_tag == tag:
-        #return f"> **{user.name}** is already assigned to `{tag.capitalize()}` tag"
-        pass
+        return f"> **{user.name}** is already assigned to `{tag.capitalize()}` tag"
 
     if old_tag != "":
         # remove user from current tag
@@ -116,8 +114,10 @@ async def get_show_hunters_embd(tag, hunters):
     return embd
 
 # remove user from their tag
-async def remove_user(server_id, user_id : int):
+async def remove_user(server_id, user):
     
+    user_id = user.id
+
     query = {"server_id" : str(server_id)}
 
     mongo_cursor = mongo_manager.manager.get_all_data("tags", query)

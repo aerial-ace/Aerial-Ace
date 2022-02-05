@@ -23,6 +23,9 @@ REPO_LINK = "https://github.com/Devanshu19/Aerial-Ace"
 GITHUB_PROFILE_LINK = "https://github.com/Devanshu19/"
 VOTE_LINK = "https://top.gg/bot/908384747393286174/"
 
+# Emojis
+BULLET_EMOJI = "<a:arrow_arrow:939409283668410381>"
+
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"
 STATS_FILE_LOCATION = "data/stats.json"
