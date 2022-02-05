@@ -74,7 +74,7 @@ class BattleSystem(commands.Cog):
     @commands.guild_only()
     @commands.command(name="battle_remove", aliases=["br"])
     async def battle_remove(self, ctx, user : Member):
-        reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user.id)
+        reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user)
         await ctx.send(reply)
 
     @battle_remove.error

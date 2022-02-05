@@ -147,9 +147,9 @@ async def get_battle_leaderboard_embed(guild):
         return await general_helper.get_info_embd("Oops", "Error occured while showing battle leaderboards :|", config.ERROR_COLOR, "These errors were registered")
 
 # removes the user from the leaderboard
-async def remove_user_from_battleboard(server_id : int, user_id : int):
+async def remove_user_from_battleboard(server_id : int, user):
     server_id = str(server_id)
-    user_id = str(user_id)
+    user_id = str(user.id)
 
     query = {"server_id" : server_id}
 
@@ -178,7 +178,3 @@ async def remove_user_from_battleboard(server_id : int, user_id : int):
     mongo_manager.manager.update_all_data("battles", query, updated_data)
 
     return f"> <@{user_id}> was removed from the battle board."
-
-
-
-
