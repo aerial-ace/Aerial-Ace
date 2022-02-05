@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord import Bot
 
 from managers import cache_manager
 from managers import mongo_manager
@@ -9,13 +10,13 @@ from config import TOKEN, MONGO_URI, TEST_TOKEN
 from checkers import rare_catch_detection
 
 # determines whether to run the bot in local, or global mode
-is_test = True
+is_test = False
 
 # for getting the prefix
-def prefix_callable(bot, message):
-    return ["-aa ", "aa."]
+def prefix_callable(bot : Bot, message):
+    return [f"<@{bot.user.id}>", f"<!@{bot.user.id}>", "-aa ", "aa."]
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or(prefix_callable), description="Aerial Ace", case_insensitive=True, )
+bot = commands.Bot(command_prefix=prefix_callable, description="Aerial Ace", case_insensitive=True)
 bot.remove_command("help")
 
 initial_cogs = [
@@ -35,7 +36,8 @@ initial_slash_cogs = [
     "pokedex",
     "pokeinfo",
     "tag",
-    "utility"
+    "utility",
+    "battle"
 ]
 
 @bot.event

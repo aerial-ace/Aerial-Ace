@@ -21,15 +21,12 @@ class BattleSystem(commands.Cog):
         winner_id = await general_helper.get_user_id_from_ping(winner)
         loser_id = await general_helper.get_user_id_from_ping(loser)
 
-        info = await battle_helper.get_battle_acceptance(self.bot, ctx, winner_id, loser_id)
+        info = await battle_helper.get_battle_acceptance(ctx, winner_id, loser_id)
 
         if info == "accepted":
             reply = await battle_helper.register_battle_log(ctx.guild.id, winner_id, loser_id)
         elif info == "notaccepted":
             reply = "> Battle log wasn't accepted."
-            ctx.command.reset_cooldown(ctx)
-        elif info == "error":
-            reply = f"> Error occured while logging battles :/"
             ctx.command.reset_cooldown(ctx)
         else:
             return
@@ -49,7 +46,7 @@ class BattleSystem(commands.Cog):
     @commands.guild_only()
     @commands.command(name="battle_lb", aliases=["blb"])
     async def battle_lb(self, ctx):
-        reply = await battle_helper.get_battle_leaderboard_embed(self.bot, ctx.guild)
+        reply = await battle_helper.get_battle_leaderboard_embed(ctx.guild)
         await ctx.send(embed=reply)
 
     @battle_lb.error
@@ -76,8 +73,8 @@ class BattleSystem(commands.Cog):
 
     @commands.guild_only()
     @commands.command(name="battle_remove", aliases=["br"])
-    async def battle_remove(self, ctx, user_id: int):
-        reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user_id)
+    async def battle_remove(self, ctx, user : Member):
+        reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user.id)
         await ctx.send(reply)
 
     @battle_remove.error
