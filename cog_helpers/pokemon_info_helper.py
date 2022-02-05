@@ -29,7 +29,9 @@ async def get_stats_embed(pokemon):
     else:
         embd.title = "That pokemon was not found in the database"
         embd.description = "> If the name is correct then \n"
-        embd.description += "> PROBABLY this pokemon is not good for battling"
+        embd.description += "> PROBABLY this pokemon is not good for battling \n"
+        embd.description += "> Stats for **most** mega are same as their non mega forms"
+
         return embd
 
 # get moveset
@@ -53,7 +55,8 @@ async def get_moveset_embed(poke):
     else:
         embd.title = "That pokemon was not found in the database"
         embd.description = "> If the name is correct then \n"
-        embd.description += "> PROBABLY this pokemon is not good for battling"
+        embd.description += "> PROBABLY this pokemon is not good for battling\n"
+        embd.description += "> If this pokemon is a mega, try searching their non mega form"
         return embd
 
 # get nature 
