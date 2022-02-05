@@ -37,7 +37,8 @@ initial_slash_cogs = [
     "pokeinfo",
     "tag",
     "utility",
-    "battle"
+    "battle",
+    "fun"
 ]
 
 @bot.event
