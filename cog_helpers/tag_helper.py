@@ -37,7 +37,8 @@ async def register_tag(server_id, user, tag):
             break
 
     if old_tag == tag:
-        return f"> **{user.name}** is already assigned to `{tag.capitalize()}` tag"
+        #return f"> **{user.name}** is already assigned to `{tag.capitalize()}` tag"
+        pass
 
     if old_tag != "":
         # remove user from current tag
@@ -62,7 +63,8 @@ async def register_tag(server_id, user, tag):
         tag_data[tag] = []
         users_assigned_to_new_tag = []
 
-    users_assigned_to_new_tag.append(str(user.id))
+    if str(user.id) not in users_assigned_to_new_tag:
+        users_assigned_to_new_tag.append(str(user.id))
 
     tag_data[tag] = users_assigned_to_new_tag 
 
