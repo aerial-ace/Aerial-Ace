@@ -38,7 +38,8 @@ initial_slash_cogs = [
     "tag",
     "utility",
     "battle",
-    "fun"
+    "fun",
+    "help"
 ]
 
 @bot.event
