@@ -6,7 +6,7 @@ from cog_helpers import help_helper
 
 class HelpSystemSlash(commands.Cog):
     
-    @slash_command(name="help", description="Get help for a command/catagory", guild_ids=[751076697884852389])
+    @slash_command(name="help", description="Get help for a command/catagory")
     async def help(self, ctx : ApplicationContext, category : Option(str, description="Pick category to see commands", required=False, default=None)):
 
         if category is None:
