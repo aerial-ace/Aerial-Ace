@@ -40,9 +40,9 @@ class TagSystemSlash(commands.Cog):
         hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
 
         embd = Embed(title=f"{tag.capitalize()}", color=config.NORMAL_COLOR)
-        embd.description = f"Users assigned to `{tag.capitalize()}` tag : "
+        embd.description = f"Users assigned to `{tag.capitalize()}` tag : \n\n"
         if hunters is None:
-            await ctx.respond(f"No one is assigned to `{tag}` tag. \n")
+            await ctx.respond(f"No one is assigned to `{tag}` tag.")
             return
         else:
             for h in hunters:
