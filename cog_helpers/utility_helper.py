@@ -66,8 +66,14 @@ async def get_about_embed(ctx) -> discord.Embed:
     )
 
     embd.add_field(
+        name="<:arrow_yellow:939409297639616524>Repository",
+        value=f"[Click here]({config.REPO_LINK})",
+        inline=True
+    )
+
+    embd.add_field(
         name="<:arrow_yellow:939409297639616524>Source Details",
-        value=f"**Aerial Ace** is an open source project released under GNU GPL v3 license.\nComplete source of the project is available [here]({config.REPO_LINK}).\nRepo stars are appreciated :3",
+        value=f"**Aerial Ace** is an open source project released under GNU GPL v3 license.\nComplete source of the project is available on the github page (links above).\nRepo stars are appreciated :3",
         inline=False
     )
 
