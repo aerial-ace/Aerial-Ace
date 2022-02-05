@@ -14,7 +14,7 @@ is_test = False
 
 # for getting the prefix
 def prefix_callable(bot : Bot, message):
-    return [f"<@{bot.user.id}>", f"<!@{bot.user.id}>", "-aa ", "aa."]
+    return [f"<@{bot.user.id}> ", f"<@!{bot.user.id}> ", "-aa ", "aa."]
 
 bot = commands.Bot(command_prefix=prefix_callable, description="Aerial Ace", case_insensitive=True)
 bot.remove_command("help")
