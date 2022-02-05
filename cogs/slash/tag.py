@@ -1,4 +1,4 @@
-from discord import Embed, ApplicationContext, AutocompleteContext
+from discord import Member, ApplicationContext, AutocompleteContext
 from discord.ext import commands
 from discord.commands import slash_command, Option
 
@@ -39,16 +39,12 @@ class TagSystemSlash(commands.Cog):
 
         hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
 
-        embd = Embed(title=f"{tag.capitalize()}", color=config.NORMAL_COLOR)
-        embd.description = f"Users assigned to `{tag.capitalize()}` tag : \n\n"
         if hunters is None:
             await ctx.respond(f"No one is assigned to `{tag}` tag.")
             return
         else:
-            for h in hunters:
-                embd.description += f"<@{h}> \n"
-            
-            await ctx.respond(embed=embd)
+            reply = await tag_helper.get_show_hunters_embd(tag, hunters)
+            await ctx.respond(embed=reply)
 
     """For toggling afk"""
 
@@ -61,7 +57,17 @@ class TagSystemSlash(commands.Cog):
     async def afk(self, ctx : ApplicationContext, state : Option(str, "Pick a state", autocomplete=get_afk_state)):
 
         reply = await tag_helper.set_afk(str(ctx.guild.id), str(ctx.author.id), state)
+        await ctx.respond(reply)
 
+    """For removing users from their tag"""
+
+    @slash_command(name="tag-remove", description="Remove a user from their tag", guild_ids=[751076697884852389])
+    async def tag_remove(self, ctx : ApplicationContext, user : Option(Member, description="Member to remove from tag", required=True)):
+
+        if not ctx.author.guild_permissions.administrator:
+            return await ctx.respond("Be Admin when? :/")
+
+        reply = await tag_helper.remove_user(ctx.guild.id, user.id)
         await ctx.respond(reply)
 
 def setup(bot : commands.Bot):

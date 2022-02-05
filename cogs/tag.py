@@ -8,6 +8,8 @@ class TagSystem(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
+    """Assign tags"""
+
     @commands.guild_only()
     @commands.command()
     async def tag(self, ctx, tag : str):
@@ -20,6 +22,8 @@ class TagSystem(commands.Cog):
             await ctx.reply(f"> Gib a tag name when? Like this ```{ctx.prefix}tag Ralts```")
         else:
             await ctx.send(error)
+
+    """Ping tags"""
 
     @commands.guild_only()
     @commands.command(name="tag_ping", aliases=["tp"])
@@ -49,6 +53,8 @@ class TagSystem(commands.Cog):
         else:
             await ctx.send(error)
 
+    """View tags"""
+
     @commands.guild_only()
     @commands.command(name="tag_show", aliases=["ts"])
     async def tag_show(self, ctx, tag : str):
@@ -71,6 +77,8 @@ class TagSystem(commands.Cog):
         else:
             await ctx.send(error)
 
+    """Remove tags"""
+
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     @commands.command(name="tag_remove", aliases=["tr"])
@@ -88,6 +96,8 @@ class TagSystem(commands.Cog):
             await ctx.reply(reply)
         else:
             await ctx.send(error)
+
+    """Set afk"""
 
     @commands.guild_only()
     @commands.command()
