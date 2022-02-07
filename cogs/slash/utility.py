@@ -8,7 +8,7 @@ class UtilitySlash(commands.Cog):
     
     """Bot's latency"""
 
-    @slash_command(name="ping")
+    @slash_command(name="ping", description="Get bot's current latency")
     async def ping(self, ctx):
         ping = str(round(ctx.bot.latency * 1000, 2))
         await ctx.respond(f"Pong! Took {ping} ms")
