@@ -71,6 +71,6 @@ if __name__ == "__main__":
     main()
 
     if is_test is False:
-        bot.run(TOKEN, bot=True, reconnect=True)
+        bot.run(TOKEN)
     else:
-        bot.run(TEST_TOKEN, bot=True, reconnect=True)
+        bot.run(TEST_TOKEN)
