@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord import Member
 
 import config
 from cog_helpers import tag_helper
@@ -7,6 +8,8 @@ from cog_helpers import general_helper
 class TagSystem(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
+
+    """Assign tags"""
 
     @commands.guild_only()
     @commands.command()
@@ -20,6 +23,8 @@ class TagSystem(commands.Cog):
             await ctx.reply(f"> Gib a tag name when? Like this ```{ctx.prefix}tag Ralts```")
         else:
             await ctx.send(error)
+
+    """Ping tags"""
 
     @commands.guild_only()
     @commands.command(name="tag_ping", aliases=["tp"])
@@ -39,7 +44,7 @@ class TagSystem(commands.Cog):
             if i <= number_of_hunters - 2:
                 pings += " | "
 
-        await ctx.send(f"Pinging users assigned to `{tag.capitalize()}` tag\n{pings}")
+        await ctx.send(f"Pinging users assigned to `{tag.capitalize()}` tag\n\n{pings}")
 
     @tag_ping.error
     async def tag_ping_handler(self, ctx, error):
@@ -48,6 +53,8 @@ class TagSystem(commands.Cog):
             await ctx.reply(embed=reply)
         else:
             await ctx.send(error)
+
+    """View tags"""
 
     @commands.guild_only()
     @commands.command(name="tag_show", aliases=["ts"])
@@ -71,11 +78,13 @@ class TagSystem(commands.Cog):
         else:
             await ctx.send(error)
 
+    """Remove tags"""
+
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     @commands.command(name="tag_remove", aliases=["tr"])
-    async def tag_remove(self, ctx, user_id : int):
-        reply = await tag_helper.remove_user(ctx.guild.id, user_id)
+    async def tag_remove(self, ctx, user : Member):
+        reply = await tag_helper.remove_user(ctx.guild.id, user)
         await ctx.send(reply)
 
     @tag_remove.error
@@ -88,6 +97,8 @@ class TagSystem(commands.Cog):
             await ctx.reply(reply)
         else:
             await ctx.send(error)
+
+    """Set afk"""
 
     @commands.guild_only()
     @commands.command()

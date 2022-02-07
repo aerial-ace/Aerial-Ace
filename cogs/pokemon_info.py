@@ -8,6 +8,8 @@ class Pokemon_Info(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    """For getting the duel stats"""
+
     @commands.guild_only()
     @commands.command()
     async def stats(self, ctx, poke:str):
@@ -21,6 +23,8 @@ class Pokemon_Info(commands.Cog):
             await ctx.reply(embed=reply)
         else:
             await ctx.send(error)
+
+    """For getting the duel moveset"""
 
     @commands.guild_only()
     @commands.command(name="moveset", aliases=["ms"])
@@ -36,6 +40,8 @@ class Pokemon_Info(commands.Cog):
         else:
             await ctx.send(error)
 
+    """For getting the duel nature"""
+
     @commands.guild_only()
     @commands.command()
     async def nature(self, ctx, poke : str):
@@ -49,6 +55,8 @@ class Pokemon_Info(commands.Cog):
             await ctx.send(embed=reply)
         else:
             await ctx.send(error)
+
+    """For getting the tierlists"""
 
     @commands.guild_only()
     @commands.command(name="tierlist", aliases=["tl"])
@@ -67,6 +75,16 @@ class Pokemon_Info(commands.Cog):
             await ctx.reply("Give a tier name as a parameter :/ Like `rare`, `common`, `mega`, `steel`, `fighting`")
         else:
             await ctx.send(error)
+
+    """For getting the weakness"""
+
+    @commands.guild_only()
+    @commands.command(name="weakness", aliases=["weak"])
+    async def get_weakness(self, ctx, *params):
+
+        reply = await pokemon_info_helper.get_weakness_embed(params)
+
+        await ctx.send(embed=reply)
 
 def setup(bot):
     bot.add_cog(Pokemon_Info(bot))

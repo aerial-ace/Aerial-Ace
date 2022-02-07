@@ -7,18 +7,18 @@ import config
 
 class FunModule(commands.Cog):
 
+    """Kill someone by showing gifs"""
+
     @commands.guild_only()
     @commands.cooldown(1, 10, type=commands.BucketType.user)
     @commands.command(name="kill")
     async def kill(self, ctx, target : discord.Member):
 
-        """Kill someone by showing gifs"""
-
         if target == ctx.author : 
             await ctx.reply("I was unable to find a suicide gif, but dw, you **successfully** killed yourself :]")
             return
 
-        reply = await fun_helper.get_kill_embed(ctx.author.name, target.name)
+        reply = await fun_helper.get_kill_embed(ctx.author, target)
 
         await ctx.send(embed=reply)
         
@@ -30,19 +30,15 @@ class FunModule(commands.Cog):
         else:
             await ctx.reply(error)
 
+    """Hit someone by showing gifs"""
+
     @commands.guild_only()
     @commands.cooldown(1, 10, type=commands.BucketType.user)
     @commands.command(name="hit")
     async def hit(self, ctx, target : discord.Member):
 
-        """Hit someone by showing gifs"""
 
-        if ctx.author == target:
-            reply = discord.Embed(title=f"{ctx.author.name} slapped {ctx.author.name} then, {ctx.author.name} slapped {ctx.author.name} :/ What a mess.").set_image(url="https://cdn.discordapp.com/attachments/893732055421157396/934808056343191552/psyduck-hit-smash.gif")
-            await ctx.send(embed=reply)
-            return
-
-        reply = await fun_helper.get_hit_embed(ctx.author.name, target.name)
+        reply = await fun_helper.get_hit_embed(ctx.author, target)
         await ctx.send(embed=reply)
 
     @hit.error
@@ -53,14 +49,16 @@ class FunModule(commands.Cog):
         else:
             await ctx.reply(error)
 
+    """Dance with someone using gifs"""
+
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="dance")
     async def dance(self, ctx, target : discord.Member = None):
         if target is None:
-            reply = await fun_helper.get_dance_embed(ctx.author.name)
+            reply = await fun_helper.get_dance_embed(ctx.author)
         else:
-            reply = await fun_helper.get_dance_embed(ctx.author.name, target.name)
+            reply = await fun_helper.get_dance_embed(ctx.author, target)
 
         await ctx.send(embed=reply)
 
@@ -68,11 +66,13 @@ class FunModule(commands.Cog):
     async def dance_handler(self, ctx, error):
         await ctx.reply(error)
 
+    """Pat someone with gifs"""
+
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="pat")
     async def pat(self, ctx, target : discord.Member):
-        reply = await fun_helper.get_pat_embed(ctx.author.name, target.name)
+        reply = await fun_helper.get_pat_embed(ctx.author, target)
         await ctx.send(embed=reply)
 
     @pat.error
@@ -83,11 +83,13 @@ class FunModule(commands.Cog):
         else:
             await ctx.reply(error)
 
+    """Tease someone with gifs"""
+
     @commands.guild_only()
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.command(name="tease")
     async def tease(self, ctx, target : discord.Member):
-        reply = await fun_helper.get_tease_embed(ctx.author.name, target.name)
+        reply = await fun_helper.get_tease_embed(ctx.author, target)
         await ctx.send(embed=reply)
 
     @pat.error

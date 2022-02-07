@@ -31,7 +31,7 @@ async def register_tag(server_id, user, tag):
     old_tag = ""
 
     for i in range(0, len(users)):
-        if str(user.id) in users[i]:
+        if str(user.id) in users[i] or f"/{user.id}" in users[i]:
             old_tag = tags[i]
             break
 
@@ -40,7 +40,16 @@ async def register_tag(server_id, user, tag):
 
     if old_tag != "":
         # remove user from current tag
-        tag_data[old_tag].remove(str(user.id))
+        try:
+            # Try to remove non afk user id
+            tag_data[old_tag].remove(str(user.id))
+        except:
+            try:
+                # Try to remove afk user id
+                tag_data[old_tag].remove(f"/{user.id}")
+            except:
+                pass
+            pass
 
         # remove empty tags
         if len(tag_data[old_tag]) <= 0:
@@ -52,7 +61,8 @@ async def register_tag(server_id, user, tag):
         tag_data[tag] = []
         users_assigned_to_new_tag = []
 
-    users_assigned_to_new_tag.append(str(user.id))
+    if str(user.id) not in users_assigned_to_new_tag:
+        users_assigned_to_new_tag.append(str(user.id))
 
     tag_data[tag] = users_assigned_to_new_tag 
 
@@ -66,7 +76,7 @@ async def register_tag(server_id, user, tag):
         return f"> **{user.name}** was removed from `{old_tag.capitalize()}` and assigned to `{tag.capitalize()}` tag"
 
 # Get shiny tags
-async def get_tag_hunters(server_id, tag):
+async def get_tag_hunters(server_id, tag) -> list:
     
     tag = tag.lower()
     query = {"server_id" : str(server_id)}
@@ -95,17 +105,19 @@ async def get_tag_hunters(server_id, tag):
 async def get_show_hunters_embd(tag, hunters):
 
     embd = discord.Embed(color=config.NORMAL_COLOR)
-    embd.title = "Users assigned to `{tag}` tag".format(tag=tag.capitalize())
-    embd.description = ""
+    embd.title = "{tag}".format(tag=tag.capitalize())
+    embd.description = f"Users assigned to `{tag.capitalize()}` tag \n\n"
 
     for i in hunters:
-        embd.description += "<@{hunter_id}>\n".format(hunter_id=i)
+        embd.description += "<@{hunter_id}>\n".format(hunter_id=i.replace("/",""))
 
     return embd
 
 # remove user from their tag
-async def remove_user(server_id, user_id : int):
+async def remove_user(server_id, user):
     
+    user_id = user.id
+
     query = {"server_id" : str(server_id)}
 
     mongo_cursor = mongo_manager.manager.get_all_data("tags", query)
@@ -126,7 +138,7 @@ async def remove_user(server_id, user_id : int):
     old_tag = ""
 
     for i in range(0, len(users)):
-        if str(user_id) in users[i]:
+        if str(user_id) in users[i] or f"/{user_id}" in users[i]:
             old_tag = tags[i]
             break
 
@@ -134,7 +146,14 @@ async def remove_user(server_id, user_id : int):
         return f"> <@{user_id}> is not assigned to any tag."
     else:
         # remove user from current tag
-        tag_data[old_tag].remove(str(user_id))
+        try:
+            tag_data[old_tag].remove(str(user_id))
+        except:
+            try:
+                tag_data[old_tag].remove(f"/{user_id}")
+            except:
+                pass
+            pass
 
         # remove empty tags
         if len(tag_data[old_tag]) <= 0:

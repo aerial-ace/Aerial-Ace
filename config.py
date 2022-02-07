@@ -17,11 +17,14 @@ SUGGESTION_LOG_CHANNEL_ID = 938352848448659466
 
 # bot links
 INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=277025647680&scope=bot%20applications.commands"
-AVATAR_LINK = "https://cdn.discordapp.com/avatars/908384747393286174/312dafe2a71e0338db6f2ef5315899a7.webp"
+AVATAR_LINK = "https://cdn.discordapp.com/avatars/908384747393286174/16ee31af1a88ab05809b1ea3bac3cc8f.png"
 SUPPORT_SERVER_LINK = "https://discord.gg/4mPdqevgsH"
 REPO_LINK = "https://github.com/Devanshu19/Aerial-Ace"
 GITHUB_PROFILE_LINK = "https://github.com/Devanshu19/"
 VOTE_LINK = "https://top.gg/bot/908384747393286174/"
+
+# Emojis
+BULLET_EMOJI = "<a:arrow_arrow:939409283668410381>"
 
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"

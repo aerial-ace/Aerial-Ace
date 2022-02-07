@@ -43,7 +43,7 @@ links = {
 }
 
 # returns an embed with kill gif
-async def get_kill_embed(user_name : str, target_name : str):
+async def get_kill_embed(user, target):
 
     all_headings = list(links["kill"].keys())
     all_links = list(links["kill"].values())
@@ -53,13 +53,17 @@ async def get_kill_embed(user_name : str, target_name : str):
     heading = all_headings[roll]
     link = all_links[roll]
 
-    embd = discord.Embed(title=heading.format(user=user_name, target=target_name), color=config.NORMAL_COLOR)
+    embd = discord.Embed(title=heading.format(user=user.name, target=target.name), color=config.NORMAL_COLOR)
     embd.set_image(url=link)
 
     return embd
 
 # returns an embed with hit gif
-async def get_hit_embed(user_name : str, target_name : str):
+async def get_hit_embed(user, target):
+
+    if user == target:
+        reply = discord.Embed(title=f"{user.name} slapped {user.name} then, {user.name} slapped {user.name} :/ What a mess.").set_image(url="https://cdn.discordapp.com/attachments/893732055421157396/934808056343191552/psyduck-hit-smash.gif")
+        return reply
 
     all_headings = list(links["hit"].keys())
     all_links = list(links["hit"].values())
@@ -69,14 +73,15 @@ async def get_hit_embed(user_name : str, target_name : str):
     heading = all_headings[roll]
     link = all_links[roll]
 
-    embd = discord.Embed(title=heading.format(user=user_name, target=target_name), color=config.NORMAL_COLOR)
+    embd = discord.Embed(title=heading.format(user=user.name, target=target.name), color=config.NORMAL_COLOR)
     embd.set_image(url=link)
 
     return embd
 
-async def get_dance_embed(user_name : str, target_name : str = None):
+async def get_dance_embed(user, target = None):
 
-    if target_name is None or target_name == user_name:
+    if target is None or target == user:
+        target = user
         all_headings = list(links["single-dance"].keys())
         all_links = list(links["single-dance"].values())
     else:
@@ -88,12 +93,12 @@ async def get_dance_embed(user_name : str, target_name : str = None):
     heading = all_headings[roll]
     link = all_links[roll]
 
-    embd = discord.Embed(title=heading.format(user=user_name, target=target_name), color=config.NORMAL_COLOR)
+    embd = discord.Embed(title=heading.format(user=user.name, target=target.name), color=config.NORMAL_COLOR)
     embd.set_image(url=link)
 
     return embd
 
-async def get_pat_embed(user_name : str, target_name : str):
+async def get_pat_embed(user, target):
 
     all_headings = list(links["pat"].keys())
     all_links = list(links["pat"].values())
@@ -103,12 +108,12 @@ async def get_pat_embed(user_name : str, target_name : str):
     heading = all_headings[roll]
     link = all_links[roll]
 
-    embd = discord.Embed(title=heading.format(user=user_name, target=target_name), color=config.NORMAL_COLOR)
+    embd = discord.Embed(title=heading.format(user=user.name, target=target.name), color=config.NORMAL_COLOR)
     embd.set_image(url=link)
 
     return embd
 
-async def get_tease_embed(user_name : str, target_name : str):
+async def get_tease_embed(user, target):
 
     all_headings = list(links["tease"].keys())
     all_links = list(links["tease"].values())
@@ -118,7 +123,7 @@ async def get_tease_embed(user_name : str, target_name : str):
     heading = all_headings[roll]
     link = all_links[roll]
 
-    embd = discord.Embed(title=heading.format(user=user_name, target=target_name), color=config.NORMAL_COLOR)
+    embd = discord.Embed(title=heading.format(user=user.name, target=target.name), color=config.NORMAL_COLOR)
     embd.set_image(url=link)
 
     return embd

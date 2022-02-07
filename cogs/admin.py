@@ -1,5 +1,5 @@
 from discord.ext import commands
-import discord
+from os import listdir
 
 from managers import mongo_manager
 
@@ -35,6 +35,59 @@ class AdminSystem(commands.Cog):
         """
 
         await ctx.send(reply)
+
+    @commands.is_owner()
+    @commands.command(name="unload")
+    async def unload_cog(self, ctx : commands.Context, cog):
+
+        bot : commands.Bot = ctx.bot
+
+        if cog == "slash":
+            return await ctx.send( await self.toggle_slash_cogs(True))
+
+        try:
+            bot.unload_extension(cog)
+        except Exception as e:
+            await ctx.send(f"Unable to unload that cog.\n **Error** : {e}")
+        else:
+            await ctx.send(f"Cog unloaded successfully : `{cog}`")
+
+    @commands.is_owner()
+    @commands.command(name="load")
+    async def load_cog(self, ctx : commands.Context, cog):
+
+        bot : commands.Bot = ctx.bot
+
+        if cog == "slash":
+            return await ctx.send( await self.toggle_slash_cogs(False))
+
+        try:
+            bot.load_extension(cog)
+        except Exception as e:
+            await ctx.send(f"Unable to unload that cog.\n **Error** : {e}")
+        else:
+            await ctx.send(f"Cog loaded successfully : `{cog}`")
         
+    async def toggle_slash_cogs(self, unload = True) -> str:
+        
+        if unload is True:
+            try:
+                for file in listdir("./cogs/slash"):
+                    if file.endswith(".py"):
+                        self.bot.unload_extension(f"cogs.slash.{file[:-3]}")
+            except Exception as e:
+                return f"Error occured while unloading slash commands : {e}"
+            else:
+                return "Slash cogs unloaded successfully"
+        else:
+            try:
+                for file in listdir("./cogs/slash"):
+                    if file.endswith(".py"):
+                        self.bot.load_extension(f"cogs.slash.{file[:-3]}")
+            except Exception as e:
+                return f"Error occured while loading slash commands : {e}"
+            else:
+                return "Slash cogs loaded successfully"
+
 def setup(bot):
     bot.add_cog(AdminSystem(bot))

@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord import Bot
 
 from managers import cache_manager
 from managers import mongo_manager
@@ -12,24 +13,33 @@ from checkers import rare_catch_detection
 is_test = False
 
 # for getting the prefix
-def prefix_callable(bot, message):
-    return [f"<@{bot.user.id}>", "<@!{bot.user.id}>", "-aa ", "aa."]
+def prefix_callable(bot : Bot, message):
+    return [f"<@{bot.user.id}> ", f"<@!{bot.user.id}> ", "-aa ", "aa."]
 
 bot = commands.Bot(command_prefix=prefix_callable, description="Aerial Ace", case_insensitive=True)
 bot.remove_command("help")
 
 initial_cogs = [
-    "cogs.presence_cycle",
-    "cogs.admin",
-    "cogs.help",
-    "cogs.mail",
-    "cogs.utility",
-    "cogs.pokedex",
-    "cogs.pokemon_info",
-    "cogs.tag",
-    "cogs.weakness",
-    "cogs.fun",
-    "cogs.battle"
+    "presence_cycle",
+    "admin",
+    "help",
+    "mail",
+    "utility",
+    "pokedex",
+    "pokemon_info",
+    "tag",
+    "fun",
+    "battle"
+]
+
+initial_slash_cogs = [
+    "pokedex",
+    "pokeinfo",
+    "tag",
+    "utility",
+    "battle",
+    "fun",
+    "help"
 ]
 
 @bot.event
@@ -65,7 +75,10 @@ async def after_command(ctx : commands.Context):
 
 def main():
     for cog in initial_cogs:
-        bot.load_extension(cog)
+        bot.load_extension(f"cogs.{cog}")
+
+    for slash_cog in initial_slash_cogs:
+        bot.load_extension(f"cogs.slash.{slash_cog}")
 
 if __name__ == "__main__":
     main()
