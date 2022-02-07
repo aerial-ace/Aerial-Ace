@@ -29,7 +29,7 @@ class FunSystemSlash(commands.Cog):
        
     """Dance with/without someone"""
 
-    @slash_command(name="dance", description="Dance Dance, the pokemon way", guilds_ids=[751076697884852389])
+    @slash_command(name="dance", description="Dance Dance, the pokemon way")
     async def dance(self, ctx : ApplicationContext, target : Option(Member, description="Member to dance with", required=False, default=None)):
 
         if target is None:

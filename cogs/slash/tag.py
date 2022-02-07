@@ -66,7 +66,7 @@ class TagSystemSlash(commands.Cog):
         if not ctx.author.guild_permissions.administrator:
             return await ctx.respond("Be Admin when? :/")
 
-        reply = await tag_helper.remove_user(ctx.guild.id, user.id)
+        reply = await tag_helper.remove_user(ctx.guild.id, user)
         await ctx.respond(reply)
 
 def setup(bot : commands.Bot):
