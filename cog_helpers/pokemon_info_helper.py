@@ -18,7 +18,7 @@ async def get_stats_embed(pokemon):
 
     if pokemon in all_pokemon:
         embd.title = "{poke}'s Stats".format(poke=pokemon.capitalize())
-        embd.description = "HP, Defense, Sp.Defense and Speed are `The more the better` stats \n"
+        embd.description = "HP, Def, Sp.Def and Speed are `The more the better` stats \n"
         embd.add_field(name="Stats", value="```{stats}```".format(stats=cached_stats_data[pokemon]), inline=False)
 
         image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{pokemon.lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
@@ -31,6 +31,8 @@ async def get_stats_embed(pokemon):
         embd.description = "> If the name is correct then \n"
         embd.description += "> PROBABLY this pokemon is not good for battling \n"
         embd.description += "> Stats for **most** mega are same as their non mega forms"
+
+        embd.set_footer(f"Missing stats for a potentially good pokemon? Report it at official server {config.PLS_EMOJI}")
 
         return embd
 
@@ -45,7 +47,7 @@ async def get_moveset_embed(poke):
     embd.colour = config.NORMAL_COLOR
 
     if poke in all_pokemon:
-        embd.title = "{poke}'s moveset".format(poke=poke.capitalize())
+        embd.title = "{poke}'s Moveset".format(poke=poke.capitalize())
         embd.description = "```{ms}```".format(ms=cached_moveset_data[poke])
 
         image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{poke.lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
@@ -57,6 +59,9 @@ async def get_moveset_embed(poke):
         embd.description = "> If the name is correct then \n"
         embd.description += "> PROBABLY this pokemon is not good for battling\n"
         embd.description += "> If this pokemon is a mega, try searching their non mega form"
+
+        embd.set_footer(f"Report Missing movesets of good pokemons at the official server when? {config.THEFK_EMOJI}")
+
         return embd
 
 # get nature 
@@ -76,6 +81,9 @@ async def get_nature_embed(poke: str):
         embd.title = "That pokemon was not found in the database"
         embd.description = "> If the name is correct then \n"
         embd.description += "> PROBABLY this pokemon is not good for battling"
+
+        embd.set_footer(f"Report Missing nature of good pokemons at the official server when? {config.THEFK_EMOJI}")
+
         embd.color = config.ERROR_COLOR
     
     return embd
@@ -105,7 +113,7 @@ async def get_weakness_embed(params):
         else:
             types = params
     except KeyError as err:
-        return await general_helper.get_info_embd(title="Not Found Error!", desc="That pokemon was not found, try this ```-aa weak Emolga```", color=config.ERROR_COLOR)
+        return await general_helper.get_info_embd(title="Not Found Error!", desc="That pokemon was not found, try this ```-aa weak Emolga```", color=config.ERROR_COLOR, footer="Report missing weakness data of any pokemon at the official server when?")
 
     # get individual weakness per type
     individual_weakness = {}
