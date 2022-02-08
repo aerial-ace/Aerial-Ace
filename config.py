@@ -25,6 +25,9 @@ VOTE_LINK = "https://top.gg/bot/908384747393286174/"
 
 # Emojis
 BULLET_EMOJI = "<a:arrow_arrow:939409283668410381>"
+IMPORTANT_EMOJI = "<a:Important:940582149797601391>"
+THEFK_EMOJI = "<:thefk:929683678890713108>"
+ALERT_EMOJI = "<:alert:940589741714317332>"
 
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"
