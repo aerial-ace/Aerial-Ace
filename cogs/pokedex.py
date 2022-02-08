@@ -8,6 +8,8 @@ class PokeDex(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    """View dex entry of any pokemon"""
+
     @commands.command()
     @commands.guild_only()
     async def dex(self, ctx, poke):
@@ -30,6 +32,8 @@ class PokeDex(commands.Cog):
             await ctx.reply(embed=reply)
         else:
             await ctx.reply(error)
+
+    """View random pokemon"""
 
     @commands.guild_only()
     @commands.command(name="random_poke", aliases=["rp"])

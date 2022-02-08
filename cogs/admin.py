@@ -10,6 +10,8 @@ class AdminSystem(commands.Cog):
     def __init__(self, bot):        
         self.bot = bot
 
+    """Show Data of any document from mongodb database"""
+
     @commands.is_owner()
     @commands.command(name="show_data", aliases=["sd"])
     async def show_data(self, ctx, collection : str, server_id : str):
@@ -36,6 +38,8 @@ class AdminSystem(commands.Cog):
 
         await ctx.send(reply)
 
+    """Unload any cog"""
+
     @commands.is_owner()
     @commands.command(name="unload")
     async def unload_cog(self, ctx : commands.Context, cog):
@@ -52,6 +56,8 @@ class AdminSystem(commands.Cog):
         else:
             await ctx.send(f"Cog unloaded successfully : `{cog}`")
 
+    """Load any cog"""
+
     @commands.is_owner()
     @commands.command(name="load")
     async def load_cog(self, ctx : commands.Context, cog):
@@ -67,7 +73,9 @@ class AdminSystem(commands.Cog):
             await ctx.send(f"Unable to unload that cog.\n **Error** : {e}")
         else:
             await ctx.send(f"Cog loaded successfully : `{cog}`")
-        
+
+    """Toggle Slash Commands"""
+
     async def toggle_slash_cogs(self, unload = True) -> str:
         
         if unload is True:
