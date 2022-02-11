@@ -39,6 +39,10 @@ links = {
         "OH, ok" : "https://i.imgur.com/KgjtG5F.gif",
         "{user} pets {target}, 0.0" : "https://i.imgur.com/xmPGH0T.gif",
         "{user} -> pat-pat -> {target}" : "https://i.imgur.com/cYQMCLw.gif"
+    },
+    "cry" : {
+        "{user} is crying, sad" : "https://i.imgur.com/hJc70Sa.gif",
+        "{user} cried hard" : "https://i.imgur.com/iVfgbHw.gif"
     }
 }
 
@@ -125,5 +129,17 @@ async def get_tease_embed(user, target):
 
     embd = discord.Embed(title=heading.format(user=user.name, target=target.name), color=config.NORMAL_COLOR)
     embd.set_image(url=link)
+
+    return embd
+
+async def get_cry_embed(user):
+
+    all_headings = list(links["cry"].keys())
+    all_links = list(links["cry"].values())
+
+    roll = random.randint(0, len(all_headings) - 1)
+
+    embd = discord.Embed(title=all_headings[roll].format(user=user.name), color=config.NORMAL_COLOR)
+    embd.set_image(url=all_links[roll])
 
     return embd

@@ -77,7 +77,7 @@ class FunModule(commands.Cog):
 
     @pat.error
     async def pat_handler(self, ctx, error):
-        if isinstance(error, commands.errors.MissingPermissions):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this : ```{ctx.prefix}pat @raupy```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
         else:
@@ -94,11 +94,24 @@ class FunModule(commands.Cog):
 
     @pat.error
     async def tease_handler(self, ctx, error):
-        if isinstance(error, commands.errors.MissingPermissions):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this : ```{ctx.prefix}pat @raupy```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
         else:
             await ctx.reply(error)
+
+    """Cry with gifs"""
+
+    @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="cry")
+    async def cry(self, ctx : commands.Context):
+        reply = await fun_helper.get_cry_embed(ctx.author)
+        await ctx.send(embed=reply)
+
+    @cry.error
+    async def cry_handler(self, ctx : commands.Context, error):
+        await ctx.reply(error)
 
 def setup(bot):
     bot.add_cog(FunModule())
