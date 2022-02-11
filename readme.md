@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://user-images.githubusercontent.com/66104268/146304164-cd2fd647-54f2-4269-99c5-158db840ac5f.png" style="width : 50; height : auto;" />
+  <img src="https://i.imgur.com/TAWr46v.png" style="width : 200px; height : auto;" />
 </h1>
 
 <h1 align="center">Aerial Ace</h1>
