@@ -15,7 +15,7 @@ class MailModule(commands.Cog):
         embd.description = f"{config.IMPORTANT_EMOJI} For Admins {config.IMPORTANT_EMOJI}\n"
 
         embd.description += f"Aerial Ace now supports **Slash Commands**. To get them working though, you need to reauthorize the bot for your server. \n\n"
-        embd.description += f"Just click on the [invite link]({config.INVITE_LINK}), select your server and click reauthorize\n\n"
+        embd.description += f"Just click on the [invite link]({config.INVITE_LINK}), select your server and click authorize\n\n"
 
         embd.description += f"To get started, use `/dance` {config.THEFK_EMOJI}"
 

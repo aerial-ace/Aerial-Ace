@@ -109,5 +109,9 @@ class FunModule(commands.Cog):
         reply = await fun_helper.get_cry_embed(ctx.author)
         await ctx.send(embed=reply)
 
+    @cry.error
+    async def cry_handler(self, ctx : commands.Context, error):
+        await ctx.reply(error)
+
 def setup(bot):
     bot.add_cog(FunModule())
