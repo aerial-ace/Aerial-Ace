@@ -4,6 +4,7 @@ from discord import Member
 import config
 from cog_helpers import tag_helper
 from cog_helpers import general_helper
+from managers import cache_manager
 
 class TagSystem(commands.Cog):
     def __init__(self, bot) -> None:
@@ -14,6 +15,13 @@ class TagSystem(commands.Cog):
     @commands.guild_only()
     @commands.command()
     async def tag(self, ctx, tag : str):
+        
+        try:
+            cache_manager.cached_type_data[tag.lower()]
+        except KeyError as keyErr:
+            reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english.", config.ERROR_COLOR)
+            return await ctx.send(embed=reply)
+
         reply = await tag_helper.register_tag(ctx.guild.id, ctx.author, tag)
         await ctx.send(reply)
 
@@ -29,6 +37,13 @@ class TagSystem(commands.Cog):
     @commands.guild_only()
     @commands.command(name="tag_ping", aliases=["tp"])
     async def tag_ping(self, ctx, tag: str):
+
+        try:
+            cache_manager.cached_type_data[tag.lower()]
+        except KeyError as keyErr:
+            reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english.", config.ERROR_COLOR)
+            return await ctx.send(embed=reply)
+
         hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
 
         if hunters is None:
@@ -59,6 +74,13 @@ class TagSystem(commands.Cog):
     @commands.guild_only()
     @commands.command(name="tag_show", aliases=["ts"])
     async def tag_show(self, ctx, tag : str):
+
+        try:
+            cache_manager.cached_type_data[tag.lower()]
+        except KeyError as keyErr:
+            reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english.", config.ERROR_COLOR)
+            return await ctx.send(embed=reply)
+
         hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
 
         if hunters is None:
