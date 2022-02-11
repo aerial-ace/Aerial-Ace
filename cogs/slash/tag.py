@@ -2,14 +2,36 @@ from discord import Member, ApplicationContext, AutocompleteContext
 from discord.ext import commands
 from discord.commands import slash_command, Option
 
+from config import ERROR_COLOR
+from cog_helpers import general_helper
 from cog_helpers import tag_helper
+from managers import cache_manager
 
 class TagSystemSlash(commands.Cog):
+
+    bot : commands.Bot = None
+
+    def __init__(self, bot) -> None:
+        self.bot = bot
+
+    # validates a tag 
+    async def validate_tag(self, ctx : ApplicationContext, tag) -> bool:
+        try:
+            cache_manager.cached_type_data[tag.lower()]
+        except KeyError as keyErr:
+            reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english.", ERROR_COLOR)
+            await ctx.respond(embed=reply)
+            return False
+        else:
+            return True
 
     """For registering tags"""
 
     @slash_command(name="tag", description="Add yourself to any tag")
     async def assign_tag(self, ctx, tag : Option(str, description="Name of the tag", required=True)):
+
+        if await self.validate_tag(ctx, tag.lower()) is False:
+            return
 
         reply = await tag_helper.register_tag(ctx.guild.id, ctx.author, tag)
         await ctx.respond(reply)
@@ -18,6 +40,9 @@ class TagSystemSlash(commands.Cog):
 
     @slash_command(name="pingtag", description="Ping users assigned to the provided tag")
     async def tag_ping(self, ctx, tag : Option(str, description="Name of the tag", required=True)):
+
+        if await self.validate_tag(ctx, tag.lower()) is False:
+            return
 
         hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
 
@@ -35,6 +60,9 @@ class TagSystemSlash(commands.Cog):
 
     @slash_command(name="viewtag", description="View users assigned to provided tag")
     async def view_tag(self, ctx, tag : Option(str, description="Name of the tag", required=True)):
+
+        if await self.validate_tag(ctx, tag.lower()) is False:
+            return
 
         hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
 
@@ -70,4 +98,4 @@ class TagSystemSlash(commands.Cog):
         await ctx.respond(reply)
 
 def setup(bot : commands.Bot):
-    bot.add_cog(TagSystemSlash())
+    bot.add_cog(TagSystemSlash(bot))

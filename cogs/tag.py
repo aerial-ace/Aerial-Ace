@@ -1,7 +1,7 @@
 from discord.ext import commands
 from discord import Member
 
-import config
+from config import ERROR_COLOR, WARNING_COLOR
 from cog_helpers import tag_helper
 from cog_helpers import general_helper
 from managers import cache_manager
@@ -10,17 +10,25 @@ class TagSystem(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
+    # validates a tag 
+    async def validate_tag(self, ctx : commands.Context, tag) -> bool:
+        try:
+            cache_manager.cached_type_data[tag.lower()]
+        except KeyError as keyErr:
+            reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english.", ERROR_COLOR)
+            await ctx.send(embed=reply)
+            return False
+        else:
+            return True
+
     """Assign tags"""
 
     @commands.guild_only()
     @commands.command()
     async def tag(self, ctx, tag : str):
         
-        try:
-            cache_manager.cached_type_data[tag.lower()]
-        except KeyError as keyErr:
-            reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english.", config.ERROR_COLOR)
-            return await ctx.send(embed=reply)
+        if await self.validate_tag(ctx, tag.lower()) is False:
+            return
 
         reply = await tag_helper.register_tag(ctx.guild.id, ctx.author, tag)
         await ctx.send(reply)
@@ -38,16 +46,13 @@ class TagSystem(commands.Cog):
     @commands.command(name="tag_ping", aliases=["tp"])
     async def tag_ping(self, ctx, tag: str):
 
-        try:
-            cache_manager.cached_type_data[tag.lower()]
-        except KeyError as keyErr:
-            reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english.", config.ERROR_COLOR)
-            return await ctx.send(embed=reply)
+        if await self.validate_tag(ctx, tag.lower()) is False:
+            return
 
         hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
 
         if hunters is None:
-            reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), config.WARNING_COLOR)
+            reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), WARNING_COLOR)
             await ctx.send(embed=reply)
             return
 
@@ -64,7 +69,7 @@ class TagSystem(commands.Cog):
     @tag_ping.error
     async def tag_ping_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a tag as a parameter.\n```{ctx.prefix}tag_ping Espurr```", config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a tag as a parameter.\n```{ctx.prefix}tag_ping Espurr```", ERROR_COLOR)
             await ctx.reply(embed=reply)
         else:
             await ctx.send(error)
@@ -75,16 +80,13 @@ class TagSystem(commands.Cog):
     @commands.command(name="tag_show", aliases=["ts"])
     async def tag_show(self, ctx, tag : str):
 
-        try:
-            cache_manager.cached_type_data[tag.lower()]
-        except KeyError as keyErr:
-            reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english.", config.ERROR_COLOR)
-            return await ctx.send(embed=reply)
+        if await self.validate_tag(ctx, tag.lower()) is False:
+            return
 
         hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
 
         if hunters is None:
-            reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), config.WARNING_COLOR)
+            reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), WARNING_COLOR)
             await ctx.reply(embed=reply)
             return
 
@@ -95,7 +97,7 @@ class TagSystem(commands.Cog):
     @tag_show.error
     async def tag_show_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a tag as a parameter.\n```{ctx.prefix}tag_show Darumaka```", config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a tag as a parameter.\n```{ctx.prefix}tag_show Darumaka```", ERROR_COLOR)
             await ctx.reply(embed=reply)
         else:
             await ctx.send(error)
@@ -112,7 +114,7 @@ class TagSystem(commands.Cog):
     @tag_remove.error
     async def tag_remove_helper(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a user_id as a parameter.\n```{ctx.prefix}tag_remove 716390085896962058```", config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a user_id as a parameter.\n```{ctx.prefix}tag_remove 716390085896962058```", ERROR_COLOR)
             await ctx.reply(embed=reply)
         elif isinstance(error, commands.errors.MissingPermissions):
             reply = "Be a Admin when?"
@@ -135,7 +137,7 @@ class TagSystem(commands.Cog):
     @afk.error
     async def afk_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires `State` as a parameter. Like this```{ctx.prefix}afk on [off]```", color=config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires `State` as a parameter. Like this```{ctx.prefix}afk on [off]```", color=ERROR_COLOR)
             await ctx.reply(embed=reply)
             return
 
