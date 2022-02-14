@@ -24,6 +24,8 @@ async def get_stats_embed(pokemon):
         image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{pokemon.lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
         embd.set_thumbnail(url=image_link)
 
+        embd.set_footer(text="Missing stats for a potentially good pokemon? Report it at official server.")
+
         return embd
 
     else:
@@ -32,7 +34,7 @@ async def get_stats_embed(pokemon):
         embd.description += "> PROBABLY this pokemon is not good for battling \n"
         embd.description += "> Stats for **most** mega are same as their non mega forms"
 
-        embd.set_footer(f"Missing stats for a potentially good pokemon? Report it at official server {config.PLS_EMOJI}")
+        embd.set_footer(text="Missing stats for a potentially good pokemon? Report it at official server")
 
         return embd
 
@@ -53,6 +55,8 @@ async def get_moveset_embed(poke):
         image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{poke.lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
         embd.set_thumbnail(url=image_link)
 
+        embd.set_footer(text="Missing moveset for a potentially good pokemon? Report it at official server.")
+
         return embd
     else:
         embd.title = "That pokemon was not found in the database"
@@ -60,7 +64,7 @@ async def get_moveset_embed(poke):
         embd.description += "> PROBABLY this pokemon is not good for battling\n"
         embd.description += "> If this pokemon is a mega, try searching their non mega form"
 
-        embd.set_footer(f"Report Missing movesets of good pokemons at the official server when? {config.THEFK_EMOJI}")
+        embd.set_footer(text="Missing moveset for a potentially good pokemon? Report it at official server.")
 
         return embd
 
@@ -77,12 +81,14 @@ async def get_nature_embed(poke: str):
 
         image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{poke.lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
         embd.set_thumbnail(url=image_link)
+
+        embd.set_footer(text="Missing nature for a potentially good pokemon? Report it at official server.")
     except:
         embd.title = "That pokemon was not found in the database"
         embd.description = "> If the name is correct then \n"
         embd.description += "> PROBABLY this pokemon is not good for battling"
 
-        embd.set_footer(f"Report Missing nature of good pokemons at the official server when? {config.THEFK_EMOJI}")
+        embd.set_footer(text="Missing nature for a potentially good pokemon? Report it at official server.")
 
         embd.color = config.ERROR_COLOR
     
