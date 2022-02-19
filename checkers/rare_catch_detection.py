@@ -6,7 +6,7 @@ import config
 
 # detect rare catch message
 async def rare_check(message):    
-    if str(message.author.id) != config.POKETWO_ID:
+    if str(message.author.id) != config.ADMIN_ID:
         return
     
     try:
@@ -66,7 +66,7 @@ async def determine_rare_catch(msg):
             break
 
     # remove the extra text from the message
-    extra_text = ["Congratulations", "You caught a level", "+1 Shiny chain!", "Shiny streak reset.", "This is your", "10th", "100th", "1000th", "Added to Pokédex", "You received", "Pokécoins", "These colors seem unusual...", "✨", ".", "!", "(", ")", "*"]
+    extra_text = ["Congratulations", "You caught a level", "+1 Shiny chain!", "Shiny streak reset.", "This is your", "10th", "100th", "1000th", "Added to Pokédex", "You received", "Pokécoins", "These colors seem unusual...", "✨", ".", "!", "(", ")", "*", ","]
 
     info_text = msg
     for extra in extra_text:
