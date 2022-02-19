@@ -10,9 +10,6 @@
   </a>
   <a href="https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge">
     <img src="https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge" alt="Status" />
-  </a><br>
-  <a href="https://top.gg/bot/908384747393286174">
-    <img src="https://top.gg/api/widget/servers/908384747393286174.svg?noavatar=true">
   </a>
 </h2>
 
