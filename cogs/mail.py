@@ -12,24 +12,23 @@ class MailModule(commands.Cog):
         """View all the mails in the mail box"""
 
         embd = discord.Embed(title="__Mail Box - Aerial Ace__", color=config.NORMAL_COLOR)
-        embd.description = f"{config.IMPORTANT_EMOJI} For Admins {config.IMPORTANT_EMOJI}\n"
+        embd.description = f"{config.IMPORTANT_EMOJI} For Admins {config.IMPORTANT_EMOJI}\n\n"
 
-        embd.description += f"Aerial Ace now supports **Slash Commands**. To get them working though, you need to reauthorize the bot for your server. \n\n"
-        embd.description += f"Just click on the [invite link]({config.INVITE_LINK}), select your server and click authorize\n\n"
-
-        embd.description += f"To get started, use `/dance` {config.THEFK_EMOJI}"
+        embd.description += f"Aerial Ace now has a Starboard System. Use `{ctx.prefix}starboard #channel` to enable it.\n\n"
+        embd.description += f"Here is how the embeds look {config.THEFK_EMOJI}"
+        embd.set_image(url="https://cdn.discordapp.com/attachments/908392246158700607/944602162900635658/unknown.png")
 
         await ctx.send(embed=embd)
 
 # Mail reminder
 async def process_mail(ctx):
 
-        prob : int = 30
+        prob : int = 100
         roll = random.randint(0, 100)
 
         if roll > 0 and roll < prob:
             embd = discord.Embed(title=f"{config.ALERT_EMOJI} Mail Box {config.ALERT_EMOJI}", color=config.NORMAL_COLOR)
-            embd.description = f"Very Important Mail is in the mail box\n"
+            embd.description = f"Starboard System is here :tada:\n\n"
             embd.description += f"Check using `{ctx.prefix}mail` now"
             await ctx.send(embed=embd)
 
