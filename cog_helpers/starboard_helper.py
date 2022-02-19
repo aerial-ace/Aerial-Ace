@@ -51,6 +51,12 @@ async def get_starboard_embed(user_id : str, level : str, pokemon_id:str, messag
         pokemon_id = cache_manager.cached_alt_name_data[pokemon_id.lower()]
     except Exception as e:
         pokemon_id = pokemon_id.replace(" ", "").lower()
+        pokemon_id = pokemon_id.replace("defense", "").replace("attack", "").replace("speed", "")
+
+        if pokemon_id.startswith("alolan"):
+            pokemon_id = pokemon_id.replace("alolan", "") + "-alola"
+        elif pokemon_id.startswith("galarian"):
+            pokemon_id = pokemon_id.replace("galarian", "") + "-galar"
 
     embd = Embed(color=NORMAL_COLOR)
 
