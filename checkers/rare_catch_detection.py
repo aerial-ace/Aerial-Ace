@@ -1,31 +1,31 @@
 import discord
 import datetime
 
+from cog_helpers import starboard_helper
 from managers import cache_manager
 import config
 
 # detect rare catch message
-async def rare_check(message):    
-    if str(message.author.id) != config.ADMIN_ID:
+async def rare_check(message : discord.Message):    
+    if str(message.author.id) != config.POKETWO_ID:
         return
-    
-    try:
-        catch_info = await determine_rare_catch(message.content)
 
-        # return if not a rare catch
-        if catch_info is None:
-            return
+    catch_info = await determine_rare_catch(message.content)
 
-        # get the rare catch details
-        if catch_info["type"] == "shiny":
-            reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "shiny")
-        elif catch_info["type"] == "rare":
-            reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "rare")
+    # return if not a rare catch
+    if catch_info is None:
+        return
 
-        await message.channel.send(embed=reply)
-    except Exception as e:
-        print(f"Error while determining rare dex {e}")
-    return
+    is_shiny = (True if catch_info["type"] == "shiny" else False)
+
+    # get the rare catch details
+    if is_shiny:
+        reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "shiny")
+    else:
+        reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "rare")
+
+    await message.channel.send(embed=reply)
+    await starboard_helper.send_starboard(str(message.guild.id), catch_info["user"], catch_info["level"], catch_info["pokemon"], message, is_shiny)
 
 # check if any message is a rare catch message
 async def determine_rare_catch(msg):
@@ -129,12 +129,6 @@ async def get_rare_catch_embd(_message, _ping, _pokemon, _level, _type):
         embd.set_image(url=config.PIKA_SHOCK)
 
     embd.description += f"Congratulations :tada: :tada:\n"
-
-    try:
-        await _message.pin()
-        embd.description += "This catch was pinned to this channel"
-    except Exception as e:
-        embd.description += "Unable to pin this catch :/"
 
     _date = datetime.date.today().strftime("%d %b %y")
     _time_object = datetime.datetime.now(datetime.timezone.utc)
