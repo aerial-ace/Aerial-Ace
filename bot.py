@@ -22,6 +22,7 @@ bot.remove_command("help")
 initial_cogs = [
     "presence_cycle",
     "admin",
+    "starboard",
     "help",
     "mail",
     "utility",
@@ -72,6 +73,10 @@ async def on_message(message):
 async def after_command(ctx : commands.Context):
     if ctx.command.name != "help" and ctx.command.name != "mail":
         await mail_manager.process_mail(ctx)
+
+@property
+def starboard():
+    return bot.get_cog("Starboard").instance
 
 def main():
     for cog in initial_cogs:

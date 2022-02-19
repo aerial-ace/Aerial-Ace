@@ -24,26 +24,16 @@ async def rare_check(message : discord.Message):
     else:
         reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "rare")
 
+    # Send to current Channel
     await message.channel.send(embed=reply)
+
+    # Send to Starboard
     await starboard_helper.send_starboard(str(message.guild.id), catch_info["user"], catch_info["level"], catch_info["pokemon"], message, is_shiny)
 
 # check if any message is a rare catch message
 async def determine_rare_catch(msg):
 
-    """
-    1. Determine if message is a catch message, else return None
-    2. Determine shiny catch or normal catch.
-    3. Shiny Catch : 
-        remove all the unnecessary text
-        get the catch data
-        return the catch data
-    4. Normal Catch : 
-        Remove the shit
-        Get required data from the remaining message
-        return the data
-    """
-
-    message = msg.replace("!", "").replace(".", "").replace("♂️", "").replace("♀️", "")     # remove the shit
+    message = msg.replace("!", "").replace(".", "").replace("♂️", "").replace("♀️", "") # remove the shit
     message_words = message.split()  
 
     is_shiny = True
@@ -51,7 +41,6 @@ async def determine_rare_catch(msg):
 
     catch_keywords = ["Congratulations", "You", "caught", "a", "level"]
     shiny_keywords = ["These", "colors", "seem", "unusual"]
-
 
     # determines whether this message is a catch message by checking the presence of the all catch keywords
     for catch_keyword in catch_keywords:
