@@ -45,10 +45,10 @@ async def set_starboard(server_id : str, channel : TextChannel = None):
             return "Starboard Module was disabled"
 
 # returns the starboard embed for starboard channel
-async def get_starboard_embed(user_id : str, level : str, pokemon_id:str, message_link : str, is_shiny:bool = False):
+async def get_starboard_embed(user_id : str, level : str, pokemon_id:str, message_link : str, is_shiny:bool = False, time:str = None):
 
     try:
-        pokemon_id = cache_manager.cached_alt_name_data[pokemon_id.lower()].replace("-koko", "koko").replace("-lele", "lele").replace("-bulu", "bulu").replace("-fini", "fini")
+        pokemon_id = cache_manager.cached_alt_name_data[pokemon_id.lower()]
     except Exception as e:
         pokemon_id = pokemon_id.replace(" ", "").lower()
 
@@ -67,9 +67,12 @@ async def get_starboard_embed(user_id : str, level : str, pokemon_id:str, messag
         image_link = f"https://play.pokemonshowdown.com/sprites/gen5-shiny/{pokemon_id}.png"
         embd.set_thumbnail(url=image_link)
 
+    if time is not None:
+        embd.set_footer(time)
+
     return embd
 
-async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, message:Message, is_shiny:bool):
+async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, message:Message, is_shiny:bool, time:str = None):
     
     query = {"server_id" : server_id}
 
@@ -82,7 +85,7 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
         return
 
     # get starboard embed
-    reply = await get_starboard_embed(user_id, level, pokemon, message.jump_url, is_shiny)
+    reply = await get_starboard_embed(user_id, level, pokemon, message.jump_url, is_shiny, time)
 
     # send that starboard embed to the starboard channel
     await message.guild.get_channel(int(starboard_channel_id)).send(embed=reply)

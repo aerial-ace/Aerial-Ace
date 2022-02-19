@@ -3,7 +3,7 @@ from discord import Embed
 import config
 from cog_helpers import general_helper
 
-all_categories = ["dex", "info", "battle", "tag", "fun", "misc"]
+all_categories = ["dex", "info", "battle", "tag", "fun", "misc", "starboard"]
 
 all_commands = {
     "dex" : [
@@ -38,6 +38,10 @@ all_commands = {
         "`{prefix}support_server[ss]` displays the link for the support server",
         "`{prefix}vote` displays the vote link for the bot",
         "`{prefix}invite` displays the invite link for the bot"
+    ],
+    "starboard" : [
+        "`{prefix}starboard #channel` sends rare catch embeds to this channel",
+        "`{prefix}starboard` disables the module"
     ]
 }
 
