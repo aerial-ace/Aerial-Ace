@@ -51,13 +51,15 @@ async def set_starboard(server_id : str, channel : TextChannel = None):
 async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, message_link : str, is_shiny:bool = False, time:str = None):
 
     pokemon = pokemon_id.replace(" ", "").lower()
-    pokemon = pokemon.replace("defense", "").replace("attack", "").replace("speed", "")
+    pokemon = pokemon.removeprefix("defense").removeprefix("attack").removeprefix("speed")
 
     # modify the id for alolan and galarian forms
     if pokemon.startswith("alolan"):
-        pokemon = pokemon.replace("alolan", "") + "-alola"
+        pokemon = pokemon.removeprefix("alolan") + "-alola"
     elif pokemon.startswith("galarian"):
-        pokemon = pokemon.replace("galarian", "") + "-galar"
+        pokemon = pokemon.removeprefix("galarian") + "-galar"
+    elif pokemon.startswith("complete"):
+        pokemon = pokemon.removeprefix("complete") + "-complete"
 
     embd = Embed(color=NORMAL_COLOR)
 
