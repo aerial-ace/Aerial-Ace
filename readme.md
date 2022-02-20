@@ -30,6 +30,7 @@
 * View pokemon tierlists.
 * Register Battles and view leaderboards.
 * Rare catch detection System
+* Advanced Starboard System that works with/without togglemention.
 
 ### Commands
 * `-aa roll <upper limit>` rolls a dice.
@@ -47,6 +48,7 @@
 * `-aa log_battle @winner @loser` logs the battle in the leaderboard.
 * `-aa battle_score` displays the current battle score the user.
 * `-aa battle_lb` displays the battle leaderboard of the server.
+* `-aa starboard #channel` sets the 'channel' as the starboard channel.
 
 ### Commands in action
 <div class="row">
