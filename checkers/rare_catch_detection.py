@@ -20,9 +20,9 @@ async def rare_check(message : discord.Message):
 
     # get the rare catch details
     if is_shiny:
-        reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "shiny")
+        reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], True)
     else:
-        reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], "rare")
+        reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], False)
 
     # Send to current Channel
     await message.channel.send(embed=reply)
@@ -46,7 +46,6 @@ async def determine_rare_catch(msg):
     for catch_keyword in catch_keywords:
         if catch_keyword not in message_words:
             return None # Not a catch message
-
     
     # determine shiny catch by checking the presence of all the shiny keywords
     for shiny_keyword in shiny_keywords:
@@ -79,7 +78,6 @@ async def determine_rare_catch(msg):
             break
 
     # remove duplicates from pokemon_name_words
-
     unique_pokemon_name_words = []
     for i in pokemon_name_words:
         if i not in unique_pokemon_name_words:
@@ -104,21 +102,22 @@ async def determine_rare_catch(msg):
     return catch_info
 
 # returns the embed containing the rare catch info
-async def get_rare_catch_embd(_message, _ping, _pokemon, _level, _type):
+async def get_rare_catch_embd(_message, _ping, _pokemon, _level, is_shiny:bool):
 
     embd = discord.Embed(colour=config.RARE_CATCH_COLOR)
 
-    if _type == "rare":
+    if is_shiny is not True:
         embd.title = ":star2: Rare Catch Detected :star2:"
         embd.description = f"{_ping} caught a level {_level} `{_pokemon.strip()}`\n"
         embd.set_image(url=config.JIRACHI_WOW)
-    elif _type == "shiny":
+    else:
         embd.title = ":star2: Shiny Catch Detected :star2:"
         embd.description = f"{_ping} caught a level {_level} **SHINY** `{_pokemon}`\n"
         embd.set_image(url=config.PIKA_SHOCK)
 
     embd.description += f"Congratulations :tada: :tada:\n"
 
+    # set the time of the catch 
     _date = datetime.date.today().strftime("%d %b %y")
     _time_object = datetime.datetime.now(datetime.timezone.utc)
     _time = _time_object.strftime("%I:%M %p UTC")

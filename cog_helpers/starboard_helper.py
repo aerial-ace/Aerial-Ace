@@ -5,6 +5,8 @@ from managers import mongo_manager
 from managers import cache_manager
 from config import NORMAL_COLOR
 
+"""Sets/Resets the starboard channel"""
+
 async def set_starboard(server_id : str, channel : TextChannel = None):
 
     try:
@@ -44,39 +46,46 @@ async def set_starboard(server_id : str, channel : TextChannel = None):
         else:
             return "Starboard Module was disabled"
 
-# returns the starboard embed for starboard channel
-async def get_starboard_embed(user_id : str, level : str, pokemon_id:str, message_link : str, is_shiny:bool = False, time:str = None):
+"""Returns the starboard embed for starboard channel"""
 
-    try:
-        pokemon_id = cache_manager.cached_alt_name_data[pokemon_id.lower()]
-    except Exception as e:
-        pokemon_id = pokemon_id.replace(" ", "").lower()
-        pokemon_id = pokemon_id.replace("defense", "").replace("attack", "").replace("speed", "")
+async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, message_link : str, is_shiny:bool = False, time:str = None):
 
-        if pokemon_id.startswith("alolan"):
-            pokemon_id = pokemon_id.replace("alolan", "") + "-alola"
-        elif pokemon_id.startswith("galarian"):
-            pokemon_id = pokemon_id.replace("galarian", "") + "-galar"
+    pokemon = pokemon_id.replace(" ", "").lower()
+    pokemon = pokemon.replace("defense", "").replace("attack", "").replace("speed", "")
+
+    # modify the id for alolan and galarian forms
+    if pokemon.startswith("alolan"):
+        pokemon = pokemon.replace("alolan", "") + "-alola"
+    elif pokemon.startswith("galarian"):
+        pokemon = pokemon.replace("galarian", "") + "-galar"
 
     embd = Embed(color=NORMAL_COLOR)
 
     if is_shiny is False:
         embd.title = ":star2: Rare Catch Detected :star2:"
-        embd.description = f"{user_id} caught a level {level} `{pokemon_id.strip().capitalize()}`\n\n"
-        embd.description += f"[**Teleport**]({message_link})"
-        image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{pokemon_id}.png"
+
+        embd.description = f"**Trainer :** {user_name}\n"
+        embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
+        embd.description += f"**Level :** {level} [Teleport]({message_link})"
+
+        image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{pokemon}.png"
         embd.set_thumbnail(url=image_link)
     else:
         embd.title = ":star2: Shiny Catch Detected :star2:"
-        embd.description = f"{user_id} caught a level {level} **SHINY** `{pokemon_id.capitalize()}`\n\n"
-        embd.description += f"[**Teleport**]({message_link})"
-        image_link = f"https://play.pokemonshowdown.com/sprites/gen5-shiny/{pokemon_id}.png"
+
+        embd.description = f"**Trainer :** {user_name}\n"
+        embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
+        embd.description += f"**Level :** {level} [Teleport]({message_link})"
+
+        image_link = f"https://play.pokemonshowdown.com/sprites/gen5-shiny/{pokemon}.png"
         embd.set_thumbnail(url=image_link)
 
     if time is not None:
         embd.set_footer(time)
 
     return embd
+
+"""Sends the star catch embed to the starboard"""
 
 async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, message:Message, is_shiny:bool, time:str = None):
     
@@ -87,6 +96,7 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
     data = cursor[0]
     starboard_channel_id = data["starboard"]
 
+    # return if module is disabled
     if starboard_channel_id == "0":
         return
 
