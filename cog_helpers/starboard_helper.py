@@ -2,8 +2,7 @@ from discord import TextChannel
 from discord import Embed, Message
 
 from managers import mongo_manager
-from managers import cache_manager
-from config import NORMAL_COLOR
+from config import NORMAL_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE
 
 """Sets/Resets the starboard channel"""
 
@@ -70,7 +69,7 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
         embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
         embd.description += f"**Level :** {level} [Teleport]({message_link})"
 
-        image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{pokemon}.png"
+        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
         embd.set_thumbnail(url=image_link)
     else:
         embd.title = ":star2: Shiny Catch Detected :star2:"
@@ -79,7 +78,7 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
         embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
         embd.description += f"**Level :** {level} [Teleport]({message_link})"
 
-        image_link = f"https://play.pokemonshowdown.com/sprites/gen5-shiny/{pokemon}.png"
+        image_link = SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
         embd.set_thumbnail(url=image_link)
 
     if time is not None:

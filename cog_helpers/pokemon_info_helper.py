@@ -21,7 +21,7 @@ async def get_stats_embed(pokemon):
         embd.description = "HP, Def, Sp.Def and Speed are `The more the better` stats \n"
         embd.add_field(name="Stats", value="```{stats}```".format(stats=cached_stats_data[pokemon]), inline=False)
 
-        image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{pokemon.lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
+        image_link = config.NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon.lower())
         embd.set_thumbnail(url=image_link)
 
         embd.set_footer(text="Missing stats for a potentially good pokemon? Report it at official server.")
@@ -52,7 +52,7 @@ async def get_moveset_embed(poke):
         embd.title = "{poke}'s Moveset".format(poke=poke.capitalize())
         embd.description = "```{ms}```".format(ms=cached_moveset_data[poke])
 
-        image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{poke.lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
+        image_link = config.NON_SHINY_LINK_TEMPLATE.format(pokemon=poke.lower())
         embd.set_thumbnail(url=image_link)
 
         embd.set_footer(text="Missing moveset for a potentially good pokemon? Report it at official server.")
@@ -79,7 +79,7 @@ async def get_nature_embed(poke: str):
         embd.description = f"```{nature}```"
         embd.color = config.NORMAL_COLOR
 
-        image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{poke.lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
+        image_link = config.NON_SHINY_LINK_TEMPLATE.format(pokemon=poke.lower())
         embd.set_thumbnail(url=image_link)
 
         embd.set_footer(text="Missing nature for a potentially good pokemon? Report it at official server.")
@@ -177,7 +177,7 @@ async def get_weakness_embed(params):
             inline=False
         )
 
-        image_link = f"https://play.pokemonshowdown.com/sprites/gen5/{params[0].lower()}.png".replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
+        image_link = config.NON_SHINY_LINK_TEMPLATE.format(pokemon=params[0].lower()).replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
 
         if type_input is False:
             embed.set_thumbnail(url=image_link)

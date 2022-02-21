@@ -30,6 +30,10 @@ THEFK_EMOJI = "<:thefk:929683678890713108>"
 ALERT_EMOJI = "<:alert:940589741714317332>"
 PLS_EMOJI = ""
 
+# Dex links
+NON_SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5/{pokemon}.png"
+SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5-shiny/{pokemon}.png"
+
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"
 STATS_FILE_LOCATION = "data/stats.json"
