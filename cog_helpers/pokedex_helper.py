@@ -27,11 +27,18 @@ class PokeData:
 # returns the data of pokemon fetched from api
 async def get_poke_by_id(poke_id):
 
+    is_shiny = False
+
     if poke_id == "":
         return None
     else:
         if type(poke_id) is not int:
             poke_id = poke_id.lower()
+
+            # check for shiny query
+            if poke_id.endswith("-shiny"):
+                is_shiny = True
+                poke_id = poke_id.removesuffix("-shiny")
 
     try:
         poke_id = cache_manager.cached_alt_name_data[poke_id]
@@ -91,7 +98,10 @@ async def get_poke_by_id(poke_id):
             break
 
     # get image_link
-    poke.image_link = general_data["sprites"]["front_default"]
+    if not is_shiny:
+        poke.image_link = general_data["sprites"]["front_default"]
+    else:
+        poke.image_link = general_data["sprites"]["front_shiny"]
 
     # get stats
     stats = general_data["stats"]
