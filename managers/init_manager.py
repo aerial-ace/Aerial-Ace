@@ -17,7 +17,7 @@ async def register_guild(bot : commands.Bot, guild : discord.Guild):
     server_duplicates = mongo_manager.manager.get_documents_length("servers", {"server_id" : server_id})
     
     if server_duplicates <= 0:
-        entry = {"server_id" : server_id, "server_name" : server_name, "prefix" : "-aa "}
+        entry = {"server_id" : server_id, "server_name" : server_name, "starboard" : "0"}
         mongo_manager.manager.add_data("servers", entry)
 
     # create empty tags entry
