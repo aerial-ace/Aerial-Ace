@@ -65,15 +65,14 @@ async def get_random_team(tier:str) -> list:
         if MAX_TEAM_SIZE - i - 1 == 0:                                                              
             random_score_tier = max_possible_range * 10                                             # if this is the last iteration, just pick from the highest tier as only this tier can maintain a perfect score
         else:
-            rand = random.randint(1, max_possible_range)
-            random_score_tier = valid_score_tiers[rand - 1]            # pick a random score tier from all the valid tiers
+            random_score_tier = valid_score_tiers[random.randint(1, max_possible_range) - 1]        # pick a random score tier from all the valid tiers
 
-        random_tier = tier_duelish_pokemons[str(random_score_tier)]                                        # get the pokemons of that random tier
+        random_tier = tier_duelish_pokemons[str(random_score_tier)]                                 # get the pokemons of that random tier
         random_pokemon_from_random_tier = random_tier[random.randint(0, len(random_tier) - 1)]      # get a random pokemon from that random tier
         while random_pokemon_from_random_tier in team:                                              # if this pokemon is already in the team, then look for another pokemon from the same tier
             random_pokemon_from_random_tier = random_tier[random.randint(0, len(random_tier) - 1)]  # get a random pokemon from that random tier
 
-        team.append(random_pokemon_from_random_tier)                                                # add that random pokemon to the team
+        team.append(random_pokemon_from_random_tier + " - " + random_score_tier)                    # add that random pokemon to the team       
         current_score = current_score + int(random_score_tier)                                      # update the score by subtacting the score of the current pokemon
 
     return team
