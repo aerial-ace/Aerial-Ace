@@ -1,10 +1,8 @@
 import discord
 
-import config
+from config import TYPES, NON_SHINY_LINK_TEMPLATE, NORMAL_COLOR, ERROR_COLOR
 from managers import cache_manager
 from cog_helpers import general_helper
-
-all_types = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water"]
 
 # get stats
 async def get_stats_embed(pokemon):
@@ -14,14 +12,14 @@ async def get_stats_embed(pokemon):
     cached_stats_data = cache_manager.cached_stats_data
 
     all_pokemon = list(cached_stats_data.keys())
-    embd.colour = config.NORMAL_COLOR
+    embd.colour = NORMAL_COLOR
 
     if pokemon in all_pokemon:
         embd.title = "{poke}'s Stats".format(poke=pokemon.capitalize())
         embd.description = "HP, Def, Sp.Def and Speed are `The more the better` stats \n"
         embd.add_field(name="Stats", value="```{stats}```".format(stats=cached_stats_data[pokemon]), inline=False)
 
-        image_link = config.NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon.lower())
+        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon.lower())
         embd.set_thumbnail(url=image_link)
 
         embd.set_footer(text="Missing stats for a potentially good pokemon? Report it at official server.")
@@ -46,13 +44,13 @@ async def get_moveset_embed(poke):
     cached_moveset_data = cache_manager.cached_moveset_data
 
     all_pokemon = list(cached_moveset_data.keys())
-    embd.colour = config.NORMAL_COLOR
+    embd.colour = NORMAL_COLOR
 
     if poke in all_pokemon:
         embd.title = "{poke}'s Moveset".format(poke=poke.capitalize())
         embd.description = "```{ms}```".format(ms=cached_moveset_data[poke])
 
-        image_link = config.NON_SHINY_LINK_TEMPLATE.format(pokemon=poke.lower())
+        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=poke.lower())
         embd.set_thumbnail(url=image_link)
 
         embd.set_footer(text="Missing moveset for a potentially good pokemon? Report it at official server.")
@@ -77,9 +75,9 @@ async def get_nature_embed(poke: str):
         nature = cache_manager.cached_nature_data[poke]
         embd.title = "{poke}'s nature".format(poke=poke.capitalize())
         embd.description = f"```{nature}```"
-        embd.color = config.NORMAL_COLOR
+        embd.color = NORMAL_COLOR
 
-        image_link = config.NON_SHINY_LINK_TEMPLATE.format(pokemon=poke.lower())
+        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=poke.lower())
         embd.set_thumbnail(url=image_link)
 
         embd.set_footer(text="Missing nature for a potentially good pokemon? Report it at official server.")
@@ -90,7 +88,7 @@ async def get_nature_embed(poke: str):
 
         embd.set_footer(text="Missing nature for a potentially good pokemon? Report it at official server.")
 
-        embd.color = config.ERROR_COLOR
+        embd.color = ERROR_COLOR
     
     return embd
 
@@ -99,17 +97,17 @@ async def get_weakness_embed(params):
     params = [p.lower() for p in params]
 
     # determine the type of input
-    type_input = (True if params[0] in all_types else False)
+    type_input = (True if params[0] in TYPES else False)
 
     # return if input error
     if type_input:
         for t in params:
-            if t.lower() not in all_types:
-                reply = await general_helper.get_info_embd(title="Breh, whats this?", desc="Input Error, either give a valid type set or a valid pokemon name",color=config.ERROR_COLOR)
+            if t.lower() not in TYPES:
+                reply = await general_helper.get_info_embd(title="Breh, whats this?", desc="Input Error, either give a valid type set or a valid pokemon name",color=ERROR_COLOR)
                 return reply
     else:
         if len(params) > 1:
-            reply = await general_helper.get_info_embd(title="Breh, whats this?", desc="Input Error, either give a valid type set or a valid pokemon name",color=config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd(title="Breh, whats this?", desc="Input Error, either give a valid type set or a valid pokemon name",color=ERROR_COLOR)
             return reply
 
     # get types from the input
@@ -119,7 +117,7 @@ async def get_weakness_embed(params):
         else:
             types = params
     except KeyError as err:
-        return await general_helper.get_info_embd(title="Not Found Error!", desc="That pokemon was not found, try this ```-aa weak Emolga```", color=config.ERROR_COLOR, footer="Report missing weakness data of any pokemon at the official server when?")
+        return await general_helper.get_info_embd(title="Not Found Error!", desc="That pokemon was not found, try this ```-aa weak Emolga```", color=ERROR_COLOR, footer="Report missing weakness data of any pokemon at the official server when?")
 
     # get individual weakness per type
     individual_weakness = {}
@@ -131,7 +129,7 @@ async def get_weakness_embed(params):
     overall_weakness = {"bug": 1, "dark": 1, "dragon": 1, "electric": 1, "fairy": 1, "fighting": 1, "fire": 1, "flying": 1, "ghost": 1, "grass": 1, "ground": 1, "ice": 1, "normal": 1, "poison": 1, "psychic": 1, "rock": 1, "steel": 1, "water": 1}
 
     for i in list(individual_weakness.keys()):
-        for j in all_types:
+        for j in TYPES:
             overall_weakness[j] = overall_weakness[j] * individual_weakness[i][j]
 
     # divide the overall weaknesses into tiers
@@ -177,7 +175,7 @@ async def get_weakness_embed(params):
             inline=False
         )
 
-        image_link = config.NON_SHINY_LINK_TEMPLATE.format(pokemon=params[0].lower()).replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
+        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=params[0].lower()).replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
 
         if type_input is False:
             embed.set_thumbnail(url=image_link)
