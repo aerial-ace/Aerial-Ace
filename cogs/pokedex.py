@@ -33,15 +33,5 @@ class PokeDex(commands.Cog):
         else:
             await ctx.reply(error)
 
-    """View random pokemon"""
-
-    @commands.guild_only()
-    @commands.command(name="random_poke", aliases=["rp"])
-    async def random_poke(self, ctx):
-        poke_data = await pokedex_helper.get_random_poke()
-        reply = await pokedex_helper.get_random_pokemon_embed(poke_data)
-
-        await ctx.send(embed=reply)
-
 def setup(bot):
     bot.add_cog(PokeDex(bot))

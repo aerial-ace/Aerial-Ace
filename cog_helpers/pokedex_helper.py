@@ -3,11 +3,12 @@ import requests
 import json
 import random
 
-import config
+from config import NORMAL_COLOR, ERROR_COLOR, TYPES
 from managers import cache_manager
 from cog_helpers import general_helper
 
-# data structure used to store pokemon data
+"""data structure used to store pokemon data"""
+
 class PokeData:
 
     p_id = 0
@@ -24,7 +25,8 @@ class PokeData:
     p_evolution_chain = ""
     p_rarity = ""
 
-# returns the data of pokemon fetched from api
+"""returns the data of pokemon fetched from api"""
+
 async def get_poke_by_id(poke_id):
 
     is_shiny = False
@@ -140,45 +142,15 @@ async def get_poke_by_id(poke_id):
 
     return poke
 
-# for getting a random pokemon
-async def get_random_poke():
+"""returns the dex embed from a pokemon's id or name"""
 
-    rand_pokemon_id = random.randint(1, 898)
-
-    poke = await get_poke_by_id(rand_pokemon_id)
-
-    return poke
-
-# returns the random pokemon embed 
-async def get_random_pokemon_embed(poke_data):
-
-    embd = discord.Embed(color=config.NORMAL_COLOR)
-    embd.title = "**{0} : {1}**".format(poke_data.p_id, poke_data.p_name)
-
-    description = general_helper.wrap_text(40, poke_data.p_info)
-    embd.description = description
-    embd.add_field(
-        name="Region",
-        value=f"{poke_data.p_region}",
-        inline=True
-    )
-    embd.add_field(
-        name="Rarity",
-        value=f"{poke_data.p_rarity}",
-        inline=True
-    )
-    embd.set_image(url=poke_data.image_link)
-
-    return embd
-
-# returns the dex embed from a pokemon's id or name
 async def get_dex_entry_embed(poke_data):
     max_character_width = 40
 
     if poke_data is None:
-        return general_helper.get_info_embd("Breh, Whats this?", "> Provide a pokemon name like ```-aa dex aron```", color=config.ERROR_COLOR)
+        return general_helper.get_info_embd("Breh, Whats this?", "> Provide a pokemon name like ```-aa dex aron```", color=ERROR_COLOR)
 
-    embd = discord.Embed(color=config.NORMAL_COLOR)
+    embd = discord.Embed(color=NORMAL_COLOR)
     embd.title = "**{0} : {1}**".format(poke_data.p_id, poke_data.p_name)
 
     description = general_helper.wrap_text(max_character_width, poke_data.p_info)
@@ -232,3 +204,4 @@ async def get_dex_entry_embed(poke_data):
         embd.set_footer(text=f"Rarity : {poke_data.p_rarity}")
 
     return embd
+
