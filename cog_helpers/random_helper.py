@@ -72,7 +72,7 @@ async def get_random_team(tier:str) -> list:
         while random_pokemon_from_random_tier in team:                                              # if this pokemon is already in the team, then look for another pokemon from the same tier
             random_pokemon_from_random_tier = random_tier[random.randint(0, len(random_tier) - 1)]  # get a random pokemon from that random tier
 
-        team.append(random_pokemon_from_random_tier + " - " + random_score_tier)                    # add that random pokemon to the team       
+        team.append(random_pokemon_from_random_tier + " - " + str(random_score_tier))               # add that random pokemon to the team       
         current_score = current_score + int(random_score_tier)                                      # update the score by subtacting the score of the current pokemon
 
     return team
@@ -93,7 +93,7 @@ async def get_random_team_embed(tier:str) -> Embed:
         inline=True
     )
 
-    team_str = "\n".join(team).upper()
+    team_str = "\n".join(team)
     embd.add_field(
         name="Team",
         value=team_str,
