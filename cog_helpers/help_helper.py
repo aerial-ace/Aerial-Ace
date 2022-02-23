@@ -3,12 +3,17 @@ from discord import Embed
 import config
 from cog_helpers import general_helper
 
-all_categories = ["dex", "info", "battle", "tag", "fun", "misc", "starboard"]
+all_categories = ["dex", "random_misc", "info", "battle", "tag", "fun", "misc", "starboard"]
 
 all_commands = {
     "dex" : [
-        "`{prefix}dex <PokemonName>` displays the dex entry of the pokemon.",
+        "`{prefix}dex <PokemonName>` displays the dex entry of the pokemon."
+    ],
+    "random_misc" : [
         "`{prefix}random_poke[rp]` displays a random pokemon with **some** info about it.",
+        "`{prefix}random_team[rand_team]` displays a random team of duelish pokemons.",
+        "`{prefix}random_matchup[rand_matchup]` displays a random matchup of duelish pokemons",
+        "`{prefix}random_type[rand_type]` displays a random type for monotype battles"
     ],
     "info" : [
         "`{prefix}stats <PokemonName>` displays the must have stats for dueling of the pokemon.",
@@ -80,7 +85,7 @@ async def get_category_help_embed(ctx, category) -> Embed:
         embd.description = "All the commands in this category"
         embd.add_field(
             name="Commands : ",
-            value="\n".join(cmds),
+            value="\n\n".join(cmds),
             inline=False
         )
 
