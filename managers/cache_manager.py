@@ -10,10 +10,11 @@ cached_rarity_data = None
 cached_nature_data = None
 cached_type_data = None
 cached_weakness_data = None
+cached_duelish_data = None
 
 # caches the data
 async def cache_data():
-    global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data, cached_weakness_data, cached_type_data
+    global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data, cached_weakness_data, cached_type_data, cached_duelish_data
 
     cached_stats_data = get_all_stats()
     cached_moveset_data = get_all_moveset()
@@ -22,6 +23,7 @@ async def cache_data():
     cached_nature_data = get_all_nature_data()
     cached_type_data = get_all_type_data()
     cached_weakness_data = get_all_weakness_data()
+    cached_duelish_data = get_all_duelish_data()
 
 # returns all the stats from stats file
 def get_all_stats():
@@ -70,3 +72,9 @@ def get_all_weakness_data():
         weakness_data = json.loads(weakness_file.read())
         
         return weakness_data
+
+def get_all_duelish_data():
+    with open(config.DUELISH_POKEMON_FILE_LOCATION, "r") as duelish_file:
+        duelish_data = json.loads(duelish_file.read())
+
+        return duelish_data

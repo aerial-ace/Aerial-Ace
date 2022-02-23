@@ -29,6 +29,10 @@ IMPORTANT_EMOJI = "<a:Important:940582149797601391>"
 THEFK_EMOJI = "<:thefk:929683678890713108>"
 ALERT_EMOJI = "<:alert:940589741714317332>"
 PLS_EMOJI = ""
+COIN_HEADS_EMOJI = "<:heads:946027174526353448>"
+COIN_TAILS_EMOJI = "<:tails:946027156985757746>"
+
+TYPES = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water"]
 
 # Dex links
 NON_SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5/{pokemon}.png"
@@ -46,6 +50,7 @@ RARITY_FILE_LOCATION = "data/poke_rarity.json"
 NATURE_FILE_LOCATION = "data/nature.json"
 TYPE_FILE_LOCATION = "data/type_data.json"
 WEAKNESS_FILE_LOCATION = "data/weakness_data.json"
+DUELISH_POKEMON_FILE_LOCATION = "data/duelish_pokemons.json"
 
 # colors
 NORMAL_COLOR = discord.Color.blue()
