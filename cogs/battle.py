@@ -73,6 +73,7 @@ class BattleSystem(commands.Cog):
 
     @commands.guild_only()
     @commands.command(name="battle_remove", aliases=["br"])
+    @commands.has_permissions(administrator=True)
     async def battle_remove(self, ctx, user : Member):
         reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user)
         await ctx.send(reply)
@@ -82,11 +83,14 @@ class BattleSystem(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this```{ctx.prefix}br @dumb_guy_69```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
+        elif isinstance(error, commands.errors.MissingPermissions):
+            await ctx.reply("Be an admin when :/")
         else:
             await ctx.send(error)
 
     @commands.guild_only()
     @commands.command(name="battle_remove_id", aliases=["brid"])
+    @commands.has_permissions(administrator=True)
     async def battle_remove_id(self, ctx, user_id:str):
         reply = await battle_helper.remove_user_from_battleboard_id(ctx.guild.id, user_id)
         await ctx.send(reply)
@@ -96,6 +100,8 @@ class BattleSystem(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user_id as a parameter. Like this```{ctx.prefix}brid 716390085896962058```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
+        elif isinstance(error, commands.errors.MissingPermissions):
+            await ctx.reply("Be an admin when :/")
         else:
             await ctx.send(error)
 
