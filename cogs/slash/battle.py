@@ -29,13 +29,25 @@ class BattleSystemSlash(commands.Cog):
 
     """Remove user from battle board"""
 
-    @slash_command(name="battle-remove", description="Remove user from battle board")
+    @slash_command(name="battle-remove", description="Remove user from battle board", guild_ids=[751076697884852389])
     async def battle_remove(self, ctx : ApplicationContext, user : Option(Member, description="User to remove", required=True)):
 
         if not ctx.author.guild_permissions.administrator :
             return await ctx.respond("Be Admin when? :/")
 
         reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user)
+
+        await ctx.respond(reply)
+
+    """Remove user from battle board using user id"""
+
+    @slash_command(name="battle-remove-id", description="Remove user from battle board using ids", guild_ids=[751076697884852389])
+    async def battle_remove_id(self, ctx : ApplicationContext, user_id : Option(str, description="User to remove", required=True)):
+
+        if not ctx.author.guild_permissions.administrator :
+            return await ctx.respond("Be Admin when? :/")
+
+        reply = await battle_helper.remove_user_from_battleboard_id(ctx.guild.id, user_id)
 
         await ctx.respond(reply)
 
