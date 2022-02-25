@@ -76,7 +76,7 @@ async def get_about_embed(ctx) -> discord.Embed:
     )
 
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Made with <3 by **DevGa.me**",
+        name=f"{config.BULLET_EMOJI}Made with  <3  by **Dev**",
         value=f"**Discord** : `DevGa.me#0176`\n**Github** : [Devanshu19]({config.GITHUB_PROFILE_LINK})",
         inline=False
     )
