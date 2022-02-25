@@ -165,6 +165,58 @@ async def remove_user(server_id, user):
 
     return f"> <@{user_id}> was removed from `{old_tag.capitalize()}` tag"
 
+# remove user from their tag
+async def remove_user_id(server_id, user_id : str):
+    
+    user_id = str(user_id)
+
+    query = {"server_id" : str(server_id)}
+
+    mongo_cursor = mongo_manager.manager.get_all_data("tags", query)
+
+    """
+    {
+        "server_id" : "10000000000000000",
+        "tags" : {
+            "tag_name" : ["hunter_id_1", "hunter_id_2"]
+        }
+    }
+    """
+
+    tag_data = mongo_cursor[0]["tags"]
+    tags = list(tag_data.keys())
+    users = list(tag_data.values())
+
+    old_tag = ""
+
+    for i in range(0, len(users)):
+        if str(user_id) in users[i] or f"/{user_id}" in users[i]:
+            old_tag = tags[i]
+            break
+
+    if old_tag == "":
+        return f"> <@{user_id}> is not assigned to any tag."
+    else:
+        # remove user from current tag
+        try:
+            tag_data[old_tag].remove(str(user_id))
+        except:
+            try:
+                tag_data[old_tag].remove(f"/{user_id}")
+            except:
+                pass
+            pass
+
+        # remove empty tags
+        if len(tag_data[old_tag]) <= 0:
+            del tag_data[old_tag]
+
+    updated_tag = {"tags" : tag_data}
+
+    mongo_manager.manager.update_all_data("tags", query, updated_tag)
+
+    return f"> <@{user_id}> was removed from `{old_tag.capitalize()}` tag"
+
 # set the afk status of the user
 async def set_afk(server_id : str, user_id : str, state : str):
 

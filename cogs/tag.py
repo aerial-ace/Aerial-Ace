@@ -114,7 +114,25 @@ class TagSystem(commands.Cog):
     @tag_remove.error
     async def tag_remove_helper(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a user_id as a parameter.\n```{ctx.prefix}tag_remove 716390085896962058```", ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a user as a parameter.\n```{ctx.prefix}tag_remove @shit_guy_69```", ERROR_COLOR)
+            await ctx.reply(embed=reply)
+        elif isinstance(error, commands.errors.MissingPermissions):
+            reply = "Be a Admin when?"
+            await ctx.reply(reply)
+        else:
+            await ctx.send(error)
+
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    @commands.command(name="tag_remove_id", aliases=["trid"])
+    async def tag_remove_id(self, ctx, user_id : str):
+        reply = await tag_helper.remove_user_id(ctx.guild.id, user_id)
+        await ctx.send(reply)
+
+    @tag_remove_id.error
+    async def tag_remove_id_helper(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a user_id as a parameter.\n```{ctx.prefix}tag_remove_id 716390085896962058```", ERROR_COLOR)
             await ctx.reply(embed=reply)
         elif isinstance(error, commands.errors.MissingPermissions):
             reply = "Be a Admin when?"
