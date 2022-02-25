@@ -7,7 +7,7 @@ import config
 
 # detect rare catch message
 async def rare_check(message : discord.Message):    
-    if str(message.author.id) != config.ADMIN_ID:
+    if str(message.author.id) != config.POKETWO_ID:
         return
 
     catch_info = await determine_rare_catch(message.content)
