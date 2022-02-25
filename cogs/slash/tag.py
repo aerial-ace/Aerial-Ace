@@ -100,7 +100,7 @@ class TagSystemSlash(commands.Cog):
     """For removing user from their tag using user id"""
 
     @slash_command(name="tag-remove-id", description="Remove a user from their tag using user id")
-    async def tag_remove(self, ctx : ApplicationContext, user_id : Option(str, description="Member to remove from tag", required=True)):
+    async def tag_remove_id(self, ctx : ApplicationContext, user_id : Option(str, description="Member to remove from tag", required=True)):
 
         if not ctx.author.guild_permissions.administrator:
             return await ctx.respond("Be Admin when? :/")
