@@ -4,8 +4,8 @@ import discord
 # Bot data
 TOKEN = os.environ["TOKEN"]
 TEST_TOKEN = os.environ["TEST_TOKEN"]
-ADMIN_ID = os.environ["ADMIN_ID"]
-POKETWO_ID = os.environ["POKETWO_ID"]
+ADMIN_ID = "734754644286504991"
+POKETWO_ID = "716390085896962058"
 
 # Mongo Data
 MONGO_URI = os.environ["MONGO"]
