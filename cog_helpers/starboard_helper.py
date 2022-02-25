@@ -2,7 +2,7 @@ from discord import TextChannel
 from discord import Embed, Message
 
 from managers import mongo_manager
-from config import NORMAL_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE
+from config import NORMAL_COLOR, RARE_CATCH_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE
 
 """Sets/Resets the starboard channel"""
 
@@ -59,11 +59,14 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
         pokemon = pokemon.removeprefix("galarian") + "-galar"
     elif pokemon.startswith("complete"):
         pokemon = pokemon.removeprefix("complete") + "-complete"
+    elif pokemon.startswith("10%"):
+        pokemon = pokemon.removeprefix("10%") + "-10"
 
-    embd = Embed(color=NORMAL_COLOR)
+    embd = Embed()
 
     if is_shiny is False:
-        embd.title = ":star2: Rare Catch Detected :star2:"
+        embd.title = ":star: Rare Catch Detected :star:"
+        embd.color = NORMAL_COLOR
 
         embd.description = f"**Trainer :** {user_name}\n"
         embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
@@ -72,7 +75,8 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
         embd.set_thumbnail(url=image_link)
     else:
-        embd.title = ":star2: Shiny Catch Detected :star2:"
+        embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
+        embd.color = RARE_CATCH_COLOR
 
         embd.description = f"**Trainer :** {user_name}\n"
         embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
