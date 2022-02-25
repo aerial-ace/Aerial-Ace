@@ -97,5 +97,16 @@ class TagSystemSlash(commands.Cog):
         reply = await tag_helper.remove_user(ctx.guild.id, user)
         await ctx.respond(reply)
 
+    """For removing user from their tag using user id"""
+
+    @slash_command(name="tag-remove-id", description="Remove a user from their tag using user id")
+    async def tag_remove(self, ctx : ApplicationContext, user_id : Option(str, description="Member to remove from tag", required=True)):
+
+        if not ctx.author.guild_permissions.administrator:
+            return await ctx.respond("Be Admin when? :/")
+
+        reply = await tag_helper.remove_user_id(ctx.guild.id, user_id)
+        await ctx.respond(reply)
+
 def setup(bot : commands.Bot):
     bot.add_cog(TagSystemSlash(bot))
