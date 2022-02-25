@@ -2,6 +2,7 @@ from discord import TextChannel
 from discord import Embed, Message
 
 from managers import mongo_manager
+from cog_helpers import general_helper
 from config import NORMAL_COLOR, RARE_CATCH_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE
 
 """Sets/Resets the starboard channel"""
@@ -103,10 +104,13 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
 
     # return if module is disabled
     if starboard_channel_id == "0":
-        return
+        return await general_helper.get_info_embd("No starboard channel set", "", NORMAL_COLOR)
 
     # get starboard embed
     reply = await get_starboard_embed(user_id, level, pokemon, message.jump_url, is_shiny, time)
 
     # send that starboard embed to the starboard channel
-    await message.guild.get_channel(int(starboard_channel_id)).send(embed=reply)
+    starboard_channel : TextChannel= message.guild.get_channel(int(starboard_channel_id))
+    await starboard_channel.send(embed=reply)
+
+    return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)

@@ -7,7 +7,7 @@ import config
 
 # detect rare catch message
 async def rare_check(message : discord.Message):    
-    if str(message.author.id) != config.POKETWO_ID:
+    if str(message.author.id) != config.ADMIN_ID:
         return
 
     catch_info = await determine_rare_catch(message.content)
@@ -28,7 +28,9 @@ async def rare_check(message : discord.Message):
     await message.channel.send(embed=reply)
 
     # Send to Starboard
-    await starboard_helper.send_starboard(str(message.guild.id), catch_info["user"], catch_info["level"], catch_info["pokemon"], message, is_shiny)
+    starboard_reply = await starboard_helper.send_starboard(str(message.guild.id), catch_info["user"], catch_info["level"], catch_info["pokemon"], message, is_shiny)
+
+    await message.channel.send(embed=starboard_reply)
 
 # check if any message is a rare catch message
 async def determine_rare_catch(msg):
