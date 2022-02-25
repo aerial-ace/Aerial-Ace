@@ -147,9 +147,42 @@ async def get_battle_leaderboard_embed(guild):
         return await general_helper.get_info_embd("Oops", "Error occured while showing battle leaderboards :|", config.ERROR_COLOR, "These errors were registered")
 
 # removes the user from the leaderboard
-async def remove_user_from_battleboard(server_id : int, user):
+async def remove_user_from_battleboard(server_id : int, user : discord.Member):
     server_id = str(server_id)
     user_id = str(user.id)
+
+    query = {"server_id" : server_id}
+
+    mongo_cursor = mongo_manager.manager.get_all_data("battles", query)
+
+    battle_data = mongo_cursor[0]["logs"]
+
+    """
+    {
+        "server_id" : "1000000",
+        "logs" : {
+            "user_id" : wins
+        }
+    }
+    """
+
+    users = list(battle_data.keys())
+
+    if user_id in users:
+        del(battle_data[user_id])
+    else:
+        return "> That user is not in the leaderboard"
+
+    updated_data = {"logs" : battle_data}
+
+    mongo_manager.manager.update_all_data("battles", query, updated_data)
+
+    return f"> <@{user_id}> was removed from the battle board."
+
+# removes the user from the leaderboard
+async def remove_user_from_battleboard_id(server_id : int, user_id:str):
+    server_id = str(server_id)
+    user_id = str(user_id)
 
     query = {"server_id" : server_id}
 

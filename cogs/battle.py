@@ -80,7 +80,21 @@ class BattleSystem(commands.Cog):
     @battle_remove.error
     async def battle_remove_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user_id as a parameter. Like this```{ctx.prefix}br 716390085896962058```", color=config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this```{ctx.prefix}br @dumb_guy_69```", color=config.ERROR_COLOR)
+            await ctx.reply(embed=reply)
+        else:
+            await ctx.send(error)
+
+    @commands.guild_only()
+    @commands.command(name="battle_remove_id", aliases=["brid"])
+    async def battle_remove_id(self, ctx, user_id:str):
+        reply = await battle_helper.remove_user_from_battleboard_id(ctx.guild.id, user_id)
+        await ctx.send(reply)
+
+    @battle_remove_id.error
+    async def battle_remove_handler(self, ctx, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user_id as a parameter. Like this```{ctx.prefix}brid 716390085896962058```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
         else:
             await ctx.send(error)
