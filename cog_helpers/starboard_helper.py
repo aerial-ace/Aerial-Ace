@@ -51,6 +51,7 @@ async def set_starboard(server_id : str, channel : TextChannel = None):
 async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, message_link : str, is_shiny:bool = False, time:str = None):
 
     pokemon = pokemon_id.replace(" ", "").lower()
+    pokemon = pokemon.replace("é", "e")     #This is because of you Flabébé >:|
     pokemon = pokemon.removeprefix("defense").removeprefix("attack").removeprefix("speed")
 
     # modify the id for alolan and galarian forms

@@ -72,6 +72,8 @@ async def determine_rare_catch(msg):
     while info_words[-1].isnumeric():
         info_words.remove(info_words[-1])
 
+    pokemon_name_words = []
+
     for i in range(len(info_words) -1, -1, -1):
         if info_words[i].isnumeric():
             catch_info["level"] = info_words[i]
