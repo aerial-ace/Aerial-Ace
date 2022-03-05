@@ -281,3 +281,33 @@ async def set_afk(server_id : str, user_id : str, state : str):
         mongo_manager.manager.update_all_data("tags", query, updated_data)
 
         return "> AFK removed, you will recieve pings now." 
+
+async def get_all_tags_embed(server : discord.Guild) -> discord.Embed:
+
+    embd = discord.Embed(title=f"All Tags in {server.name}", color=config.NORMAL_COLOR)
+ 
+    query = {"server_id" : str(server.id)}
+
+    cursor = mongo_manager.manager.get_all_data("tags", query)
+
+    data = cursor[0]
+
+    """
+    {
+        "server_id" : "751076697884852389",
+        "tags" : {
+            "tag" : ["user", "user"]
+        }
+    }
+    """
+
+    all_tags = data["tags"].keys()
+
+    embd.description = ""
+
+    for tag in all_tags:
+        embd.description += f"{tag.capitalize()} - "
+
+    embd.set_footer(text=f"This server has a total of {len(all_tags)} tags.")
+
+    return embd

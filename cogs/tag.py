@@ -161,5 +161,20 @@ class TagSystem(commands.Cog):
 
         await ctx.send(error)
 
+    """All tags present in the server"""
+    @commands.command(name="alltags")
+    @commands.guild_only()
+    async def view_all_tags(self, ctx:commands.Context):
+
+        reply = await tag_helper.get_all_tags_embed(ctx.guild)
+
+        await ctx.send(embed=reply)
+
+    @view_all_tags.error
+    async def view_all_tag_handler(self, ctx:commands.Context, error):
+
+        await ctx.send(error)
+
+
 def setup(bot):
     bot.add_cog(TagSystem(bot))

@@ -108,5 +108,13 @@ class TagSystemSlash(commands.Cog):
         reply = await tag_helper.remove_user_id(ctx.guild.id, user_id)
         await ctx.respond(reply)
 
+    """All tags in the server"""
+    @slash_command(name="alltags", description="View all tags in the server")
+    async def view_all_tags(self, ctx:ApplicationContext):
+
+        reply = await tag_helper.get_all_tags_embed(ctx.guild)
+
+        await ctx.respond(embed=reply)
+
 def setup(bot : commands.Bot):
     bot.add_cog(TagSystemSlash(bot))
