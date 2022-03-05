@@ -211,3 +211,16 @@ async def remove_user_from_battleboard_id(server_id : int, user_id:str):
     mongo_manager.manager.update_all_data("battles", query, updated_data)
 
     return f"> <@{user_id}> was removed from the battle board."
+
+async def clear_battleboard(server_id : str):
+
+    try:
+        query = {"server_id" : server_id}
+
+        updated_data = {"logs" : {}}
+
+        cursor = mongo_manager.manager.update_all_data("battles", query, updated_data)
+    except Exception as e:
+        return f"Error happened while performing this command ```{e}```"
+    else:
+        return "Battle board cleared successfully."

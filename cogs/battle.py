@@ -105,5 +105,16 @@ class BattleSystem(commands.Cog):
         else:
             await ctx.send(error)
 
+    @commands.guild_only()
+    @commands.command(name="battleboard_clear", aliases=["blbc", "blb_clear"])
+    @commands.has_permissions(administrator=True)
+    async def battle_leaderboard_clear(self, ctx:commands.Context):
+        reply = await battle_helper.clear_battleboard(str(ctx.guild.id))
+        await ctx.send(reply)
+
+    @battle_leaderboard_clear.error
+    async def battle_leaderboard_clear_handler(self, ctx, error):
+        await ctx.reply(error)
+
 def setup(bot):
     bot.add_cog(BattleSystem(bot))
