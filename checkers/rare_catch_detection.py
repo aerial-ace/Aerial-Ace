@@ -5,9 +5,10 @@ from cog_helpers import starboard_helper
 from managers import cache_manager
 import config
 
-# detect rare catch message
+"""detect rare catch message"""
+
 async def rare_check(message : discord.Message):    
-    if str(message.author.id) != config.POKETWO_ID:
+    if str(message.author.id) != config.ADMIN_ID:
         return
 
     catch_info = await determine_rare_catch(message.content)
@@ -19,10 +20,7 @@ async def rare_check(message : discord.Message):
     is_shiny = (True if catch_info["type"] == "shiny" else False)
 
     # get the rare catch details
-    if is_shiny:
-        reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], True)
-    else:
-        reply = await get_rare_catch_embd(message, catch_info["user"], catch_info["pokemon"], catch_info["level"], False)
+    reply = await get_rare_catch_embd(catch_info["user"], catch_info["pokemon"], catch_info["level"], is_shiny)
 
     # Send to current Channel
     await message.channel.send(embed=reply)
@@ -30,9 +28,11 @@ async def rare_check(message : discord.Message):
     # Send to Starboard
     starboard_reply = await starboard_helper.send_starboard(str(message.guild.id), catch_info["user"], catch_info["level"], catch_info["pokemon"], message, is_shiny)
 
+    # send feedback in the current channel
     await message.channel.send(embed=starboard_reply)
 
-# check if any message is a rare catch message
+"""check if any message is a rare catch message"""
+
 async def determine_rare_catch(msg):
 
     message = msg.replace("!", "").replace(".", "").replace("♂️", "").replace("♀️", "") # remove the shit
@@ -105,17 +105,18 @@ async def determine_rare_catch(msg):
 
     return catch_info
 
-# returns the embed containing the rare catch info
-async def get_rare_catch_embd(_message, _ping, _pokemon, _level, is_shiny:bool):
+"""returns the embed containing the rare catch info"""
+
+async def get_rare_catch_embd(_ping, _pokemon, _level, is_shiny:bool):
 
     embd = discord.Embed(colour=config.RARE_CATCH_COLOR)
 
     if is_shiny is not True:
-        embd.title = ":star2: Rare Catch Detected :star2:"
+        embd.title = ":star: Rare Catch Detected :star:"
         embd.description = f"{_ping} caught a level {_level} `{_pokemon.strip()}`\n"
         embd.set_image(url=config.JIRACHI_WOW)
     else:
-        embd.title = ":star2: Shiny Catch Detected :star2:"
+        embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
         embd.description = f"{_ping} caught a level {_level} **SHINY** `{_pokemon}`\n"
         embd.set_image(url=config.PIKA_SHOCK)
 

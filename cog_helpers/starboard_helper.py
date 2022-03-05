@@ -7,7 +7,7 @@ from config import NORMAL_COLOR, RARE_CATCH_COLOR, NON_SHINY_LINK_TEMPLATE, SHIN
 
 """Sets/Resets the starboard channel"""
 
-async def set_starboard(server_id : str, channel : TextChannel = None):
+async def set_starboard(server_id : str, channel : TextChannel = None) -> str:
 
     try:
         query = {"server_id" : server_id}
@@ -16,6 +16,7 @@ async def set_starboard(server_id : str, channel : TextChannel = None):
 
         server_data = cursor[0]
 
+        # return if already enabled or disabled
         if channel is not None:
             if server_data["starboard"] == str(channel.id):
                 return f"Starboard Channel is already set to {channel.mention}"
