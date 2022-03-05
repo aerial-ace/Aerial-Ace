@@ -53,7 +53,7 @@ class BattleSystemSlash(commands.Cog):
 
     """Clear Battle board at once"""
     
-    @slash_command(name="battleboard-clear", description="Clears the complete battleboard of the server", guild_ids=[751076697884852389])
+    @slash_command(name="battleboard-clear", description="Clears the complete battleboard of the server")
     async def clear_battleboard(self, ctx:ApplicationContext):
 
         reply = await battle_helper.clear_battleboard(str(ctx.guild_id))
