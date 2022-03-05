@@ -9,8 +9,12 @@ class StarboardSlash(commands.Cog):
 
     """Enable or Disable the starboard channel"""
 
-    @slash_command(name="starboard", description="Enable/Disable Starboard Channel", guild_ids=[751076697884852389])
+    @slash_command(name="starboard", description="Enable/Disable Starboard Channel")
     async def set_starboard(self, ctx:ApplicationContext, channel : Option(TextChannel, description="Channel where Rare Catches will be sent", required=False, default=None)):
+
+        if not ctx.author.guild_permissions.administrator:
+            return ctx.respond("Be an admin when :/")
+            
         reply = await starboard_helper.set_starboard(str(ctx.guild_id), channel)
         await ctx.respond(reply)
 
