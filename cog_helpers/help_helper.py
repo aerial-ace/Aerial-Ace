@@ -61,7 +61,7 @@ async def get_help_embed(ctx = None) -> Embed:
     embd.description = f"Send `{prefix}help <category>` where category can be one from these : "
     embd.add_field(
         name="Categories",
-        value="\n\n\n".join(all_categories),
+        value="\n".join(all_categories),
         inline=False
     )
 
@@ -88,7 +88,7 @@ async def get_category_help_embed(ctx, category) -> Embed:
     embd.description = "All the commands in this category"
     embd.add_field(
         name="Commands : ",
-        value="\n".join(cmds),
+        value="\n\n".join(cmds),
         inline=False
     )
 
