@@ -38,6 +38,7 @@ initial_slash_cogs = [
     "pokedex",
     "pokeinfo",
     "starboard",
+    "random_misc",
     "tag",
     "utility",
     "battle",
