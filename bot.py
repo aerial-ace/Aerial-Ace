@@ -1,5 +1,5 @@
 from discord.ext import commands
-from discord import Bot
+from discord import Bot, Intents
 
 from managers import cache_manager
 from managers import mongo_manager
@@ -12,11 +12,14 @@ from checkers import rare_catch_detection
 # determines whether to run the bot in local, or global mode
 is_test = False
 
+intents = Intents.default()
+intents.messages = True
+
 # for getting the prefix
 def prefix_callable(bot : Bot, message):
     return [f"<@{bot.user.id}> ", f"<@!{bot.user.id}> ", "-aa ", "aa."]
 
-bot = commands.Bot(command_prefix=prefix_callable, description="Aerial Ace", case_insensitive=True)
+bot = commands.Bot(command_prefix=prefix_callable, description="Aerial Ace", case_insensitive=True, intents=intents)
 bot.remove_command("help")
 
 initial_cogs = [
