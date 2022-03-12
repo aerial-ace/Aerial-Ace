@@ -5,7 +5,6 @@ import json
 from config import NORMAL_COLOR, ERROR_COLOR, TYPES
 from managers import cache_manager
 from cog_helpers import general_helper
-from views.LinkButton import LinkButton
 
 """data structure used to store pokemon data"""
 

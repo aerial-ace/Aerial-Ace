@@ -43,6 +43,8 @@ class PokeDex(commands.Cog):
         view = View()
         reply = await pokedex_helper.get_ability_embed(name)
 
+        view.add_item(Button(label="Learn More", url=f"https://smogon.com/dex/ss/abilities/{name}/", style=ButtonStyle.link))
+
         await ctx.send(embed=reply, view=view)
 
 
