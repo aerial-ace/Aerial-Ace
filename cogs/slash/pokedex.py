@@ -1,5 +1,6 @@
-import discord
 from discord.ext import commands
+from discord import ApplicationContext, ButtonStyle
+from discord.ui import View, Button
 from discord.commands import slash_command
 from discord.commands import Option
 
@@ -16,14 +17,15 @@ class PokedexSlash(commands.Cog):
 
         await ctx.respond(embed=reply)
 
-    """Random Pokemon Slash Command"""
+    """Get info about abilities"""
 
-    @slash_command(name="random_pokemon", description="Shows a randomly choosen pokemon")
-    async def random_pokemon(self, ctx):
-        poke = await pokedex_helper.get_random_poke()
-        reply = await pokedex_helper.get_random_pokemon_embed(poke)
+    @slash_command(name="ability", description="Detailes about abilities", guild_ids=[751076697884852389])
+    async def ability(self, ctx:ApplicationContext, name:Option(str, description="Name of the ability", required=True)):
+        reply = await pokedex_helper.get_ability_embed(name)
+        view = View()
+        view.add_item(Button(label="Learn More", url="https://smogon.com/dex/ss/abilities/{name}/", style=ButtonStyle.link))
 
-        await ctx.respond(embed=reply)
+        await ctx.respond(embed=reply, view=view)
 
 def setup(bot : commands.Bot):
     bot.add_cog(PokedexSlash())
