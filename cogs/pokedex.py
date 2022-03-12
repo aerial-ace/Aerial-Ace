@@ -1,4 +1,6 @@
 from discord.ext import commands
+from discord.ui import View, Button
+from discord import ButtonStyle
 
 import config
 from cog_helpers import pokedex_helper
@@ -10,7 +12,7 @@ class PokeDex(commands.Cog):
 
     """View dex entry of any pokemon"""
 
-    @commands.command()
+    @commands.command(name="dex", aliases=["d"])
     @commands.guild_only()
     async def dex(self, ctx, poke):
 
@@ -32,6 +34,17 @@ class PokeDex(commands.Cog):
             await ctx.reply(embed=reply)
         else:
             await ctx.reply(error)
+
+    """Check Abilities"""
+    @commands.command(name="ability", aliases=["ab"])
+    @commands.guild_only()
+    async def ability(self, ctx:commands.Context, name):
+        
+        view = View()
+        reply = await pokedex_helper.get_ability_embed(name)
+
+        await ctx.send(embed=reply, view=view)
+
 
 def setup(bot):
     bot.add_cog(PokeDex(bot))

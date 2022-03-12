@@ -1,11 +1,11 @@
 import discord
 import requests
 import json
-import random
 
 from config import NORMAL_COLOR, ERROR_COLOR, TYPES
 from managers import cache_manager
 from cog_helpers import general_helper
+from views.LinkButton import LinkButton
 
 """data structure used to store pokemon data"""
 
@@ -24,6 +24,13 @@ class PokeData:
     p_total_stats = 0
     p_evolution_chain = ""
     p_rarity = ""
+
+class AbilityData:
+
+    a_name : str = ""
+    a_desc_short : str = ""
+    a_desc : str = ""
+    a_gen : str = ""
 
 """returns the data of pokemon fetched from api"""
 
@@ -205,3 +212,48 @@ async def get_dex_entry_embed(poke_data):
 
     return embd
 
+def get_ability_data(ability:str) -> AbilityData:
+
+    data = AbilityData()
+
+    ability_link = f"https://pokeapi.co/api/v2/ability/{ability}"
+    ability_response = requests.get(url=ability_link)
+    ability_data = json.loads(ability_response.text)
+
+    data.a_name = ability_data["name"]
+    data.a_gen = (ability_data["generation"]["url"]).replace("https://pokeapi.co/api/v2/generation/", "").replace("/", "")
+
+    for entry in ability_data["flavor_text_entries"]:
+        if entry["language"]["name"] == "en":
+            data.a_desc_short = entry["flavor_text"]
+
+    for entry in ability_data["effect_entries"]:
+        if entry["language"]["name"] == "en":
+            data.a_desc = entry["effect"]
+
+    return data
+
+
+async def get_ability_embed(ability:str) -> discord.Embed:
+
+    ability_data = get_ability_data(ability)
+
+    embd = discord.Embed(title=ability_data.a_name.capitalize(), color=NORMAL_COLOR)
+
+    embd.description = "Ability Overview \n\n"
+
+    embd.description += f"**Generation** : {ability_data.a_gen}"
+
+    embd.add_field(
+        name="Description : ",
+        value=general_helper.wrap_text(100, ability_data.a_desc_short),
+        inline=False
+    )
+
+    embd.add_field(
+        name="Details : ",
+        value=ability_data.a_desc[0: 500] + " ...",
+        inline=False
+    )
+
+    return embd
