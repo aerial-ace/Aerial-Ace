@@ -1,5 +1,6 @@
 from discord.ext import commands
 from discord import Bot, Intents
+import discord
 
 from managers import cache_manager
 from managers import mongo_manager
@@ -62,6 +63,7 @@ async def on_ready():
     await mongo_manager.init_mongo(MONGO_URI, "aerialace")
     await cache_manager.cache_data()
     print(f"Logged in as {bot.user}")
+    print(discord.__version__)
 
 @bot.event
 async def on_message(message):
