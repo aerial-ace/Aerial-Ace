@@ -5,7 +5,7 @@ from managers import cache_manager
 from managers import mongo_manager
 from managers import init_manager
 from cogs import mail as mail_manager
-from config import TOKEN, MONGO_URI, TEST_TOKEN
+from config import TOKEN, MONGO_URI, TEST_TOKEN, ADMIN_ID
 
 from checkers import rare_catch_detection
 
@@ -19,7 +19,7 @@ intents.messages = True
 def prefix_callable(bot : Bot, message):
     return [f"<@{bot.user.id}> ", f"<@!{bot.user.id}> ", "-aa ", "aa."]
 
-bot = commands.Bot(command_prefix=prefix_callable, description="Aerial Ace", case_insensitive=True, intents=intents)
+bot = commands.Bot(command_prefix=prefix_callable, description="Botto", case_insensitive=True, intents=intents)
 bot.remove_command("help")
 
 initial_cogs = [

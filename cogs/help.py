@@ -11,6 +11,8 @@ class HelpCommand(commands.Cog):
     @commands.command(name="help", aliases=["h"])
     async def send_help(self, ctx, category=None):
 
+        print("Help Sent")
+
         if category is None:
             reply = await help_helper.get_help_embed(ctx)
             await ctx.send(embed=reply)

@@ -11,7 +11,7 @@ class RandomMiscSlash(commands.Cog):
 
     """Random Pokemon"""
 
-    @slash_command(name="random_pokemon", description="Shows a randomly choosen pokemon", guild_ids=[751076697884852389])
+    @slash_command(name="random_pokemon", description="Shows a randomly choosen pokemon")
     async def random_pokemon(self, ctx:ApplicationContext):
         poke = await random_helper.get_random_poke()
         reply = await random_helper.get_random_pokemon_embed(poke)
@@ -20,7 +20,7 @@ class RandomMiscSlash(commands.Cog):
 
     """Random Team"""
 
-    @slash_command(name="random-team", description="Returns a random team from the tier", guild_ids=[751076697884852389])
+    @slash_command(name="random-team", description="Returns a random team from the tier")
     async def random_team(self, ctx:ApplicationContext, tier:Option(str, description="Enter the tier like common, mega, rare", required=True)):
 
         reply = await random_helper.get_random_team_embed(tier)
@@ -29,7 +29,7 @@ class RandomMiscSlash(commands.Cog):
 
     """Random Matchup"""
 
-    @slash_command(name="random-matchup", description="Returns a random matchup from the tier", guild_ids=[751076697884852389])
+    @slash_command(name="random-matchup", description="Returns a random matchup from the tier")
     async def random_matchup(self, ctx:ApplicationContext, tier:Option(str, description="Enter the tier like common, mega, rare", required=True)):
 
         reply = await random_helper.get_random_matchup_embd(tier)
@@ -38,7 +38,7 @@ class RandomMiscSlash(commands.Cog):
 
     """Random Type"""
 
-    @slash_command(name="random-type", description="Returns a random type for random battling", guild_ids=[751076697884852389])
+    @slash_command(name="random-type", description="Returns a random type for random battling")
     async def random_type(self, ctx:ApplicationContext):
 
         random_type = TYPES[random.randint(0, len(TYPES) - 1)]
