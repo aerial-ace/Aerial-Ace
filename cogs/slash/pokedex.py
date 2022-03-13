@@ -5,6 +5,7 @@ from discord.commands import slash_command
 from discord.commands import Option
 
 from cog_helpers import pokedex_helper
+from config import ABILITY_LINK_TEMPLATE_SMOGON, POKEMON_LINK_TEMPLATE_SMOGON
 
 class PokedexSlash(commands.Cog):
 
@@ -15,15 +16,19 @@ class PokedexSlash(commands.Cog):
         poke = await pokedex_helper.get_poke_by_id(pokemon)
         reply = await pokedex_helper.get_dex_entry_embed(poke)
 
-        await ctx.respond(embed=reply)
+        view = View()
+        view.add_item(Button(label="Comp. Guide", url=POKEMON_LINK_TEMPLATE_SMOGON.format(pokemon=pokemon), style=ButtonStyle.link))
+
+        await ctx.respond(embed=reply, view=view)
 
     """Get info about abilities"""
 
     @slash_command(name="ability", description="Detailes about abilities")
     async def ability(self, ctx:ApplicationContext, name:Option(str, description="Name of the ability", required=True)):
         reply = await pokedex_helper.get_ability_embed(name)
+        
         view = View()
-        view.add_item(Button(label="Learn More", url="https://smogon.com/dex/ss/abilities/{name}/", style=ButtonStyle.link))
+        view.add_item(Button(label="Learn More", url=ABILITY_LINK_TEMPLATE_SMOGON.format(ability=name), style=ButtonStyle.link))
 
         await ctx.respond(embed=reply, view=view)
 

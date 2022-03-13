@@ -37,6 +37,8 @@ TYPES = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flyi
 # Dex links
 NON_SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5/{pokemon}.png"
 SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5-shiny/{pokemon}.png"
+POKEMON_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/pokemon/{pokemon}/"
+ABILITY_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/ability/{ability}/"
 
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"
