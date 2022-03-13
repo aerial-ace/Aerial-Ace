@@ -69,6 +69,9 @@ async def on_message(message):
     if message.author == bot.user :
         return
 
+    if message.content == "alola":
+        await message.channel.send("You said, ALola")
+
     # detect rare catches from the poketwo bot
     await rare_catch_detection.rare_check(message)
 
