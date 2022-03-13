@@ -33,8 +33,7 @@ class Presence(commands.Cog):
         await self.bot.wait_until_ready()
 
     async def set_presence(self):
-        #await self.bot.change_presence(activity=self.activity.__next__())
-        await self.bot.change_presence(activity=discord.Activity(name="Use Slash Commands if prefix dont work!", type=discord.ActivityType.playing, status=discord.Status.online))
+        await self.bot.change_presence(activity=self.activity.__next__())
 
 def setup(bot):
     bot.add_cog(Presence(bot))
