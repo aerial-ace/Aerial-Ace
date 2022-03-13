@@ -14,7 +14,7 @@ from checkers import rare_catch_detection
 is_test = False
 
 intents = Intents.default()
-intents.messages = True
+intents.message_content = True
 
 # for getting the prefix
 def prefix_callable(bot : Bot, message):
