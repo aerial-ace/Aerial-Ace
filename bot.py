@@ -63,7 +63,7 @@ async def on_ready():
     await mongo_manager.init_mongo(MONGO_URI, "aerialace")
     await cache_manager.cache_data()
     print(f"Logged in as {bot.user}")
-    print(discord.__version__)
+    print(f"Discord Version : {discord.__version__}")
 
 @bot.event
 async def on_message(message):

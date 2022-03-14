@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord.commands import slash_command, Option
 
 from cog_helpers import fun_helper
+from views.GeneralView import GeneralView
 
 class FunSystemSlash(commands.Cog):
     
@@ -16,7 +17,9 @@ class FunSystemSlash(commands.Cog):
             return
 
         reply = await fun_helper.get_kill_embed(ctx.author, target)
-        await ctx.respond(embed=reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.respond(embed=reply, view=view)
 
     """Hit someone"""
 
@@ -24,8 +27,9 @@ class FunSystemSlash(commands.Cog):
     async def hit(self, ctx : ApplicationContext, target : Option(Member, description="Member to hit", required=True)):
 
         reply = await fun_helper.get_hit_embed(ctx.author, target)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(embed=reply)
+        await ctx.respond(embed=reply, view=view)
        
     """Dance with/without someone"""
 
@@ -37,7 +41,9 @@ class FunSystemSlash(commands.Cog):
         else:
             embd = await fun_helper.get_dance_embed(ctx.author, target)
 
-        await ctx.respond(embed=embd)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.respond(embed=embd, view=view)
 
     """Pat someone"""
 
@@ -45,8 +51,9 @@ class FunSystemSlash(commands.Cog):
     async def pat(self, ctx : ApplicationContext, target : Option(Member, description="Member to pat", required=True)):
 
         reply = await fun_helper.get_pat_embed(ctx.author, target)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(embed=reply)
+        await ctx.respond(embed=reply, view=view)
 
     """Tease someone"""
 
@@ -54,8 +61,9 @@ class FunSystemSlash(commands.Cog):
     async def tease(self, ctx : ApplicationContext, target : Option(Member, description="Member to tease", required=True)):
 
         reply = await fun_helper.get_tease_embed(ctx.author, target)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(embed=reply)
+        await ctx.respond(embed=reply, view=view)
 
 def setup(bot : commands.Bot):
     bot.add_cog(FunSystemSlash())

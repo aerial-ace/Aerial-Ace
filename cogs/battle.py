@@ -1,9 +1,10 @@
 from discord import Member
 from discord.ext import commands
 
+import config
 from cog_helpers import general_helper
 from cog_helpers import battle_helper
-import config
+from views.GeneralView import GeneralView
 
 class BattleSystem(commands.Cog):
 
@@ -31,13 +32,17 @@ class BattleSystem(commands.Cog):
         else:
             return
 
-        await ctx.send(reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
 
     @log_battle.error
     async def log_battle_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requries user pings as a parameter. Like this :```{ctx.prefix}lb @Wumpus @Dumpus```", color=config.ERROR_COLOR)
-            await ctx.reply(embed=reply)
+            view = GeneralView(200, True, True, False, False)
+
+            await ctx.reply(embed=reply, view=view)
         else:
             await ctx.send(error)
 
@@ -47,7 +52,9 @@ class BattleSystem(commands.Cog):
     @commands.command(name="battle_lb", aliases=["blb"])
     async def battle_lb(self, ctx):
         reply = await battle_helper.get_battle_leaderboard_embed(ctx.guild)
-        await ctx.send(embed=reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
 
     @battle_lb.error
     async def battle_lb_handler(self, ctx, error):
@@ -60,10 +67,14 @@ class BattleSystem(commands.Cog):
     async def battle_score(self, ctx, user : Member = None):
         if user is None:
             reply = await battle_helper.get_battle_score(ctx.guild.id, ctx.author)
-            await ctx.send(reply)
+            view = GeneralView(200, True, True, False, False)
+
+            await ctx.send(embed=reply, view=view)
         else:
             reply = await battle_helper.get_battle_score(ctx.guild.id, user)
-            await ctx.send(reply)
+            view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
 
     @battle_score.error
     async def battle_score_handler(self, ctx, error):
@@ -76,30 +87,40 @@ class BattleSystem(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def battle_remove(self, ctx, user : Member):
         reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user)
-        await ctx.send(reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
 
     @battle_remove.error
     async def battle_remove_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this```{ctx.prefix}br @dumb_guy_69```", color=config.ERROR_COLOR)
-            await ctx.reply(embed=reply)
+            view = GeneralView(200, True, True, False, False)
+
+            await ctx.reply(embed=reply, view=view)
         elif isinstance(error, commands.errors.MissingPermissions):
             await ctx.reply("Be an admin when :/")
         else:
             await ctx.send(error)
+
+    """Battle Remove using id"""
 
     @commands.guild_only()
     @commands.command(name="battle_remove_id", aliases=["brid"])
     @commands.has_permissions(administrator=True)
     async def battle_remove_id(self, ctx, user_id:str):
         reply = await battle_helper.remove_user_from_battleboard_id(ctx.guild.id, user_id)
-        await ctx.send(reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
 
     @battle_remove_id.error
     async def battle_remove_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user_id as a parameter. Like this```{ctx.prefix}brid 716390085896962058```", color=config.ERROR_COLOR)
-            await ctx.reply(embed=reply)
+            view = GeneralView(200, True, True, False, False)
+
+            await ctx.send(embed=reply, view=view)
         elif isinstance(error, commands.errors.MissingPermissions):
             await ctx.reply("Be an admin when :/")
         else:
@@ -110,7 +131,9 @@ class BattleSystem(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def battle_leaderboard_clear(self, ctx:commands.Context):
         reply = await battle_helper.clear_battleboard(str(ctx.guild.id))
-        await ctx.send(reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
 
     @battle_leaderboard_clear.error
     async def battle_leaderboard_clear_handler(self, ctx, error):

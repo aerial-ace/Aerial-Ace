@@ -4,6 +4,7 @@ from discord.commands import slash_command, Option
 
 import config
 from cog_helpers import pokemon_info_helper
+from views.GeneralView import GeneralView
 
 class PokeInfoSlash(commands.Cog):
 
@@ -13,8 +14,9 @@ class PokeInfoSlash(commands.Cog):
     async def stats(self, ctx : ApplicationContext, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_stats_embed(pokemon)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(embed=reply)
+        await ctx.respond(embed=reply, view=view)
 
     """For getting best duel moveset"""
 
@@ -22,8 +24,9 @@ class PokeInfoSlash(commands.Cog):
     async def moveset(self, ctx : ApplicationContext, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_moveset_embed(pokemon)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(embed=reply)
+        await ctx.respond(embed=reply, view=view)
 
     """For getting the best duel nature"""
 
@@ -31,8 +34,9 @@ class PokeInfoSlash(commands.Cog):
     async def nature(self, ctx : ApplicationContext, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_nature_embed(pokemon)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(embed=reply)
+        await ctx.respond(embed=reply, view=view)
 
     """For getting the weakness"""
 
@@ -40,8 +44,9 @@ class PokeInfoSlash(commands.Cog):
     async def weakness(self, ctx : ApplicationContext, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_weakness_embed([pokemon])
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(embed=reply)
+        await ctx.respond(embed=reply, view=view)
 
 
     """For getting tierlists"""

@@ -1,9 +1,10 @@
 import discord
 from discord.ext import commands
 
+import config
 from cog_helpers import general_helper
 from cog_helpers import fun_helper
-import config
+from views.GeneralView import GeneralView
 
 class FunModule(commands.Cog):
 
@@ -20,7 +21,9 @@ class FunModule(commands.Cog):
 
         reply = await fun_helper.get_kill_embed(ctx.author, target)
 
-        await ctx.send(embed=reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
         
     @kill.error
     async def kill_handler(self, ctx, error):
@@ -39,7 +42,9 @@ class FunModule(commands.Cog):
 
 
         reply = await fun_helper.get_hit_embed(ctx.author, target)
-        await ctx.send(embed=reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
 
     @hit.error
     async def hit_handler(self, ctx, error):
@@ -60,7 +65,9 @@ class FunModule(commands.Cog):
         else:
             reply = await fun_helper.get_dance_embed(ctx.author, target)
 
-        await ctx.send(embed=reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
 
     @dance.error
     async def dance_handler(self, ctx, error):
@@ -73,7 +80,9 @@ class FunModule(commands.Cog):
     @commands.command(name="pat")
     async def pat(self, ctx, target : discord.Member):
         reply = await fun_helper.get_pat_embed(ctx.author, target)
-        await ctx.send(embed=reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
 
     @pat.error
     async def pat_handler(self, ctx, error):
@@ -90,7 +99,9 @@ class FunModule(commands.Cog):
     @commands.command(name="tease")
     async def tease(self, ctx, target : discord.Member):
         reply = await fun_helper.get_tease_embed(ctx.author, target)
-        await ctx.send(embed=reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
 
     @pat.error
     async def tease_handler(self, ctx, error):
@@ -107,7 +118,9 @@ class FunModule(commands.Cog):
     @commands.command(name="cry")
     async def cry(self, ctx : commands.Context):
         reply = await fun_helper.get_cry_embed(ctx.author)
-        await ctx.send(embed=reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
 
     @cry.error
     async def cry_handler(self, ctx : commands.Context, error):

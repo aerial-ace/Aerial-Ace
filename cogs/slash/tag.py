@@ -6,6 +6,7 @@ from config import ERROR_COLOR
 from cog_helpers import general_helper
 from cog_helpers import tag_helper
 from managers import cache_manager
+from views.GeneralView import GeneralView
 
 class TagSystemSlash(commands.Cog):
 
@@ -71,7 +72,9 @@ class TagSystemSlash(commands.Cog):
             return
         else:
             reply = await tag_helper.get_show_hunters_embd(tag, hunters)
-            await ctx.respond(embed=reply)
+            view = GeneralView(200, True, True, False, False)
+
+            await ctx.respond(embed=reply, view=view)
 
     """For toggling afk"""
 
@@ -113,8 +116,9 @@ class TagSystemSlash(commands.Cog):
     async def view_all_tags(self, ctx:ApplicationContext):
 
         reply = await tag_helper.get_all_tags_embed(ctx.guild)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(embed=reply)
+        await ctx.respond(embed=reply, view=view)
 
 def setup(bot : commands.Bot):
     bot.add_cog(TagSystemSlash(bot))

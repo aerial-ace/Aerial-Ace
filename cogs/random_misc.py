@@ -1,8 +1,9 @@
 import random
 from discord.ext import commands
 
-from cog_helpers import random_helper
 from config import TYPES
+from cog_helpers import random_helper
+from views.GeneralView import GeneralView
 
 class RandomMisc(commands.Cog):
     
@@ -13,8 +14,9 @@ class RandomMisc(commands.Cog):
     async def random_poke(self, ctx):
         
         reply = await random_helper.get_random_pokemon_embed()
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.send(embed=reply)
+        await ctx.send(embed=reply, view=view)
 
     """Get Random Team"""
 
@@ -22,8 +24,9 @@ class RandomMisc(commands.Cog):
     @commands.guild_only()
     async def get_random_team(self, ctx : commands.Context, tier):
         reply = await random_helper.get_random_team_embed(tier.lower())
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.reply(embed=reply)
+        await ctx.reply(embed=reply, view=view)
 
     @get_random_team.error
     async def get_random_team_handler(self, ctx : commands.Context, error):
@@ -38,8 +41,9 @@ class RandomMisc(commands.Cog):
     @commands.guild_only()
     async def get_random_matchup(self, ctx : commands.Context, tier):
         reply = await random_helper.get_random_matchup_embd(tier.lower())
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.reply(embed=reply)
+        await ctx.reply(embed=reply, view=view)
 
     @get_random_matchup.error
     async def get_random_matchup_handler(self, ctx:commands.Context, error):

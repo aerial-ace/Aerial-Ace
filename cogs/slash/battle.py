@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord.commands import slash_command, Option
 
 from cog_helpers import battle_helper
+from views.GeneralView import GeneralView
 
 class BattleSystemSlash(commands.Cog):
 
@@ -13,7 +14,9 @@ class BattleSystemSlash(commands.Cog):
 
         embd = await battle_helper.get_battle_leaderboard_embed(ctx.guild)
 
-        await ctx.respond(embed=embd)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.respond(embed=embd, view=view)
 
     """For viewing the battle score"""
 

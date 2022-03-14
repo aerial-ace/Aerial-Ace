@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord.commands import slash_command, Option
 
 from cog_helpers import help_helper
+from views.GeneralView import GeneralView
 
 class HelpSystemSlash(commands.Cog):
     
@@ -11,10 +12,14 @@ class HelpSystemSlash(commands.Cog):
 
         if category is None:
             reply = await help_helper.get_help_embed(None)
-            await ctx.respond(embed=reply)
+            view = GeneralView(200, True, True, True, True)
+
+            await ctx.respond(embed=reply, view=view)
         else:
             reply = await help_helper.get_category_help_embed(ctx=None, category=category.lower())
-            await ctx.respond(embed=reply)
+            view = GeneralView(200, True, True, True, True)
+
+            await ctx.respond(embed=reply, view=view)
 
 def setup(bot : commands.Bot):
     bot.add_cog(HelpSystemSlash())

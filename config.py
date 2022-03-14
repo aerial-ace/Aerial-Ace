@@ -19,9 +19,9 @@ SUGGESTION_LOG_CHANNEL_ID = 938352848448659466
 INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=277025647680&scope=bot%20applications.commands"
 AVATAR_LINK = "https://cdn.discordapp.com/avatars/908384747393286174/16ee31af1a88ab05809b1ea3bac3cc8f.png"
 SUPPORT_SERVER_LINK = "https://discord.gg/4mPdqevgsH"
-REPO_LINK = "https://github.com/Devanshu19/Aerial-Ace"
+REPO_LINK = "https://github.com/aerial-ace/Aerial-Ace/"
 GITHUB_PROFILE_LINK = "https://github.com/Devanshu19/"
-VOTE_LINK = "https://top.gg/bot/908384747393286174/"
+VOTE_LINK = "https://top.gg/bot/908384747393286174/vote/"
 
 # Emojis
 BULLET_EMOJI = "<a:arrow_arrow:939409283668410381>"
@@ -38,7 +38,7 @@ TYPES = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flyi
 NON_SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5/{pokemon}.png"
 SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5-shiny/{pokemon}.png"
 POKEMON_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/pokemon/{pokemon}/"
-ABILITY_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/ability/{ability}/"
+ABILITY_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/abilities/{ability}/"
 
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"

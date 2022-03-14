@@ -5,6 +5,7 @@ from config import ERROR_COLOR, WARNING_COLOR
 from cog_helpers import tag_helper
 from cog_helpers import general_helper
 from managers import cache_manager
+from views.GeneralView import GeneralView
 
 class TagSystem(commands.Cog):
     def __init__(self, bot) -> None:
@@ -53,7 +54,9 @@ class TagSystem(commands.Cog):
 
         if hunters is None:
             reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), WARNING_COLOR)
-            await ctx.send(embed=reply)
+            view = GeneralView(200, True, True, False, False)
+
+            await ctx.send(embed=reply, view=view)
             return
 
         number_of_hunters = len(hunters)
@@ -70,7 +73,9 @@ class TagSystem(commands.Cog):
     async def tag_ping_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a tag as a parameter.\n```{ctx.prefix}tag_ping Espurr```", ERROR_COLOR)
-            await ctx.reply(embed=reply)
+            view = GeneralView(200, True, True, False, False)
+
+            await ctx.reply(embed=reply, view=view)
         else:
             await ctx.send(error)
 
@@ -91,14 +96,17 @@ class TagSystem(commands.Cog):
             return
 
         reply = await tag_helper.get_show_hunters_embd(tag, hunters)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.send(embed=reply)
+        await ctx.send(embed=reply, view=view)
 
     @tag_show.error
     async def tag_show_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a tag as a parameter.\n```{ctx.prefix}tag_show Darumaka```", ERROR_COLOR)
-            await ctx.reply(embed=reply)
+            view = GeneralView(200, True, True, False, False)
+
+            await ctx.reply(embed=reply, view=view)
         else:
             await ctx.send(error)
 
@@ -115,7 +123,9 @@ class TagSystem(commands.Cog):
     async def tag_remove_helper(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a user as a parameter.\n```{ctx.prefix}tag_remove @shit_guy_69```", ERROR_COLOR)
-            await ctx.reply(embed=reply)
+            view = GeneralView(200, True, True, False, False)
+
+            await ctx.reply(embed=reply, view=view)
         elif isinstance(error, commands.errors.MissingPermissions):
             reply = "Be a Admin when?"
             await ctx.reply(reply)
@@ -133,7 +143,9 @@ class TagSystem(commands.Cog):
     async def tag_remove_id_helper(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a user_id as a parameter.\n```{ctx.prefix}tag_remove_id 716390085896962058```", ERROR_COLOR)
-            await ctx.reply(embed=reply)
+            view = GeneralView(200, True, True, False, False)
+
+            await ctx.reply(embed=reply, view=view)
         elif isinstance(error, commands.errors.MissingPermissions):
             reply = "Be a Admin when?"
             await ctx.reply(reply)
@@ -156,7 +168,9 @@ class TagSystem(commands.Cog):
     async def afk_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires `State` as a parameter. Like this```{ctx.prefix}afk on [off]```", color=ERROR_COLOR)
-            await ctx.reply(embed=reply)
+            view = GeneralView(200, True, True, False, False)
+
+            await ctx.reply(embed=reply, view=view)
             return
 
         await ctx.send(error)
@@ -167,8 +181,9 @@ class TagSystem(commands.Cog):
     async def view_all_tags(self, ctx:commands.Context):
 
         reply = await tag_helper.get_all_tags_embed(ctx.guild)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.send(embed=reply)
+        await ctx.send(embed=reply, view=view)
 
     @view_all_tags.error
     async def view_all_tag_handler(self, ctx:commands.Context, error):

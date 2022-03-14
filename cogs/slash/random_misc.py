@@ -4,8 +4,9 @@ from discord.commands import slash_command
 from discord.commands import Option
 import random
 
-from cog_helpers import random_helper
 from config import TYPES
+from cog_helpers import random_helper
+from views.GeneralView import GeneralView
 
 class RandomMiscSlash(commands.Cog):
 
@@ -15,8 +16,9 @@ class RandomMiscSlash(commands.Cog):
     async def random_pokemon(self, ctx:ApplicationContext):
         poke = await random_helper.get_random_poke()
         reply = await random_helper.get_random_pokemon_embed(poke)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(embed=reply)
+        await ctx.respond(embed=reply, view=view)
 
     """Random Team"""
 
@@ -24,8 +26,9 @@ class RandomMiscSlash(commands.Cog):
     async def random_team(self, ctx:ApplicationContext, tier:Option(str, description="Enter the tier like common, mega, rare", required=True)):
 
         reply = await random_helper.get_random_team_embed(tier)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(embed=reply)
+        await ctx.respond(embed=reply, view=view)
 
     """Random Matchup"""
 
@@ -33,8 +36,9 @@ class RandomMiscSlash(commands.Cog):
     async def random_matchup(self, ctx:ApplicationContext, tier:Option(str, description="Enter the tier like common, mega, rare", required=True)):
 
         reply = await random_helper.get_random_matchup_embd(tier)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(embed=reply)
+        await ctx.respond(embed=reply, view=view)
 
     """Random Type"""
 

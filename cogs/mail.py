@@ -3,6 +3,7 @@ from discord.ext import commands
 import random
 
 import config
+from views.GeneralView import GeneralView
 
 class MailModule(commands.Cog):
     @commands.guild_only()
@@ -25,11 +26,14 @@ async def process_mail(ctx):
         prob : int = -1
         roll = random.randint(0, 100)
 
+        view = GeneralView(200, True, True, False, False)
+
         if roll > 0 and roll < prob:
             embd = discord.Embed(title=f"{config.ALERT_EMOJI} Mail Box {config.ALERT_EMOJI}", color=config.NORMAL_COLOR)
             embd.description = f"{config.ALERT_EMOJI}Admins are requested to rerun the starboard command\n\n"
             embd.description += f"Check using `{ctx.prefix}mail` now"
-            await ctx.send(embed=embd)
+
+            await ctx.send(embed=embd, view=view)
 
 def setup(bot):
     mail_module = MailModule()
