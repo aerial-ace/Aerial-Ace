@@ -69,16 +69,16 @@ class BattleSystem(commands.Cog):
             reply = await battle_helper.get_battle_score(ctx.guild.id, ctx.author)
             view = GeneralView(200, True, True, False, False)
 
-            await ctx.send(embed=reply, view=view)
+            await ctx.send(reply, view=view)
         else:
             reply = await battle_helper.get_battle_score(ctx.guild.id, user)
             view = GeneralView(200, True, True, False, False)
 
-        await ctx.send(embed=reply, view=view)
+            await ctx.send(reply, view=view)
 
-    @battle_score.error
-    async def battle_score_handler(self, ctx, error):
-        await ctx.send(error)
+    # @battle_score.error
+    # async def battle_score_handler(self, ctx, error):
+    #     await ctx.send(error)
 
     """Remove user from battle leaderboard"""
 
@@ -89,7 +89,7 @@ class BattleSystem(commands.Cog):
         reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user)
         view = GeneralView(200, True, True, False, False)
 
-        await ctx.send(embed=reply, view=view)
+        await ctx.send(reply, view=view)
 
     @battle_remove.error
     async def battle_remove_handler(self, ctx, error):
@@ -97,7 +97,7 @@ class BattleSystem(commands.Cog):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this```{ctx.prefix}br @dumb_guy_69```", color=config.ERROR_COLOR)
             view = GeneralView(200, True, True, False, False)
 
-            await ctx.reply(embed=reply, view=view)
+            await ctx.reply(reply, view=view)
         elif isinstance(error, commands.errors.MissingPermissions):
             await ctx.reply("Be an admin when :/")
         else:
@@ -112,7 +112,7 @@ class BattleSystem(commands.Cog):
         reply = await battle_helper.remove_user_from_battleboard_id(ctx.guild.id, user_id)
         view = GeneralView(200, True, True, False, False)
 
-        await ctx.send(embed=reply, view=view)
+        await ctx.send(reply, view=view)
 
     @battle_remove_id.error
     async def battle_remove_handler(self, ctx, error):
@@ -126,6 +126,8 @@ class BattleSystem(commands.Cog):
         else:
             await ctx.send(error)
 
+    """Clear Battleboard at once"""
+
     @commands.guild_only()
     @commands.command(name="battleboard_clear", aliases=["blbc", "blb_clear"])
     @commands.has_permissions(administrator=True)
@@ -133,7 +135,7 @@ class BattleSystem(commands.Cog):
         reply = await battle_helper.clear_battleboard(str(ctx.guild.id))
         view = GeneralView(200, True, True, False, False)
 
-        await ctx.send(embed=reply, view=view)
+        await ctx.send(reply, view=view)
 
     @battle_leaderboard_clear.error
     async def battle_leaderboard_clear_handler(self, ctx, error):
