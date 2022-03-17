@@ -345,5 +345,15 @@
     "stakataka": "Adamant",
     "blacephalon": "Jolly",
     "zeraora": "Adamant",
-    "melmetal": "'_'"
+    "melmetal": "'_'",
+    "raticate-alola" : "Adamant",
+    "muk-alola": "Brave",
+    "persian-alola" : "Jolly",
+    "golem-alola": "Adamant",
+    "dugtrio-alola": "Jolly",
+    "ninetales-alola": "Timid",
+    "sandslash-alola": "Adamant",
+    "exeggutor-alola": "Brave",
+    "raichu-alola": "Timid",
+    "marowak-alola": "Jolly"
 }

@@ -346,5 +346,15 @@
 	"stakataka": "Iron Head | Rock Slide | Double-Edge | Rock Blast",
 	"blacephalon": "Shadow Ball | Fire Blast | Stored Power | Mind Blown",
 	"zeraora": "Plasma Fists | Close Combat | Discharge | Fake Out",
-	"melmetal": "'_'"
+	"melmetal": "'_'",
+	"raticate-alola":"Double Edge | Crunch | Sucker Punch | Quick Attack",
+	"muk-alola": "Belch | Gunk Shot | Crunch | Venom Drench",
+	"persian-alola": "Play Rough | Dark Pulse* | Power Gem | Night Slash*\n[* : Meowth-Alola]",
+	"golem-alola": "Heavy Slam | Stone Edge | Double-Edge | Thunder Punch",
+	"dugtrio-alola": "Earthquake | Iron Head | Sucker Punch | Night Slash",
+	"ninetales-alola": "Dazzling Gleam | Ice Beam | Blizzard* | Ice Shard\n[* : Vulpix-Alola]",
+	"sandslash-alola": "Blizzard* | Iron Head* | Icicle Crash | Slash\n[* : Sandshrew-Alola]",
+	"exeggutor-alola": "Leaf Storm | Egg Bomb | Wood Hammer | Dragon Hammer",
+	"raichu-alola": "Thunderbolt | Psychic | Quick Attack",
+	"marowak-alola": "Flare Blitz | Bonemerang | Shadow Bone | Thrash"
 }
