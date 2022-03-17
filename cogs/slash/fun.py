@@ -65,5 +65,15 @@ class FunSystemSlash(commands.Cog):
 
         await ctx.respond(embed=reply, view=view)
 
+    """Cry using gifs"""
+
+    @slash_command(name="cry", description="Cry, the pokemon way")
+    async def cry(self, ctx:ApplicationContext):
+
+        reply = await fun_helper.get_cry_embed(ctx.author)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.respond(embed=reply, view=view)
+
 def setup(bot : commands.Bot):
     bot.add_cog(FunSystemSlash())
