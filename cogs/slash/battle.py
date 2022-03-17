@@ -27,8 +27,9 @@ class BattleSystemSlash(commands.Cog):
             user = ctx.author
 
         reply = await battle_helper.get_battle_score(ctx.guild.id, user)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(reply)
+        await ctx.respond(reply, view=view)
 
     """Remove user from battle board"""
 
@@ -39,8 +40,9 @@ class BattleSystemSlash(commands.Cog):
             return await ctx.respond("Be Admin when? :/")
 
         reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(reply)
+        await ctx.respond(reply, view=view)
 
     """Remove user from battle board using user id"""
 
@@ -51,8 +53,9 @@ class BattleSystemSlash(commands.Cog):
             return await ctx.respond("Be Admin when? :/")
 
         reply = await battle_helper.remove_user_from_battleboard_id(ctx.guild.id, user_id)
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(reply)
+        await ctx.respond(reply, view=view)
 
     """Clear Battle board at once"""
     
@@ -60,8 +63,9 @@ class BattleSystemSlash(commands.Cog):
     async def clear_battleboard(self, ctx:ApplicationContext):
 
         reply = await battle_helper.clear_battleboard(str(ctx.guild_id))
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(reply)
+        await ctx.respond(reply, view=view)
 
 def setup(bot : commands.Bot):
     bot.add_cog(BattleSystemSlash())

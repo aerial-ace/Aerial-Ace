@@ -20,7 +20,7 @@ class PokeDex(commands.Cog):
         try:
             poke_data = await pokedex_helper.get_poke_by_id(poke)
         except:
-            reply = await general_helper.get_info_embd("Pokemon not found", f"Dex entry for id : `{poke}` was not found in the pokedex.\n Most uncommon ids follow this format : \n```-aa dex gallade-mega\n-aa dex meowstic-female\n-aa dex deoxys-defense\n-aa dex necrozma-dawn\n-aa dex calyrex-shadow-rider\n-aa dex cinderace-gmax```\nIf you still think this pokemon is missing, report it at official server", ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Pokemon not found", f"Dex entry for id : `{poke}` was not found in the pokedex.\n Most uncommon ids follow this format : \n```{ctx.prefix}dex marowak-alola\n{ctx.prefix}dex gallade-mega\n{ctx.prefix}dex meowstic-female\n{ctx.prefix}dex deoxys-defense\n{ctx.prefix}dex necrozma-dawn\n{ctx.prefix}dex calyrex-shadow-rider\n{ctx.prefix}dex cinderace-gmax```\nIf you still think this pokemon is missing, report it at official server", ERROR_COLOR)
             view = GeneralView(200)
 
             await ctx.send(embed=reply, view=view)
@@ -37,7 +37,7 @@ class PokeDex(commands.Cog):
     @dex.error
     async def dex_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd(title="Error!!", desc="Please provide a `Pokemon_Name` or `Pokemon_ID` as a parameter", footer="Try [dex necrozma-dawn", color=ERROR_COLOR)
+            reply = await general_helper.get_info_embd(title="Error!!", desc=f"Please provide a `Pokemon_Name` or `Pokemon_ID` as a parameter like```{ctx.prefix}dex minior```", color=ERROR_COLOR)
             await ctx.reply(embed=reply)
         else:
             await ctx.reply(error)

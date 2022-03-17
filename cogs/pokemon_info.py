@@ -23,7 +23,7 @@ class Pokemon_Info(commands.Cog):
     @stats.error
     async def stats_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", f"A pokemon name is required for this command. Try this ```{ctx.prefix}stats Solgaleo```", config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", f"A pokemon name is required for this command. Try this ```{ctx.prefix}stats Solgaleo\n{ctx.prefix}stats raichu-alola```", config.ERROR_COLOR)
             view = GeneralView(200, True, True, False, False)
 
             await ctx.send(embed=reply, view=view)
@@ -43,7 +43,7 @@ class Pokemon_Info(commands.Cog):
     @moveset.error
     async def moveset_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", f"A pokemon name is required for this command, try this ```{ctx.prefix}moveset Zekrom```", config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", f"A pokemon name is required for this command, try this ```{ctx.prefix}moveset Zekrom\n{ctx.prefix}moveset raichu-alola```", config.ERROR_COLOR)
             view = GeneralView(200, True, True, False, False)
 
             await ctx.send(embed=reply, view=view)
@@ -63,7 +63,7 @@ class Pokemon_Info(commands.Cog):
     @nature.error
     async def nature_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", f"A pokemon name is required for this command, try this ```{ctx.prefix}nature Nihilego```", config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", f"A pokemon name is required for this command, try this ```{ctx.prefix}nature Nihilego\n{ctx.prefix}nature raichu-alola```", config.ERROR_COLOR)
             view = GeneralView(200, True, True, False, False)
 
             await ctx.send(embed=reply, view=view)

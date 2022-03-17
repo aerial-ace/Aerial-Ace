@@ -34,7 +34,7 @@ class BattleSystem(commands.Cog):
 
         view = GeneralView(200, True, True, False, False)
 
-        await ctx.send(embed=reply, view=view)
+        await ctx.send(reply, view=view)
 
     @log_battle.error
     async def log_battle_handler(self, ctx, error):

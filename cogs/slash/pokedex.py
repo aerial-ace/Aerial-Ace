@@ -5,7 +5,7 @@ from discord.commands import slash_command
 from discord.commands import Option
 
 from cog_helpers import pokedex_helper
-from config import ABILITY_LINK_TEMPLATE_SMOGON, POKEMON_LINK_TEMPLATE_SMOGON
+from config import ABILITY_LINK_TEMPLATE_SMOGON, POKEMON_LINK_TEMPLATE_SMOGON, INVITE_LINK
 
 class PokedexSlash(commands.Cog):
 
@@ -18,6 +18,7 @@ class PokedexSlash(commands.Cog):
 
         view = View()
         view.add_item(Button(label="Comp. Guide", url=POKEMON_LINK_TEMPLATE_SMOGON.format(pokemon=pokemon), style=ButtonStyle.link))
+        view.add_item(Button(label="Invite", url=INVITE_LINK, style=ButtonStyle.link))
 
         await ctx.respond(embed=reply, view=view)
 
@@ -29,6 +30,7 @@ class PokedexSlash(commands.Cog):
         
         view = View()
         view.add_item(Button(label="Learn More", url=ABILITY_LINK_TEMPLATE_SMOGON.format(ability=name), style=ButtonStyle.link))
+        view.add_item(Button(label="Invite", url=INVITE_LINK, style=ButtonStyle.link))
 
         await ctx.respond(embed=reply, view=view)
 
