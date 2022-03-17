@@ -35,7 +35,9 @@ class TagSystemSlash(commands.Cog):
             return
 
         reply = await tag_helper.register_tag(ctx.guild.id, ctx.author, tag)
-        await ctx.respond(reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.respond(reply, view=view)
 
     """For pinging user assigned to tag"""
 
@@ -46,6 +48,7 @@ class TagSystemSlash(commands.Cog):
             return
 
         hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
+        view = GeneralView(200, True, True, False, False)
 
         if hunters is None:
             await ctx.respond(f"No one is assigned to `{tag}` tag.")
@@ -54,8 +57,8 @@ class TagSystemSlash(commands.Cog):
             pings = ""
             for hunter in hunters:
                 pings = pings + f"<@{hunter}> "
-            await ctx.respond(f"Pinging user assigned to `{tag}` tag.\n\n{pings}")
-            return
+
+            await ctx.respond(f"Pinging user assigned to `{tag}` tag.\n\n{pings}", view=view)
     
     """For viewing users assigned to tag"""
 
@@ -87,7 +90,9 @@ class TagSystemSlash(commands.Cog):
     async def afk(self, ctx : ApplicationContext, state : Option(str, "Pick a state", autocomplete=get_afk_state)):
 
         reply = await tag_helper.set_afk(str(ctx.guild.id), str(ctx.author.id), state)
-        await ctx.respond(reply)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.respond(reply, view=view)
 
     """For removing users from their tag"""
 
@@ -98,7 +103,9 @@ class TagSystemSlash(commands.Cog):
             return await ctx.respond("Be Admin when? :/")
 
         reply = await tag_helper.remove_user(ctx.guild.id, user)
-        await ctx.respond(reply)
+        view = GeneralView(200, True, True, False, False)
+        
+        await ctx.respond(reply, view=view)
 
     """For removing user from their tag using user id"""
 
@@ -109,7 +116,9 @@ class TagSystemSlash(commands.Cog):
             return await ctx.respond("Be Admin when? :/")
 
         reply = await tag_helper.remove_user_id(ctx.guild.id, user_id)
-        await ctx.respond(reply)
+        view = GeneralView(200, True, True, False, False)
+        
+        await ctx.respond(reply, view=view)
 
     """All tags in the server"""
     @slash_command(name="alltags", description="View all tags in the server")

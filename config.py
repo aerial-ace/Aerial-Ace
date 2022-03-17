@@ -64,6 +64,7 @@ RARE_CATCH_COLOR = discord.Color.gold()
 PIKA_WOW = "https://cdn.discordapp.com/attachments/911547825274388511/918840026094247976/pika_woo.png"
 JIRACHI_WOW = "https://cdn.discordapp.com/attachments/911547825274388511/918840025477681152/jirachi_wow.png"
 PIKA_SHOCK = "https://cdn.discordapp.com/attachments/911547825274388511/918840025746137158/pika_shock.png"
+NO_IMAGE = "https://i.imgur.com/avAapuP.png"
 
 TIER_LINK = {
     "rare" : "https://media.discordapp.net/attachments/793689115689353247/924912850953195520/IMG_0018.png",

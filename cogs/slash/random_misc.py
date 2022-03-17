@@ -46,8 +46,9 @@ class RandomMiscSlash(commands.Cog):
     async def random_type(self, ctx:ApplicationContext):
 
         random_type = TYPES[random.randint(0, len(TYPES) - 1)]
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(f"HMMMMM! You got `{random_type.capitalize()}` type :3")
+        await ctx.respond(f"HMMMMM! You got `{random_type.capitalize()}` type :3", view=view)
     
 
 def setup(bot:commands.Bot):

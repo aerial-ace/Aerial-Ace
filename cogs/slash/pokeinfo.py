@@ -61,8 +61,9 @@ class PokeInfoSlash(commands.Cog):
     async def tierlist(self, ctx : ApplicationContext, catagory : Option(str, description="Select Catagory", required=True, autocomplete=get_catagory)):
 
         tier_link = config.TIER_LINK[catagory]
+        view = GeneralView(200, True, True, False, False)
 
-        await ctx.respond(tier_link)
+        await ctx.respond(tier_link, view=view)
 
 def setup(bot : commands.Bot):
     bot.add_cog(PokeInfoSlash())

@@ -2,7 +2,7 @@ import discord
 import requests
 import json
 
-from config import NORMAL_COLOR, ERROR_COLOR, TYPES
+from config import NORMAL_COLOR, ERROR_COLOR, NO_IMAGE
 from managers import cache_manager
 from cog_helpers import general_helper
 
@@ -204,7 +204,9 @@ async def get_dex_entry_embed(poke_data):
     embd.add_field(name="Stats (Total : {total_stats})".format(total_stats=poke_data.p_total_stats), value=stats_string, inline=False)
 
     embd.description = description
-    embd.set_image(url=poke_data.image_link)
+
+    image_link = (poke_data.image_link if poke_data.image_link is not None else NO_IMAGE)
+    embd.set_image(url=image_link)
 
     if poke_data.p_rarity is not None:
         embd.set_footer(text=f"Rarity : {poke_data.p_rarity}")
