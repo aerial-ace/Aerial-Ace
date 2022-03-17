@@ -13,27 +13,30 @@ class MailModule(commands.Cog):
         """View all the mails in the mail box"""
 
         embd = discord.Embed(title="__Mail Box - Aerial Ace__", color=config.NORMAL_COLOR)
-        embd.description = f"{config.IMPORTANT_EMOJI} For Admins {config.IMPORTANT_EMOJI}\n\n"
+        view = GeneralView(200, True, True, False, False)
+        
+        embd.description = "__**New**__\n\n"
 
-        embd.description += f"Random Team Commands are here :tada:\nCheck using `-aa help random_misc`\n\n"
-        embd.description += f"{config.ALERT_EMOJI} Admins are requested to rerun the starboard command if they are using it {config.THEFK_EMOJI}"
+        embd.description += f"{config.BULLET_EMOJI}Movesets/Stats/Nature data for alolan pokemons is now available.\n"
 
-        await ctx.send(embed=embd)
+        embd.description += "\n__**Older**__\n\n"
+        embd.description += f"{config.BULLET_EMOJI}Admins are requested to reathorize the bot by click on the [invite link]({config.INVITE_LINK}) and then click on reauthorize after selecting the server. Its required to use slash commands in your server.\n"
+        embd.description += f"{config.BULLET_EMOJI}Rerun the starboard command if you are/want to use built-in powerfull starboard system.\n"
+
+        await ctx.send(embed=embd, view=view)
 
 # Mail reminder
 async def process_mail(ctx):
 
-        prob : int = -1
+        prob : int = 50
         roll = random.randint(0, 100)
-
-        view = GeneralView(200, True, True, False, False)
 
         if roll > 0 and roll < prob:
             embd = discord.Embed(title=f"{config.ALERT_EMOJI} Mail Box {config.ALERT_EMOJI}", color=config.NORMAL_COLOR)
-            embd.description = f"{config.ALERT_EMOJI}Admins are requested to rerun the starboard command\n\n"
-            embd.description += f"Check using `{ctx.prefix}mail` now"
+            embd.description = f"Alolan Pokemons are here"
+            embd.set_footer(text=f"Check using {ctx.prefix}mail")
 
-            await ctx.send(embed=embd, view=view)
+            await ctx.send(embed=embd)
 
 def setup(bot):
     mail_module = MailModule()
