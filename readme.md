@@ -19,7 +19,7 @@
   <b>Website : <a href="https://aerial-ace.github.io/">Aerial Ace</a></b>
 </p>
 
-### Features
+## Features
 
 * View Dex entry of any Pokémon.
 * View random Pokémon and read about them.
@@ -33,7 +33,12 @@
 * Rare catch detection System
 * Advanced Starboard System that works with/without togglemention.
 
-### Commands
+## Resources
+***Basic Bot Example*** : [Click Here](https://gist.github.com/EvieePy/d78c061a4798ae81be9825468fe146be)<br>
+***Basic Error Handler Example*** : [Click Here](https://gist.github.com/EvieePy/7822af90858ef65012ea500bcecf1612)<br>
+***Basic Music Bot Example*** : [Click Here](https://gist.github.com/EvieePy/ab667b74e9758433b3eb806c53a19f34)
+
+## Commands
 * `-aa roll <upper limit>` rolls a dice.
 * `-aa dex <pokemon name>` displays the Pokédex entry of the provided Pokémon.
 * `-aa kill @user` and `-aa hit @user` cz, why not :3
@@ -51,7 +56,7 @@
 * `-aa battle_lb` displays the battle leaderboard of the server.
 * `-aa starboard #channel` sets the 'channel' as the starboard channel.
 
-### Commands in action
+## Commands in action
 <div class="row">
   <div class="column">
     <img src="https://user-images.githubusercontent.com/66104268/151558075-81dbcec2-750d-456c-9c8e-46d59012f2e7.png" style="width:44%; height:auto;">
