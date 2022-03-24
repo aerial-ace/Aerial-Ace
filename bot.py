@@ -11,7 +11,7 @@ from config import TOKEN, MONGO_URI, TEST_TOKEN, ADMIN_ID
 from checkers import rare_catch_detection
 
 # determines whether to run the bot in local, or global mode
-is_test = False
+is_test = True
 
 intents = Intents.default()
 intents.message_content = True
@@ -28,6 +28,7 @@ initial_cogs = [
     "admin",
     "starboard",
     "help",
+    "smogon",
     "mail",
     "utility",
     "pokedex",
