@@ -6,6 +6,9 @@ class ErrorHandler(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx:commands.Context, error:commands.CommandError):
 
+        if hasattr(ctx.command, "on_error"):
+            return
+
         cog:commands.Cog = ctx.cog
 
         # return if cog has its own handler

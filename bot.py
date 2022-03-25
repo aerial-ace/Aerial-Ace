@@ -6,7 +6,7 @@ from managers import cache_manager
 from managers import mongo_manager
 from managers import init_manager
 from cogs import mail as mail_manager
-from config import TOKEN, MONGO_URI, TEST_TOKEN, ADMIN_ID
+from config import TOKEN, MONGO_URI, TEST_TOKEN
 
 from checkers import rare_catch_detection
 
