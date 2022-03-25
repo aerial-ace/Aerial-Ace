@@ -30,6 +30,7 @@ initial_cogs = [
     "help",
     "mail",
     "utility",
+    "error_handler",
     "pokedex",
     "pokemon_info",
     "random_misc",
@@ -84,10 +85,6 @@ async def on_message(message):
 async def after_command(ctx : commands.Context):
     if ctx.command.name != "help" and ctx.command.name != "mail":
         await mail_manager.process_mail(ctx)
-
-@property
-def starboard():
-    return bot.get_cog("Starboard").instance
 
 def main():
     for cog in initial_cogs:
