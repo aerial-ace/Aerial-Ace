@@ -39,8 +39,7 @@ class PokeDex(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd(title="Error!!", desc=f"Please provide a `Pokemon_Name` or `Pokemon_ID` as a parameter like```{ctx.prefix}dex minior```", color=ERROR_COLOR)
             await ctx.reply(embed=reply)
-        else:
-            await ctx.reply(error)
+        
 
     """Check Abilities"""
     @commands.command(name="ability", aliases=["ab"])
@@ -62,8 +61,7 @@ class PokeDex(commands.Cog):
             view = GeneralView(200, True, True, False, False)
             
             await ctx.reply(embed=reply, view=view)
-        else:
-            await ctx.reply(error)
+        
 
 
 def setup(bot):

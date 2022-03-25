@@ -6,7 +6,7 @@ from managers import cache_manager
 from managers import mongo_manager
 from managers import init_manager
 from cogs import mail as mail_manager
-from config import TOKEN, MONGO_URI, TEST_TOKEN, ADMIN_ID
+from config import TOKEN, MONGO_URI, TEST_TOKEN
 
 from checkers import rare_catch_detection
 
@@ -30,6 +30,7 @@ initial_cogs = [
     "help",
     "mail",
     "utility",
+    "error_handler",
     "pokedex",
     "pokemon_info",
     "random_misc",
@@ -84,10 +85,6 @@ async def on_message(message):
 async def after_command(ctx : commands.Context):
     if ctx.command.name != "help" and ctx.command.name != "mail":
         await mail_manager.process_mail(ctx)
-
-@property
-def starboard():
-    return bot.get_cog("Starboard").instance
 
 def main():
     for cog in initial_cogs:

@@ -19,8 +19,7 @@ class StarboardSystem(commands.Cog):
     async def starboard_handler(self, ctx : commands.Context, error):
         if isinstance(error, commands.errors.MissingPermissions):
             await ctx.reply("Be an Admin when :/")
-        else:
-            await ctx.reply(error)
+        
 
 def setup(bot : commands.Bot):
     bot.add_cog(StarboardSystem())

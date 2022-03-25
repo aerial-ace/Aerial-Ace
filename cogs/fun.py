@@ -30,8 +30,7 @@ class FunModule(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this : ```{ctx.prefix}kill @Pumpkaboo```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
-        else:
-            await ctx.reply(error)
+        
 
     """Hit someone by showing gifs"""
 
@@ -51,8 +50,7 @@ class FunModule(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this : ```{ctx.prefix}hit @Irrbis```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
-        else:
-            await ctx.reply(error)
+        
 
     """Dance with someone using gifs"""
 
@@ -89,8 +87,7 @@ class FunModule(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this : ```{ctx.prefix}pat @raupy```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
-        else:
-            await ctx.reply(error)
+        
 
     """Tease someone with gifs"""
 
@@ -108,8 +105,7 @@ class FunModule(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this : ```{ctx.prefix}pat @raupy```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
-        else:
-            await ctx.reply(error)
+        
 
     """Cry with gifs"""
 

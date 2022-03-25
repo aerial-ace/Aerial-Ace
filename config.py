@@ -31,6 +31,7 @@ ALERT_EMOJI = "<:alert:940589741714317332>"
 PLS_EMOJI = ""
 COIN_HEADS_EMOJI = "<:heads:946027174526353448>"
 COIN_TAILS_EMOJI = "<:tails:946027156985757746>"
+DEVELOPER_EMOJI = "<:developer:956852544666206238>"
 
 TYPES = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water"]
 

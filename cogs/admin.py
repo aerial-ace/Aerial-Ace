@@ -1,7 +1,9 @@
 from discord.ext import commands
+from discord import Embed
 from os import listdir
 
 from managers import mongo_manager
+from config import NORMAL_COLOR, DEVELOPER_EMOJI
 
 class AdminSystem(commands.Cog):
 
@@ -96,6 +98,77 @@ class AdminSystem(commands.Cog):
                 return f"Error occured while loading slash commands : {e}"
             else:
                 return "Slash cogs loaded successfully"
+
+    """Disable Command"""
+
+    @commands.command(name="disable", aliases=["disable_cmd"])
+    @commands.is_owner()
+    async def disable_command(self, ctx:commands.Context, cmd:str):
+        try:
+            bot:commands.Bot = ctx.bot
+            bot.get_command(cmd).enabled = False
+        except Exception as e:
+            await ctx.send(f"Error while trying to disable the command!\n {e}")
+        else:
+            await ctx.send(f"Command `{cmd}` was disabled successfully!")
+
+    """Enable Command"""
+
+    @commands.command(name="enable", aliases=["enable_cmd"])
+    @commands.is_owner()
+    async def enable_command(self, ctx:commands.Context, cmd:str):
+        try:
+            bot:commands.Bot = ctx.bot
+            bot.get_command(cmd).enabled = True
+        except Exception as e:
+            await ctx.send(f"Error while trying to enable the command!\n {e}")
+        else:
+            await ctx.send(f"Command `{cmd}` was enabled successfully!")
+
+    """All commands"""
+
+    @commands.command(name="all_commands", aliases=["all", "all_cmds"])
+    async def all_commands(self, ctx:commands.Context):
+
+        embd = Embed(title="All Commands - Aerial Ace", color=NORMAL_COLOR)
+        embd.description = ""
+
+        bot:commands.Bot = ctx.bot
+        all_cmds = [[cmd.name, cmd.enabled] for cmd in list(bot.commands)]
+        numb_of_cmds = len(all_cmds)
+        cmds_per_line = int(len(all_cmds) / 3)
+
+        strs = []
+
+        for i in range(0, int(numb_of_cmds / cmds_per_line)):
+            str = ""
+            for j in range(cmds_per_line):
+                this_command = all_cmds[i * cmds_per_line + j]
+                str += this_command[0]
+                str += (" - :x:" if this_command[1] == False else "") 
+                str += "\n"
+
+            strs.append(str)
+
+        embd.add_field(
+            name="Page-1",
+            value=strs[0],
+            inline=True
+        )
+
+        embd.add_field(
+            name="Page-2",
+            value=strs[1],
+            inline=True
+        )
+
+        embd.add_field(
+            name="Page-3",
+            value=strs[2],
+            inline=True
+        )
+
+        await ctx.send(embed=embd)
 
 def setup(bot):
     bot.add_cog(AdminSystem(bot))

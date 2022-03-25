@@ -28,8 +28,7 @@ class Utility(commands.Cog):
     async def roll_handler(self, ctx, error):
         if isinstance(error, commands.errors.BadArgument):
             await ctx.reply(f"Gib a interger as an argument like `{ctx.prefix}roll 69`")
-        else:
-            await ctx.reply(error)
+        
 
     """Get links to support servers"""
 
