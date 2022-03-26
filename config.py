@@ -39,7 +39,7 @@ NON_SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5/{pokemo
 SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5-shiny/{pokemon}.png"
 POKEMON_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/pokemon/{pokemon}/"
 ABILITY_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/abilities/{ability}/"
-SMOGON_API_TEMPLATE = "https://smogon-usage-stats.herokuapp.com/{tier}/{pokemon}"
+SMOGON_API_TEMPLATE = "https://smogon-usage-stats.herokuapp.com/gen{gen}{tier}/{pokemon}"
 
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"

@@ -1,20 +1,19 @@
 from discord.ext import commands
 
-from cog_helpers import smogon_helper
+from cog_helpers import smogon_helper, general_helper
+from config import ERROR_COLOR
 
 class SmogonModule(commands.Cog):
     
     """Get Smogon Details of a pokemon"""
 
     @commands.command(name="smogon", aliases=["analyse"])
-    async def smogon_details(self, ctx:commands.Context, tier:str, pokemon:str):
-        
-        await ctx.send("Param : " + pokemon)
+    async def smogon_details(self, ctx:commands.Context, gen:int, tier:str, pokemon:str):
 
-        try:
-            data = await smogon_helper.get_smogon_data(tier, pokemon)
-        except Exception as e:
-            return await ctx.reply("Wrong Pokemon Name ig\n" + "**Exit : ** {}".format(e))
+        data = await smogon_helper.get_smogon_data(gen=gen, tier=tier, pokemon=pokemon)
+        
+        if data is None:
+            return await general_helper.get_info_embd("Error", "Some Unknown Error occured while trying to fetch smogon data.", color=ERROR_COLOR)
 
         reply = await smogon_helper.get_smogon_embed(data)
 

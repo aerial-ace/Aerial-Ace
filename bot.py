@@ -11,7 +11,7 @@ from config import TOKEN, MONGO_URI, TEST_TOKEN, ADMIN_ID
 from checkers import rare_catch_detection
 
 # determines whether to run the bot in local, or global mode
-is_test = True
+is_test = False
 
 intents = Intents.default()
 intents.message_content = True
