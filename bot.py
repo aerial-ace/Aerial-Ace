@@ -28,6 +28,7 @@ initial_cogs = [
     "admin",
     "starboard",
     "help",
+    "smogon",
     "mail",
     "utility",
     "error_handler",

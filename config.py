@@ -40,6 +40,7 @@ NON_SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5/{pokemo
 SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5-shiny/{pokemon}.png"
 POKEMON_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/pokemon/{pokemon}/"
 ABILITY_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/abilities/{ability}/"
+SMOGON_API_TEMPLATE = "https://smogon-usage-stats.herokuapp.com/gen{gen}{tier}/{pokemon}"
 
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"
@@ -60,6 +61,7 @@ NORMAL_COLOR = discord.Color.blue()
 ERROR_COLOR = discord.Color.red()
 WARNING_COLOR = discord.Color.orange()
 RARE_CATCH_COLOR = discord.Color.gold()
+SMOGON_COLOR = discord.Color.purple()
 
 # Reactions
 PIKA_WOW = "https://cdn.discordapp.com/attachments/911547825274388511/918840026094247976/pika_woo.png"
