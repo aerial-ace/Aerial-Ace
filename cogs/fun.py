@@ -122,5 +122,20 @@ class FunModule(commands.Cog):
     async def cry_handler(self, ctx : commands.Context, error):
         await ctx.reply(error)
 
+    """Hug with gifs"""
+
+    @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="hug")
+    async def hug(self, ctx : commands.Context, target:discord.Member):
+        reply = await fun_helper.get_hug_embed(ctx.author, target)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
+
+    @cry.error
+    async def hug_handler(self, ctx : commands.Context, error):
+        await ctx.reply(error)
+
 def setup(bot):
     bot.add_cog(FunModule())

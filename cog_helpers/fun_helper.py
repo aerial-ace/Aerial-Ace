@@ -42,7 +42,16 @@ links = {
     },
     "cry" : {
         "{user} is crying, sad" : "https://i.imgur.com/hJc70Sa.gif",
-        "{user} cried hard" : "https://i.imgur.com/iVfgbHw.gif"
+        "{user} cried hard" : "https://i.imgur.com/iVfgbHw.gif",
+        "{user} is crying" : "https://i.imgur.com/lucbsXD.gif",
+        "cry cry bruh" : "https://i.imgur.com/SoTPtkx.gif"
+    },
+    "hug" : {
+        "{user} hugged {target}" : "https://i.imgur.com/WKSjzXx.gif",
+        "Emotional Hug! Let's goo" : "https://i.imgur.com/pNznT0i.gif",
+        "{target} got hugged by {user}" : "https://i.imgur.com/f0TIk4n.gif",
+        "Thats some hug ngl" : "https://i.imgur.com/IDv5TDZ.gif",
+        "OWO hug" : "https://i.imgur.com/XcdiYrr.gif"
     }
 }
 
@@ -140,6 +149,18 @@ async def get_cry_embed(user):
     roll = random.randint(0, len(all_headings) - 1)
 
     embd = discord.Embed(title=all_headings[roll].format(user=user.name), color=config.NORMAL_COLOR)
+    embd.set_image(url=all_links[roll])
+
+    return embd
+
+async def get_hug_embed(user, target):
+
+    all_headings = list(links["hug"].keys())
+    all_links = list(links["hug"].values())
+
+    roll = random.randint(0, len(all_headings) - 1)
+
+    embd = discord.Embed(title=all_headings[roll].format(user=user.name, target=target.name), color=config.NORMAL_COLOR)
     embd.set_image(url=all_links[roll])
 
     return embd
