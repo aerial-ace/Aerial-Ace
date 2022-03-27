@@ -46,6 +46,7 @@ initial_slash_cogs = [
     "starboard",
     "random_misc",
     "tag",
+    "smogon",
     "utility",
     "battle",
     "fun",

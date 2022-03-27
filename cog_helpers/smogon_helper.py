@@ -78,16 +78,20 @@ async def get_smogon_embed(data:SmogonData) -> Embed:
     embd.add_field(
         name="Usage Percentage",
         value=data.usage,
-        inline=True
+        inline=False
     )
 
-    abilities_str = ""
+    # abilities
 
+    abilities_str = ""
     abilities = list(data.abilities.keys())
     ability_perc = list(data.abilities.values())
 
-    for i in range(len(abilities)):
-        abilities_str += "{} - *{}*\n".format(abilities[i].capitalize(), ability_perc[i])
+    if abilities != {}:
+        for i in range(len(abilities)):
+            abilities_str += "{} - *{}*\n".format(abilities[i].capitalize(), ability_perc[i])
+    else:
+        abilities_str = "*Not enough data here*"
 
     embd.add_field(
         name="Abilities - %",
@@ -95,12 +99,17 @@ async def get_smogon_embed(data:SmogonData) -> Embed:
         inline=False
     )
 
+    # items
+
     items_str = ""
     items = list(data.items.keys())
     items_perc = list(data.items.values())
 
-    for i in range(len(items)):
-        items_str += "{} - *{}*\n".format(items[i].capitalize(), items_perc[i])
+    if items != {}:
+        for i in range(len(items)):
+            items_str += "{} - *{}*\n".format(items[i].capitalize(), items_perc[i])
+    else:
+        items_str = "*Not enough data here*"
 
     embd.add_field(
         name="Items - %",
@@ -108,12 +117,17 @@ async def get_smogon_embed(data:SmogonData) -> Embed:
         inline=True
     )
 
+    # moves
+
     moves_str = ""
     moves = list(data.moveset.keys())
     moves_perc = list(data.moveset.values())
 
-    for i in range(len(moves)):
-        moves_str += "{} - *{}*\n".format(moves[i].capitalize(), moves_perc[i])
+    if moves != []:
+        for i in range(len(moves)):
+            moves_str += "{} - *{}*\n".format(moves[i].capitalize(), moves_perc[i])
+    else:
+        moves_str = "*Not enough data here*"
 
     embd.add_field(
         name="Moves - %",
@@ -121,12 +135,17 @@ async def get_smogon_embed(data:SmogonData) -> Embed:
         inline=True
     )
 
+    # Checks
+
     checks_str = ""
     checks = list(data.checks.keys())
     checks_perc = list(data.checks.values())
 
-    for i in range(len(checks)):
-        checks_str += "{} - *{}*\n".format(checks[i].capitalize(), checks_perc[i]["ko"])
+    if checks != []:
+        for i in range(len(checks)):
+            checks_str += "{} - *{}*\n".format(checks[i].capitalize(), checks_perc[i]["ko"])
+    else:
+        checks_str = "*Not enough data here*"
 
     embd.add_field(
         name="Checks - KO%",
@@ -134,26 +153,31 @@ async def get_smogon_embed(data:SmogonData) -> Embed:
         inline=True
     )
 
+    # stats
+
     stats_str = ""
     natures = list(data.stats.keys())
     all_spreads = list(data.stats.values())
 
-    for i in range(len(natures)):
-        if natures[i] == "Other":
-            spreads = {}
-            perc = all_spreads[i]
-        else:
-            spreads = list(all_spreads[i].keys())
-            perc = list(all_spreads[i].values())
+    if natures != []:
+        for i in range(len(natures)):
+            if natures[i] == "Other":
+                spreads = {}
+                perc = all_spreads[i]
+            else:
+                spreads = list(all_spreads[i].keys())
+                perc = list(all_spreads[i].values())
 
-        if spreads != {}:
-            for j in range(len(spreads)):
-                stats_str += "__{}__ : {} - *{}*\n".format(natures[i], spreads[j], perc[j])
-        else:
-            stats_str += "__Others__ : *{}*".format(perc)
-        
+            if spreads != {}:
+                for j in range(len(spreads)):
+                    stats_str += "{} : {} - *{}*\n".format(natures[i], spreads[j], perc[j])
+            else:
+                stats_str += "Others : *{}*".format(perc)
+    else:
+        stats_str = "*Not enough data here*"
+
     embd.add_field(
-        name="Stats Spreads",
+        name="Stats Spreads - %",
         value=stats_str,
         inline=False
     )
