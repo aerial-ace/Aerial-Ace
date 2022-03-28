@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://i.imgur.com/TAWr46v.png" style="width : 200px; height : auto;" />
+  <img src="https://i.imgur.com/TAWr46v.png" style="width : 150px; height : auto;" />
 </h1>
 
 <h1 align="center">Aerial Ace</h1>
@@ -14,7 +14,7 @@
 </h2>
 
 <p align="center">
-  Aerial Ace is a helper bot for <a href="https://github.com/poketwo/poketwo">Poketwo</a> which provide various functionalities on top of being a Pokédex.<br><br>
+  Aerial Ace is a helper bot for <a href="https://github.com/poketwo/poketwo">Poketwo</a> and <a href="https://play.pokemonshowdown.com/">Showdown</a> which provide various functionalities on top of being a Pokédex.<br><br>
   <b>Prefix</b> : `-aa`<br>
   <b>Website : <a href="https://aerial-ace.github.io/">Aerial Ace</a></b>
 </p>
@@ -25,6 +25,7 @@
 * View random Pokémon and read about them.
 * Add tags to your name and ping them for anything from favourite collections to shiny hunts.
 * View the best stats of Pokémon for battling.
+* Gif commands to express yourself via pokemon gifs.
 * View the best moveset of any Pokémon for battling.
 * View the best nature of any Pokémon for battling.
 * View the Pokémon's type weaknesses.
@@ -32,6 +33,8 @@
 * Register Battles and view leaderboards.
 * Rare catch detection System
 * Advanced Starboard System that works with/without togglemention.
+* Generate Random but Balanced teams for random battling.
+* Advanced **Smogon Analyser** helpful for Pokemon Showdown Players.
 
 ## Resources
 ***Basic Bot Example*** : [Click Here](https://gist.github.com/EvieePy/d78c061a4798ae81be9825468fe146be)<br>
@@ -49,12 +52,16 @@
 * `-aa stats <pokemon name>` displays the best stats for the provided Pokémon.
 * `-aa moveset <pokemon name>` displays the best moveset of the provided Pokémon.
 * `-aa nature <pokemon name>` displays the best nature of the provided Pokémon.
+* `-aa hug/kill/hit/cry/tease/dance` sends a pokemon gif related to the command.
 * `-aa weakness <pokemon name>` displays the type weaknesses of the provided Pokémon.
 * `-aa tierlist <tier type>` displays the tierlist of that type. Available types are `common`, `mega`, `rare`, `water`.
 * `-aa log_battle @winner @loser` logs the battle in the leaderboard.
 * `-aa battle_score` displays the current battle score the user.
 * `-aa battle_lb` displays the battle leaderboard of the server.
 * `-aa starboard #channel` sets the 'channel' as the starboard channel.
+* `-aa random_team <tier>` returns a random but balanced team of that tier. Available tier are `common`, `mega`, `rare`.
+* `-aa random_matchup <tier>` returns a random but balanced match of two player with roll of that tier. Available tier are `common`, `mega`, `rare`.
+* `-aa smogon 8 OU durant` displays the smogon statistics of durant in Gen8OU.
 
 ## Commands in action
 <div class="row">
@@ -71,8 +78,8 @@
     <img src="https://user-images.githubusercontent.com/66104268/151566097-17e84297-d151-475f-8d32-21d4245302cf.png" style="width:25%; height:auto;">
     <img src="https://user-images.githubusercontent.com/66104268/151570575-ee53e174-6a40-4925-8cce-5e005a3960ec.png" style="width:38%; height:auto;">
     <img src="https://user-images.githubusercontent.com/66104268/151570373-3635c15b-c0d8-4bbf-bcf1-7dbe391f5202.png" style="width:42%; height:auto;">
-
-
+    <img src="https://user-images.githubusercontent.com/66104268/160364627-fdd8c3a6-d8fc-47d3-a0d2-897ef4e5fb04.png" style="width:43%; height:auto;">
+    <img src="https://user-images.githubusercontent.com/66104268/160364277-a1d2bb9d-5a47-44aa-a54a-ee0f1f034ea5.png" style="width:36%; height:auto;">
   </div>
 </div>
 
