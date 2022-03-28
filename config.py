@@ -31,6 +31,7 @@ ALERT_EMOJI = "<:alert:940589741714317332>"
 PLS_EMOJI = ""
 COIN_HEADS_EMOJI = "<:heads:946027174526353448>"
 COIN_TAILS_EMOJI = "<:tails:946027156985757746>"
+DEVELOPER_EMOJI = "<:developer:956852544666206238>"
 
 TYPES = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water"]
 
@@ -39,6 +40,7 @@ NON_SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5/{pokemo
 SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5-shiny/{pokemon}.png"
 POKEMON_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/pokemon/{pokemon}/"
 ABILITY_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/abilities/{ability}/"
+SMOGON_API_TEMPLATE = "https://smogon-usage-stats.herokuapp.com/gen{gen}{tier}/{pokemon}"
 
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"
@@ -59,6 +61,7 @@ NORMAL_COLOR = discord.Color.blue()
 ERROR_COLOR = discord.Color.red()
 WARNING_COLOR = discord.Color.orange()
 RARE_CATCH_COLOR = discord.Color.gold()
+SMOGON_COLOR = discord.Color.purple()
 
 # Reactions
 PIKA_WOW = "https://cdn.discordapp.com/attachments/911547825274388511/918840026094247976/pika_woo.png"

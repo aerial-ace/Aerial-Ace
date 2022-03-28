@@ -32,8 +32,7 @@ class RandomMisc(commands.Cog):
     async def get_random_team_handler(self, ctx : commands.Context, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.reply(f"Give a Team Tier like ```{ctx.prefix}random_team mega```")
-        else:
-            await ctx.reply(error)
+        
 
     """Get random matchup"""
 
@@ -49,8 +48,7 @@ class RandomMisc(commands.Cog):
     async def get_random_matchup_handler(self, ctx:commands.Context, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.reply(f"Give a Team Tier like ```{ctx.prefix}random_matchup mega```")
-        else:
-            await ctx.reply(error)
+        
 
     """Get random type"""    
     

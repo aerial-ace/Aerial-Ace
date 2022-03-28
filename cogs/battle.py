@@ -43,8 +43,7 @@ class BattleSystem(commands.Cog):
             view = GeneralView(200, True, True, False, False)
 
             await ctx.reply(embed=reply, view=view)
-        else:
-            await ctx.send(error)
+        
 
     """View Battleboard"""
 
@@ -100,8 +99,7 @@ class BattleSystem(commands.Cog):
             await ctx.reply(reply, view=view)
         elif isinstance(error, commands.errors.MissingPermissions):
             await ctx.reply("Be an admin when :/")
-        else:
-            await ctx.send(error)
+        
 
     """Battle Remove using id"""
 
@@ -123,8 +121,7 @@ class BattleSystem(commands.Cog):
             await ctx.send(embed=reply, view=view)
         elif isinstance(error, commands.errors.MissingPermissions):
             await ctx.reply("Be an admin when :/")
-        else:
-            await ctx.send(error)
+        
 
     """Clear Battleboard at once"""
 

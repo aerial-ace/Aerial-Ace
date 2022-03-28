@@ -27,8 +27,7 @@ class Pokemon_Info(commands.Cog):
             view = GeneralView(200, True, True, False, False)
 
             await ctx.send(embed=reply, view=view)
-        else:
-            await ctx.send(error)
+        
 
     """For getting the duel moveset"""
 
@@ -47,8 +46,7 @@ class Pokemon_Info(commands.Cog):
             view = GeneralView(200, True, True, False, False)
 
             await ctx.send(embed=reply, view=view)
-        else:
-            await ctx.send(error)
+        
 
     """For getting the duel nature"""
 
@@ -67,8 +65,7 @@ class Pokemon_Info(commands.Cog):
             view = GeneralView(200, True, True, False, False)
 
             await ctx.send(embed=reply, view=view)
-        else:
-            await ctx.send(error)
+        
 
     """For getting the tierlists"""
 
@@ -87,8 +84,7 @@ class Pokemon_Info(commands.Cog):
     async def tierlist_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.reply("Give a tier name as a parameter :/ Like `rare`, `common`, `mega`, `steel`, `fighting`")
-        else:
-            await ctx.send(error)
+        
 
     """For getting the weakness"""
 

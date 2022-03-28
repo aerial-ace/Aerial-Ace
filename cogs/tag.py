@@ -38,8 +38,7 @@ class TagSystem(commands.Cog):
     async def tag_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.reply(f"> Gib a tag name when? Like this ```{ctx.prefix}tag Ralts```")
-        else:
-            await ctx.send(error)
+        
 
     """Ping tags"""
 
@@ -76,8 +75,7 @@ class TagSystem(commands.Cog):
             view = GeneralView(200, True, True, False, False)
 
             await ctx.reply(embed=reply, view=view)
-        else:
-            await ctx.send(error)
+        
 
     """View tags"""
 
@@ -107,8 +105,7 @@ class TagSystem(commands.Cog):
             view = GeneralView(200, True, True, False, False)
 
             await ctx.reply(embed=reply, view=view)
-        else:
-            await ctx.send(error)
+        
 
     """Remove tags"""
 
@@ -129,8 +126,7 @@ class TagSystem(commands.Cog):
         elif isinstance(error, commands.errors.MissingPermissions):
             reply = "Be a Admin when?"
             await ctx.reply(reply)
-        else:
-            await ctx.send(error)
+        
 
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
@@ -149,8 +145,7 @@ class TagSystem(commands.Cog):
         elif isinstance(error, commands.errors.MissingPermissions):
             reply = "Be a Admin when?"
             await ctx.reply(reply)
-        else:
-            await ctx.send(error)
+        
 
     """Set afk"""
 

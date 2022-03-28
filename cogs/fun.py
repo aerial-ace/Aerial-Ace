@@ -30,8 +30,7 @@ class FunModule(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this : ```{ctx.prefix}kill @Pumpkaboo```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
-        else:
-            await ctx.reply(error)
+        
 
     """Hit someone by showing gifs"""
 
@@ -51,8 +50,7 @@ class FunModule(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this : ```{ctx.prefix}hit @Irrbis```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
-        else:
-            await ctx.reply(error)
+        
 
     """Dance with someone using gifs"""
 
@@ -89,8 +87,7 @@ class FunModule(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this : ```{ctx.prefix}pat @raupy```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
-        else:
-            await ctx.reply(error)
+        
 
     """Tease someone with gifs"""
 
@@ -108,8 +105,7 @@ class FunModule(commands.Cog):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user as a parameter. Like this : ```{ctx.prefix}pat @raupy```", color=config.ERROR_COLOR)
             await ctx.reply(embed=reply)
-        else:
-            await ctx.reply(error)
+        
 
     """Cry with gifs"""
 
@@ -124,6 +120,21 @@ class FunModule(commands.Cog):
 
     @cry.error
     async def cry_handler(self, ctx : commands.Context, error):
+        await ctx.reply(error)
+
+    """Hug with gifs"""
+
+    @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command(name="hug")
+    async def hug(self, ctx : commands.Context, target:discord.Member):
+        reply = await fun_helper.get_hug_embed(ctx.author, target)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
+
+    @cry.error
+    async def hug_handler(self, ctx : commands.Context, error):
         await ctx.reply(error)
 
 def setup(bot):

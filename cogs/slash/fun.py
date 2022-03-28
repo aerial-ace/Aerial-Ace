@@ -75,5 +75,15 @@ class FunSystemSlash(commands.Cog):
 
         await ctx.respond(embed=reply, view=view)
 
+    """Hug using Gifs"""
+
+    @slash_command(name="hug", description="Hug someone, the pokemon way")
+    async def hug(self, ctx:ApplicationContext, target:Option(Member, description="Member to hug", required=True)):
+
+        reply = await fun_helper.get_hug_embed(ctx.author, target)
+        view = GeneralView(200, True, True, False, False)
+
+        await ctx.respond(embed=reply, view=view)
+
 def setup(bot : commands.Bot):
     bot.add_cog(FunSystemSlash())
