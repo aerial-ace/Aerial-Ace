@@ -21,5 +21,13 @@ class SmogonModule(commands.Cog):
 
         await ctx.send(embed=reply, view=view)
 
+    @smogon_details.error
+    async def smogon_details_handler(self, ctx:commands.Context, error):
+        if isinstance(error, commands.errors.MissingRequiredArgument):
+            reply = await general_helper.get_info_embd("Oh no!", f"This command requires these parameters \n```{ctx.prefix}smogon <gen> <tier> <pokemon>\n{ctx.prefix}smogon 5 OU tyranitar```", color=ERROR_COLOR, footer="Try /smogon too")
+            await ctx.send(embed=reply)
+        else:
+            await ctx.reply(error)
+
 def setup(bot:commands.Bot):
     bot.add_cog(SmogonModule())
