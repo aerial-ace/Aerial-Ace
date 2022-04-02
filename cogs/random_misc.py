@@ -10,7 +10,7 @@ class RandomMisc(commands.Cog):
     """View random pokemon"""
 
     @commands.guild_only()
-    @commands.command(name="random_poke", aliases=["rp"])
+    @commands.command(name="random_poke", aliases=["rp"], description="View randomly picked pokemon")
     async def random_poke(self, ctx):
         
         reply = await random_helper.get_random_pokemon_embed()
@@ -20,7 +20,7 @@ class RandomMisc(commands.Cog):
 
     """Get Random Team"""
 
-    @commands.command(name="random_team", aliases=["rand_team"])
+    @commands.command(name="random_team", aliases=["rand_team"], description="Returns a random but balanced team of any tier")
     @commands.guild_only()
     async def get_random_team(self, ctx : commands.Context, tier):
         reply = await random_helper.get_random_team_embed(tier.lower())
@@ -36,7 +36,7 @@ class RandomMisc(commands.Cog):
 
     """Get random matchup"""
 
-    @commands.command(name="random_matchup", aliases=["rand_matchup"])
+    @commands.command(name="random_matchup", aliases=["rand_matchup"], description="Returns a random but balanced match of two random teams")
     @commands.guild_only()
     async def get_random_matchup(self, ctx : commands.Context, tier):
         reply = await random_helper.get_random_matchup_embd(tier.lower())
@@ -52,7 +52,7 @@ class RandomMisc(commands.Cog):
 
     """Get random type"""    
     
-    @commands.command(name="random_type", aliases=["rand_type"])
+    @commands.command(name="random_type", aliases=["rand_type"], description="Returns a random type")
     @commands.guild_only()
     async def get_random_type(self, ctx:commands.Context):
         random_type = TYPES[random.randint(0, len(TYPES) - 1)]

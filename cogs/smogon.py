@@ -8,7 +8,7 @@ class SmogonModule(commands.Cog):
     
     """Get Smogon Details of a pokemon"""
 
-    @commands.command(name="smogon", aliases=["analyse"])
+    @commands.command(name="smogon", aliases=["analyse"], description="Returns complete usage analysis of a pokemon from smogon database")
     async def smogon_details(self, ctx:commands.Context, gen:int, tier:str, pokemon:str):
 
         data = await smogon_helper.get_smogon_data(gen=gen, tier=tier, pokemon=pokemon)

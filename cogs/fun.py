@@ -12,7 +12,7 @@ class FunModule(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(1, 10, type=commands.BucketType.user)
-    @commands.command(name="kill")
+    @commands.command(name="kill", description="Kill someone using pokemon gifs")
     async def kill(self, ctx, target : discord.Member):
 
         if target == ctx.author : 
@@ -36,7 +36,7 @@ class FunModule(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(1, 10, type=commands.BucketType.user)
-    @commands.command(name="hit")
+    @commands.command(name="hit", description="Hit someone using pokmeon gifs")
     async def hit(self, ctx, target : discord.Member):
 
 
@@ -56,7 +56,7 @@ class FunModule(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="dance")
+    @commands.command(name="dance", description="Dance solo, or with someone using pokemon gifs")
     async def dance(self, ctx, target : discord.Member = None):
         if target is None:
             reply = await fun_helper.get_dance_embed(ctx.author)
@@ -75,7 +75,7 @@ class FunModule(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="pat")
+    @commands.command(name="pat", description="Pat someone using pokemon gifs")
     async def pat(self, ctx, target : discord.Member):
         reply = await fun_helper.get_pat_embed(ctx.author, target)
         view = GeneralView(200, True, True, False, False)
@@ -93,7 +93,7 @@ class FunModule(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(1, 1, commands.BucketType.user)
-    @commands.command(name="tease")
+    @commands.command(name="tease", description="Tease someone using pokemon gifs")
     async def tease(self, ctx, target : discord.Member):
         reply = await fun_helper.get_tease_embed(ctx.author, target)
         view = GeneralView(200, True, True, False, False)
@@ -111,7 +111,7 @@ class FunModule(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="cry")
+    @commands.command(name="cry", description="Cry using pokemon gifs")
     async def cry(self, ctx : commands.Context):
         reply = await fun_helper.get_cry_embed(ctx.author)
         view = GeneralView(200, True, True, False, False)
@@ -126,7 +126,7 @@ class FunModule(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="hug")
+    @commands.command(name="hug", description="Hug someone using pokemon gifs")
     async def hug(self, ctx : commands.Context, target:discord.Member):
         reply = await fun_helper.get_hug_embed(ctx.author, target)
         view = GeneralView(200, True, True, False, False)

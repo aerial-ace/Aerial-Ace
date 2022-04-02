@@ -25,7 +25,7 @@ class TagSystem(commands.Cog):
     """Assign tags"""
 
     @commands.guild_only()
-    @commands.command()
+    @commands.command(name="tag", description="Assign yourself to a shiny hunt tag")
     async def tag(self, ctx, tag : str):
         
         if await self.validate_tag(ctx, tag.lower()) is False:
@@ -43,7 +43,7 @@ class TagSystem(commands.Cog):
     """Ping tags"""
 
     @commands.guild_only()
-    @commands.command(name="tag_ping", aliases=["tp"])
+    @commands.command(name="tag_ping", aliases=["tp"], description="Ping users assigned to a particular tag")
     async def tag_ping(self, ctx, tag: str):
 
         if await self.validate_tag(ctx, tag.lower()) is False:
@@ -80,7 +80,7 @@ class TagSystem(commands.Cog):
     """View tags"""
 
     @commands.guild_only()
-    @commands.command(name="tag_show", aliases=["ts"])
+    @commands.command(name="tag_show", aliases=["ts"], description="View users assigned to a particular tag")
     async def tag_show(self, ctx, tag : str):
 
         if await self.validate_tag(ctx, tag.lower()) is False:
@@ -111,7 +111,7 @@ class TagSystem(commands.Cog):
 
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
-    @commands.command(name="tag_remove", aliases=["tr"])
+    @commands.command(name="tag_remove", aliases=["tr"], description="Remove users from their current tag (Admins Only)")
     async def tag_remove(self, ctx, user : Member):
         reply = await tag_helper.remove_user(ctx.guild.id, user)
         await ctx.send(reply)
@@ -130,7 +130,7 @@ class TagSystem(commands.Cog):
 
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
-    @commands.command(name="tag_remove_id", aliases=["trid"])
+    @commands.command(name="tag_remove_id", aliases=["trid"], description="Remove user from their current tag using id (Admins Only)")
     async def tag_remove_id(self, ctx, user_id : str):
         reply = await tag_helper.remove_user_id(ctx.guild.id, user_id)
         await ctx.send(reply)
@@ -150,7 +150,7 @@ class TagSystem(commands.Cog):
     """Set afk"""
 
     @commands.guild_only()
-    @commands.command()
+    @commands.command(name="afk", description="Sets your afk state to on/off")
     async def afk(self, ctx, state):
 
         if state.lower() not in ["on", "off"]:
@@ -171,7 +171,7 @@ class TagSystem(commands.Cog):
         await ctx.send(error)
 
     """All tags present in the server"""
-    @commands.command(name="alltags")
+    @commands.command(name="alltags", description="Returns a list of all tags in the server")
     @commands.guild_only()
     async def view_all_tags(self, ctx:commands.Context):
 

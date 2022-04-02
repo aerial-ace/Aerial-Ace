@@ -7,7 +7,7 @@ from views.GeneralView import GeneralView
 
 class MailModule(commands.Cog):
     @commands.guild_only()
-    @commands.command(name="mail", aliases=["ml"])
+    @commands.command(name="mail", aliases=["ml"], description="open the mail box to get alerts")
     async def open_mail(self, ctx : commands.Context):
 
         """View all the mails in the mail box"""

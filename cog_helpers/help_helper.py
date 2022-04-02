@@ -1,56 +1,61 @@
 from discord import Embed
+from discord.ext import commands
+import datetime
 
 import config
 from cog_helpers import general_helper
 
-all_categories = ["dex", "random_misc", "info", "battle", "tag", "fun", "misc", "starboard"]
+all_categories = {"pokedex" : "commands related to pokedex", "random" : "commands related to random gen", "info" : "commands related to information", "battle" : "commands related to battleboard", "tags" : "commands related to shinyhunts", "fun" : "other fun commands", "misc" : "commands that dont fit in other catagories", "starboard" : "commands related to starboard", "smogon" : "commands related to showdown"}
+
+commands_in_catagory = {
+    "pokedex" : ["dex", "ability"],
+    "random" : ["random_pokemon", "random_team", "random_matchup", "random_type"],
+    "info" : ["stats", "moveset", "nature", "weak"],
+    "battle" : ["log_battle", "battle_score", "battle_lb", "battle_remove", "battle_remove_id", "battleboard_clear"],
+    "tags" : ["tag", "tag_ping", "tag_show", "afk", "tag_remove", "tag_remove_id", "alltags"],
+    "fun" : ["hit", "pat", "kill", "hug", "tease", "cry", "dance"],
+    "starboard" : ["starboard"],
+    "misc" : ["ping", "roll", "support", "vote", "invite", "mail"],
+    "smogon" : ["smogon"]
+}
 
 all_commands = {
-    "dex" : [
-        "```{prefix}dex <PokemonName>``` displays the dex entry of the pokemon.",
-        "```{prefix}ability <AbilityName>``` displays the overview of the ability"
-    ],
-    "random_misc" : [
-        "```{prefix}random_poke[rp]``` displays a random pokemon with **some** info about it.",
-        "```{prefix}random_team[rand_team]``` displays a random team of duelish pokemons.",
-        "```{prefix}random_matchup[rand_matchup]``` displays a random matchup of duelish pokemons",
-        "```{prefix}random_type[rand_type]``` displays a random type for monotype battles"
-    ],
-    "info" : [
-        "```{prefix}stats <PokemonName>``` displays the must have stats for dueling of the pokemon.",
-        "```{prefix}moveset[ms] <PokemonName>``` displays the must have moveset for dueling of the pokemon.",
-        "```{prefix}nature <PokemonName>``` displays the must have nature for dueling of the pokemon.",
-        "```{prefix}weakness[weak] <PokemonName or type combination>``` displays the **type** weakness of the pokemon."
-    ],
-    "battle" : [
-        "```{prefix}log_battle[lb] @winner @loser``` logs the battle.",
-        "```{prefix}battle_score[bs]``` displays the current battle score of the user.",
-        "```{prefix}battle_lb[blb]``` displays the battle leaderboard of the server.",
-        "```{prefix}battle_remove[br] @user``` removes the user from the battle board (Admin Only)",
-        "```{prefix}battle_remove_id[brid] <user_id>``` removes the user from the battle board (Admin Only)"
-    ],
-    "tag" : [
-        "```{prefix}tag <tag>``` assigns the user to the tag provided.",
-        "```{prefix}tag_ping[tp] <tag>``` pings the users assigned to the tag provided.",
-        "```{prefix}tag_show[ts] <tag>``` displays the users assigned to the tag provided.",
-        "```{prefix}afk <on/off>``` set the afk",
-        "```{prefix}tag_remove @user``` removes the user from their tag (Admin Only).",
-        "```{prefix}tag_remove_id[trid] <user_id>``` removes the user from their tag (Admin Only)."
-    ],
-    "fun" : [
-        "```{prefix}hit @target```, ```{prefix}kill @target```, ```{prefix}pat @target```, ```{prefix}dance [@target]```, ```{prefix}tease @target``` \nNo explanation is needed for these ig :3"
-    ],
-    "misc" : [
-        "```{prefix}roll <UpperLimit>``` rolls a die",
-        "```{prefix}ping``` displays the current bot latency",
-        "```{prefix}support_server[ss]``` displays the link for the support server",
-        "```{prefix}vote``` displays the vote link for the bot",
-        "```{prefix}invite``` displays the invite link for the bot"
-    ],
-    "starboard" : [
-        "```{prefix}starboard #channel``` sends rare catch embeds to this channel",
-        "```{prefix}starboard``` disables the module"
-    ]
+    "dex" : "```{prefix}dex[d] <PokemonName>\n{prefix}dex ditto```\ndisplays the dex entry of the pokemon.",
+    "ability" : "```{prefix}ability[ab] <AbilityName>\n{prefix}ability trace```\ndisplays the overview of the ability",
+    "random_pokemon" : "```{prefix}random_poke[rp]```\ndisplays a random pokemon with **some** info about it.",
+    "random_team" : "```{prefix}random_team[rand_team] <tier>\n{prefix}rand_team mega```\ndisplays a random team of duelish pokemons.",
+    "random_matchup" : "```{prefix}random_matchup[rand_matchup] <tier>\n{prefix}rand_matchup rare```\ndisplays a random matchup of duelish pokemons",
+    "random_type" : "```{prefix}random_type[rand_type]```\ndisplays a random type for monotype battles",
+    "stats" : "```{prefix}stats <PokemonName>\n{prefix}stats moltres```\ndisplays the must have stats for dueling of the pokemon.",
+    "moveset" : "```{prefix}moveset[ms] <PokemonName>\n{prefix}ms suicune```\ndisplays the must have moveset for dueling of the pokemon.",
+    "nature" : "```{prefix}nature <PokemonName>\n{prefix}nature azelf```\ndisplays the must have nature for dueling of the pokemon.",
+    "weak" : "```{prefix}weakness[weak] <PokemonName or type combination>\n{prefix}weak kyurem\n{prefix}weak fire water grass```\ndisplays the **type** weakness of the pokemon.",
+    "log_battle" : "```{prefix}log_battle[lb] @winner @loser```\nlogs the battle with winner @winner and loser @loser",
+    "battle_score" : "```{prefix}battle_score[bs] <user(Optional)>\n{prefix}bs\n{prefix}bs @Wumpus```\ndisplays the current battle score of the user.",
+    "battle_lb" : "```{prefix}battle_lb[blb]```\ndisplays the battle leaderboard of the server.",
+    "battle_remove" : "```{prefix}battle_remove[br] @user\n{prefix}br @Wumpus```\nremoves the user from the battle board (Admin Only)",
+    "battle_remove_id" : "```{prefix}battle_remove_id[brid] <user_id>\n{prefix}brid 716390085896962058```\nremoves the user from the battle board (Admin Only)",
+    "tag" : "```{prefix}tag <tag>\n{prefix}tag pawniard```\nassigns the user to the tag provided.",
+    "tag_ping" : "```{prefix}tag_ping[tp] <tag>\n{prefix}tp axew```\npings the users assigned to the tag provided.",
+    "tag_show" : "```{prefix}tag_show[ts] <tag>\n{prefix}ts basculin```\ndisplays the users assigned to the tag provided.",
+    "afk" : "```{prefix}afk <on/off>\n{prefix}afk on\n{prefix}afk off```\nset the afk",
+    "tag_remove" : "```{prefix}tag_remove[tr] @user\n{prefix}tr @Wumpus```\nremoves the user from their tag (Admin Only).",
+    "tag_remove_id" : "```{prefix}tag_remove_id[trid] <user_id>\n{prefix}trid 716390085896962058```\nremoves the user from their tag (Admin Only).",
+    "hit" : "```{prefix}hit @target```\nhit anyone using pokemon gifs",
+    "kill" : "```{prefix}kill @target```\nkill anyone using pokemon gifs",
+    "pat" : "```{prefix}pat @target```\npat anyone using pokemon gifs",
+    "dance" : "```{prefix}dance [@target]```\ndance solo or with anyone using pokemon gifs",
+    "tease" : "```{prefix}tease @target```\ntease anyone using pokemon gifs",
+    "hug" : "```{prefix}hug @target```\nhug anyone using pokemon gifs",
+    "cry" : "```{prefix}cry```\n cry using pokemon gifs",
+    "roll" : "```{prefix}roll <UpperLimit>\n{prefix}roll 69```\nrolls a die",
+    "ping" : "```{prefix}ping```\ndisplays the current bot latency",
+    "support" : "```{prefix}support_server[ss]```\ndisplays the link for the support server",
+    "vote" : "```{prefix}vote```\ndisplays the vote link for the bot",
+    "invite" : "```{prefix}invite```\ndisplays the invite link for the bot",
+    "mail" : "```{prefix}mail```\nopens up the mail box with latest news about the bot",
+    "starboard" : "```{prefix}starboard[sb] #channel\n{prefix}sb #poketwo-starboard```\nsends rare catch embeds to this channel",
+    "smogon" : "```{prefix}smogon <gen> <tier> <pokemon>\n{prefix}smogon 5 OU durant```\nreturns the detailed usage data of the pokemon from the smogon database"
 }
 
 async def get_help_embed(ctx = None) -> Embed:
@@ -58,40 +63,63 @@ async def get_help_embed(ctx = None) -> Embed:
     prefix = (ctx.prefix if ctx is not None else "/")
 
     embd = Embed(title="__HELP - Aerial Ace__", color=config.NORMAL_COLOR)
-    embd.description = f"Send `{prefix}help <category>` where category can be one from these : "
-    embd.add_field(
-        name="Categories",
-        value="\n".join(all_categories),
-        inline=False
-    )
+    embd.description = f"Send `{prefix}help <catagory>` where catagory can be one from these : "
+
+    catagories = list(all_categories.keys())
+    desc = list(all_categories.values())
+
+    for i in range(len(catagories)):
+        embd.add_field(
+            name=catagories[i],
+            value=desc[i],
+            inline=True
+        )
 
     embd.set_thumbnail(url=config.AVATAR_LINK)
+    embd.timestamp = datetime.datetime.now()
 
     return embd
 
-async def get_category_help_embed(ctx, category) -> Embed:
+async def get_catagory_help_embed(ctx:commands.Context, input) -> Embed:
 
-    category = category.lower()
+    input = input.lower()
 
     prefix = (ctx.prefix if ctx is not None else "/")
 
-    if category not in all_categories:
-        reply = await general_helper.get_info_embd("Not Found Error!", f"This category was not found, do `{prefix}help` for all the categories", color=config.ERROR_COLOR)
-        return reply
+    catagories = list(all_categories.keys())
+    commands = list(all_commands.keys())
 
-    cmds = all_commands[category]
+    input_is_command = False
 
-    for i in range(0, len(cmds)):
-        cmds[i] = cmds[i].format(prefix=prefix)
+    if input not in commands:
+        if input not in catagories:
+            reply = await general_helper.get_info_embd("Not Found Error!", f"This catagory was not found, do `{prefix}help` for all the categories", color=config.ERROR_COLOR)
+            return reply
+        else:
+            input_is_command = False
+    else:
+        input_is_command = True
 
-    embd = Embed(title=f"__{category.capitalize()} Help__", color=config.NORMAL_COLOR)
-    embd.description = "All the commands in this category"
-    embd.add_field(
-        name="Commands : ",
-        value="\n\n".join(cmds),
-        inline=False
-    )
+    if input_is_command:
+        desc = all_commands[input]
+        embd = Embed(title=f"__{input.capitalize()} Help__", color=config.NORMAL_COLOR)
+        embd.description = desc.format(prefix=ctx.prefix)
+        embd.timestamp = datetime.datetime.now()
+    else:
+        cmds = commands_in_catagory[input]   
 
-    embd.set_thumbnail(url=config.AVATAR_LINK)
+        embd = Embed(title=f"__{input.capitalize()} Help__", color=config.NORMAL_COLOR)
+        embd.description = "All the commands in this catagory, Use aa.help <command> to know more"
+        
+        for i in cmds:
+            desc = ctx.bot.get_command(i).description
+            embd.add_field(
+                name=i,
+                value=desc,
+                inline=True
+            )
+
+        embd.set_thumbnail(url=config.AVATAR_LINK)
+        embd.timestamp = datetime.datetime.now()
 
     return embd

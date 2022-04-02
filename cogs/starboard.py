@@ -7,7 +7,7 @@ class StarboardSystem(commands.Cog):
 
     """Toggle Starboard Module"""
 
-    @commands.command(name="starboard", aliases=["sb"])
+    @commands.command(name="starboard", aliases=["sb"], description="Enables/Disables the starboard system")
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     async def starboard(self, ctx : commands.Context, channel:TextChannel = None):

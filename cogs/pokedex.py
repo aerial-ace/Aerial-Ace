@@ -13,7 +13,7 @@ class PokeDex(commands.Cog):
 
     """View dex entry of any pokemon"""
 
-    @commands.command(name="dex", aliases=["d"])
+    @commands.command(name="dex", aliases=["d"], description="Pokedex for every pokemon")
     @commands.guild_only()
     async def dex(self, ctx, poke):
 
@@ -42,7 +42,7 @@ class PokeDex(commands.Cog):
         
 
     """Check Abilities"""
-    @commands.command(name="ability", aliases=["ab"])
+    @commands.command(name="ability", aliases=["ab"], description="Get ability details")
     @commands.guild_only()
     async def ability(self, ctx:commands.Context, name):
         
@@ -61,8 +61,6 @@ class PokeDex(commands.Cog):
             view = GeneralView(200, True, True, False, False)
             
             await ctx.reply(embed=reply, view=view)
-        
-
 
 def setup(bot):
     bot.add_cog(PokeDex(bot))
