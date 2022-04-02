@@ -93,7 +93,7 @@ async def get_catagory_help_embed(ctx:commands.Context, input) -> Embed:
 
     if input not in commands:
         if input not in catagories:
-            reply = await general_helper.get_info_embd("Not Found Error!", f"This catagory was not found, do `{prefix}help` for all the categories", color=config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Not Found Error!", f"This catagory/command was not found, do `{prefix}help` for all the categories", color=config.ERROR_COLOR)
             return reply
         else:
             input_is_command = False
