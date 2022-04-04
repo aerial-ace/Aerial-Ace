@@ -15,7 +15,7 @@ commands_in_catagory = {
     "tags" : ["tag", "tag_ping", "tag_show", "afk", "tag_remove", "tag_remove_id", "alltags"],
     "fun" : ["hit", "pat", "kill", "hug", "tease", "cry", "dance"],
     "starboard" : ["starboard"],
-    "misc" : ["ping", "roll", "support", "vote", "invite", "mail"],
+    "misc" : ["ping", "roll", "support", "vote", "invite", "mail", "all"],
     "smogon" : ["smogon"]
 }
 
@@ -55,7 +55,8 @@ all_commands = {
     "invite" : "```{prefix}invite```\ndisplays the invite link for the bot",
     "mail" : "```{prefix}mail```\nopens up the mail box with latest news about the bot",
     "starboard" : "```{prefix}starboard[sb] #channel\n{prefix}sb #poketwo-starboard```\nsends rare catch embeds to this channel",
-    "smogon" : "```{prefix}smogon <gen> <tier> <pokemon>\n{prefix}smogon 5 OU durant```\nreturns the detailed usage data of the pokemon from the smogon database"
+    "smogon" : "```{prefix}smogon <gen> <tier> <pokemon>\n{prefix}smogon 5 OU durant```\nreturns the detailed usage data of the pokemon from the smogon database",
+    "all" : "```{prefix}all``` returns a list of all the commands in the bot"
 }
 
 async def get_help_embed(ctx = None) -> Embed:
