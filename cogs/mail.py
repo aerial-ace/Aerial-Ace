@@ -17,6 +17,7 @@ class MailModule(commands.Cog):
         
         embd.description = "__**New**__\n\n"
 
+        embd.description += f"{config.BULLET_EMOJI}Eeveelution Tier List added [Beta]. Try `{ctx.prefix}tl eeveelution` \n"
         embd.description += f"{config.BULLET_EMOJI}New Smogon Commands is now available. Use this `smogon` command to get the usage statistics of any pokemon. Try `{ctx.prefix}smogon 8 OU dragapult`. \n"
         embd.description += f"{config.BULLET_EMOJI}Suggest command is here, use `{ctx.prefix}suggest` command to send a suggestion to the developers.\n"
 

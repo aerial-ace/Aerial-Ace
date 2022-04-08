@@ -83,7 +83,7 @@ class Pokemon_Info(commands.Cog):
     @tierlist.error
     async def tierlist_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            await ctx.reply("Give a tier name as a parameter :/ Like `rare`, `common`, `mega`, `steel`, `fighting`")
+            await ctx.reply("Give a tier name as a parameter :/ Like `rare`, `common`, `mega`, `steel`, `fighting`, `eeveelution`")
         
     """For getting the weakness"""
 
