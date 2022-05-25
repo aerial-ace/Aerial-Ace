@@ -1,7 +1,6 @@
 from discord.ext import commands
 
 from cog_helpers import smogon_helper, general_helper
-from views.GeneralView import GeneralView
 from config import ERROR_COLOR
 
 class SmogonModule(commands.Cog):
@@ -16,10 +15,11 @@ class SmogonModule(commands.Cog):
         if data is None:
             return await general_helper.get_info_embd("Error", "Some Unknown Error occured while trying to fetch smogon data.", color=ERROR_COLOR)
 
-        reply = await smogon_helper.get_smogon_embed(data)
-        view = GeneralView(200, True, True, False, False)
-
-        await ctx.send(embed=reply, view=view)
+        try:
+            paginator = await smogon_helper.get_smogon_paginator(data)
+            await paginator.send(ctx)
+        except:
+            await ctx.reply(embed=await general_helper.get_info_embd("Error!!", "**Error Code :** {code}\n**Error Description** {desc}\n\nThere is a possiblity that the searched pokemon is not available in that generation or in that tier. \nTry with gen it was first introduced in.".format(code=data.error, desc=data.message), color=ERROR_COLOR))
 
     @smogon_details.error
     async def smogon_details_handler(self, ctx:commands.Context, error):

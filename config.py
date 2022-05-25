@@ -32,6 +32,10 @@ PLS_EMOJI = ""
 COIN_HEADS_EMOJI = "<:heads:946027174526353448>"
 COIN_TAILS_EMOJI = "<:tails:946027156985757746>"
 DEVELOPER_EMOJI = "<:developer:956852544666206238>"
+NEXT_EMOJI = "<:next:964507779765272648>"
+PREV_EMOJI = "<:prev:964508551915634768>"
+FIRST_EMOJI = "<:first:964508851166646272>"
+LAST_EMOJI = "<:last:964508277809496125>"
 
 TYPES = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water"]
 
