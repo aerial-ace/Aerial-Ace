@@ -14,7 +14,7 @@ def wrap_text(width, text):
     return wrapped_text
 
 # returns a embed provided the data 
-async def get_info_embd(title, desc, color, footer=None, show_tumbnail=False):
+async def get_info_embd(title, desc, color=discord.Color.blue(), footer=None, show_tumbnail=False):
     embd = discord.Embed()
 
     embd.colour = color
