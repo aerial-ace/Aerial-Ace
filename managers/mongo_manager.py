@@ -17,7 +17,7 @@ class MongoManager:
 
         return True
 
-    async def get_all_data(self, collection_name : str, query : dict) -> cursor:
+    async def get_all_data(self, collection_name : str, query : dict):
 
         try:
             result_cursor = await self.db[collection_name].find(query).to_list(length=100)
