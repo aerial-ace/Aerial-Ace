@@ -69,6 +69,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+tests.py
 
 # Translations
 *.mo
