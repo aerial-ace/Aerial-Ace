@@ -2,3 +2,5 @@ git+https://github.com/Pycord-Development/pycord
 requests
 TextWrapper
 pymongo[srv]
+motor
+dnspython
