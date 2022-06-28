@@ -10,7 +10,7 @@ class RandomMisc(commands.Cog):
     """View random pokemon"""
 
     @commands.guild_only()
-    @commands.command(name="random_poke", aliases=["rp"], description="View randomly picked pokemon")
+    @commands.command(name="random_pokemon", aliases=["rp"], description="View randomly picked pokemon")
     async def random_poke(self, ctx):
         
         reply = await random_helper.get_random_pokemon_embed()
