@@ -7,7 +7,7 @@ from views.GeneralView import GeneralView
 
 class HelpSystemSlash(commands.Cog):
     
-    @slash_command(name="help", description="Get help for a command", guild_ids=[751076697884852389])
+    @slash_command(name="help", description="Get help for a command")
     async def help(self, ctx : ApplicationContext, input : Option(str, description="Command to get help for", required=False, default=None)):
 
         view = GeneralView(200, True, True, True, True)
