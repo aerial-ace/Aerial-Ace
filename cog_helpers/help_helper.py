@@ -7,7 +7,7 @@ from cog_helpers import general_helper
 
 all_categories = {"pokedex" : "commands related to pokedex", "random" : "commands related to random gen", "info" : "commands related to information", "battle" : "commands related to battleboard", "tags" : "commands related to shinyhunts", "fun" : "other fun commands", "misc" : "commands that dont fit in other catagories", "starboard" : "commands related to starboard", "smogon" : "commands related to showdown"}
 
-commands_in_catagory = {
+commands_in_category = {
     "pokedex" : ["dex", "ability"],
     "random" : ["random_pokemon", "random_team", "random_matchup", "random_type"],
     "info" : ["stats", "moveset", "nature", "weak"],
@@ -81,7 +81,7 @@ async def get_help_embed(ctx = None) -> Embed:
 
     return embd
 
-async def get_catagory_help_embed(ctx:commands.Context, input) -> Embed:
+async def get_category_help_embed(ctx:commands.Context, input) -> Embed:
 
     input = input.lower()
 
@@ -94,7 +94,7 @@ async def get_catagory_help_embed(ctx:commands.Context, input) -> Embed:
 
     if input not in commands:
         if input not in catagories:
-            reply = await general_helper.get_info_embd("Not Found Error!", f"This catagory/command was not found, do `{prefix}help` for all the categories", color=config.ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Not Found Error!", f"This category/command was not found, do `{prefix}help` for all the categories", color=config.ERROR_COLOR)
             return reply
         else:
             input_is_command = False
@@ -104,23 +104,27 @@ async def get_catagory_help_embed(ctx:commands.Context, input) -> Embed:
     if input_is_command:
         desc = all_commands[input]
         embd = Embed(title=f"__{input.capitalize()} Help__", color=config.NORMAL_COLOR)
-        embd.description = desc.format(prefix=ctx.prefix)
+        embd.description = desc.format(prefix=prefix)
         embd.timestamp = datetime.datetime.now()
     else:
-        cmds = commands_in_catagory[input]   
+        if ctx is not None:
+            cmds = commands_in_category[input]   
 
-        embd = Embed(title=f"__{input.capitalize()} Help__", color=config.NORMAL_COLOR)
-        embd.description = "All the commands in this catagory, Use aa.help <command> to know more"
-        
-        for i in cmds:
-            desc = ctx.bot.get_command(i).description
-            embd.add_field(
-                name=i,
-                value=desc,
-                inline=True
-            )
+            embd = Embed(title=f"__{input.capitalize()} Help__", color=config.NORMAL_COLOR)
+            embd.description = "All the commands in this category, Use aa.help <command> to know more"
+            
+            for i in cmds:
+                desc = ctx.bot.get_command(i).description
+                embd.add_field(
+                    name=i,
+                    value=desc,
+                    inline=True
+                )
 
-        embd.set_thumbnail(url=config.AVATAR_LINK)
-        embd.timestamp = datetime.datetime.now()
+            embd.set_thumbnail(url=config.AVATAR_LINK)
+            embd.timestamp = datetime.datetime.now()
+        else:
+            reply = await general_helper.get_info_embd("Not Found Error!", f"This command was not found, do `{prefix}help` for all the categories", color=config.ERROR_COLOR)
+            return reply
 
     return embd

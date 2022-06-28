@@ -18,7 +18,7 @@ class HelpCommand(commands.Cog):
             reply = await help_helper.get_help_embed(ctx)
             await ctx.send(embed=reply, view=view)
         else:
-            reply = await help_helper.get_catagory_help_embed(ctx, input.lower())
+            reply = await help_helper.get_category_help_embed(ctx, input.lower())
             await ctx.send(embed=reply, view=view)
 
 def setup(bot):
