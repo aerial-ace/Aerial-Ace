@@ -11,11 +11,13 @@ cached_nature_data = None
 cached_type_data = None
 cached_weakness_data = None
 cached_duelish_data = None
+pokemon = None
 
 # caches the data
 async def cache_data():
     global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data, cached_weakness_data, cached_type_data, cached_duelish_data
 
+    pokemon = get_pokemon_name()
     cached_stats_data = get_all_stats()
     cached_moveset_data = get_all_moveset()
     cached_alt_name_data = get_all_alt_names()
@@ -25,6 +27,11 @@ async def cache_data():
     cached_weakness_data = get_all_weakness_data()
     cached_duelish_data = get_all_duelish_data()
 
+    
+def get_pokemon_name():
+    with open('data/pokemon.json', 'r') as file:
+        return json.loads(file)
+    
 # returns all the stats from stats file
 def get_all_stats():
     stats_file = open(config.STATS_FILE_LOCATION, "r")
