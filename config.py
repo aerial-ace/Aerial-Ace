@@ -32,6 +32,10 @@ PLS_EMOJI = ""
 COIN_HEADS_EMOJI = "<:heads:946027174526353448>"
 COIN_TAILS_EMOJI = "<:tails:946027156985757746>"
 DEVELOPER_EMOJI = "<:developer:956852544666206238>"
+NEXT_EMOJI = "<:next:964507779765272648>"
+PREV_EMOJI = "<:prev:964508551915634768>"
+FIRST_EMOJI = "<:first:964508851166646272>"
+LAST_EMOJI = "<:last:964508277809496125>"
 
 TYPES = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water"]
 
@@ -70,25 +74,26 @@ PIKA_SHOCK = "https://cdn.discordapp.com/attachments/911547825274388511/91884002
 NO_IMAGE = "https://i.imgur.com/avAapuP.png"
 
 TIER_LINK = {
-    "rare" : "https://media.discordapp.net/attachments/793689115689353247/924912850953195520/IMG_0018.png",
-    "mega" : "https://cdn.discordapp.com/attachments/774499540938129429/870761603153416202/my-image_50.png",
-    "common" : " https://media.discordapp.net/attachments/839209309371891802/900488066437894144/my-image_271.png https://media.discordapp.net/attachments/839209309371891802/900488066756640888/my-image_2721.png https://media.discordapp.net/attachments/839209309371891802/900488065229942804/my-image_272.png https://media.discordapp.net/attachments/839209309371891802/900488065594826863/my-image_273.png",
-    "bug" : "https://media.discordapp.net/attachments/774499540938129429/845692957214375966/image0.png",
-    "dark" : "https://cdn.discordapp.com/attachments/918973688932630589/935020376717672448/my-image_6.png",
-    "dragon" : "https://cdn.discordapp.com/attachments/793689115689353247/931947498937921596/my-image_3.png",
-    "electric" : "https://cdn.discordapp.com/attachments/793689115689353247/868569489938210836/my-image_46.png",
-    "fairy" : "https://cdn.discordapp.com/attachments/793689115689353247/936020121900703744/my-image_11.png",
-    "fighting" : "https://cdn.discordapp.com/attachments/718008298837770290/901298772783558716/my-image_14.png",
-    "fire" : "https://cdn.discordapp.com/attachments/899753866638266418/900555487437807657/my-image_11.png",
-    "flying" : "https://cdn.discordapp.com/attachments/774499540938129429/887928654116552724/my-image.png", 
-    "ghost" : "https://media.discordapp.net/attachments/718008298837770290/844752635684454460/image0.png",
-    "grass" : "https://media.discordapp.net/attachments/793689115689353247/920423300692332564/IMG_9676.png",
-    "ground" : "https://cdn.discordapp.com/attachments/718008298837770290/866929735920254976/my-image_43.png",
-    "ice" : "https://media.discordapp.net/attachments/774499540938129429/850456657120591943/my-image_9.png",
-    "normal" : "https://cdn.discordapp.com/attachments/718008298837770290/896314513895329853/my-image_1.png",
-    "poison" : "https://cdn.discordapp.com/attachments/718008298837770290/934966138415239198/my-image_4.png",
-    "psychic" : "https://cdn.discordapp.com/attachments/877212831240560752/909264788935311360/my-image_17.png",
-    "rock" : "https://cdn.discordapp.com/attachments/718008298837770290/900550270050787358/my-image_8.png",
-    "steel" : "https://cdn.discordapp.com/attachments/918973688932630589/935029992541278208/my-image_8.png",
-    "water" : "https://cdn.discordapp.com/attachments/774499540938129429/876979764773126225/my-image_55.png"
+    "rare" : "https://i.imgur.com/TAbPWeK.png",
+    "mega" : "https://i.imgur.com/aEkh8Mm.png",
+    "common" : "https://i.imgur.com/NIq1RZK.png https://i.imgur.com/OgrPggn.png https://i.imgur.com/hjr5aXs.png https://i.imgur.com/9M4oQJr.png",
+    "bug" : "https://i.imgur.com/pFZmJU1.png",
+    "dark" : "https://i.imgur.com/50fQwp5.png",
+    "dragon" : "https://i.imgur.com/xVSeQZg.png",
+    "electric" : "https://i.imgur.com/Mm9IP3h.png",
+    "fairy" : "https://i.imgur.com/YzPJHei.png",
+    "fighting" : "https://i.imgur.com/xPOwt2J.png",
+    "fire" : "https://i.imgur.com/HlyLW5I.png",
+    "flying" : "https://i.imgur.com/quWnAgG.png", 
+    "ghost" : "https://i.imgur.com/YbFC3qr.png",
+    "grass" : "https://i.imgur.com/NFszuTb.png",
+    "ground" : "https://i.imgur.com/nJEZuSc.png",
+    "ice" : "https://i.imgur.com/2JUuEl0.png",
+    "normal" : "https://i.imgur.com/z2pXPLb.png",
+    "poison" : "https://i.imgur.com/6hoKTD9.png",
+    "psychic" : "https://i.imgur.com/MIwNq5V.png",
+    "rock" : "https://i.imgur.com/2rWh30S.png",
+    "steel" : "https://i.imgur.com/sV7gaY6.png",
+    "water" : "https://i.imgur.com/fdUuqg6.png",
+    "eeveelution" : "**Beta : ** https://i.imgur.com/WXTPYHv.png"
 }

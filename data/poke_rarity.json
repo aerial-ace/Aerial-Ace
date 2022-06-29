@@ -399,7 +399,7 @@
   "starly": "common",
   "staravia": "common",
   "staraptor": "common",
-  "bidoof": "common",
+  "bidoof": "Legendary++",
   "bibarel": "common",
   "kricketot": "common",
   "kricketune": "common",
@@ -933,5 +933,6 @@
   "spectrier": "legendary",
   "calyrex": "legendary",
   "calyrex-shadow-rider": "legendary",
-  "calyrex-ice-rider": "legendary"
+  "calyrex-ice-rider": "legendary",
+  "enamorus" : "legendary"
 }

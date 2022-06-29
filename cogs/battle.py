@@ -17,7 +17,7 @@ class BattleSystem(commands.Cog):
 
     @commands.cooldown(1, 25, commands.BucketType.user)
     @commands.guild_only()
-    @commands.command(name="log_battle", aliases=["lb"])
+    @commands.command(name="log_battle", aliases=["lb"], description="Logs a battle in battle leaderboard")
     async def log_battle(self, ctx : commands.Context, winner, loser):
         winner_id = await general_helper.get_user_id_from_ping(winner)
         loser_id = await general_helper.get_user_id_from_ping(loser)
@@ -48,7 +48,7 @@ class BattleSystem(commands.Cog):
     """View Battleboard"""
 
     @commands.guild_only()
-    @commands.command(name="battle_lb", aliases=["blb"])
+    @commands.command(name="battle_lb", aliases=["blb"], description="Shows the battle leaderboard of the server")
     async def battle_lb(self, ctx):
         reply = await battle_helper.get_battle_leaderboard_embed(ctx.guild)
         view = GeneralView(200, True, True, False, False)
@@ -62,7 +62,7 @@ class BattleSystem(commands.Cog):
     """View Battle Score"""
 
     @commands.guild_only()
-    @commands.command(name="battle_score", aliases=["bs"])
+    @commands.command(name="battle_score", aliases=["bs"], description="Returns the battle score the server member")
     async def battle_score(self, ctx, user : Member = None):
         if user is None:
             reply = await battle_helper.get_battle_score(ctx.guild.id, ctx.author)
@@ -75,14 +75,10 @@ class BattleSystem(commands.Cog):
 
             await ctx.send(reply, view=view)
 
-    # @battle_score.error
-    # async def battle_score_handler(self, ctx, error):
-    #     await ctx.send(error)
-
     """Remove user from battle leaderboard"""
 
     @commands.guild_only()
-    @commands.command(name="battle_remove", aliases=["br"])
+    @commands.command(name="battle_remove", aliases=["br"], description="Removes a server member from the battle leaderboard")
     @commands.has_permissions(administrator=True)
     async def battle_remove(self, ctx, user : Member):
         reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user)
@@ -104,7 +100,7 @@ class BattleSystem(commands.Cog):
     """Battle Remove using id"""
 
     @commands.guild_only()
-    @commands.command(name="battle_remove_id", aliases=["brid"])
+    @commands.command(name="battle_remove_id", aliases=["brid"], description="Removes a server member from the battle leaderboard using member id")
     @commands.has_permissions(administrator=True)
     async def battle_remove_id(self, ctx, user_id:str):
         reply = await battle_helper.remove_user_from_battleboard_id(ctx.guild.id, user_id)
@@ -126,7 +122,7 @@ class BattleSystem(commands.Cog):
     """Clear Battleboard at once"""
 
     @commands.guild_only()
-    @commands.command(name="battleboard_clear", aliases=["blbc", "blb_clear"])
+    @commands.command(name="battleboard_clear", aliases=["blbc", "blb_clear"], description="Clears the battle leaderboard of the server")
     @commands.has_permissions(administrator=True)
     async def battle_leaderboard_clear(self, ctx:commands.Context):
         reply = await battle_helper.clear_battleboard(str(ctx.guild.id))

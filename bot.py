@@ -1,3 +1,6 @@
+from dis import disco
+from distutils.command.config import config
+from operator import imod
 from discord.ext import commands
 from discord import Bot, Intents
 import discord
@@ -7,6 +10,8 @@ from managers import mongo_manager
 from managers import init_manager
 from cogs import mail as mail_manager
 from config import TOKEN, MONGO_URI, TEST_TOKEN
+
+from cog_helpers import general_helper
 
 from checkers import rare_catch_detection
 
@@ -31,6 +36,7 @@ initial_cogs = [
     "smogon",
     "mail",
     "utility",
+    "suggestion",
     "error_handler",
     "pokedex",
     "pokemon_info",
@@ -45,6 +51,7 @@ initial_slash_cogs = [
     "pokeinfo",
     "starboard",
     "random_misc",
+    "suggestion",
     "tag",
     "smogon",
     "utility",
@@ -69,13 +76,14 @@ async def on_ready():
     print(f"Discord Version : {discord.__version__}")
 
 @bot.event
-async def on_message(message):
+async def on_message(message:discord.Message):
 
     if message.author == bot.user :
         return
 
-    if message.content == "alola":
-        await message.channel.send("You said, ALola")
+    # reply to solo pings
+    if message.content == "<@908384747393286174>":
+        await message.channel.send(embed=(await general_helper.get_info_embd(title="Alola :wave:, This is Aerial Ace.", desc="Prefix : `-aa` or `aa.`\n**Slash Commands are available**\nPing : **{ping} ms** \nHelp Command : `-aa help`".format(ping=round(bot.latency * 1000, 2)))))
 
     # detect rare catches from the poketwo bot
     await rare_catch_detection.rare_check(message)

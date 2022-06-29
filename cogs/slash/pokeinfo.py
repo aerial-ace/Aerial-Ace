@@ -51,7 +51,7 @@ class PokeInfoSlash(commands.Cog):
 
     """For getting tierlists"""
 
-    tierlist_catagories = ["common", "mega", "rare", "bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water"]
+    tierlist_catagories = ["common", "mega", "rare", "bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water", "eeveelution"]
 
     # return catagory from the input
     async def get_catagory(self, ctx : AutocompleteContext) -> str:

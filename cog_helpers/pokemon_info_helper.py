@@ -28,6 +28,7 @@ async def get_stats_embed(pokemon):
 
     else:
         embd.title = "That pokemon was not found in the database"
+        embd.color = ERROR_COLOR
         embd.description = "> If the name is correct then \n"
         embd.description += "> PROBABLY this pokemon is not good for battling \n"
         embd.description += "> Stats for **most** mega are same as their non mega forms"
@@ -58,6 +59,7 @@ async def get_moveset_embed(poke):
         return embd
     else:
         embd.title = "That pokemon was not found in the database"
+        embd.color = ERROR_COLOR
         embd.description = "> If the name is correct then \n"
         embd.description += "> PROBABLY this pokemon is not good for battling\n"
         embd.description += "> If this pokemon is a mega, try searching their non mega form"
@@ -74,8 +76,8 @@ async def get_nature_embed(poke: str):
     try:
         nature = cache_manager.cached_nature_data[poke]
         embd.title = "{poke}'s nature".format(poke=poke.capitalize())
-        embd.description = f"```{nature}```"
         embd.color = NORMAL_COLOR
+        embd.description = f"```{nature}```"
 
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=poke.lower())
         embd.set_thumbnail(url=image_link)

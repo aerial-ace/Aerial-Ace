@@ -11,14 +11,14 @@ class Utility(commands.Cog):
     """Get bot's latency"""
 
     @commands.guild_only()
-    @commands.command(name="ping")
+    @commands.command(name="ping", description="Get Bot's latency")
     async def ping(self, ctx):
         await ctx.send(f"Bot Latency (aka Ping) is : `{round(self.bot.latency * 1000, 2)}`ms")
 
     """Get roll"""
 
     @commands.guild_only()
-    @commands.command()
+    @commands.command(name="roll", description="Rolls a die")
     async def roll(self, ctx, max_value : int = 100):
         reply = await utility_helper.roll(max_value, ctx.author)
         
@@ -32,7 +32,7 @@ class Utility(commands.Cog):
 
     """Get links to support servers"""
 
-    @commands.command(name="support_server", aliases=["ss"])
+    @commands.command(name="support_server", aliases=["ss", "support"], description="Returns the link to support server")
     async def support_server(self, ctx):
         reply = await utility_helper.get_support_server_embed()
         view = GeneralView(200, True, True, False, False)
@@ -41,7 +41,7 @@ class Utility(commands.Cog):
 
     """Get about the bot embed"""
 
-    @commands.command(name="about")
+    @commands.command(name="about", description="About the bot")
     async def about(self, ctx):
         reply = await utility_helper.get_about_embed(ctx)
         view = GeneralView(200, True, True, True, True)
@@ -50,7 +50,7 @@ class Utility(commands.Cog):
 
     """Get vote links for the vote"""
 
-    @commands.command(name="vote")
+    @commands.command(name="vote", description="Vote link of the bot")
     async def vote(self, ctx):
         reply = await utility_helper.get_vote_embed()
         view = GeneralView(200, True, False, True, False)
@@ -59,7 +59,7 @@ class Utility(commands.Cog):
 
     """Get Invite links for the bot"""
 
-    @commands.command(name="invite", aliases=["inv"])
+    @commands.command(name="invite", aliases=["inv"], description="Returns the invite link of the bot")
     async def invite(self, ctx):
         reply = await utility_helper.get_invite_embed()
         view = GeneralView(200, True, True, False, False)

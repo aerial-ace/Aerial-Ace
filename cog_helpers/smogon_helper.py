@@ -1,9 +1,12 @@
 import requests
 from discord import Embed
+from discord.ext import pages
 import json
 
-from config import SMOGON_API_TEMPLATE, SMOGON_COLOR, ERROR_COLOR, NON_SHINY_LINK_TEMPLATE
+from config import NORMAL_COLOR, SMOGON_API_TEMPLATE, SMOGON_COLOR, ERROR_COLOR, NON_SHINY_LINK_TEMPLATE
 from cog_helpers import general_helper
+
+from views import GeneralView
 
 class SmogonData:
 
@@ -53,29 +56,30 @@ async def get_smogon_data(gen:int, tier:str, pokemon:str) -> SmogonData:
     return smogon_data
 
 
-async def get_smogon_embed(data:SmogonData) -> Embed:
+async def get_smogon_paginator(data:SmogonData) -> pages.Paginator:
 
     if data.error is not None:
         return await general_helper.get_info_embd("Error!!", "**Error Code :** {code}\n**Error Description** {desc}\n\nThere is a possiblity that the searched pokemon is not available in that generation or in that tier. \nTry with gen it was first introduced in.".format(code=data.error, desc=data.message), color=ERROR_COLOR)
 
-    embd = Embed(title=f"{data.name.capitalize()} - Smogon Analysis", color=SMOGON_COLOR)
+    mainEmbed = Embed(title=f"{data.name.capitalize()} - Smogon Analysis", color=SMOGON_COLOR)
+    mainEmbed.set_thumbnail(url=NON_SHINY_LINK_TEMPLATE.format(pokemon=data.name.lower()))
 
-    embd.add_field(
+    mainEmbed.add_field(
         name="Gen - Tier",
         value="{} - {}".format(data.gen, data.tier.upper()),
         inline=True
     )
-    embd.add_field(
+    mainEmbed.add_field(
         name="Pokemon",
         value=data.name.capitalize(),
         inline=True
     )
-    embd.add_field(
+    mainEmbed.add_field(
         name="Tier Rank",
         value=data.rank,
         inline=True
     )
-    embd.add_field(
+    mainEmbed.add_field(
         name="Usage Percentage",
         value=data.usage,
         inline=False
@@ -93,13 +97,16 @@ async def get_smogon_embed(data:SmogonData) -> Embed:
     else:
         abilities_str = "*Not enough data here*"
 
-    embd.add_field(
+    mainEmbed.add_field(
         name="Abilities - %",
         value=abilities_str,
         inline=False
     )
 
     # items
+
+    itemEmbed = Embed(title=f"Items - {data.name.capitalize()}", color=NORMAL_COLOR)
+    itemEmbed.set_thumbnail(url=NON_SHINY_LINK_TEMPLATE.format(pokemon=data.name.lower()))
 
     items_str = ""
     items = list(data.items.keys())
@@ -111,13 +118,16 @@ async def get_smogon_embed(data:SmogonData) -> Embed:
     else:
         items_str = "*Not enough data here*"
 
-    embd.add_field(
-        name="Items - %",
+    itemEmbed.add_field(
+        name="Items - Usage %",
         value=items_str,
         inline=True
     )
 
     # moves
+
+    moveEmbed = Embed(title=f"Moves - {data.name.capitalize()}", color=NORMAL_COLOR)
+    moveEmbed.set_thumbnail(url=NON_SHINY_LINK_TEMPLATE.format(pokemon=data.name.lower()))
 
     moves_str = ""
     moves = list(data.moveset.keys())
@@ -129,13 +139,16 @@ async def get_smogon_embed(data:SmogonData) -> Embed:
     else:
         moves_str = "*Not enough data here*"
 
-    embd.add_field(
-        name="Moves - %",
+    moveEmbed.add_field(
+        name="Moves - Usage %",
         value=moves_str,
         inline=True
     )
 
     # Checks
+
+    counterEmbed = Embed(title=f"Checks - {data.name.capitalize()}", color=NORMAL_COLOR)
+    counterEmbed.set_thumbnail(url=NON_SHINY_LINK_TEMPLATE.format(pokemon=data.name.lower()))
 
     checks_str = ""
     checks = list(data.checks.keys())
@@ -147,13 +160,16 @@ async def get_smogon_embed(data:SmogonData) -> Embed:
     else:
         checks_str = "*Not enough data here*"
 
-    embd.add_field(
-        name="Checks - KO%",
+    counterEmbed.add_field(
+        name="Checks - KO %",
         value=checks_str,
         inline=True
     )
 
     # stats
+
+    statsEmbed = Embed(title=f"Stats - {data.name.capitalize()}", color=NORMAL_COLOR)
+    statsEmbed.set_thumbnail(url=NON_SHINY_LINK_TEMPLATE.format(pokemon=data.name.lower()))
 
     stats_str = ""
     natures = list(data.stats.keys())
@@ -176,12 +192,10 @@ async def get_smogon_embed(data:SmogonData) -> Embed:
     else:
         stats_str = "*Not enough data here*"
 
-    embd.add_field(
-        name="Stats Spreads - %",
+    statsEmbed.add_field(
+        name="Stats Spreads - Usage %",
         value=stats_str,
         inline=False
     )
-    
-    embd.set_image(url=NON_SHINY_LINK_TEMPLATE.format(pokemon=data.name.lower()))
-    
-    return embd
+
+    return GeneralView.PageView([mainEmbed, itemEmbed, moveEmbed, counterEmbed, statsEmbed])

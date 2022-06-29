@@ -127,7 +127,7 @@ class AdminSystem(commands.Cog):
 
     """All commands"""
 
-    @commands.command(name="all_commands", aliases=["all", "all_cmds"])
+    @commands.command(name="all_commands", aliases=["all", "all_cmds"], description="Returns a list of all commands available in the bot.")
     async def all_commands(self, ctx:commands.Context):
 
         embd = Embed(title="All Commands - Aerial Ace", color=NORMAL_COLOR)

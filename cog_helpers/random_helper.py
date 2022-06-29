@@ -69,7 +69,8 @@ async def get_random_team(tier:str) -> list:
 
         random_tier = tier_duelish_pokemons[str(random_score_tier)]                                 # get the pokemons of that random tier
         random_pokemon_from_random_tier = random_tier[random.randint(0, len(random_tier) - 1)]      # get a random pokemon from that random tier
-        while random_pokemon_from_random_tier in team:                                              # if this pokemon is already in the team, then look for another pokemon from the same tier
+
+        while random_pokemon_from_random_tier + f" - {random_score_tier}" in team:                  # if this pokemon is already in the team, then look for another pokemon from the same tier
             random_pokemon_from_random_tier = random_tier[random.randint(0, len(random_tier) - 1)]  # get a random pokemon from that random tier
 
         team.append(random_pokemon_from_random_tier + " - " + str(random_score_tier))               # add that random pokemon to the team       

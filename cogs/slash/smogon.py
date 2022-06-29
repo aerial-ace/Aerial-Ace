@@ -3,7 +3,6 @@ from discord.commands import slash_command
 from discord import ApplicationContext, Option
 
 from cog_helpers import smogon_helper
-from views.GeneralView import GeneralView
 
 class SmogonSlashModule(commands.Cog):
 
@@ -11,10 +10,9 @@ class SmogonSlashModule(commands.Cog):
     async def smogon_slash(self, ctx:ApplicationContext, gen:Option(int, description="The Generation to look into"), tier:Option(str, description="Tier to look into"), pokemon:Option(str, description="Name of the pokemon", required=True)):
 
         data = await smogon_helper.get_smogon_data(gen=gen, tier=tier, pokemon=pokemon)
-        reply = await smogon_helper.get_smogon_embed(data)
-        view = GeneralView(200, True, True, False, False)
+        paginator = await smogon_helper.get_smogon_paginator(data)
 
-        await ctx.respond(embed=reply, view=view)
+        await paginator.send(ctx)
 
 def setup(bot:commands.Bot):
     bot.add_cog(SmogonSlashModule())
