@@ -3,9 +3,11 @@ from discord.ui import View, Button
 from discord import ButtonStyle
 
 from config import POKEMON_LINK_TEMPLATE_SMOGON, ABILITY_LINK_TEMPLATE_SMOGON, ERROR_COLOR, INVITE_LINK
+from managers import cache_manager
 from cog_helpers import pokedex_helper
 from cog_helpers import general_helper
 from views.GeneralView import GeneralView
+import difflib
 
 class PokeDex(commands.Cog):
     def __init__(self, bot):
@@ -20,7 +22,9 @@ class PokeDex(commands.Cog):
         try:
             poke_data = await pokedex_helper.get_poke_by_id(poke)
         except:
-            reply = await general_helper.get_info_embd("Pokemon not found", f"Dex entry for id : `{poke}` was not found in the pokedex.\n Most uncommon ids follow this format : \n```{ctx.prefix}dex marowak-alola\n{ctx.prefix}dex gallade-mega\n{ctx.prefix}dex meowstic-female\n{ctx.prefix}dex deoxys-defense\n{ctx.prefix}dex necrozma-dawn\n{ctx.prefix}dex calyrex-shadow-rider\n{ctx.prefix}dex cinderace-gmax```\nIf you still think this pokemon is missing, report it at official server", ERROR_COLOR)
+            pokemon = cache_manager.pokemon.keys()
+            close = difflib.get_close_matches(poke, pokemon)
+            reply = await general_helper.get_info_embd("Pokemon not found", f"Dex entry for id : `{poke}` was not found in the pokedex.\n The most close match for pokemon was {close[0]}.\n Most uncommon ids follow this format : \n```{ctx.prefix}dex marowak-alola\n{ctx.prefix}dex gallade-mega\n{ctx.prefix}dex meowstic-female\n{ctx.prefix}dex deoxys-defense\n{ctx.prefix}dex necrozma-dawn\n{ctx.prefix}dex calyrex-shadow-rider\n{ctx.prefix}dex cinderace-gmax```\nIf you still think this pokemon is missing, report it at official server", ERROR_COLOR)
             view = GeneralView(200)
 
             await ctx.send(embed=reply, view=view)
