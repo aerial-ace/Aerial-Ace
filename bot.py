@@ -25,7 +25,7 @@ intents.message_content = True
 def prefix_callable(bot : Bot, message):
     return [f"<@{bot.user.id}> ", f"<@!{bot.user.id}> ", "-aa ", "aa."]
 
-bot = commands.Bot(command_prefix=prefix_callable, description="Botto", case_insensitive=True, intents=intents)
+bot = commands.AutoShardedBot(command_prefix=prefix_callable, description="Botto", case_insensitive=True, intents=intents)
 bot.remove_command("help")
 
 initial_cogs = [

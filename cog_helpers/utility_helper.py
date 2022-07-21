@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 import random
 
 import config
@@ -66,6 +67,16 @@ async def get_about_embed(ctx) -> discord.Embed:
     embd.add_field(
         name=f"{config.BULLET_EMOJI}Repository",
         value=f"[Click here]({config.REPO_LINK})",
+        inline=True
+    )
+
+    bot:commands.Bot = ctx.bot
+
+    shards = bot.shard_count
+
+    embd.add_field(
+        name=f"{config.BULLET_EMOJI}Shards",
+        value="{}".format(shards),
         inline=True
     )
 
