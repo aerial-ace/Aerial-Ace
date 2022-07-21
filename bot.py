@@ -2,9 +2,7 @@ from discord.ext import commands
 from discord import Bot, Intents
 import discord
 
-from managers import cache_manager
-from managers import mongo_manager
-from managers import init_manager
+from managers import cache_manager, mongo_manager, init_manager, post_command_manager
 from cogs import mail as mail_manager
 from config import TOKEN, MONGO_URI, TEST_TOKEN
 
@@ -91,7 +89,7 @@ async def on_message(message:discord.Message):
 @bot.listen("on_command_completion")
 async def after_command(ctx : commands.Context):
     if ctx.command.name != "help" and ctx.command.name != "mail":
-        await mail_manager.process_mail(ctx)
+        await post_command_manager.process_post_commands(ctx)
 
 def main():
     for cog in initial_cogs:
