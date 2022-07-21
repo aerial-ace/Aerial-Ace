@@ -24,7 +24,7 @@ class PokedexSlash(commands.Cog):
 
     """Get info about abilities"""
 
-    @slash_command(name="ability", description="Detailes about abilities")
+    @slash_command(name="ability", description="Details about abilities")
     async def ability(self, ctx:ApplicationContext, name:Option(str, description="Name of the ability", required=True)):
         reply = await pokedex_helper.get_ability_embed(name)
         

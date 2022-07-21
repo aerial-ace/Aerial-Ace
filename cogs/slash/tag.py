@@ -2,11 +2,11 @@ from discord import Member, ApplicationContext, AutocompleteContext
 from discord.ext import commands
 from discord.commands import slash_command, Option
 
-from config import ERROR_COLOR
+from views.ButtonViews import GeneralView
+from managers import cache_manager
 from cog_helpers import general_helper
 from cog_helpers import tag_helper
-from managers import cache_manager
-from views.GeneralView import GeneralView
+from config import ERROR_COLOR
 
 class TagSystemSlash(commands.Cog):
 

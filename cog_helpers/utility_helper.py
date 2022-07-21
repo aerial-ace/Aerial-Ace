@@ -149,3 +149,11 @@ async def register_suggestion(ctx, text : list()) -> None:
     embd.set_thumbnail(url=config.AVATAR_LINK)
 
     await suggestion_channel.send(embed=embd)
+
+# returns the donation embed
+async def get_donation_embed() -> discord.Embed:
+
+    embd = discord.Embed(title="Become a Supporter", color=config.NORMAL_COLOR)
+    embd.description = "Support the development of Aerial Ace by becoming an Aerial Ace [patron]({patreon_link}) or donate directly via [PayPal]({paypal_link}).".format(patreon_link=config.PATREON_LINK, paypal_link=config.PAYPAL_LINK)
+
+    return embd

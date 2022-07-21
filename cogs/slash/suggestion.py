@@ -2,8 +2,8 @@ from discord.ext import commands
 from discord import ApplicationContext
 from discord.commands import slash_command, Option
 
+from views.ButtonViews import GeneralView
 from cog_helpers import suggestion_helper
-from views.GeneralView import GeneralView
 
 class SuggestionSlash(commands.Cog):
 

@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.commands import slash_command, Option
 
 from cog_helpers import help_helper
-from views.GeneralView import GeneralView
+from views.ButtonViews import GeneralView
 
 class HelpSystemSlash(commands.Cog):
     

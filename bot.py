@@ -1,6 +1,3 @@
-from dis import disco
-from distutils.command.config import config
-from operator import imod
 from discord.ext import commands
 from discord import Bot, Intents
 import discord

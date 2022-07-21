@@ -2,8 +2,8 @@ from discord import ApplicationContext
 from discord.ext import commands
 from discord.commands import slash_command
 
+from views.ButtonViews import GeneralView, DonationView
 from cog_helpers import utility_helper
-from views.GeneralView import GeneralView
 
 class UtilitySlash(commands.Cog):
     
@@ -56,6 +56,16 @@ class UtilitySlash(commands.Cog):
         view = GeneralView(200, True, True, False, False)
 
         await ctx.respond(embed=reply, view=view)
+
+    """Donation Links"""
+
+    @slash_command(name="donation", description="Donate or become a patron to support the development of aerial ace")
+    async def donation(self, ctx:ApplicationContext):
+        reply = await utility_helper.get_donation_embed()
+        view = DonationView(200)
+
+        await ctx.respond(embed=reply, view=view)
+
 
 def setup(bot : commands.Bot):
     bot.add_cog(UtilitySlash())

@@ -1,8 +1,7 @@
 from discord.ext import commands
 
+from views.ButtonViews import GeneralView, DonationView
 from cog_helpers import utility_helper
-from cog_helpers.general_helper import get_info_embd
-from views.GeneralView import GeneralView
 
 class Utility(commands.Cog):
     def __init__(self, bot) -> None:
@@ -63,6 +62,15 @@ class Utility(commands.Cog):
     async def invite(self, ctx):
         reply = await utility_helper.get_invite_embed()
         view = GeneralView(200, True, True, False, False)
+
+        await ctx.send(embed=reply, view=view)
+
+    """Get Donation Links"""
+
+    @commands.command(name="donate", aliases=["patreon", "donation"], description="Donate or Subscribe to Patreon to get exclusive perks.")
+    async def donation(self, ctx):
+        reply = await utility_helper.get_donation_embed()
+        view = DonationView(200)
 
         await ctx.send(embed=reply, view=view)
             

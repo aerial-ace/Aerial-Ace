@@ -1,11 +1,11 @@
 from discord.ext import commands
 from discord import Member
 
-from config import ERROR_COLOR, WARNING_COLOR
+from views.ButtonViews import GeneralView
+from managers import cache_manager
 from cog_helpers import tag_helper
 from cog_helpers import general_helper
-from managers import cache_manager
-from views.GeneralView import GeneralView
+from config import ERROR_COLOR, WARNING_COLOR
 
 class TagSystem(commands.Cog):
     def __init__(self, bot) -> None:

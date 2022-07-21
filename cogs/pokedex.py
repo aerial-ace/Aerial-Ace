@@ -2,10 +2,10 @@ from discord.ext import commands
 from discord.ui import View, Button
 from discord import ButtonStyle
 
-from config import POKEMON_LINK_TEMPLATE_SMOGON, ABILITY_LINK_TEMPLATE_SMOGON, ERROR_COLOR, INVITE_LINK
+from views.ButtonViews import GeneralView
 from cog_helpers import pokedex_helper
 from cog_helpers import general_helper
-from views.GeneralView import GeneralView
+from config import POKEMON_LINK_TEMPLATE_SMOGON, ABILITY_LINK_TEMPLATE_SMOGON, ERROR_COLOR, INVITE_LINK
 
 class PokeDex(commands.Cog):
     def __init__(self, bot):

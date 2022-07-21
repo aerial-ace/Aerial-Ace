@@ -1,7 +1,7 @@
 from discord.ext import commands
 
+from views.ButtonViews import GeneralView
 from cog_helpers import help_helper
-from views.GeneralView import GeneralView
 
 class HelpCommand(commands.Cog):
 

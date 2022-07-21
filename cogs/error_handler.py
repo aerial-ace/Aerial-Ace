@@ -1,7 +1,7 @@
 from discord.ext import commands
 from discord import HTTPException
 
-from views.GeneralView import GeneralView
+from views.ButtonViews import GeneralView
 
 class ErrorHandler(commands.Cog):
     

@@ -2,8 +2,8 @@ import discord
 from discord.ext import commands
 import random
 
+from views.ButtonViews import GeneralView
 import config
-from views.GeneralView import GeneralView
 
 class MailModule(commands.Cog):
     @commands.guild_only()

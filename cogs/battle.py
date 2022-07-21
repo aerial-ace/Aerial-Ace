@@ -1,10 +1,10 @@
 from discord import Member
 from discord.ext import commands
 
-import config
+from views.ButtonViews import GeneralView
 from cog_helpers import general_helper
 from cog_helpers import battle_helper
-from views.GeneralView import GeneralView
+import config
 
 class BattleSystem(commands.Cog):
 

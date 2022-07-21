@@ -1,8 +1,8 @@
 import discord
 
-from config import TYPES, NON_SHINY_LINK_TEMPLATE, NORMAL_COLOR, ERROR_COLOR
 from managers import cache_manager
 from cog_helpers import general_helper
+from config import TYPES, NON_SHINY_LINK_TEMPLATE, NORMAL_COLOR, ERROR_COLOR
 
 # get stats
 async def get_stats_embed(pokemon):

@@ -3,7 +3,7 @@ from discord import Embed
 from os import listdir
 
 from managers import mongo_manager
-from config import NORMAL_COLOR, DEVELOPER_EMOJI
+from config import NORMAL_COLOR
 
 class AdminSystem(commands.Cog):
 

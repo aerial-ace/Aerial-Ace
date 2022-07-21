@@ -1,9 +1,9 @@
 from discord.ext import commands
 
-import config
-from views.GeneralView import GeneralView
+from views.ButtonViews import GeneralView
 from cog_helpers import pokemon_info_helper
 from cog_helpers import general_helper
+import config
 
 class Pokemon_Info(commands.Cog):
     def __init__(self, bot):

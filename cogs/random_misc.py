@@ -1,9 +1,9 @@
 import random
 from discord.ext import commands
 
-from config import TYPES
+from views.ButtonViews import GeneralView
 from cog_helpers import random_helper
-from views.GeneralView import GeneralView
+from config import TYPES
 
 class RandomMisc(commands.Cog):
     

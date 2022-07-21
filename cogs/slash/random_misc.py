@@ -4,9 +4,9 @@ from discord.commands import slash_command
 from discord.commands import Option
 import random
 
-from config import TYPES
+from views.ButtonViews import GeneralView
 from cog_helpers import random_helper
-from views.GeneralView import GeneralView
+from config import TYPES
 
 class RandomMiscSlash(commands.Cog):
 

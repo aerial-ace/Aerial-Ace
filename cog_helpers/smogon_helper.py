@@ -3,10 +3,11 @@ from discord import Embed
 from discord.ext import pages
 import json
 
-from config import NORMAL_COLOR, SMOGON_API_TEMPLATE, SMOGON_COLOR, ERROR_COLOR, NON_SHINY_LINK_TEMPLATE
+from views.PaginatorViews import PageView
 from cog_helpers import general_helper
+from config import NORMAL_COLOR, SMOGON_API_TEMPLATE, SMOGON_COLOR, ERROR_COLOR, NON_SHINY_LINK_TEMPLATE
 
-from views import GeneralView
+from views import PaginatorViews
 
 class SmogonData:
 
@@ -56,7 +57,7 @@ async def get_smogon_data(gen:int, tier:str, pokemon:str) -> SmogonData:
     return smogon_data
 
 
-async def get_smogon_paginator(data:SmogonData) -> pages.Paginator:
+async def get_smogon_paginator(data:SmogonData) -> PageView:
 
     if data.error is not None:
         return await general_helper.get_info_embd("Error!!", "**Error Code :** {code}\n**Error Description** {desc}\n\nThere is a possiblity that the searched pokemon is not available in that generation or in that tier. \nTry with gen it was first introduced in.".format(code=data.error, desc=data.message), color=ERROR_COLOR)
@@ -198,4 +199,4 @@ async def get_smogon_paginator(data:SmogonData) -> pages.Paginator:
         inline=False
     )
 
-    return GeneralView.PageView([mainEmbed, itemEmbed, moveEmbed, counterEmbed, statsEmbed])
+    return PaginatorViews.PageView([mainEmbed, itemEmbed, moveEmbed, counterEmbed, statsEmbed])

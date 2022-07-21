@@ -2,9 +2,9 @@ import discord
 import requests
 import json
 
-from config import NORMAL_COLOR, ERROR_COLOR, NO_IMAGE
 from managers import cache_manager
 from cog_helpers import general_helper
+from config import NORMAL_COLOR, ERROR_COLOR, NO_IMAGE
 
 """data structure used to store pokemon data"""
 

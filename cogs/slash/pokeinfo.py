@@ -2,9 +2,9 @@ from discord import ApplicationContext, AutocompleteContext
 from discord.ext import commands
 from discord.commands import slash_command, Option
 
-import config
+from views.ButtonViews import GeneralView
 from cog_helpers import pokemon_info_helper
-from views.GeneralView import GeneralView
+import config
 
 class PokeInfoSlash(commands.Cog):
 
