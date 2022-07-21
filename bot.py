@@ -3,7 +3,6 @@ from discord import Bot, Intents
 import discord
 
 from managers import cache_manager, mongo_manager, init_manager, post_command_manager
-from cogs import mail as mail_manager
 from config import TOKEN, MONGO_URI, TEST_TOKEN
 
 from cog_helpers import general_helper
