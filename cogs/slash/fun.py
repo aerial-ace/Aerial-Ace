@@ -17,7 +17,7 @@ class FunSystemSlash(commands.Cog):
             return
 
         reply = await fun_helper.get_kill_embed(ctx.author, target)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -27,7 +27,7 @@ class FunSystemSlash(commands.Cog):
     async def hit(self, ctx : ApplicationContext, target : Option(Member, description="Member to hit", required=True)):
 
         reply = await fun_helper.get_hit_embed(ctx.author, target)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
        
@@ -41,7 +41,7 @@ class FunSystemSlash(commands.Cog):
         else:
             embd = await fun_helper.get_dance_embed(ctx.author, target)
 
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=embd, view=view)
 
@@ -51,7 +51,7 @@ class FunSystemSlash(commands.Cog):
     async def pat(self, ctx : ApplicationContext, target : Option(Member, description="Member to pat", required=True)):
 
         reply = await fun_helper.get_pat_embed(ctx.author, target)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -61,7 +61,7 @@ class FunSystemSlash(commands.Cog):
     async def tease(self, ctx : ApplicationContext, target : Option(Member, description="Member to tease", required=True)):
 
         reply = await fun_helper.get_tease_embed(ctx.author, target)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -71,7 +71,7 @@ class FunSystemSlash(commands.Cog):
     async def cry(self, ctx:ApplicationContext):
 
         reply = await fun_helper.get_cry_embed(ctx.author)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -81,7 +81,7 @@ class FunSystemSlash(commands.Cog):
     async def hug(self, ctx:ApplicationContext, target:Option(Member, description="Member to hug", required=True)):
 
         reply = await fun_helper.get_hug_embed(ctx.author, target)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
 

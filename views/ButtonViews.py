@@ -20,7 +20,7 @@ class DonationView(View):
 
 class GeneralView(View):
 
-    def __init__(self, timeout:int, invite:bool=True, support_server:bool=True, donate:bool=False, source:bool=False):
+    def __init__(self, timeout:int, invite:bool=True, support_server:bool=True, source:bool=False, donate:bool=False):
 
         super().__init__()
 
@@ -44,7 +44,7 @@ class GeneralView(View):
     async def donate_callback(self, interaction:Interaction) -> None:
 
         embd = await general_helper.get_info_embd(
-            title="Donate to support the Aerial Ace",
+            title="Donate to support Aerial Ace",
             desc="Thanks for checking out the donation module. \nYou can donate or subscribe to patreon to support the development of aerial ace. \nCurrently, 100% of server expenses are on the developer, so even your smallest donations matter a lot.",
             show_thumbnail=True
         )

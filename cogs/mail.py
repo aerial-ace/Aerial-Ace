@@ -13,7 +13,7 @@ class MailModule(commands.Cog):
         """View all the mails in the mail box"""
 
         embd = discord.Embed(title="__Mail Box - Aerial Ace__", color=config.NORMAL_COLOR)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
         
         embd.description = "__**New**__\n\n"
 

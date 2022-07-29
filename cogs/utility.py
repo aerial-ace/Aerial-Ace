@@ -34,7 +34,7 @@ class Utility(commands.Cog):
     @commands.command(name="support_server", aliases=["ss", "support"], description="Returns the link to support server")
     async def support_server(self, ctx):
         reply = await utility_helper.get_support_server_embed()
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -52,7 +52,7 @@ class Utility(commands.Cog):
     @commands.command(name="vote", description="Vote link of the bot")
     async def vote(self, ctx):
         reply = await utility_helper.get_vote_embed()
-        view = GeneralView(200, True, False, True, False)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -61,7 +61,7 @@ class Utility(commands.Cog):
     @commands.command(name="invite", aliases=["inv"], description="Returns the invite link of the bot")
     async def invite(self, ctx):
         reply = await utility_helper.get_invite_embed()
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.send(embed=reply, view=view)
 

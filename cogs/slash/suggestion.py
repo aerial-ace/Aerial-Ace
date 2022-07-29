@@ -11,7 +11,7 @@ class SuggestionSlash(commands.Cog):
     async def suggest(self, ctx:ApplicationContext, suggestion:Option(str, description="Suggestion Goes Here", required=True)):
         
         reply = await suggestion_helper.send_suggestion(ctx.guild, ctx.author, suggestion)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(reply, view=view)
 

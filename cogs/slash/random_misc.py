@@ -16,7 +16,7 @@ class RandomMiscSlash(commands.Cog):
     async def random_pokemon(self, ctx:ApplicationContext):
         poke = await random_helper.get_random_poke()
         reply = await random_helper.get_random_pokemon_embed(poke)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -26,7 +26,7 @@ class RandomMiscSlash(commands.Cog):
     async def random_team(self, ctx:ApplicationContext, tier:Option(str, description="Enter the tier like common, mega, rare", required=True)):
 
         reply = await random_helper.get_random_team_embed(tier)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -36,7 +36,7 @@ class RandomMiscSlash(commands.Cog):
     async def random_matchup(self, ctx:ApplicationContext, tier:Option(str, description="Enter the tier like common, mega, rare", required=True)):
 
         reply = await random_helper.get_random_matchup_embd(tier)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -46,7 +46,7 @@ class RandomMiscSlash(commands.Cog):
     async def random_type(self, ctx:ApplicationContext):
 
         random_type = TYPES[random.randint(0, len(TYPES) - 1)]
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(f"HMMMMM! You got `{random_type.capitalize()}` type :3", view=view)
     

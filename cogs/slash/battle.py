@@ -14,7 +14,7 @@ class BattleSystemSlash(commands.Cog):
 
         embd = await battle_helper.get_battle_leaderboard_embed(ctx.guild)
 
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=embd, view=view)
 
@@ -27,7 +27,7 @@ class BattleSystemSlash(commands.Cog):
             user = ctx.author
 
         reply = await battle_helper.get_battle_score(ctx.guild.id, user)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(reply, view=view)
 
@@ -40,7 +40,7 @@ class BattleSystemSlash(commands.Cog):
             return await ctx.respond("Be Admin when? :/")
 
         reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(reply, view=view)
 
@@ -53,7 +53,7 @@ class BattleSystemSlash(commands.Cog):
             return await ctx.respond("Be Admin when? :/")
 
         reply = await battle_helper.remove_user_from_battleboard_id(ctx.guild.id, user_id)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(reply, view=view)
 
@@ -63,7 +63,7 @@ class BattleSystemSlash(commands.Cog):
     async def clear_battleboard(self, ctx:ApplicationContext):
 
         reply = await battle_helper.clear_battleboard(str(ctx.guild_id))
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(reply, view=view)
 

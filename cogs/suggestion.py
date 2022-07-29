@@ -14,7 +14,7 @@ class SuggestionManager(commands.Cog):
             return await ctx.reply("Give Suggestion too :|")
 
         reply = await suggestion_helper.send_suggestion(ctx.guild, ctx.author, " ".join(suggestion))
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.reply(reply, view=view)
 

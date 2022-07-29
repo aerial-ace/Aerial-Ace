@@ -14,7 +14,7 @@ class PokeInfoSlash(commands.Cog):
     async def stats(self, ctx : ApplicationContext, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_stats_embed(pokemon)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -24,7 +24,7 @@ class PokeInfoSlash(commands.Cog):
     async def moveset(self, ctx : ApplicationContext, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_moveset_embed(pokemon)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -34,7 +34,7 @@ class PokeInfoSlash(commands.Cog):
     async def nature(self, ctx : ApplicationContext, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_nature_embed(pokemon)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -44,7 +44,7 @@ class PokeInfoSlash(commands.Cog):
     async def weakness(self, ctx : ApplicationContext, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_weakness_embed([pokemon])
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -61,7 +61,7 @@ class PokeInfoSlash(commands.Cog):
     async def tierlist(self, ctx : ApplicationContext, catagory : Option(str, description="Select Catagory", required=True, autocomplete=get_catagory)):
 
         tier_link = config.TIER_LINK[catagory]
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(tier_link, view=view)
 

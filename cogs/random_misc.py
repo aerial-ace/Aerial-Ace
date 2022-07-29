@@ -14,7 +14,7 @@ class RandomMisc(commands.Cog):
     async def random_poke(self, ctx):
         
         reply = await random_helper.get_random_pokemon_embed()
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -24,7 +24,7 @@ class RandomMisc(commands.Cog):
     @commands.guild_only()
     async def get_random_team(self, ctx : commands.Context, tier):
         reply = await random_helper.get_random_team_embed(tier.lower())
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.reply(embed=reply, view=view)
 
@@ -40,7 +40,7 @@ class RandomMisc(commands.Cog):
     @commands.guild_only()
     async def get_random_matchup(self, ctx : commands.Context, tier):
         reply = await random_helper.get_random_matchup_embd(tier.lower())
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.reply(embed=reply, view=view)
 

@@ -86,6 +86,7 @@ async def on_message(message:discord.Message):
     await bot.process_commands(message)
 
 @bot.listen("on_command_completion")
+@bot.listen("on_application_command_completion")
 async def after_command(ctx : commands.Context):
     if ctx.command.name != "help" and ctx.command.name != "mail":
         await post_command_manager.process_post_commands(ctx)

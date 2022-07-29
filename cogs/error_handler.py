@@ -12,7 +12,7 @@ class ErrorHandler(commands.Cog):
             return
 
         cog:commands.Cog = ctx.cog
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         # return if cog has its own handler
         if cog:

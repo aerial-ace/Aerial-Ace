@@ -21,7 +21,7 @@ class FunModule(commands.Cog):
 
         reply = await fun_helper.get_kill_embed(ctx.author, target)
 
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.send(embed=reply, view=view)
         
@@ -41,7 +41,7 @@ class FunModule(commands.Cog):
 
 
         reply = await fun_helper.get_hit_embed(ctx.author, target)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -63,7 +63,7 @@ class FunModule(commands.Cog):
         else:
             reply = await fun_helper.get_dance_embed(ctx.author, target)
 
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -78,7 +78,7 @@ class FunModule(commands.Cog):
     @commands.command(name="pat", description="Pat someone using pokemon gifs")
     async def pat(self, ctx, target : discord.Member):
         reply = await fun_helper.get_pat_embed(ctx.author, target)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -96,7 +96,7 @@ class FunModule(commands.Cog):
     @commands.command(name="tease", description="Tease someone using pokemon gifs")
     async def tease(self, ctx, target : discord.Member):
         reply = await fun_helper.get_tease_embed(ctx.author, target)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -114,7 +114,7 @@ class FunModule(commands.Cog):
     @commands.command(name="cry", description="Cry using pokemon gifs")
     async def cry(self, ctx : commands.Context):
         reply = await fun_helper.get_cry_embed(ctx.author)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -129,7 +129,7 @@ class FunModule(commands.Cog):
     @commands.command(name="hug", description="Hug someone using pokemon gifs")
     async def hug(self, ctx : commands.Context, target:discord.Member):
         reply = await fun_helper.get_hug_embed(ctx.author, target)
-        view = GeneralView(200, True, True, False, False)
+        view = GeneralView(200, True, True, False, True)
 
         await ctx.send(embed=reply, view=view)
 
