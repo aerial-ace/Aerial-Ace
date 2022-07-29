@@ -14,7 +14,7 @@ def wrap_text(width, text):
     return wrapped_text
 
 # returns a embed provided the data 
-async def get_info_embd(title, desc, color=discord.Color.blue(), footer=None, show_tumbnail=False):
+async def get_info_embd(title, desc, color=discord.Color.blue(), footer=None, show_thumbnail=False):
     embd = discord.Embed()
 
     embd.colour = color
@@ -24,7 +24,7 @@ async def get_info_embd(title, desc, color=discord.Color.blue(), footer=None, sh
     if footer is not None:
         embd.set_footer(text=footer)
 
-    if show_tumbnail is True:
+    if show_thumbnail is True:
         embd.set_thumbnail(url=f"{config.AVATAR_LINK}")
 
     return embd
