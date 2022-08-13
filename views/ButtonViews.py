@@ -20,7 +20,7 @@ class DonationView(View):
 
 class GeneralView(View):
 
-    def __init__(self, timeout:int, invite:bool=True, support_server:bool=True, source:bool=False, donate:bool=False):
+    def __init__(self, timeout:int, invite:bool=True, support_server:bool=True, source:bool=False, donate:bool=False, vote=True):
 
         super().__init__()
 
@@ -29,6 +29,7 @@ class GeneralView(View):
         invite_button : Button = Button(label="Invite", url=INVITE_LINK, style=ButtonStyle.link)
         support_server_button : Button = Button(label="Support Server", url=SUPPORT_SERVER_LINK, style=ButtonStyle.link)
         source_button : Button = Button(label="Source Code", url=REPO_LINK, style=ButtonStyle.link)
+        vote_button : Button = Button(label="Vote", style=ButtonStyle.link, url=VOTE_LINK)
         donate_button : Button = Button(label="Donate", style=ButtonStyle.gray)
         donate_button.callback = self.donate_callback
 
@@ -38,6 +39,8 @@ class GeneralView(View):
             self.add_item(support_server_button)
         if(source):
             self.add_item(source_button)
+        if(vote):
+            self.add_item(vote_button)
         if(donate):
             self.add_item(donate_button)
 
