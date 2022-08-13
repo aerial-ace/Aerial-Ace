@@ -55,15 +55,21 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
     pokemon = pokemon.replace("é", "e")     #This is because of you Flabébé >:|
     pokemon = pokemon.removeprefix("defense").removeprefix("attack").removeprefix("speed")
 
-    # modify the id for alolan and galarian forms
-    if pokemon.startswith("alolan"):
-        pokemon = pokemon.removeprefix("alolan") + "-alola"
-    elif pokemon.startswith("galarian"):
-        pokemon = pokemon.removeprefix("galarian") + "-galar"
-    elif pokemon.startswith("complete"):
-        pokemon = pokemon.removeprefix("complete") + "-complete"
-    elif pokemon.startswith("10%"):
-        pokemon = pokemon.removeprefix("10%") + "-10"
+    name_aliter = {"ho-oh":"hooh"}
+
+    try:
+        pokemon = name_aliter[pokemon]
+    except KeyError as e:
+        
+        # modify the id for alolan and galarian forms
+        if pokemon.startswith("alolan"):
+            pokemon = pokemon.removeprefix("alolan") + "-alola"
+        elif pokemon.startswith("galarian"):
+            pokemon = pokemon.removeprefix("galarian") + "-galar"
+        elif pokemon.startswith("complete"):
+            pokemon = pokemon.removeprefix("complete") + "-complete"
+        elif pokemon.startswith("10%"):
+            pokemon = pokemon.removeprefix("10%") + "-10"
 
     embd = Embed()
 
