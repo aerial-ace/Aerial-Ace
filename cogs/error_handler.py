@@ -8,9 +8,6 @@ class ErrorHandler(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx:commands.Context, error:commands.CommandError):
 
-        if hasattr(ctx.command, "on_error"):
-            return
-
         cog:commands.Cog = ctx.cog
         view = GeneralView(200, True, True, False, True)
 
@@ -43,7 +40,7 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.NotOwner):
             return await ctx.reply("You are not supposed to use this command :>", view=view)
 
-        await ctx.reply(error, view=view)
+        await ctx.reply("Error Occurred ```{}```".format(error), view=view)
     
 
 def setup(bot:commands.Bot):
