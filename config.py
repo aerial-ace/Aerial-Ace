@@ -1,5 +1,8 @@
 import os
 import discord
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Bot data
 TOKEN = os.environ["TOKEN"]
