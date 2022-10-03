@@ -17,7 +17,7 @@ def wrap_text(width, text):
 async def get_info_embd(title, desc, color=discord.Color.blue(), footer=None, show_thumbnail=False):
     embd = discord.Embed()
 
-    embd.colour = color
+    embd.color = color
     embd.title = title
     embd.description = desc
 

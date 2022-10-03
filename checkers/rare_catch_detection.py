@@ -8,7 +8,7 @@ import config
 """detect rare catch message"""
 
 async def rare_check(message : discord.Message):    
-    if str(message.author.id) != config.ADMIN_ID:
+    if str(message.author.id) != config.POKETWO_ID:
         return
 
     catch_info = await determine_rare_catch(message.content)
@@ -109,7 +109,7 @@ async def determine_rare_catch(msg):
 
 async def get_rare_catch_embd(_ping, _pokemon, _level, is_shiny:bool):
 
-    embd = discord.Embed(colour=config.RARE_CATCH_COLOR)
+    embd = discord.Embed(color=config.RARE_CATCH_COLOR)
 
     if is_shiny is not True:
         embd.title = ":star: Rare Catch Detected :star:"
