@@ -66,6 +66,8 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
             pokemon = pokemon.removeprefix("alolan") + "-alola"
         elif pokemon.startswith("galarian"):
             pokemon = pokemon.removeprefix("galarian") + "-galar"
+        elif pokemon.startswith("hisuian"):
+            pokemon = pokemon.removeprefix("hisuian") + "-hisui"
         elif pokemon.startswith("complete"):
             pokemon = pokemon.removeprefix("complete") + "-complete"
         elif pokemon.startswith("10%"):

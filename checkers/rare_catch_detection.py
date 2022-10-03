@@ -8,7 +8,7 @@ import config
 """detect rare catch message"""
 
 async def rare_check(message : discord.Message):    
-    if str(message.author.id) != config.POKETWO_ID:
+    if str(message.author.id) != config.ADMIN_ID:
         return
 
     catch_info = await determine_rare_catch(message.content)
@@ -62,7 +62,7 @@ async def determine_rare_catch(msg):
     for extra in extra_text:
         info_text = info_text.replace(extra, "")
 
-    info_words = info_text.split()      # stores the inforamation as values in the list
+    info_words = info_text.split()      # stores the information as values in the list
 
     catch_info["user"] = ""
     catch_info["level"] = 0
@@ -95,7 +95,7 @@ async def determine_rare_catch(msg):
         catch_info["pokemon"] = " ".join(unique_pokemon_name_words)
         for i in unique_pokemon_name_words:
             try:
-                if i.lower() == "galarian" or i.lower() == "alolan" or cache_manager.cached_rarity_data[i.lower()] in ["legendary", "mythical", "ultra beast"]:
+                if i.lower() == "galarian" or i.lower() == "alolan" or i.lower() == "hisuian" or cache_manager.cached_rarity_data[i.lower()] in ["legendary", "mythical", "ultra beast"]:
                     catch_info["type"] = "rare"
             except:
                 continue
