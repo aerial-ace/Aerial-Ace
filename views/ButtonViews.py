@@ -2,7 +2,7 @@ from discord import ButtonStyle, Interaction
 from discord.ui import View, Button
 
 from cog_helpers import general_helper
-from config import PATREON_EMOJI, PAYPAL_EMOJI, PATREON_LINK, PAYPAL_LINK, INVITE_LINK, SUPPORT_SERVER_LINK, REPO_LINK, VOTE_LINK
+from config import PATREON_EMOJI, PAYPAL_EMOJI, PATREON_LINK, PAYPAL_LINK, INVITE_LINK, SUPPORT_SERVER_LINK, REPO_LINK, VOTE_LINK, GITHUB_EMOJI, GITHUB_SPONSORS_LINK
 
 class DonationView(View):
 
@@ -14,9 +14,11 @@ class DonationView(View):
 
         paypal_btn = Button(label="PayPal", emoji=PAYPAL_EMOJI, style=ButtonStyle.link, url=PAYPAL_LINK)
         patreon_btn = Button(label="Patreon", emoji=PATREON_EMOJI, style=ButtonStyle.link, url=PATREON_LINK)
+        github_btn = Button(label="Github Sponsors", emoji=GITHUB_EMOJI, style=ButtonStyle.link, url=GITHUB_SPONSORS_LINK)
 
         self.add_item(patreon_btn)
         self.add_item(paypal_btn)
+        self.add_item(github_btn)
 
 class GeneralView(View):
 

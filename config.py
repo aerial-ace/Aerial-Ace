@@ -28,6 +28,7 @@ VOTE_LINK = "https://top.gg/bot/908384747393286174/vote/"
 
 PATREON_LINK = "https://www.patreon.com/aerial_ace?fan_landing=true"
 PAYPAL_LINK = "https://www.paypal.me/devgame19"
+GITHUB_SPONSORS_LINK = "https://github.com/sponsors/aerial-ace"
 
 # Emojis
 BULLET_EMOJI = "<a:arrow_arrow:939409283668410381>"
@@ -44,6 +45,7 @@ FIRST_EMOJI = "<:first:964508851166646272>"
 LAST_EMOJI = "<:last:964508277809496125>"
 PAYPAL_EMOJI = "<:paypal:999716748712480848>"
 PATREON_EMOJI = "<:Patreon:999717040057237634>"
+GITHUB_EMOJI = "<:github:1035069645763383307>"
 
 TYPES = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water"]
 

@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import random
 
+from cog_helpers import general_helper
 import config
 
 # returns a value for roll
@@ -153,7 +154,10 @@ async def register_suggestion(ctx, text : list()) -> None:
 # returns the donation embed
 async def get_donation_embed() -> discord.Embed:
 
-    embd = discord.Embed(title="Become a Supporter", color=config.NORMAL_COLOR)
-    embd.description = "Support the development of Aerial Ace by becoming an Aerial Ace [patron]({patreon_link}) or donate directly via [PayPal]({paypal_link}).".format(patreon_link=config.PATREON_LINK, paypal_link=config.PAYPAL_LINK)
+    embd = await general_helper.get_info_embd(
+            title="Donate to support Aerial Ace",
+            desc="Thanks for checking out the donation module. \nYou can donate or subscribe to patreon to support the development of aerial ace. \nCurrently, 100% of server expenses are on the developer, so even your smallest donations matter a lot.",
+            show_thumbnail=True
+    )
 
     return embd

@@ -10,7 +10,7 @@ from cog_helpers import general_helper
 from checkers import rare_catch_detection
 
 # determines whether to run the bot in local, or global mode
-is_test = False
+is_test = True
 
 intents = Intents.default()
 intents.message_content = True
