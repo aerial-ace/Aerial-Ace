@@ -109,7 +109,17 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
 
     # get starboard channel
     cursor = mongo_manager.manager.get_all_data("servers", query)
-    data = cursor[0]
+    try:
+        data = cursor[1]
+    except:
+        print(mongo_manager.manager.db.name)
+        print(server_id)
+        print(user_id)
+        print(level)
+        print(message.id)
+
+        return
+
     starboard_channel_id = data["starboard"]
 
     # return if module is disabled
