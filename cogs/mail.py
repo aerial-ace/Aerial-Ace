@@ -30,7 +30,10 @@ async def process_mail(ctx):
         if roll > 0 and roll < prob:
             embd = discord.Embed(title=f"{config.ALERT_EMOJI} NOTICE {config.ALERT_EMOJI}", color=config.NORMAL_COLOR)
             embd.description = f"Aerial Ace is going to be discontinued from 25th November 2022."
-            embd.set_footer(text=f"Check the complete mail using {ctx.prefix}mail")
+            try:
+                embd.set_footer(text=f"Check the complete mail using {ctx.prefix}mail")
+            except:
+                pass # Dont add footer in mail reminder through slash commands
 
             await ctx.send(embed=embd)
 
