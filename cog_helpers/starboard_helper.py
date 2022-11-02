@@ -1,9 +1,10 @@
 from discord import TextChannel
 from discord import Embed, Message
+import datetime
 
 from managers import mongo_manager
 from cog_helpers import general_helper
-from config import NORMAL_COLOR, RARE_CATCH_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE
+from config import NORMAL_COLOR, RARE_CATCH_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT
 
 """Sets/Resets the starboard channel"""
 
@@ -46,6 +47,54 @@ async def set_starboard(server_id : str, channel : TextChannel = None) -> str:
             return f"Sending rare catches to {channel.mention}"
         else:
             return "Starboard Module was disabled"
+
+"""Change the starboard text"""
+async def set_starboard_text(server_id:str, text:str, type:str) -> Embed:
+    query = {
+        "server_id" : server_id
+    }
+
+    if type == "RARE":
+        updated_data = {
+            "starboard_text_rare" : text
+        }
+    elif type == "SHINY":
+        updated_data = {
+            "starboard_text_shiny" : text
+        }
+
+    try:
+        mongo_manager.manager.update_all_data("servers", query, updated_data)
+        if text != "DEFAULT":
+            return Embed(title=f"Starboard {type} Text Updated!")
+        else:
+            return Embed(title=f"Starboard {type} Text Reset")
+    except Exception as e:
+        return Embed(title="Error Occurred", description="```e```")
+
+"""Change the starboard image"""
+async def set_starboard_image(server_id:str, text:str, type:str) -> Embed:
+    query = {
+        "server_id" : server_id
+    }
+
+    if type == "RARE":
+        updated_data = {
+            "starboard_image_rare" : text
+        }
+    elif type == "SHINY":
+        updated_data = {
+            "starboard_image_shiny" : text
+        }
+
+    try:
+        mongo_manager.manager.update_all_data("servers", query, updated_data)
+        if text != "DEFAULT":
+            return Embed(title=f"Starboard {type} Image Updated!")
+        else:
+            return Embed(title=f"Starboard {type} Image Reset")
+    except Exception as e:
+        return Embed(title="Error Occurred", description="```e```")
 
 """Returns the starboard embed for starboard channel"""
 
@@ -115,10 +164,6 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
         print(mongo_manager.manager.db.name)
         
         print(server_id)
-        print(user_id)
-        print(level)
-        print(message.id)
-
         return
 
     starboard_channel_id = data["starboard"]
@@ -135,3 +180,35 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
     await starboard_channel.send(embed=reply)
 
     return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
+
+"""returns the embed containing the rare catch info"""
+
+async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, is_shiny:bool):
+
+    query = {
+        "server_id" : server_id
+    }
+
+    cursor = mongo_manager.manager.get_all_data("servers", query)
+
+    try:
+        data = cursor[0]
+    except:
+        print(mongo_manager.manager.db.name)
+        print(server_id)
+        return
+
+    embd = Embed(color=RARE_CATCH_COLOR)
+
+    if is_shiny is not True:
+        embd.description = (DEFAULT_RARE_TEXT if data["starboard_text_rare"] == "DEFAULT" else data["starboard_text_rare"]).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
+
+        embd.set_image(url=(JIRACHI_WOW if data["starboard_image_rare"] == "DEFAULT" else data["starboard_image_rare"]))
+    else:
+        embd.description = (DEFAULT_SHINY_TEXT if data["starboard_text_shiny"] == "DEFAULT" else data["starboard_text_shiny"]).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
+
+        embd.set_image(url=(PIKA_SHOCK if data["starboard_image_shiny"] == "DEFAULT" else data["starboard_image_shiny"]))
+
+    embd.timestamp = datetime.datetime.now()
+
+    return embd
