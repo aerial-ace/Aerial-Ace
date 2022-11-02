@@ -86,7 +86,7 @@ class AdminSystem(commands.Cog):
                     if file.endswith(".py"):
                         self.bot.unload_extension(f"cogs.slash.{file[:-3]}")
             except Exception as e:
-                return f"Error occured while unloading slash commands : {e}"
+                return f"Error occurred while unloading slash commands : {e}"
             else:
                 return "Slash cogs unloaded successfully"
         else:
@@ -95,7 +95,7 @@ class AdminSystem(commands.Cog):
                     if file.endswith(".py"):
                         self.bot.load_extension(f"cogs.slash.{file[:-3]}")
             except Exception as e:
-                return f"Error occured while loading slash commands : {e}"
+                return f"Error occurred while loading slash commands : {e}"
             else:
                 return "Slash cogs loaded successfully"
 
