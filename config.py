@@ -19,6 +19,7 @@ SERVER_JOIN_LOG_CHANNEL_ID = 938032583726497812
 SUGGESTION_LOG_CHANNEL_ID = 938352848448659466
 
 # bot links
+DEVELOPER_DISCORD_PROFILE_LINK = "https://discordapp.com/users/734754644286504991"
 INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=277025647680&scope=bot%20applications.commands"
 AVATAR_LINK = "https://cdn.discordapp.com/avatars/908384747393286174/16ee31af1a88ab05809b1ea3bac3cc8f.png"
 SUPPORT_SERVER_LINK = "https://discord.gg/4mPdqevgsH"
