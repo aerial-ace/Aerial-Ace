@@ -55,6 +55,11 @@ async def set_starboard_text(server_id:str, text:str, type:str) -> Embed:
         "server_id" : server_id
     }
 
+    data = mongo_manager.manager.get_all_data("servers", query)[0]
+
+    if data.get("tier", 0) < 1:
+        return Embed(title="Whoops!", description="Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!")
+
     if type == "RARE":
         updated_data = {
             "starboard_text_rare" : text
@@ -78,6 +83,11 @@ async def set_starboard_image(server_id:str, text:str, type:str) -> Embed:
     query = {
         "server_id" : server_id
     }
+
+    data = mongo_manager.manager.get_all_data("servers", query)[0]
+
+    if data.get("tier", 0) < 2:
+        return Embed(title="Whoops!", description="Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!")
 
     if type == "RARE":
         updated_data = {
@@ -199,20 +209,22 @@ async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, is_shiny:b
         print(server_id)
         return
 
-    if data.get("starboard_embed", "DEFAULT") != "DEFAULT":
+    tier:int = data.get("tier", 0)
+
+    if data.get("starboard_embed", "DEFAULT") != "DEFAULT" and tier >= 3:
         data = json.loads(data.get("starboard_embed", "DEFAULT"))
         return Embed().from_dict(data)
 
     embd = Embed(color=RARE_CATCH_COLOR)
 
     if is_shiny is not True:
-        embd.description = (DEFAULT_RARE_TEXT if data.get("starboard_text_rare", "DEFAULT") == "DEFAULT" else data.get("starboard_text_rare", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
+        embd.description = (DEFAULT_RARE_TEXT if data.get("starboard_text_rare", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_rare", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
-        embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" else data.get("starboard_image_rare", "DEFAULT")))
+        embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
     else:
-        embd.description = (DEFAULT_SHINY_TEXT if data.get("starboard_text_shiny", "DEFAULT") == "DEFAULT" else data.get("starboard_text_shiny", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
+        embd.description = (DEFAULT_SHINY_TEXT if data.get("starboard_text_shiny", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_shiny", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
-        embd.set_image(url=(PIKA_SHOCK if data.get("starboard_image_shiny", "DEFAULT") == "DEFAULT" else data.get("starboard_image_shiny", "DEFAULT")))
+        embd.set_image(url=(PIKA_SHOCK if data.get("starboard_image_shiny", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_shiny", "DEFAULT")))
 
     embd.timestamp = datetime.datetime.now()
 
