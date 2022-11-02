@@ -1,6 +1,7 @@
 from discord import TextChannel
 from discord import Embed, Message
 import datetime
+import json
 
 from managers import mongo_manager
 from cog_helpers import general_helper
@@ -198,16 +199,20 @@ async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, is_shiny:b
         print(server_id)
         return
 
+    if data.get("starboard_embed", "DEFAULT") != "DEFAULT":
+        data = json.loads(data.get("starboard_embed", "DEFAULT"))
+        return Embed().from_dict(data)
+
     embd = Embed(color=RARE_CATCH_COLOR)
 
     if is_shiny is not True:
-        embd.description = (DEFAULT_RARE_TEXT if data["starboard_text_rare"] == "DEFAULT" else data["starboard_text_rare"]).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
+        embd.description = (DEFAULT_RARE_TEXT if data.get("starboard_text_rare", "DEFAULT") == "DEFAULT" else data.get("starboard_text_rare", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
-        embd.set_image(url=(JIRACHI_WOW if data["starboard_image_rare"] == "DEFAULT" else data["starboard_image_rare"]))
+        embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" else data.get("starboard_image_rare", "DEFAULT")))
     else:
-        embd.description = (DEFAULT_SHINY_TEXT if data["starboard_text_shiny"] == "DEFAULT" else data["starboard_text_shiny"]).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
+        embd.description = (DEFAULT_SHINY_TEXT if data.get("starboard_text_shiny", "DEFAULT") == "DEFAULT" else data.get("starboard_text_shiny", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
-        embd.set_image(url=(PIKA_SHOCK if data["starboard_image_shiny"] == "DEFAULT" else data["starboard_image_shiny"]))
+        embd.set_image(url=(PIKA_SHOCK if data.get("starboard_image_shiny", "DEFAULT") == "DEFAULT" else data.get("starboard_image_shiny", "DEFAULT")))
 
     embd.timestamp = datetime.datetime.now()
 
