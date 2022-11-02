@@ -5,7 +5,7 @@ import datetime
 from cog_helpers import general_helper
 import config
 
-all_categories = {"pokedex" : "commands related to pokedex", "random" : "commands related to random gen", "info" : "commands related to information", "battle" : "commands related to battleboard", "tags" : "commands related to shinyhunts", "fun" : "other fun commands", "misc" : "commands that dont fit in other catagories", "starboard" : "commands related to starboard", "smogon" : "commands related to showdown"}
+all_categories = {"pokedex" : "commands related to pokedex", "random" : "commands related to random gen", "info" : "commands related to information", "battle" : "commands related to battleboard", "tags" : "commands related to shinyhunts", "fun" : "other fun commands", "misc" : "commands that dont fit in other categories", "starboard" : "commands related to starboard", "smogon" : "commands related to showdown"}
 
 commands_in_category = {
     "pokedex" : ["dex", "ability"],
@@ -64,14 +64,14 @@ async def get_help_embed(ctx = None) -> Embed:
     prefix = (ctx.prefix if ctx is not None else "/")
 
     embd = Embed(title="__HELP - Aerial Ace__", color=config.NORMAL_COLOR)
-    embd.description = f"Send `{prefix}help <catagory>` where catagory can be one from these : "
+    embd.description = f"Send `{prefix}help <category>` where category can be one from these : "
 
-    catagories = list(all_categories.keys())
+    categories = list(all_categories.keys())
     desc = list(all_categories.values())
 
-    for i in range(len(catagories)):
+    for i in range(len(categories)):
         embd.add_field(
-            name=catagories[i],
+            name=categories[i],
             value=desc[i],
             inline=True
         )
@@ -87,13 +87,13 @@ async def get_category_help_embed(ctx:commands.Context, input) -> Embed:
 
     prefix = (ctx.prefix if ctx is not None else "/")
 
-    catagories = list(all_categories.keys())
+    categories = list(all_categories.keys())
     commands = list(all_commands.keys())
 
     input_is_command = False
 
     if input not in commands:
-        if input not in catagories:
+        if input not in categories:
             reply = await general_helper.get_info_embd("Not Found Error!", f"This category/command was not found, do `{prefix}help` for all the categories", color=config.ERROR_COLOR)
             return reply
         else:

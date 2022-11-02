@@ -51,16 +51,16 @@ class PokeInfoSlash(commands.Cog):
 
     """For getting tierlists"""
 
-    tierlist_catagories = ["common", "mega", "rare", "bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water", "eeveelution"]
+    tierlist_categories = ["common", "mega", "rare", "bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water", "eeveelution"]
 
-    # return catagory from the input
-    async def get_catagory(self, ctx : AutocompleteContext) -> str:
-        return [catagory for catagory in self.tierlist_catagories if catagory.startswith(ctx.value)]
+    # return category from the input
+    async def get_category(self, ctx : AutocompleteContext) -> str:
+        return [category for category in self.tierlist_categories if category.startswith(ctx.value)]
 
-    @slash_command(name="tierlist", description="Returns the tier list of the select catagory")
-    async def tierlist(self, ctx : ApplicationContext, catagory : Option(str, description="Select Catagory", required=True, autocomplete=get_catagory)):
+    @slash_command(name="tierlist", description="Returns the tier list of the select category")
+    async def tierlist(self, ctx : ApplicationContext, category : Option(str, description="Select category", required=True, autocomplete=get_category)):
 
-        tier_link = config.TIER_LINK[catagory]
+        tier_link = config.TIER_LINK[category]
         view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(tier_link, view=view)
