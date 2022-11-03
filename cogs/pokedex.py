@@ -1,6 +1,7 @@
 from discord.ext import commands
 from discord.ui import View, Button
 from discord import ButtonStyle
+from json import JSONDecodeError
 
 from views.ButtonViews import GeneralView
 from cog_helpers import pokedex_helper
@@ -47,11 +48,11 @@ class PokeDex(commands.Cog):
     async def ability(self, ctx:commands.Context, name):
         
         reply = await pokedex_helper.get_ability_embed(name)
-        view = View()
         
-        view.add_item(Button(label="Learn More", url=ABILITY_LINK_TEMPLATE_SMOGON.format(ability=name), style=ButtonStyle.link))
+        view = View()
         view.add_item(Button(label="Invite", url=INVITE_LINK, style=ButtonStyle.link))
-
+        view.add_item(Button(label="Learn More", url=ABILITY_LINK_TEMPLATE_SMOGON.format(ability=name), style=ButtonStyle.link))
+        
         await ctx.send(embed=reply, view=view)
 
     @ability.error
@@ -60,6 +61,11 @@ class PokeDex(commands.Cog):
             reply = await general_helper.get_info_embd("Missing Argument Error!", f"Give an ability as parameter like ```{ctx.prefix}ability stance-change```", ERROR_COLOR)
             view = GeneralView(200, True, True, False, False)
             
+            await ctx.reply(embed=reply, view=view)
+        elif isinstance(error, JSONDecodeError):
+            reply = await general_helper.get_info_embd("Error!", "This is not a valid ability name. \nPlease note that, aerial ace naming conventions follow **-** separated words. ```stance-change\nunseen-fist\nunburden```are valid ability names.")
+            view = GeneralView(200, True, True, False, False)
+
             await ctx.reply(embed=reply, view=view)
 
 def setup(bot):
