@@ -86,7 +86,7 @@ class AdminSystem(commands.Cog):
                     if file.endswith(".py"):
                         self.bot.unload_extension(f"cogs.slash.{file[:-3]}")
             except Exception as e:
-                return f"Error occured while unloading slash commands : {e}"
+                return f"Error occurred while unloading slash commands : {e}"
             else:
                 return "Slash cogs unloaded successfully"
         else:
@@ -95,7 +95,7 @@ class AdminSystem(commands.Cog):
                     if file.endswith(".py"):
                         self.bot.load_extension(f"cogs.slash.{file[:-3]}")
             except Exception as e:
-                return f"Error occured while loading slash commands : {e}"
+                return f"Error occurred while loading slash commands : {e}"
             else:
                 return "Slash cogs loaded successfully"
 
@@ -169,6 +169,25 @@ class AdminSystem(commands.Cog):
         )
 
         await ctx.send(embed=embd)
+
+    @commands.command(name="tier", aliases=["set_tier"], description="Updates the Tier of the provided server")
+    @commands.is_owner()
+    async def set_tier(self, ctx:commands.Context, server_id:int, tier:int):
+
+        query = {
+            "server_id" : str(server_id)
+        }
+
+        updated_data = {
+            "tier" : tier
+        }
+
+        try:
+            mongo_manager.manager.update_all_data("servers", query, updated_data)
+        except Exception as e:
+            await ctx.send(f"Error! ```{e}```")
+        else:
+            await ctx.send(f"Server with id **{server_id}** is now at **Tier {tier}**")
 
 def setup(bot):
     bot.add_cog(AdminSystem(bot))

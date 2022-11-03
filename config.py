@@ -78,6 +78,10 @@ WARNING_COLOR = discord.Color.orange()
 RARE_CATCH_COLOR = discord.Color.gold()
 SMOGON_COLOR = discord.Color.purple()
 
+#starboard defaults
+DEFAULT_RARE_TEXT = "{ping} caught a level {level} `{pokemon}` \nCongratulations :tada: :tada:\n"
+DEFAULT_SHINY_TEXT = "{ping} caught a level {level} **SHINY** `{pokemon}` \nCongratulations :tada: :tada:\n"
+
 # Reactions
 PIKA_WOW = "https://cdn.discordapp.com/attachments/911547825274388511/918840026094247976/pika_woo.png"
 JIRACHI_WOW = "https://cdn.discordapp.com/attachments/911547825274388511/918840025477681152/jirachi_wow.png"

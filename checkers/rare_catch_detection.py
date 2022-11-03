@@ -20,7 +20,7 @@ async def rare_check(message : discord.Message):
     is_shiny = (True if catch_info["type"] == "shiny" else False)
 
     # get the rare catch details
-    reply = await get_rare_catch_embd(catch_info["user"], catch_info["pokemon"], catch_info["level"], is_shiny)
+    reply = await starboard_helper.get_rare_catch_embd(str(message.guild.id), catch_info["user"], catch_info["pokemon"], catch_info["level"], is_shiny)
 
     # Send to current Channel
     await message.channel.send(embed=reply)
@@ -104,29 +104,3 @@ async def determine_rare_catch(msg):
         return None
 
     return catch_info
-
-"""returns the embed containing the rare catch info"""
-
-async def get_rare_catch_embd(_ping, _pokemon, _level, is_shiny:bool):
-
-    embd = discord.Embed(color=config.RARE_CATCH_COLOR)
-
-    if is_shiny is not True:
-        embd.title = ":star: Rare Catch Detected :star:"
-        embd.description = f"{_ping} caught a level {_level} `{_pokemon.strip()}`\n"
-        embd.set_image(url=config.JIRACHI_WOW)
-    else:
-        embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
-        embd.description = f"{_ping} caught a level {_level} **SHINY** `{_pokemon}`\n"
-        embd.set_image(url=config.PIKA_SHOCK)
-
-    embd.description += f"Congratulations :tada: :tada:\n"
-
-    # set the time of the catch 
-    _date = datetime.date.today().strftime("%d %b %y")
-    _time_object = datetime.datetime.now(datetime.timezone.utc)
-    _time = _time_object.strftime("%I:%M %p UTC")
-
-    embd.set_footer(text=f"{_date} at {_time}")
-
-    return embd

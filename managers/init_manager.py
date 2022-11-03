@@ -11,7 +11,6 @@ async def register_guild(bot : commands.Bot, guild : discord.Guild):
 
     server_id = str(guild.id)
     server_name = str(guild.name)
-    prefix = "-aa "
 
     # create empty servers entry
     server_duplicates = mongo_manager.manager.get_documents_length("servers", {"server_id" : server_id})
@@ -53,6 +52,49 @@ async def register_guild(bot : commands.Bot, guild : discord.Guild):
 
     await log_channel.send(embed=embed)
 
+    data = {
+        "server_id" : server_id,
+        "server_name" : "NONE",
+        "starboard" : "0"
+    }
+
+    return data
+
+# register guild in the database without other bs
+
+async def register_guild_without_bs(guild_id:str, guild_name:str="NONE"):
+
+    server_id = str(guild_id)
+    server_name = str(guild_name)
+
+    # create empty servers entry
+    server_duplicates = mongo_manager.manager.get_documents_length("servers", {"server_id" : server_id})
+    
+    if server_duplicates <= 0:
+        entry = {"server_id" : server_id, "server_name" : server_name, "starboard" : "0"}
+        mongo_manager.manager.add_data("servers", entry)
+
+    # create empty tags entry
+    server_duplicates = mongo_manager.manager.get_documents_length("tags", {"server_id" : server_id})
+
+    if server_duplicates <= 0:
+        entry = {"server_id" : server_id, "tags" : {}}
+        mongo_manager.manager.add_data("tags", entry)
+
+    # create empty battle entry
+    server_duplicates = mongo_manager.manager.get_documents_length("battles", {"server_id" : server_id})
+
+    if server_duplicates <= 0:
+        entry = {"server_id" : server_id, "logs" : {}}
+        mongo_manager.manager.add_data("battles", entry)
+
+    data = {
+        "server_id" : server_id,
+        "server_name" : "NONE",
+        "starboard" : "0"
+    }
+
+    return data
 
 # remove server from the database
 async def remove_guild(bot : commands.Bot, guild : discord.Guild):
