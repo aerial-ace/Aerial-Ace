@@ -3,7 +3,7 @@ from discord import Embed, Message
 import datetime
 import json
 
-from managers import mongo_manager
+from managers import mongo_manager, init_manager
 from cog_helpers import general_helper
 from config import NORMAL_COLOR, RARE_CATCH_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT
 
@@ -158,6 +158,8 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
 
     if time is not None:
         embd.set_footer(time)
+    else:
+        embd.timestamp = datetime.datetime.now()
 
     return embd
 
@@ -172,10 +174,7 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
     try:
         data = cursor[0]
     except:
-        print(mongo_manager.manager.db.name)
-        
-        print(server_id)
-        return
+        data = await init_manager.register_guild_without_bs(server_id)
 
     starboard_channel_id = data["starboard"]
 
@@ -205,9 +204,7 @@ async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, is_shiny:b
     try:
         data = cursor[0]
     except:
-        print(mongo_manager.manager.db.name)
-        print(server_id)
-        return
+        data = await init_manager.register_guild_without_bs(server_id)
 
     tier:int = data.get("tier", 0)
 
@@ -218,10 +215,12 @@ async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, is_shiny:b
     embd = Embed(color=RARE_CATCH_COLOR)
 
     if is_shiny is not True:
+        embd.title = ":star: Rare Catch Detected :star:"
         embd.description = (DEFAULT_RARE_TEXT if data.get("starboard_text_rare", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_rare", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
         embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
     else:
+        embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
         embd.description = (DEFAULT_SHINY_TEXT if data.get("starboard_text_shiny", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_shiny", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
         embd.set_image(url=(PIKA_SHOCK if data.get("starboard_image_shiny", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_shiny", "DEFAULT")))
