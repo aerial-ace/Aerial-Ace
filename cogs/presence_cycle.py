@@ -15,8 +15,6 @@ class Presence(commands.Cog):
         discord.Activity(name="aa.help", type=discord.ActivityType.watching, status=discord.Status.online)
     ])
 
-    discontinuation_activity = discord.Activity(name="Going to sleep soon.", type=discord.ActivityType.watching, status=discord.Status.online)
-
     def __init__(self, bot) -> None:
         self.bot = bot
         self.update_presence.start()
@@ -35,7 +33,7 @@ class Presence(commands.Cog):
         await self.bot.wait_until_ready()
 
     async def set_presence(self):
-        await self.bot.change_presence(activity=self.discontinuation_activity)
+        await self.bot.change_presence(activity=self.activity.__next__())
 
 def setup(bot):
     bot.add_cog(Presence(bot))
