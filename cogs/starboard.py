@@ -38,11 +38,11 @@ class StarboardSystem(commands.Cog):
     @starboard.command(name="shiny_text", aliases=["st", "shinytext"], description="Change the text shown for shiny catch!")
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
-    async def set_shiny_text(self, ctx: commands.Context, text:str=None):
-        if text is None:
-            reply = await starboard_helper.set_starboard_text(str(ctx.guild.id), "DEFAULT", "SHINY")
-        else:
-            reply = await starboard_helper.set_starboard_text(str(ctx.guild.id), text, "SHINY")     
+    async def set_shiny_text(self, ctx: commands.Context, text:str="DEFAULT"):
+        if len(text) == 0:
+            text = "DEFAULT"
+
+        reply = await starboard_helper.set_starboard_text(str(ctx.guild.id), text, "SHINY")     
 
         await ctx.reply(embed=reply)
 

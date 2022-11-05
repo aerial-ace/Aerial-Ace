@@ -154,10 +154,22 @@ async def register_suggestion(ctx, text : list()) -> None:
 # returns the donation embed
 async def get_donation_embed() -> discord.Embed:
 
-    embd = await general_helper.get_info_embd(
-            title="Donate to support Aerial Ace",
-            desc="Thanks for checking out the donation module. \nYou can donate or subscribe to patreon to support the development of aerial ace. \nCurrently, 100% of server expenses are on the developer, so even your smallest donations matter a lot.",
-            show_thumbnail=True
-    )
+    embd = await general_helper.get_info_embd(title="Support Aerial Ace", desc="")
+
+    embd.description += f"{config.BULLET_EMOJI} **TIER-3 : **\n"
+
+    embd.description += "Fully customizable starboard text! \n_You can now update the text of rare catch embed, and say a lot of things whether it be something more than Congrats, or straight out ask for its stats._\n\n"
+
+    embd.description += f"{config.BULLET_EMOJI} **TIER-2 : **\n"
+    embd.description += "Fully customizable starboard image. \n_Server of this tier will get access to custom starboard rare/shiny catch image. Update it to your server mascot or pick a good anime gif, and slap it in, the choice is yours._\n"
+    embd.description += "Include rewards from the previous tiers.\n\n"
+
+    embd.description += f"{config.BULLET_EMOJI} **TIER-1 : **\n"
+    embd.description += "Fully [ We mean FULLY ] customizable starboard embed. \n_Servers of this tier have full control over how the starboard embed should look like. You can add custom invite links, vote links, messages, ask the users to perform certain task on catching a rare/shiny [ Good for events ] and what not. Definitely the most powerful and good for servers with a lot of events happening._\n"
+    embd.description += "Includes rewards from the previous tiers\n\n"
+
+    embd.description += "**To check the pricing, visit our patreon page.**\n\n"
+
+    embd.description += "__By becoming a member of these tiers, you directly support the development of Aerial Ace. The base functionality of aerial-ace is and will always be 100% free. These customizations are just a way to thank our awesome supporters who keep the bot alive.__"
 
     return embd
