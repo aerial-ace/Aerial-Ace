@@ -5,7 +5,7 @@ import datetime
 from cog_helpers import general_helper
 import config
 
-all_categories = {"pokedex" : "commands related to pokedex", "random" : "commands related to random gen", "info" : "commands related to information", "battle" : "commands related to battleboard", "tags" : "commands related to shinyhunts", "fun" : "other fun commands", "misc" : "commands that dont fit in other categories", "starboard" : "commands related to starboard", "smogon" : "commands related to showdown"}
+all_categories = {"pokedex" : "commands related to pokedex", "random" : "commands related to random gen", "info" : "commands related to information", "battle" : "commands related to battleboard", "tags" : "commands related to shinyhunts", "fun" : "other fun commands", "misc" : "commands that dont fit in other categories", "starboard" : "commands related to starboard", "customization" : "Customization commands for premium servers", "smogon" : "commands related to showdown"}
 
 commands_in_category = {
     "pokedex" : ["dex", "ability"],
@@ -15,6 +15,7 @@ commands_in_category = {
     "tags" : ["tag", "tag_ping", "tag_show", "afk", "tag_remove", "tag_remove_id", "alltags"],
     "fun" : ["hit", "pat", "kill", "hug", "tease", "cry", "dance"],
     "starboard" : ["starboard"],
+    "customization" : ["rare_text", "shiny_text", "rare_image", "shiny_image"],
     "misc" : ["ping", "roll", "support", "vote", "invite", "mail", "all"],
     "smogon" : ["smogon"]
 }
@@ -56,7 +57,11 @@ all_commands = {
     "mail" : "```{prefix}mail```\nopens up the mail box with latest news about the bot",
     "starboard" : "```{prefix}starboard[sb] #channel\n{prefix}sb #poketwo-starboard```\nsends rare catch embeds to this channel",
     "smogon" : "```{prefix}smogon <gen> <tier> <pokemon>\n{prefix}smogon 5 OU durant```\nreturns the detailed usage data of the pokemon from the smogon database",
-    "all" : "```{prefix}all``` returns a list of all the commands in the bot"
+    "all" : "```{prefix}all``` returns a list of all the commands in the bot",
+    "rare_text": "```{prefix}sb rt <text>\n{prefix}sb rt Woohoo \{ping\}! Congrats on catching a \{pokemon\}. Show us its stats :3``` updates the text shown on the rare catch embed. Add \{ping\}, \{level\} and \{pokemon\} in the text, which will be auto replaced to correct values",
+    "shiny_text": "```{prefix}sb st <text>\n{prefix}sb st Holy Smokes {ping}! Congrats on catching a SHINY {pokemon}. Good luck on your next hunt, if this was your hunt.``` updates the text shown on the shiny catch embed. Add {ping}, {level} and {pokemon} in the text, which will be auto replaced to correct values",
+    "rare_image": "```{prefix}sb ri <link>\n{prefix}sb ri https://i.waifu.pics/wFFu3UE.gif``` updates the image show in the rare catch image.",
+    "shiny_image": "```{prefix}sb si <link>\n{prefix}sb si https://i.waifu.pics/wFFu3UE.gif``` updates the image show in the shiny catch image.```"
 }
 
 async def get_help_embed(ctx = None) -> Embed:
@@ -104,7 +109,11 @@ async def get_category_help_embed(ctx:commands.Context, input) -> Embed:
     if input_is_command:
         desc = all_commands[input]
         embd = Embed(title=f"__{input.capitalize()} Help__", color=config.NORMAL_COLOR)
-        embd.description = desc.format(prefix=prefix)
+        try:
+            embd.description = desc.format(prefix=prefix)
+        except Exception as e:
+            print(e)
+
         embd.timestamp = datetime.datetime.now()
     else:
         if ctx is not None:
@@ -114,7 +123,11 @@ async def get_category_help_embed(ctx:commands.Context, input) -> Embed:
             embd.description = "All the commands in this category, Use aa.help <command> to know more"
             
             for i in cmds:
-                desc = ctx.bot.get_command(i).description
+                try:
+                    desc = ctx.bot.get_command(i).description
+                except:
+                    desc = i
+
                 embd.add_field(
                     name=i,
                     value=desc,

@@ -1,6 +1,7 @@
 from discord import TextChannel
 from discord import Embed, Message
 from discord.ext import commands
+from discord import errors
 import datetime
 import json
 
@@ -190,8 +191,12 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
     starboard_channel : TextChannel= message.guild.get_channel(int(starboard_channel_id))
     try:
         await starboard_channel.send(embed=reply)
-    except commands.MissingPermissions as e:
+    except errors.Forbidden as e:
+        print(type(e))
         return await general_helper.get_info_embd(f"Missing Permissions! Can't send message in <#{starboard_channel_id}>")
+    except Exception as e:
+        print(type(e))
+        print(e)
 
     return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
 
