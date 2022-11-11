@@ -50,7 +50,7 @@ class GeneralView(View):
 
         embd = await general_helper.get_info_embd(
             title="Donate to support Aerial Ace",
-            desc="Thanks for checking out the donation module. \nYou can donate or subscribe to patreon to support the development of aerial ace. \nCurrently, 100% of server expenses are on the developer, so even your smallest donations matter a lot.",
+            desc="Thanks for checking out the donation module. \nYou can donate or subscribe to patreon to support the development of aerial ace. \n Use `-aa donate` command to check details.",
             show_thumbnail=True
         )
 

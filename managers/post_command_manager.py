@@ -18,7 +18,7 @@ async def donation_reminder(ctx:commands.Context):
         embd = Embed(
             title="Support Aerial Ace",
             color=config.NORMAL_COLOR,
-            description="Support the development of Aerial Ace financially by becoming a patron in exchange for various perks. Currently, aerial ace is backed by its own developers, you can donate / become a patron to help reduce financial load on them and get some perks in return."
+            description="Support the development of Aerial Ace financially by becoming a patron in exchange for various perks. Use `-aa donate` command to check details."
         )
 
         view = DonationView(600)
