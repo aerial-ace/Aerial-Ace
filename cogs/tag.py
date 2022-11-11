@@ -117,6 +117,31 @@ class TagSystem(commands.Cog):
 
         await ctx.send(reply, view=view)
 
+    """Clear All Tags"""
+
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    @commands.command(name="tag_clearall", aliases=["tca"], description="Remove all users of this server from their tags")
+    async def tag_clearall(self, ctx:commands.Context):
+
+        confirmation_embed = await general_helper.get_info_embd("Are you Sure?", "This will remove all tags created in this server! Please be cautious, as this cannot be undone. Type **CONFIRM** to confirm", ERROR_COLOR)
+        await ctx.reply(embed=confirmation_embed)
+
+        bot:commands.Bot = ctx.bot
+
+        def confirm_check(message):
+            return message.author == ctx.author and message.content.lower() == "confirm"
+
+        try:
+            await bot.wait_for("message", check=confirm_check, timeout=10.0)
+        except:
+            return await ctx.send(embed=await general_helper.get_info_embd("Cancelled!", ""))
+
+        reply = await tag_helper.remove_all_tags(str(ctx.guild.id))
+        view  = GeneralView(200, True, True, False, True)
+
+        await ctx.send(embed=reply, view=view)
+
     """Remove tags"""
 
     @commands.guild_only()

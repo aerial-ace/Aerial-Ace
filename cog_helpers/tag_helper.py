@@ -217,6 +217,22 @@ async def remove_user_id(server_id, user_id : str):
 
     return f"> <@{user_id}> was removed from `{old_tag.capitalize()}` tag"
 
+# remove all tags of a particular server
+async def remove_all_tags(server_id:str) -> discord.Embed:
+
+    query = {"server_id" : server_id}
+
+    updated_data = {
+        "tags" : {}
+    }
+
+    try:
+        mongo_manager.manager.update_all_data("tags", query, updated_data)
+    except Exception as e:
+        return discord.Embed(title="Error!", description="```" + e + "```", color=config.ERROR_COLOR)
+    else:
+        return discord.Embed(title="Success!", description="All tags cleared!")
+
 # set the afk status of the user
 async def set_afk(server_id : str, user_id : str, state : str):
 
