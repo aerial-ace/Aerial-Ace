@@ -107,7 +107,15 @@ class TagSystem(commands.Cog):
             view = GeneralView(200, True, True, False, True)
 
             await ctx.reply(embed=reply, view=view)
-        
+
+    """Clear Personal Tag"""        
+    @commands.guild_only()
+    @commands.command(name="tag_clear", aliases=["tc"], description="Removes the users from his current tag.")
+    async def tag_clear(self, ctx:commands.Context):
+        reply = await tag_helper.remove_user(ctx.guild.id, ctx.author)
+        view = GeneralView(200, True, True, False, True)
+
+        await ctx.send(reply, view=view)
 
     """Remove tags"""
 
