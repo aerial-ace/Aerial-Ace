@@ -95,6 +95,41 @@ class TagSystemSlash(commands.Cog):
 
         await ctx.respond(reply, view=view)
 
+    """For clearing your tag"""
+    @slash_command(name="tag-clear", description="Removes your tag", guild_ids=[751076697884852389])
+    async def tag_clear(self, ctx:ApplicationContext):
+
+        reply = await tag_helper.remove_user(ctx.guild.id, ctx.author)
+        view  = GeneralView(200, True, True, False, True)
+
+        await ctx.respond(reply, view=view)
+
+    """For Clearing all tags in the server"""
+    @slash_command(name="tag-clear-all", description="Remove all tags created in this server", guild_ids=[751076697884852389])
+    async def tag_clear_all(self, ctx:ApplicationContext):
+
+        if not ctx.author.guild_permissions.administrator:
+            return await ctx.respond("Be Admin when? :/")
+
+        confirmation_embed = await general_helper.get_info_embd("Are you Sure?", "This will remove all tags created in this server! Please be cautious, as this cannot be undone. Type **CONFIRM** to confirm", ERROR_COLOR)
+        await ctx.respond(embed=confirmation_embed)
+
+        bot:commands.Bot = ctx.bot
+
+        def confirm_check(message):
+            return message.author == ctx.author and message.content.lower() == "confirm"
+
+        try:
+            await bot.wait_for("message", check=confirm_check, timeout=10.0)
+        except:
+            return await ctx.send(embed=await general_helper.get_info_embd("Cancelled!", ""))
+
+        reply = await tag_helper.remove_all_tags(str(ctx.guild.id))
+        view  = GeneralView(200, True, True, False, True)
+
+        await ctx.respond(embed=reply, view=view)
+
+
     """For removing users from their tag"""
 
     @slash_command(name="tag-remove", description="Remove a user from their tag")
