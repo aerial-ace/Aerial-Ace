@@ -96,7 +96,7 @@ class TagSystemSlash(commands.Cog):
         await ctx.respond(reply, view=view)
 
     """For clearing your tag"""
-    @slash_command(name="tag-clear", description="Removes your tag", guild_ids=[751076697884852389])
+    @slash_command(name="tag-clear", description="Removes your tag")
     async def tag_clear(self, ctx:ApplicationContext):
 
         reply = await tag_helper.remove_user(ctx.guild.id, ctx.author)
@@ -105,7 +105,7 @@ class TagSystemSlash(commands.Cog):
         await ctx.respond(reply, view=view)
 
     """For Clearing all tags in the server"""
-    @slash_command(name="tag-clear-all", description="Remove all tags created in this server", guild_ids=[751076697884852389])
+    @slash_command(name="tag-clear-all", description="Remove all tags created in this server")
     async def tag_clear_all(self, ctx:ApplicationContext):
 
         if not ctx.author.guild_permissions.administrator:
