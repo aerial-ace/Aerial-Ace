@@ -3,6 +3,10 @@ import discord
 from managers import mongo_manager
 import config
 
+class TagData:
+    hunters:list = None
+    timer:int    = 0
+
 # register shiny tags
 async def register_tag(server_id, user, tag):
 
@@ -76,7 +80,7 @@ async def register_tag(server_id, user, tag):
         return f"> **{user.name}** was removed from `{old_tag.capitalize()}` and assigned to `{tag.capitalize()}` tag"
 
 # Get shiny tags
-async def get_tag_hunters(server_id, tag) -> list:
+async def get_tag_data(server_id, tag) -> TagData:
     
     tag = tag.lower()
     query = {"server_id" : str(server_id)}
@@ -86,20 +90,21 @@ async def get_tag_hunters(server_id, tag) -> list:
     """
     {
         "server_id" : "10000000000000000",
+        "timer" : 0
         "tags" : {
             "tag_name" : ["hunter_id_1", "hunter_id_2"]
         }
     }
     """
 
-    tag_data = data_cursor[0]["tags"]
+    tag_data = data_cursor[0]
 
-    try:
-        hunters = tag_data[tag]
-    except Exception as e:
-        hunters = None
+    data = TagData()
 
-    return hunters    
+    data.hunters = tag_data["tags"].get(tag, [])
+    data.timer   = tag_data["timer"]
+
+    return data
 
 # Get show hunters embed
 async def get_show_hunters_embd(tag, hunters):
@@ -112,6 +117,24 @@ async def get_show_hunters_embd(tag, hunters):
         embd.description += "<@{hunter_id}>\n".format(hunter_id=i.replace("/",""))
 
     return embd
+
+# Set Timer
+async def update_timer(server_id:str, time_value:int):
+
+    query = {
+        "server_id" : server_id
+    }
+
+    updated_data = {
+        "timer" : time_value
+    }
+
+    try:
+        mongo_manager.manager.update_all_data("tags", query, updated_data)
+    except Exception as e:
+        return discord.Embed(title="Error!", description=f"```{e}```", color=config.ERROR_COLOR)
+    else:
+        return discord.Embed(title="Timer Updated!", description="Post Tag Timer is now set to **{}** seconds".format(time_value), color=discord.Color.dark_theme())
 
 # remove user from their tag
 async def remove_user(server_id, user):

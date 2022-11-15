@@ -10,6 +10,8 @@ TEST_TOKEN = os.environ["TEST_TOKEN"]
 ADMIN_ID = "734754644286504991"
 POKETWO_ID = "716390085896962058"
 
+MAX_TAG_TIMER_VALUE = 500
+
 # Mongo Data
 MONGO_URI = os.environ["MONGO"]
 
@@ -72,7 +74,7 @@ WEAKNESS_FILE_LOCATION = "data/weakness_data.json"
 DUELISH_POKEMON_FILE_LOCATION = "data/duelish_pokemons.json"
 
 # colors
-NORMAL_COLOR = discord.Color.blue()
+NORMAL_COLOR = discord.Color.dark_theme()
 ERROR_COLOR = discord.Color.red()
 WARNING_COLOR = discord.Color.orange()
 RARE_CATCH_COLOR = discord.Color.gold()

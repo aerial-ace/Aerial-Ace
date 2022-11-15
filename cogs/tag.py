@@ -1,11 +1,12 @@
 from discord.ext import commands
-from discord import Member
+from discord import Member, Message
+import asyncio
 
 from views.ButtonViews import GeneralView
 from managers import cache_manager
 from cog_helpers import tag_helper
 from cog_helpers import general_helper
-from config import ERROR_COLOR, WARNING_COLOR
+from config import ERROR_COLOR, WARNING_COLOR, MAX_TAG_TIMER_VALUE
 
 class TagSystem(commands.Cog):
     def __init__(self, bot) -> None:
@@ -46,30 +47,49 @@ class TagSystem(commands.Cog):
 
     @commands.guild_only()
     @commands.command(name="tag_ping", aliases=["tp"], description="Ping users assigned to a particular tag")
-    async def tag_ping(self, ctx, tag: str):
+    async def tag_ping(self, ctx:commands.Context, tag: str):
 
         if await self.validate_tag(ctx, tag.lower()) is False:
             return
 
-        hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
+        data = await tag_helper.get_tag_data(ctx.guild.id, tag)
 
-        if hunters is None:
+        if len(data.hunters) == 0:
             reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), WARNING_COLOR)
             view = GeneralView(200, True, True, False, True)
 
             await ctx.send(embed=reply, view=view)
             return
 
-        number_of_hunters = len(hunters)
-        pings = ""
+        # Ping the assigned users
 
-        for i in range(0, number_of_hunters):
-            pings = pings + f"<@{str(hunters[i])}>"
-            if i <= number_of_hunters - 2:
-                pings += " | "
+        pings = ["<@{}>".format(user_id) for user_id in data.hunters]
 
-        await ctx.send(f"Pinging users assigned to `{tag.capitalize()}` tag\n\n{pings}")
+        ping_str = " | ".join(pings)
 
+        ping_message = await ctx.send(f"Pinging users assigned to `{tag.capitalize()}` tag\n\n{ping_str}")
+
+        # Start the timer
+
+        post_tag_timer_embed = await general_helper.get_info_embd("", "")
+
+        if data.timer == 0:
+            post_tag_timer_embed.title = "No Post Tag Timer Set!"
+        else:
+            post_tag_timer_embed.title = "⌛{}s Timer Started!".format(data.timer)
+
+        post_tag_message:Message = await ctx.send(embed=post_tag_timer_embed, reference=ping_message)
+
+        if data.timer == 0:
+            return
+
+        # Wait for timer to end
+        await asyncio.sleep(data.timer)
+
+        await post_tag_message.delete()
+
+        return await ctx.send(embed=await general_helper.get_info_embd("Timer Ended", "You can catch the pokemon now."), reference=ping_message)
+        
     @tag_ping.error
     async def tag_ping_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
@@ -88,7 +108,7 @@ class TagSystem(commands.Cog):
         if await self.validate_tag(ctx, tag.lower()) is False:
             return
 
-        hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
+        hunters = await tag_helper.get_tag_data(ctx.guild.id, tag)
 
         if hunters is None:
             reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), WARNING_COLOR)
@@ -108,6 +128,29 @@ class TagSystem(commands.Cog):
 
             await ctx.reply(embed=reply, view=view)
 
+
+    """Set the tag post timer"""
+
+    @commands.command(name="tag_timer", aliases=["tt"], description="Sets the post tag timer for this server | Enter 0 to disable")
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    async def tag_timer(self, ctx:commands.Context, value:str):
+
+        try:
+            value = int(value)
+        except:
+            await ctx.send("Enter a valid Integer between 1 and 500")
+            return
+
+        if value > MAX_TAG_TIMER_VALUE or value < 1:
+            await ctx.reply("Timer Values higher than **500 seconds** are not allowed!")
+            return
+
+        reply = await tag_helper.update_timer(str(ctx.guild.id), value)
+        view  = GeneralView(200, True, True, False, True)
+
+        await ctx.send(embed=reply, view=view)
+
     """Clear Personal Tag"""        
     @commands.guild_only()
     @commands.command(name="tag_clear", aliases=["tc"], description="Removes the users from his current tag.")
@@ -116,6 +159,7 @@ class TagSystem(commands.Cog):
         view = GeneralView(200, True, True, False, True)
 
         await ctx.send(reply, view=view)
+
 
     """Clear All Tags"""
 
@@ -142,6 +186,7 @@ class TagSystem(commands.Cog):
 
         await ctx.send(embed=reply, view=view)
 
+
     """Remove tags"""
 
     @commands.guild_only()
@@ -164,6 +209,8 @@ class TagSystem(commands.Cog):
             view = GeneralView(200, True, True, False, True)
             await ctx.reply(reply, view=view)
         
+    
+    """Remove Tag By User ID"""
 
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
@@ -208,6 +255,7 @@ class TagSystem(commands.Cog):
             return
 
         await ctx.send(error)
+
 
     """All tags present in the server"""
     @commands.command(name="alltags", description="Returns a list of all tags in the server")
