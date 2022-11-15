@@ -189,11 +189,15 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
 
     # send that starboard embed to the starboard channel
     starboard_channel : TextChannel= message.guild.get_channel(int(starboard_channel_id))
+
+    if starboard_channel is None:
+        return await general_helper.get_info_embd("No Access", f"Can't send message in <#{starboard_channel_id}>")
+
     try:
         await starboard_channel.send(embed=reply)
     except errors.Forbidden as e:
         print(type(e))
-        return await general_helper.get_info_embd(f"Missing Permissions!", "Can't send message in <#{starboard_channel_id}>")
+        return await general_helper.get_info_embd(f"Missing Permissions!", f"Can't send message in <#{starboard_channel_id}>")
     except Exception as e:
         print(type(e))
         print(e)
