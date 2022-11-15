@@ -74,7 +74,7 @@ WEAKNESS_FILE_LOCATION = "data/weakness_data.json"
 DUELISH_POKEMON_FILE_LOCATION = "data/duelish_pokemons.json"
 
 # colors
-NORMAL_COLOR = discord.Color.blue()
+NORMAL_COLOR = discord.Color.dark_theme()
 ERROR_COLOR = discord.Color.red()
 WARNING_COLOR = discord.Color.orange()
 RARE_CATCH_COLOR = discord.Color.gold()
