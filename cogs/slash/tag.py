@@ -48,7 +48,7 @@ class TagSystemSlash(commands.Cog):
         if await self.validate_tag(ctx, tag.lower()) is False:
             return
 
-        hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
+        hunters = await tag_helper.get_tag_data(ctx.guild.id, tag)
         view = GeneralView(200, True, True, False, True)
 
         if hunters is None:
@@ -69,7 +69,7 @@ class TagSystemSlash(commands.Cog):
         if await self.validate_tag(ctx, tag.lower()) is False:
             return
 
-        hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
+        hunters = await tag_helper.get_tag_data(ctx.guild.id, tag)
 
         if hunters is None:
             await ctx.respond(f"No one is assigned to `{tag}` tag.")

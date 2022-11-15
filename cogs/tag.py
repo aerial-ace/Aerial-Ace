@@ -1,5 +1,6 @@
 from discord.ext import commands
-from discord import Member
+from discord import Member, Message
+import asyncio
 
 from views.ButtonViews import GeneralView
 from managers import cache_manager
@@ -46,29 +47,56 @@ class TagSystem(commands.Cog):
 
     @commands.guild_only()
     @commands.command(name="tag_ping", aliases=["tp"], description="Ping users assigned to a particular tag")
-    async def tag_ping(self, ctx, tag: str):
+    async def tag_ping(self, ctx:commands.Context, tag: str):
 
         if await self.validate_tag(ctx, tag.lower()) is False:
             return
 
-        hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
+        data = await tag_helper.get_tag_data(ctx.guild.id, tag)
 
-        if hunters is None:
+        if len(data.hunters) == 0:
             reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), WARNING_COLOR)
             view = GeneralView(200, True, True, False, True)
 
             await ctx.send(embed=reply, view=view)
             return
 
-        number_of_hunters = len(hunters)
-        pings = ""
+        # Ping the assigned users
 
-        for i in range(0, number_of_hunters):
-            pings = pings + f"<@{str(hunters[i])}>"
-            if i <= number_of_hunters - 2:
-                pings += " | "
+        pings = ["<@{}>".format(user_id) for user_id in data.hunters]
 
-        await ctx.send(f"Pinging users assigned to `{tag.capitalize()}` tag\n\n{pings}")
+        ping_str = " | ".join(pings)
+
+        await ctx.send(f"Pinging users assigned to `{tag.capitalize()}` tag\n\n{ping_str}")
+
+        # Start the timer
+
+        post_tag_timer_embed = await general_helper.get_info_embd("", "")
+
+        if data.timer == 0:
+            post_tag_timer_embed.title = "No Post Tag Timer Set!"
+        else:
+            post_tag_timer_embed.title = "⌛{}s Timer Started!".format(data.timer)
+
+        post_tag_message:Message = await ctx.send(embed=post_tag_timer_embed)
+
+        if data.timer == 0:
+            return
+
+        # Wait for timer to end
+
+        botto:commands.Bot = ctx.bot
+
+        def check(message):
+            return False
+
+        try:
+            await botto.wait_for("message", timeout=data.timer, check=check)
+        except asyncio.TimeoutError:
+            await post_tag_message.delete()
+            return await ctx.send(embed=await general_helper.get_info_embd("Timer Ended", "You can catch the pokemon now."))
+        except Exception as e:
+            return
 
     @tag_ping.error
     async def tag_ping_handler(self, ctx, error):
@@ -88,7 +116,7 @@ class TagSystem(commands.Cog):
         if await self.validate_tag(ctx, tag.lower()) is False:
             return
 
-        hunters = await tag_helper.get_tag_hunters(ctx.guild.id, tag)
+        hunters = await tag_helper.get_tag_data(ctx.guild.id, tag)
 
         if hunters is None:
             reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), WARNING_COLOR)
