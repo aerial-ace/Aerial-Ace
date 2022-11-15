@@ -84,20 +84,12 @@ class TagSystem(commands.Cog):
             return
 
         # Wait for timer to end
+        await asyncio.sleep(data.timer)
 
-        botto:commands.Bot = ctx.bot
-
-        def check(message):
-            return False
-
-        try:
-            await botto.wait_for("message", timeout=data.timer, check=check)
-        except asyncio.TimeoutError:
-            await post_tag_message.delete()
-            return await ctx.send(embed=await general_helper.get_info_embd("Timer Ended", "You can catch the pokemon now."))
-        except Exception as e:
-            return
-
+        await post_tag_message.delete()
+        
+        return await ctx.send(embed=await general_helper.get_info_embd("Timer Ended", "You can catch the pokemon now."))
+        
     @tag_ping.error
     async def tag_ping_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
