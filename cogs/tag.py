@@ -67,7 +67,7 @@ class TagSystem(commands.Cog):
 
         ping_str = " | ".join(pings)
 
-        await ctx.send(f"Pinging users assigned to `{tag.capitalize()}` tag\n\n{ping_str}")
+        ping_message = await ctx.send(f"Pinging users assigned to `{tag.capitalize()}` tag\n\n{ping_str}")
 
         # Start the timer
 
@@ -78,7 +78,7 @@ class TagSystem(commands.Cog):
         else:
             post_tag_timer_embed.title = "⌛{}s Timer Started!".format(data.timer)
 
-        post_tag_message:Message = await ctx.send(embed=post_tag_timer_embed)
+        post_tag_message:Message = await ctx.send(embed=post_tag_timer_embed, reference=ping_message)
 
         if data.timer == 0:
             return
@@ -88,7 +88,7 @@ class TagSystem(commands.Cog):
 
         await post_tag_message.delete()
 
-        return await ctx.send(embed=await general_helper.get_info_embd("Timer Ended", "You can catch the pokemon now."))
+        return await ctx.send(embed=await general_helper.get_info_embd("Timer Ended", "You can catch the pokemon now."), reference=ping_message)
         
     @tag_ping.error
     async def tag_ping_handler(self, ctx, error):
@@ -134,9 +134,15 @@ class TagSystem(commands.Cog):
     @commands.command(name="tag_timer", aliases=["tt"], description="Sets the post tag timer for this server | Enter 0 to disable")
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
-    async def tag_timer(self, ctx:commands.Context, value:int):
+    async def tag_timer(self, ctx:commands.Context, value:str):
 
-        if value > MAX_TAG_TIMER_VALUE:
+        try:
+            value = int(value)
+        except:
+            await ctx.send("Enter a valid Integer between 1 and 500")
+            return
+
+        if value > MAX_TAG_TIMER_VALUE or value < 1:
             await ctx.reply("Timer Values higher than **500 seconds** are not allowed!")
             return
 
@@ -144,7 +150,6 @@ class TagSystem(commands.Cog):
         view  = GeneralView(200, True, True, False, True)
 
         await ctx.send(embed=reply, view=view)
-
 
     """Clear Personal Tag"""        
     @commands.guild_only()

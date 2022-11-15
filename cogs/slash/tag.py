@@ -7,7 +7,7 @@ from views.ButtonViews import GeneralView
 from managers import cache_manager
 from cog_helpers import general_helper
 from cog_helpers import tag_helper
-from config import ERROR_COLOR, WARNING_COLOR
+from config import ERROR_COLOR, WARNING_COLOR, MAX_TAG_TIMER_VALUE
 
 class TagSystemSlash(commands.Cog):
 
@@ -45,22 +45,6 @@ class TagSystemSlash(commands.Cog):
 
     @slash_command(name="pingtag", description="Ping users assigned to the provided tag")
     async def tag_ping(self, ctx:ApplicationContext, tag : Option(str, description="Name of the tag", required=True)):
-
-        # if await self.validate_tag(ctx, tag.lower()) is False:
-        #     return
-
-        # hunters = await tag_helper.get_tag_data(ctx.guild.id, tag)
-        # view = GeneralView(200, True, True, False, True)
-
-        # if hunters is None:
-        #     await ctx.respond(f"No one is assigned to `{tag}` tag.")
-        #     return
-        # else:
-        #     pings = ""
-        #     for hunter in hunters:
-        #         pings = pings + f"<@{hunter}> "
-
-        #     await ctx.respond(f"Pinging user assigned to `{tag}` tag.\n\n{pings}", view=view)
 
         if await self.validate_tag(ctx, tag.lower()) is False:
             return
@@ -122,6 +106,20 @@ class TagSystemSlash(commands.Cog):
             view = GeneralView(200, True, True, False, True)
 
             await ctx.respond(embed=reply, view=view)
+
+
+    """For setting the tag timer"""
+    @slash_command(name="tag-timer", description="Updates the Post Tag Wait Time! 0 = Disable", guild_ids=[751076697884852389])
+    async def tag_timer(self, ctx:ApplicationContext, value:Option(int, "Wait Time")):
+
+        if value > MAX_TAG_TIMER_VALUE or value < 1:
+            await ctx.respond("Timer Values higher than **500 seconds** are not allowed!")
+            return
+
+        reply = await tag_helper.update_timer(str(ctx.guild.id), value)
+        view = GeneralView(200, True, True, False, True)
+
+        await ctx.respond(embed=reply, view=view)
 
     """For toggling afk"""
 
