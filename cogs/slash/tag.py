@@ -1,12 +1,13 @@
 from discord import Member, ApplicationContext, AutocompleteContext
 from discord.ext import commands
 from discord.commands import slash_command, Option
+import asyncio
 
 from views.ButtonViews import GeneralView
 from managers import cache_manager
 from cog_helpers import general_helper
 from cog_helpers import tag_helper
-from config import ERROR_COLOR
+from config import ERROR_COLOR, WARNING_COLOR
 
 class TagSystemSlash(commands.Cog):
 
@@ -20,7 +21,7 @@ class TagSystemSlash(commands.Cog):
         try:
             cache_manager.cached_type_data[tag.lower()]
         except KeyError as keyErr:
-            reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english and that follow this format ```{ctx.prefix}dex marowak-alola\n{ctx.prefix}dex gallade-mega\n{ctx.prefix}dex meowstic-female\n{ctx.prefix}dex deoxys-defense\n{ctx.prefix}dex necrozma-dawn\n{ctx.prefix}dex calyrex-shadow-rider\n{ctx.prefix}dex cinderace-gmax```", ERROR_COLOR)
+            reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english and that follow this format ```/dex marowak-alola\n/dex gallade-mega\n/dex meowstic-female\n/dex deoxys-defense\n/dex necrozma-dawn\n/dex calyrex-shadow-rider\n/dex cinderace-gmax```", ERROR_COLOR)
             view = GeneralView(200, True, True, False, True)
             await ctx.respond(embed=reply, view=view)
             return False
@@ -30,7 +31,7 @@ class TagSystemSlash(commands.Cog):
     """For registering tags"""
 
     @slash_command(name="tag", description="Add yourself to any tag")
-    async def assign_tag(self, ctx, tag : Option(str, description="Name of the tag", required=True)):
+    async def assign_tag(self, ctx:ApplicationContext, tag : Option(str, description="Name of the tag", required=True)):
 
         if await self.validate_tag(ctx, tag.lower()) is False:
             return
@@ -43,23 +44,65 @@ class TagSystemSlash(commands.Cog):
     """For pinging user assigned to tag"""
 
     @slash_command(name="pingtag", description="Ping users assigned to the provided tag")
-    async def tag_ping(self, ctx, tag : Option(str, description="Name of the tag", required=True)):
+    async def tag_ping(self, ctx:ApplicationContext, tag : Option(str, description="Name of the tag", required=True)):
+
+        # if await self.validate_tag(ctx, tag.lower()) is False:
+        #     return
+
+        # hunters = await tag_helper.get_tag_data(ctx.guild.id, tag)
+        # view = GeneralView(200, True, True, False, True)
+
+        # if hunters is None:
+        #     await ctx.respond(f"No one is assigned to `{tag}` tag.")
+        #     return
+        # else:
+        #     pings = ""
+        #     for hunter in hunters:
+        #         pings = pings + f"<@{hunter}> "
+
+        #     await ctx.respond(f"Pinging user assigned to `{tag}` tag.\n\n{pings}", view=view)
 
         if await self.validate_tag(ctx, tag.lower()) is False:
             return
 
-        hunters = await tag_helper.get_tag_data(ctx.guild.id, tag)
-        view = GeneralView(200, True, True, False, True)
+        data = await tag_helper.get_tag_data(ctx.guild.id, tag)
 
-        if hunters is None:
-            await ctx.respond(f"No one is assigned to `{tag}` tag.")
+        if len(data.hunters) == 0:
+            reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), WARNING_COLOR)
+            view = GeneralView(200, True, True, False, True)
+
+            await ctx.respond(embed=reply, view=view)
             return
-        else:
-            pings = ""
-            for hunter in hunters:
-                pings = pings + f"<@{hunter}> "
 
-            await ctx.respond(f"Pinging user assigned to `{tag}` tag.\n\n{pings}", view=view)
+        # Ping the assigned users
+
+        pings = ["<@{}>".format(user_id) for user_id in data.hunters]
+
+        ping_str = " | ".join(pings)
+
+        await ctx.respond(f"Pinging users assigned to `{tag.capitalize()}` tag\n\n{ping_str}")
+
+        # Start the timer
+
+        post_tag_timer_embed = await general_helper.get_info_embd("", "")
+
+        if data.timer == 0:
+            post_tag_timer_embed.title = "No Post Tag Timer Set!"
+        else:
+            post_tag_timer_embed.title = "⌛{}s Timer Started!".format(data.timer)
+
+        post_tag_message = await ctx.respond(embed=post_tag_timer_embed)
+
+        if data.timer == 0:
+            return
+
+        # Wait for timer to end
+
+        await asyncio.sleep(data.timer)
+
+        await post_tag_message.delete()
+
+        return await ctx.respond(embed=await general_helper.get_info_embd("Timer Ended", "You can catch the pokemon now."))
     
     """For viewing users assigned to tag"""
 
