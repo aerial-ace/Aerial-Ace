@@ -118,6 +118,24 @@ async def get_show_hunters_embd(tag, hunters):
 
     return embd
 
+# Set Timer
+async def update_timer(server_id:str, time_value:int):
+
+    query = {
+        "server_id" : server_id
+    }
+
+    updated_data = {
+        "timer" : time_value
+    }
+
+    try:
+        mongo_manager.manager.update_all_data("tags", query, updated_data)
+    except Exception as e:
+        return discord.Embed(title="Error!", description=f"```{e}```")
+    else:
+        return discord.Embed(title="Timer Updated!", description="Post Tag Timer is now set to **{}** seconds".format(time_value))
+
 # remove user from their tag
 async def remove_user(server_id, user):
     
