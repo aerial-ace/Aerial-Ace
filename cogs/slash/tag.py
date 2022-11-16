@@ -109,7 +109,7 @@ class TagSystemSlash(commands.Cog):
 
 
     """For setting the tag timer"""
-    @slash_command(name="tag-timer", description="Updates the Post Tag Wait Time! 0 = Disable", guild_ids=[751076697884852389])
+    @slash_command(name="tag-timer", description="Updates the Post Tag Wait Time! 0 = Disable")
     async def tag_timer(self, ctx:ApplicationContext, value:Option(int, "Wait Time")):
 
         if value > MAX_TAG_TIMER_VALUE or value < 1:

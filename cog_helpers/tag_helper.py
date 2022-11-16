@@ -101,8 +101,12 @@ async def get_tag_data(server_id, tag) -> TagData:
 
     data = TagData()
 
-    data.hunters = tag_data["tags"].get(tag, [])
-    data.timer   = tag_data["timer"]
+    try:
+        data.hunters = tag_data["tags"].get(tag, [])
+        data.timer   = tag_data["timer"]
+    except KeyError:
+        await update_timer(str(server_id), 0)
+        data.timer   = 0
 
     return data
 

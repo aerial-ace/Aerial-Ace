@@ -23,7 +23,7 @@ async def register_guild(bot : commands.Bot, guild : discord.Guild):
     server_duplicates = mongo_manager.manager.get_documents_length("tags", {"server_id" : server_id})
 
     if server_duplicates <= 0:
-        entry = {"server_id" : server_id, "tags" : {}}
+        entry = {"server_id" : server_id, "tags" : {}, "timer" : 0}
         mongo_manager.manager.add_data("tags", entry)
 
     # create empty battle entry
@@ -78,7 +78,7 @@ async def register_guild_without_bs(guild_id:str, guild_name:str="NONE"):
     server_duplicates = mongo_manager.manager.get_documents_length("tags", {"server_id" : server_id})
 
     if server_duplicates <= 0:
-        entry = {"server_id" : server_id, "tags" : {}}
+        entry = {"server_id" : server_id, "tags" : {}, "timer" : 0}
         mongo_manager.manager.add_data("tags", entry)
 
     # create empty battle entry
