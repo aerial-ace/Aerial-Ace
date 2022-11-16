@@ -142,7 +142,7 @@ class TagSystem(commands.Cog):
             await ctx.send("Enter a valid Integer between 1 and 500")
             return
 
-        if value > MAX_TAG_TIMER_VALUE or value < 1:
+        if value > MAX_TAG_TIMER_VALUE or value < 0:
             await ctx.reply("Timer Values higher than **500 seconds** are not allowed!")
             return
 

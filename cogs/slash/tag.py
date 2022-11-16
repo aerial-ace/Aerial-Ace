@@ -112,7 +112,7 @@ class TagSystemSlash(commands.Cog):
     @slash_command(name="tag-timer", description="Updates the Post Tag Wait Time! 0 = Disable")
     async def tag_timer(self, ctx:ApplicationContext, value:Option(int, "Wait Time")):
 
-        if value > MAX_TAG_TIMER_VALUE or value < 1:
+        if value > MAX_TAG_TIMER_VALUE or value < 0:
             await ctx.respond("Timer Values higher than **500 seconds** are not allowed!")
             return
 
