@@ -96,7 +96,8 @@ class TagSystemSlash(commands.Cog):
         if await self.validate_tag(ctx, tag.lower()) is False:
             return
 
-        hunters = await tag_helper.get_tag_data(ctx.guild.id, tag)
+        data = await tag_helper.get_tag_data(ctx.guild.id, tag)
+        hunters = data.hunters
 
         if hunters is None:
             await ctx.respond(f"No one is assigned to `{tag}` tag.")
@@ -172,7 +173,6 @@ class TagSystemSlash(commands.Cog):
 
 
     """For removing users from their tag"""
-
     @slash_command(name="tag-remove", description="Remove a user from their tag")
     async def tag_remove(self, ctx : ApplicationContext, user : Option(Member, description="Member to remove from tag", required=True)):
 
@@ -185,7 +185,6 @@ class TagSystemSlash(commands.Cog):
         await ctx.respond(reply, view=view)
 
     """For removing user from their tag using user id"""
-
     @slash_command(name="tag-remove-id", description="Remove a user from their tag using user id")
     async def tag_remove_id(self, ctx : ApplicationContext, user_id : Option(str, description="Member to remove from tag", required=True)):
 

@@ -108,7 +108,8 @@ class TagSystem(commands.Cog):
         if await self.validate_tag(ctx, tag.lower()) is False:
             return
 
-        hunters = await tag_helper.get_tag_data(ctx.guild.id, tag)
+        data = await tag_helper.get_tag_data(ctx.guild.id, tag)
+        hunters = data.hunters
 
         if hunters is None:
             reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), WARNING_COLOR)
