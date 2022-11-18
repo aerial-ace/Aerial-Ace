@@ -7,7 +7,7 @@ import json
 
 from managers import mongo_manager, init_manager
 from cog_helpers import general_helper
-from config import NORMAL_COLOR, RARE_CATCH_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT
+from config import NORMAL_COLOR, RARE_CATCH_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, STREAK_EMOJI, STREAK_COLOR
 
 """Sets/Resets the starboard channel"""
 
@@ -110,8 +110,7 @@ async def set_starboard_image(server_id:str, text:str, type:str) -> Embed:
         return Embed(title="Error Occurred", description="```e```")
 
 """Returns the starboard embed for starboard channel"""
-
-async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, message_link : str, is_shiny:bool = False, time:str = None):
+async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, message_link : str, type:str="", streak=0):
 
     pokemon = pokemon_id.replace(" ", "").lower()
     pokemon = pokemon.replace("é", "e")     #This is because of you Flabébé >:|
@@ -137,37 +136,46 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
 
     embd = Embed()
 
-    if is_shiny is False:
+    if type == "rare":
         embd.title = ":star: Rare Catch Detected :star:"
         embd.color = NORMAL_COLOR
 
         embd.description = f"**Trainer :** {user_name}\n"
         embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
-        embd.description += f"**Level :** {level} [Teleport]({message_link})"
+        embd.description += f"**Level :** {level} [Teleport]({message_link})\n\n"
+        embd.description += ("**Streak :** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
 
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
         embd.set_thumbnail(url=image_link)
-    else:
+    elif type == "shiny":
         embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
         embd.color = RARE_CATCH_COLOR
 
         embd.description = f"**Trainer :** {user_name}\n"
         embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
-        embd.description += f"**Level :** {level} [Teleport]({message_link})"
+        embd.description += f"**Level :** {level} [Teleport]({message_link})\n\n"
+        embd.description += ("**Streak :** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
 
         image_link = SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
         embd.set_thumbnail(url=image_link)
+    elif streak != 0:
+        embd.title = "{emote} Catch Streak Detected {emote}".format(emote=STREAK_EMOJI)
+        embd.color = STREAK_COLOR
 
-    if time is not None:
-        embd.set_footer(time)
-    else:
-        embd.timestamp = datetime.datetime.now()
+        embd.description = f"**Trainer :** {user_name}\n"
+        embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
+        embd.description += f"**Level :** {level} [Teleport]({message_link})\n\n"
+        embd.description += "**Streak :** {streak}".format(streak=streak)
+
+        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+        embd.set_thumbnail(url=image_link)
+
+    embd.timestamp = datetime.datetime.now()
 
     return embd
 
 """Sends the star catch embed to the starboard"""
-
-async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, message:Message, is_shiny:bool, time:str = None):
+async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, message:Message, type="", streak=0):
     
     query = {"server_id" : server_id}
 
@@ -185,7 +193,7 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
         return await general_helper.get_info_embd("No starboard channel set", "", NORMAL_COLOR)
 
     # get starboard embed
-    reply = await get_starboard_embed(user_id, level, pokemon, message.jump_url, is_shiny, time)
+    reply = await get_starboard_embed(user_id, level, pokemon, message.jump_url, type, streak)
 
     # send that starboard embed to the starboard channel
     starboard_channel : TextChannel= message.guild.get_channel(int(starboard_channel_id))
@@ -205,8 +213,7 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
     return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
 
 """returns the embed containing the rare catch info"""
-
-async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, is_shiny:bool):
+async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str="", _streak=0):
 
     query = {
         "server_id" : server_id
@@ -225,18 +232,28 @@ async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, is_shiny:b
         data = json.loads(data.get("starboard_embed", "DEFAULT"))
         return Embed().from_dict(data)
 
-    embd = Embed(color=RARE_CATCH_COLOR)
+    embd = Embed()
 
-    if is_shiny is not True:
+    if _type == "rare":
         embd.title = ":star: Rare Catch Detected :star:"
+        embd.color = NORMAL_COLOR
         embd.description = (DEFAULT_RARE_TEXT if data.get("starboard_text_rare", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_rare", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
+        embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")
+
         embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
-    else:
+    elif _type == "shiny":
         embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
+        embd.color = RARE_CATCH_COLOR
         embd.description = (DEFAULT_SHINY_TEXT if data.get("starboard_text_shiny", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_shiny", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
+        embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")
+
         embd.set_image(url=(PIKA_SHOCK if data.get("starboard_image_shiny", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_shiny", "DEFAULT")))
+    elif _streak != 0:
+        embd.title = f"{STREAK_EMOJI} Catch Streak {STREAK_EMOJI}"
+        embd.color = STREAK_COLOR
+        embd.description = "{ping} caught their {streak}th {pokemon}\n\n:tada: Congratulations :tada:".format(ping=_ping, streak=_streak, pokemon=_pokemon)
 
     embd.timestamp = datetime.datetime.now()
 

@@ -36,9 +36,8 @@ GITHUB_SPONSORS_LINK = "https://github.com/sponsors/aerial-ace"
 # Emojis
 BULLET_EMOJI = "<a:arrow_arrow:939409283668410381>"
 IMPORTANT_EMOJI = "<a:Important:940582149797601391>"
-THEFK_EMOJI = "<:thefk:929683678890713108>"
 ALERT_EMOJI = "<:alert:940589741714317332>"
-PLS_EMOJI = ""
+STREAK_EMOJI = "<:upgrades:1043145357070176407>"
 COIN_HEADS_EMOJI = "<:heads:946027174526353448>"
 COIN_TAILS_EMOJI = "<:tails:946027156985757746>"
 DEVELOPER_EMOJI = "<:developer:956852544666206238>"
@@ -79,10 +78,11 @@ ERROR_COLOR = discord.Color.red()
 WARNING_COLOR = discord.Color.orange()
 RARE_CATCH_COLOR = discord.Color.gold()
 SMOGON_COLOR = discord.Color.purple()
+STREAK_COLOR = 0xc3f717
 
 #starboard defaults
-DEFAULT_RARE_TEXT = "{ping} caught a level {level} `{pokemon}` \nCongratulations :tada: :tada:\n"
-DEFAULT_SHINY_TEXT = "{ping} caught a level {level} **SHINY** `{pokemon}` \nCongratulations :tada: :tada:\n"
+DEFAULT_RARE_TEXT = "{ping} caught a level {level} `{pokemon}` \n\n:tada: Congratulations :tada:\n"
+DEFAULT_SHINY_TEXT = "{ping} caught a level {level} **SHINY** `{pokemon}` \n\n :tada: Congratulations :tada:\n"
 
 # Reactions
 PIKA_WOW = "https://cdn.discordapp.com/attachments/911547825274388511/918840026094247976/pika_woo.png"
