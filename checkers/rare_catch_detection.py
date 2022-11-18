@@ -14,7 +14,7 @@ async def rare_check(message : discord.Message):
     catch_info = await determine_rare_catch(message.content)
 
     # return if not a rare catch
-    if catch_info["type"] == "" and catch_info["streak"] == 0:
+    if catch_info is None or (catch_info["type"] == "" and catch_info["streak"] == 0):
         return None
 
     # get the rare catch details
