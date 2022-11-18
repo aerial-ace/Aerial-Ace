@@ -32,7 +32,8 @@ links = {
     "double-dance":{
         "{user} is dancing with {target}" : "https://i.imgur.com/nGHoCJW.gif",
         "{target} is dancing with {user}" : "https://i.imgur.com/xbDs4cq.gif",
-        "{user} and {target} are dancing, Cool" : "https://i.imgur.com/u2u0tPC.gif"
+        "{user} and {target} are dancing, Cool" : "https://i.imgur.com/u2u0tPC.gif",
+        "{user} is dance with {target} ^_^" : "https://i.imgur.com/A7OeAHE.gif"
     },
     "pat" : {
         "{user} pets {target}" : "https://i.imgur.com/NUA66SL.gif",
