@@ -74,6 +74,7 @@ DUELISH_POKEMON_FILE_LOCATION = "data/duelish_pokemons.json"
 
 # colors
 NORMAL_COLOR = discord.Color.dark_theme()
+DEFAULT_COLOR = discord.Color.blue()
 ERROR_COLOR = discord.Color.red()
 WARNING_COLOR = discord.Color.orange()
 RARE_CATCH_COLOR = discord.Color.gold()

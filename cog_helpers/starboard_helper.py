@@ -7,7 +7,7 @@ import json
 
 from managers import mongo_manager, init_manager
 from cog_helpers import general_helper
-from config import NORMAL_COLOR, RARE_CATCH_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, STREAK_EMOJI, STREAK_COLOR
+from config import NORMAL_COLOR, DEFAULT_COLOR, RARE_CATCH_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, STREAK_EMOJI, STREAK_COLOR
 
 """Sets/Resets the starboard channel"""
 
@@ -138,7 +138,7 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
 
     if type == "rare":
         embd.title = ":star: Rare Catch Detected :star:"
-        embd.color = NORMAL_COLOR
+        embd.color = DEFAULT_COLOR
 
         embd.description = f"**Trainer :** {user_name}\n"
         embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
@@ -207,6 +207,48 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
         print(type(e))
         return await general_helper.get_info_embd(f"Missing Permissions!", f"Can't send message in <#{starboard_channel_id}>")
     except Exception as e:
+        print(type(e))
+        print(e)
+
+    return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
+
+"""Sends the star catch embed to the starboard without catch info"""
+async def send_starboard_without_catch_info(server_id:str, level:str, pokemon:str, message:Message):
+    
+    query = {"server_id" : server_id}
+
+    # get starboard channel
+    cursor = mongo_manager.manager.get_all_data("servers", query)
+    try:
+        data = cursor[0]
+    except:
+        data = await init_manager.register_guild_without_bs(server_id)
+
+    starboard_channel_id = data["starboard"]
+
+    # return if module is disabled
+    if starboard_channel_id == "0":
+        return await general_helper.get_info_embd("No starboard channel set", "", NORMAL_COLOR)
+
+    # get starboard embed
+    reply = Embed(title=":star: Rare Pokemon Found :star:")
+    reply.description = "**Pokemon** : {}\n".format(pokemon)
+    reply.description += "**Level** : {} [Teleport]({})\n".format(level, message.jump_url)
+
+    reply.timestamp = datetime.datetime.now()
+
+    # send that starboard embed to the starboard channel
+    starboard_channel : TextChannel= message.guild.get_channel(int(starboard_channel_id))
+
+    if starboard_channel is None:
+        return await general_helper.get_info_embd("No Access", f"Can't send message in <#{starboard_channel_id}>")
+
+    try:
+        await starboard_channel.send(embed=reply)
+    except errors.Forbidden as e:
+        return await general_helper.get_info_embd(f"Missing Permissions!", f"Can't send message in <#{starboard_channel_id}>")
+    except Exception as e:
+        print(">>"*20)
         print(type(e))
         print(e)
 
