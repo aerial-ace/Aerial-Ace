@@ -18,7 +18,17 @@
   <b>Prefix</b> : `-aa`<br>
   <b>Website : <a href="https://aerial-ace.github.io/">Aerial Ace</a></b>
 </p>
+<hr>
+<h2 align="center">
+  <a href="https://ko-fi.com/T6T3GI6XH">
+    <img src="https://ko-fi.com/img/githubbutton_sm.svg" />
+  </a>  
+  <a href="https://patreon.com/aerial_ace">
+    <img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Daerial_ace%26type%3Dpatrons&style=for-the-badge" alt="Support me on Patreon" />
+  </a>
+</center>
 
+<hr />
 ## Features
 
 * View Dex entry of any Pokémon.
