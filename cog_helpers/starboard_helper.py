@@ -110,7 +110,7 @@ async def set_starboard_image(server_id:str, text:str, type:str) -> Embed:
         return Embed(title="Error Occurred", description="```e```")
 
 """Returns the starboard embed for starboard channel"""
-async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, message_link : str, type:str="", streak=0):
+async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, message_link : str, type:str="", streak=0, tier:int=0):
 
     pokemon = pokemon_id.replace(" ", "").lower()
     pokemon = pokemon.replace("é", "e")     #This is because of you Flabébé >:|
@@ -158,7 +158,7 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
 
         image_link = SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
         embd.set_thumbnail(url=image_link)
-    elif streak != 0:
+    elif streak != 0 and tier > 0:
         embd.title = "{emote} Catch Streak Detected {emote}".format(emote=STREAK_EMOJI)
         embd.color = STREAK_COLOR
 
@@ -187,13 +187,14 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
         data = await init_manager.register_guild_without_bs(server_id)
 
     starboard_channel_id = data["starboard"]
+    tier = data["tier"]
 
     # return if module is disabled
     if starboard_channel_id == "0":
         return await general_helper.get_info_embd("No starboard channel set", "", NORMAL_COLOR)
 
     # get starboard embed
-    reply = await get_starboard_embed(user_id, level, pokemon, message.jump_url, type, streak)
+    reply = await get_starboard_embed(user_id, level, pokemon, message.jump_url, type, streak, tier)
 
     # send that starboard embed to the starboard channel
     starboard_channel : TextChannel= message.guild.get_channel(int(starboard_channel_id))
@@ -212,47 +213,47 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
 
     return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
 
-"""Sends the star catch embed to the starboard without catch info"""
-async def send_starboard_without_catch_info(server_id:str, level:str, pokemon:str, message:Message):
+# """Sends the star catch embed to the starboard without catch info"""
+# async def send_starboard_without_catch_info(server_id:str, level:str, pokemon:str, message:Message):
     
-    query = {"server_id" : server_id}
+#     query = {"server_id" : server_id}
 
-    # get starboard channel
-    cursor = mongo_manager.manager.get_all_data("servers", query)
-    try:
-        data = cursor[0]
-    except:
-        data = await init_manager.register_guild_without_bs(server_id)
+#     # get starboard channel
+#     cursor = mongo_manager.manager.get_all_data("servers", query)
+#     try:
+#         data = cursor[0]
+#     except:
+#         data = await init_manager.register_guild_without_bs(server_id)
 
-    starboard_channel_id = data["starboard"]
+#     starboard_channel_id = data["starboard"]
 
-    # return if module is disabled
-    if starboard_channel_id == "0":
-        return await general_helper.get_info_embd("No starboard channel set", "", NORMAL_COLOR)
+#     # return if module is disabled
+#     if starboard_channel_id == "0":
+#         return await general_helper.get_info_embd("No starboard channel set", "", NORMAL_COLOR)
 
-    # get starboard embed
-    reply = Embed(title=":star: Rare Pokemon Found :star:")
-    reply.description = "**Pokemon** : {}\n".format(pokemon)
-    reply.description += "**Level** : {} [Teleport]({})\n".format(level, message.jump_url)
+#     # get starboard embed
+#     reply = Embed(title=":star: Rare Pokemon Found :star:")
+#     reply.description = "**Pokemon** : {}\n".format(pokemon)
+#     reply.description += "**Level** : {} [Teleport]({})\n".format(level, message.jump_url)
 
-    reply.timestamp = datetime.datetime.now()
+#     reply.timestamp = datetime.datetime.now()
 
-    # send that starboard embed to the starboard channel
-    starboard_channel : TextChannel= message.guild.get_channel(int(starboard_channel_id))
+#     # send that starboard embed to the starboard channel
+#     starboard_channel : TextChannel= message.guild.get_channel(int(starboard_channel_id))
 
-    if starboard_channel is None:
-        return await general_helper.get_info_embd("No Access", f"Can't send message in <#{starboard_channel_id}>")
+#     if starboard_channel is None:
+#         return await general_helper.get_info_embd("No Access", f"Can't send message in <#{starboard_channel_id}>")
 
-    try:
-        await starboard_channel.send(embed=reply)
-    except errors.Forbidden as e:
-        return await general_helper.get_info_embd(f"Missing Permissions!", f"Can't send message in <#{starboard_channel_id}>")
-    except Exception as e:
-        print(">>"*20)
-        print(type(e))
-        print(e)
+#     try:
+#         await starboard_channel.send(embed=reply)
+#     except errors.Forbidden as e:
+#         return await general_helper.get_info_embd(f"Missing Permissions!", f"Can't send message in <#{starboard_channel_id}>")
+#     except Exception as e:
+#         print(">>"*20)
+#         print(type(e))
+#         print(e)
 
-    return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
+#     return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
 
 """returns the embed containing the rare catch info"""
 async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str="", _streak=0):
@@ -292,7 +293,7 @@ async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str=
         embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")
 
         embd.set_image(url=(PIKA_SHOCK if data.get("starboard_image_shiny", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_shiny", "DEFAULT")))
-    elif _streak != 0:
+    elif _streak != 0 and tier > 0:
         embd.title = f"{STREAK_EMOJI} Catch Streak {STREAK_EMOJI}"
         embd.color = STREAK_COLOR
         embd.description = "{ping} caught their {streak}th {pokemon}\n\n:tada: Congratulations :tada:".format(ping=_ping, streak=_streak, pokemon=_pokemon)
