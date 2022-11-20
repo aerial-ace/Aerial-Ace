@@ -26,7 +26,7 @@
   <a href="https://patreon.com/aerial_ace">
     <img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Daerial_ace%26type%3Dpatrons&style=for-the-badge" alt="Support me on Patreon" />
   </a>
-</center>
+</h2>
 
 <hr />
 ## Features
