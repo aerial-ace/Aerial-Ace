@@ -279,7 +279,7 @@ async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str=
 
     if _type == "rare":
         embd.title = ":star: Rare Catch Detected :star:"
-        embd.color = NORMAL_COLOR
+        embd.color = DEFAULT_COLOR
         embd.description = (DEFAULT_RARE_TEXT if data.get("starboard_text_rare", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_rare", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
         embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")
