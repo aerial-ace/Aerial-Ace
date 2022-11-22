@@ -29,6 +29,7 @@
 </h2>
 
 <hr />
+
 ## Features
 
 * View Dex entry of any Pokémon.
