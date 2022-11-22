@@ -187,7 +187,7 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
         data = await init_manager.register_guild_without_bs(server_id)
 
     starboard_channel_id = data["starboard"]
-    tier = data["tier"]
+    tier = data.get("tier", 0)
 
     # return if module is disabled
     if starboard_channel_id == "0":
