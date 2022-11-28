@@ -44,6 +44,8 @@
 * Register Battles and view leaderboards.
 * Rare catch detection System
 * Advanced Starboard System that works with/without togglemention.
+* Extensive Set of starboard customization commands for project supporters.
+* Automatic Catch Streak Detection.
 * Generate Random but Balanced teams for random battling.
 * Advanced **Smogon Analyser** helpful for Pokemon Showdown Players.
 
@@ -69,7 +71,9 @@
 * `-aa log_battle @winner @loser` logs the battle in the leaderboard.
 * `-aa battle_score` displays the current battle score the user.
 * `-aa battle_lb` displays the battle leaderboard of the server.
-* `-aa starboard #channel` sets the 'channel' as the starboard channel.
+* `-aa starboard channel #channel` sets the 'channel' as the starboard channel.
+* `-aa starboard rare_text/shiny_text <text>` sets the rare/shiny text for the starboard embed [ Premium Server ]
+* `-aa starboard rare_image/shiny_image <link>` sets the rare/shiny image for the starboard embed [ Premium Server ]
 * `-aa random_team <tier>` returns a random but balanced team of that tier. Available tier are `common`, `mega`, `rare`.
 * `-aa random_matchup <tier>` returns a random but balanced match of two player with roll of that tier. Available tier are `common`, `mega`, `rare`.
 * `-aa smogon 8 OU durant` displays the smogon statistics of durant in Gen8OU.
