@@ -80,6 +80,7 @@ WARNING_COLOR = discord.Color.orange()
 RARE_CATCH_COLOR = discord.Color.gold()
 SMOGON_COLOR = discord.Color.purple()
 STREAK_COLOR = 0xc3f717
+HUNT_COMPLETED_COLOR = 0xc27c0e
 
 #starboard defaults
 DEFAULT_RARE_TEXT = "{ping} caught a level {level} `{pokemon}` \n\n:tada: Congratulations :tada:\n"
