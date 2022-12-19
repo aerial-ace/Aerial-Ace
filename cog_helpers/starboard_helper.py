@@ -7,7 +7,7 @@ import json
 
 from managers import mongo_manager, init_manager
 from cog_helpers import general_helper
-from config import NORMAL_COLOR, DEFAULT_COLOR, RARE_CATCH_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, STREAK_EMOJI, STREAK_COLOR
+from config import NORMAL_COLOR, DEFAULT_COLOR, RARE_CATCH_COLOR, HUNT_COMPLETED_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, STREAK_EMOJI, STREAK_COLOR
 
 """Sets/Resets the starboard channel"""
 
@@ -110,7 +110,7 @@ async def set_starboard_image(server_id:str, text:str, type:str) -> Embed:
         return Embed(title="Error Occurred", description="```e```")
 
 """Returns the starboard embed for starboard channel"""
-async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, message_link : str, type:str="", streak=0, tier:int=0):
+async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, message_link : str, type:str="", streak=0, tier:int=0, is_hunt=False):
 
     pokemon = pokemon_id.replace(" ", "").lower()
     pokemon = pokemon.replace("é", "e")     #This is because of you Flabébé >:|
@@ -148,8 +148,12 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
         embd.set_thumbnail(url=image_link)
     elif type == "shiny":
-        embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
-        embd.color = RARE_CATCH_COLOR
+        if is_hunt is False:
+            embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
+            embd.color = RARE_CATCH_COLOR
+        else:
+            embd.title = ":fire: Hunt Completed :fire:"
+            embd.color = HUNT_COMPLETED_COLOR
 
         embd.description = f"**Trainer :** {user_name}\n"
         embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
@@ -175,7 +179,7 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
     return embd
 
 """Sends the star catch embed to the starboard"""
-async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, message:Message, type="", streak=0):
+async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, message:Message, type="", streak=0, is_hunt=False):
     
     query = {"server_id" : server_id}
 
@@ -194,7 +198,7 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
         return await general_helper.get_info_embd("No starboard channel set", "", NORMAL_COLOR)
 
     # get starboard embed
-    reply = await get_starboard_embed(user_id, level, pokemon, message.jump_url, type, streak, tier)
+    reply = await get_starboard_embed(user_id, level, pokemon, message.jump_url, type, streak, tier, is_hunt)
 
     # send that starboard embed to the starboard channel
     starboard_channel : TextChannel= message.guild.get_channel(int(starboard_channel_id))
@@ -256,7 +260,7 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
 #     return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
 
 """returns the embed containing the rare catch info"""
-async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str="", _streak=0):
+async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str="", _streak=0, is_hunt=False):
 
     query = {
         "server_id" : server_id
@@ -286,8 +290,13 @@ async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str=
 
         embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
     elif _type == "shiny":
-        embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
-        embd.color = RARE_CATCH_COLOR
+        if is_hunt is False:
+            embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
+            embd.color = RARE_CATCH_COLOR
+        else:
+            embd.title = ":fire: Hunt Completed :fire:"
+            embd.color = HUNT_COMPLETED_COLOR
+            
         embd.description = (DEFAULT_SHINY_TEXT if data.get("starboard_text_shiny", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_shiny", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
         embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")

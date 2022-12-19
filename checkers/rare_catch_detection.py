@@ -18,13 +18,13 @@ async def rare_check(message : discord.Message):
         return None
 
     # get the rare catch details
-    reply = await starboard_helper.get_rare_catch_embd(str(message.guild.id), catch_info["user"], catch_info["pokemon"], catch_info["level"], catch_info["type"], catch_info["streak"])
+    reply = await starboard_helper.get_rare_catch_embd(str(message.guild.id), catch_info["user"], catch_info["pokemon"], catch_info["level"], catch_info["type"], catch_info["streak"], catch_info["hunt"])
 
     # Send to current Channel
     await message.channel.send(embed=reply)
 
     # Send to Starboard
-    starboard_reply = await starboard_helper.send_starboard(str(message.guild.id), catch_info["user"], catch_info["level"], catch_info["pokemon"], message, catch_info["type"], catch_info["streak"])
+    starboard_reply = await starboard_helper.send_starboard(str(message.guild.id), catch_info["user"], catch_info["level"], catch_info["pokemon"], message, catch_info["type"], catch_info["streak"], catch_info["hunt"])
 
     # send feedback in the current channel
     await message.channel.send(embed=starboard_reply)
@@ -37,6 +37,7 @@ async def determine_rare_catch(msg):
     message_words = message.split()  
 
     is_shiny = True
+    is_hunt = False
     catch_info = {}     # stores the info of the catch
 
     catch_keywords = ["Congratulations", "You", "caught", "a", "level"]
@@ -53,14 +54,21 @@ async def determine_rare_catch(msg):
             is_shiny = False
             break
 
-    # remove the extra text from the message
-    extra_text = ["Congratulations", "You caught a level", "+1 Shiny chain!", "Shiny streak reset.", "This is your", "10th", "Added to Pokédex", "You received", "Pokécoins", "These colors seem unusual...", "✨", ".", "!", "(", ")", "*", ","]
+    hunt_keywords = ["+1 Shiny chain!", "Shiny streak reset."]
+    extra_text = ["Congratulations", "You caught a level", "This is your", "10th", "Added to Pokédex", "You received", "Pokécoins", "These colors seem unusual...", "✨", ".", "!", "(", ")", "*", ","]
 
     info_text = msg
+
+    for hunt_keyword in hunt_keywords:
+        if hunt_keyword in info_text:
+            is_hunt = True 
+            info_text = info_text.replace(hunt_keyword, "")
+
     for extra in extra_text:
         info_text = info_text.replace(extra, "")
 
-    info_words:list = info_text.split()      # stores the information as values in the list
+    # stores the information as values in the list
+    info_words:list = info_text.split()     
 
     catch_streak_text = ["100th", "1000th", "10000th"]
 
@@ -81,6 +89,7 @@ async def determine_rare_catch(msg):
     catch_info["pokemon"] = ""
     catch_info["type"] = ""
     catch_info["streak"] = 0
+    catch_info["hunt"] = is_hunt
     
     while info_words[-1].isnumeric():
         info_words.remove(info_words[-1])
