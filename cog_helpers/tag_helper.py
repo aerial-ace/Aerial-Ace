@@ -323,7 +323,7 @@ async def set_afk(server_id : str, user_id : str, state : str):
 
         mongo_manager.manager.update_all_data("tags", query, updated_data)
 
-        return "> AFK removed, you will recieve pings now." 
+        return "> AFK removed, you will receive pings now." 
 
 async def get_all_tags_embed(server : discord.Guild) -> discord.Embed:
 

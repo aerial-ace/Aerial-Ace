@@ -74,7 +74,7 @@ async def get_random_team(tier:str) -> list:
             random_pokemon_from_random_tier = random_tier[random.randint(0, len(random_tier) - 1)]  # get a random pokemon from that random tier
 
         team.append(random_pokemon_from_random_tier + " - " + str(random_score_tier))               # add that random pokemon to the team       
-        current_score = current_score + int(random_score_tier)                                      # update the score by subtacting the score of the current pokemon
+        current_score = current_score + int(random_score_tier)                                      # update the score by subtracting the score of the current pokemon
 
     return team
 
@@ -102,7 +102,7 @@ async def get_random_team_embed(tier:str) -> Embed:
     )
     embd.add_field(
         name="Note:",
-        value="Make your own rules for the case where you don't have any of these pokmeons. It can be as simple as generating a new team, to purchaing that pokemon from the market. Whatever both parties agree upon.",
+        value="Make your own rules for the case where you don't have any of these pokemons. It can be as simple as generating a new team, to purchasing that pokemon from the market. Whatever both parties agree upon.",
         inline=False
     )
 
@@ -148,7 +148,7 @@ async def get_random_matchup_embd(tier:str) -> Embed:
 
     embd.add_field(
         name="Note:",
-        value="Make your own rules for the case where you don't have any of these pokmeons. It can be as simple as generating a new team, to purchasing that pokemon from the market. Whatever both parties agree upon.",
+        value="Make your own rules for the case where you don't have any of these pokemons. It can be as simple as generating a new team, to purchasing that pokemon from the market. Whatever both parties agree upon.",
         inline=False
     )
 

@@ -36,7 +36,7 @@ class FunModule(commands.Cog):
 
     @commands.guild_only()
     @commands.cooldown(1, 10, type=commands.BucketType.user)
-    @commands.command(name="hit", description="Hit someone using pokmeon gifs")
+    @commands.command(name="hit", description="Hit someone using pokemon gifs")
     async def hit(self, ctx, target : discord.Member):
 
 

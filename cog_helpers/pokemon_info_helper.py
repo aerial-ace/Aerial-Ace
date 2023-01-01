@@ -12,7 +12,7 @@ async def get_stats_embed(pokemon):
     cached_stats_data = cache_manager.cached_stats_data
 
     all_pokemon = list(cached_stats_data.keys())
-    embd.colour = NORMAL_COLOR
+    embd.color = NORMAL_COLOR
 
     if pokemon in all_pokemon:
         embd.title = "{poke}'s Stats".format(poke=pokemon.capitalize())
@@ -45,7 +45,7 @@ async def get_moveset_embed(poke):
     cached_moveset_data = cache_manager.cached_moveset_data
 
     all_pokemon = list(cached_moveset_data.keys())
-    embd.colour = NORMAL_COLOR
+    embd.color = NORMAL_COLOR
 
     if poke in all_pokemon:
         embd.title = "{poke}'s Moveset".format(poke=poke.capitalize())

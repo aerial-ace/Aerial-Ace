@@ -60,7 +60,7 @@ async def get_smogon_data(gen:int, tier:str, pokemon:str) -> SmogonData:
 async def get_smogon_paginator(data:SmogonData) -> PageView:
 
     if data.error is not None:
-        return await general_helper.get_info_embd("Error!!", "**Error Code :** {code}\n**Error Description** {desc}\n\nThere is a possiblity that the searched pokemon is not available in that generation or in that tier. \nTry with gen it was first introduced in.".format(code=data.error, desc=data.message), color=ERROR_COLOR)
+        return await general_helper.get_info_embd("Error!!", "**Error Code :** {code}\n**Error Description** {desc}\n\nThere is a possibility that the searched pokemon is not available in that generation or in that tier. \nTry with gen it was first introduced in.".format(code=data.error, desc=data.message), color=ERROR_COLOR)
 
     mainEmbed = Embed(title=f"{data.name.capitalize()} - Smogon Analysis", color=SMOGON_COLOR)
     mainEmbed.set_thumbnail(url=NON_SHINY_LINK_TEMPLATE.format(pokemon=data.name.lower()))

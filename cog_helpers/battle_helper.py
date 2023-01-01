@@ -123,7 +123,7 @@ async def get_battle_leaderboard_embed(guild):
 
         sorted_battle_records = OrderedDict(sorted(battle_records.items(), key=lambda x: int(x[1]), reverse=True))
 
-        reply_embd = discord.Embed(title="{server_name}'s battle leaderboard".format(server_name=server_name), colour=discord.Colour.blue())
+        reply_embd = discord.Embed(title="{server_name}'s battle leaderboard".format(server_name=server_name), color=discord.Color.blue())
         reply_embd.description = "`-Pos- | -Score- | -Name-` \n\n"
 
         max_leaderboard_listings = 15
@@ -144,7 +144,7 @@ async def get_battle_leaderboard_embed(guild):
         return reply_embd
     except Exception as e:
         print(f"Error while showing battle leaderboard : {e}")
-        return await general_helper.get_info_embd("Oops", "Error occured while showing battle leaderboards :|", config.ERROR_COLOR, "These errors were registered")
+        return await general_helper.get_info_embd("Oops", "Error occurred while showing battle leaderboard :|", config.ERROR_COLOR, "These errors were registered")
 
 # removes the user from the leaderboard
 async def remove_user_from_battleboard(server_id : int, user : discord.Member):

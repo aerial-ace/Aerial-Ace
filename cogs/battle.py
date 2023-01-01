@@ -39,8 +39,8 @@ class BattleSystem(commands.Cog):
     @log_battle.error
     async def log_battle_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
-            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requries user pings as a parameter. Like this :```{ctx.prefix}lb @Wumpus @Dumpus```", color=config.ERROR_COLOR)
-            view = GeneralView(200, True, True, False, True)
+            reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires user pings as a parameter. Like this :```{ctx.prefix}lb @Wumpus @Dumpus```", color=config.ERROR_COLOR)
+            view = GeneralView(200, True, True, False, False)
 
             await ctx.reply(embed=reply, view=view)
         
