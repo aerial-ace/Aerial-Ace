@@ -68,25 +68,25 @@ async def register_guild_without_bs(guild_id:str, guild_name:str="NONE"):
     server_name = str(guild_name)
 
     # create empty servers entry
-    server_duplicates = mongo_manager.manager.get_documents_length("servers", {"server_id" : server_id})
+    server_duplicates = await mongo_manager.manager.get_documents_length("servers", {"server_id" : server_id})
     
     if server_duplicates <= 0:
         entry = {"server_id" : server_id, "server_name" : server_name, "starboard" : "0"}
-        mongo_manager.manager.add_data("servers", entry)
+        await mongo_manager.manager.add_data("servers", entry)
 
     # create empty tags entry
-    server_duplicates = mongo_manager.manager.get_documents_length("tags", {"server_id" : server_id})
+    server_duplicates = await mongo_manager.manager.get_documents_length("tags", {"server_id" : server_id})
 
     if server_duplicates <= 0:
         entry = {"server_id" : server_id, "tags" : {}, "timer" : 0}
-        mongo_manager.manager.add_data("tags", entry)
+        await mongo_manager.manager.add_data("tags", entry)
 
     # create empty battle entry
-    server_duplicates = mongo_manager.manager.get_documents_length("battles", {"server_id" : server_id})
+    server_duplicates = await mongo_manager.manager.get_documents_length("battles", {"server_id" : server_id})
 
     if server_duplicates <= 0:
         entry = {"server_id" : server_id, "logs" : {}}
-        mongo_manager.manager.add_data("battles", entry)
+        await mongo_manager.manager.add_data("battles", entry)
 
     data = {
         "server_id" : server_id,
