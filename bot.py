@@ -1,6 +1,7 @@
 from discord.ext import commands
 from discord import Bot, Intents
 import discord
+import sys
 
 from managers import cache_manager, mongo_manager, init_manager, post_command_manager
 from config import TOKEN, MONGO_URI, TEST_TOKEN
@@ -64,7 +65,7 @@ async def on_guild_remove(guild):
 
 @bot.event
 async def on_ready():
-    await mongo_manager.init_mongo(MONGO_URI, "aerialace")
+    mongo_manager.init_mongo(MONGO_URI, "aerialace")
     await cache_manager.cache_data()
     print(f"Logged in as {bot.user}")
     print(f"Discord Version : {discord.__version__}")
@@ -99,6 +100,12 @@ def main():
         bot.load_extension(f"cogs.slash.{slash_cog}")
 
 if __name__ == "__main__":
+
+    if len(sys.argv) < 2:
+        is_test = False
+    else:
+        is_test = (True if sys.argv[1].lower() == "true" else False) 
+
     main()
 
     if is_test is False:
