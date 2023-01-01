@@ -16,7 +16,7 @@ async def set_starboard(server_id : str, channel : TextChannel = None) -> str:
     try:
         query = {"server_id" : server_id}
 
-        cursor = mongo_manager.manager.get_all_data("servers", query)
+        cursor = await mongo_manager.manager.get_all_data("servers", query)
 
         server_data = cursor[0]
 
@@ -41,7 +41,7 @@ async def set_starboard(server_id : str, channel : TextChannel = None) -> str:
         else:
             updated_data = {"starboard" : "0"}
 
-        mongo_manager.manager.update_all_data("servers", query, updated_data)
+        await mongo_manager.manager.update_all_data("servers", query, updated_data)
 
     except Exception as e:
         return e
@@ -57,7 +57,7 @@ async def set_starboard_text(server_id:str, text:str, type:str) -> Embed:
         "server_id" : server_id
     }
 
-    data = mongo_manager.manager.get_all_data("servers", query)[0]
+    data = (await mongo_manager.manager.get_all_data("servers", query))[0]
 
     if data.get("tier", 0) < 1:
         return Embed(title="Whoops!", description="Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!")
@@ -72,7 +72,7 @@ async def set_starboard_text(server_id:str, text:str, type:str) -> Embed:
         }
 
     try:
-        mongo_manager.manager.update_all_data("servers", query, updated_data)
+        await mongo_manager.manager.update_all_data("servers", query, updated_data)
         if text != "DEFAULT":
             return Embed(title=f"Starboard {type} Text Updated!")
         else:
@@ -86,7 +86,7 @@ async def set_starboard_image(server_id:str, text:str, type:str) -> Embed:
         "server_id" : server_id
     }
 
-    data = mongo_manager.manager.get_all_data("servers", query)[0]
+    data = (await mongo_manager.manager.get_all_data("servers", query))[0]
 
     if data.get("tier", 0) < 2:
         return Embed(title="Whoops!", description="Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!")
@@ -101,7 +101,7 @@ async def set_starboard_image(server_id:str, text:str, type:str) -> Embed:
         }
 
     try:
-        mongo_manager.manager.update_all_data("servers", query, updated_data)
+        await mongo_manager.manager.update_all_data("servers", query, updated_data)
         if text != "DEFAULT":
             return Embed(title=f"Starboard {type} Image Updated!")
         else:
@@ -184,7 +184,7 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
     query = {"server_id" : server_id}
 
     # get starboard channel
-    cursor = mongo_manager.manager.get_all_data("servers", query)
+    cursor = await mongo_manager.manager.get_all_data("servers", query)
     try:
         data = cursor[0]
     except:
@@ -217,48 +217,6 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
 
     return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
 
-# """Sends the star catch embed to the starboard without catch info"""
-# async def send_starboard_without_catch_info(server_id:str, level:str, pokemon:str, message:Message):
-    
-#     query = {"server_id" : server_id}
-
-#     # get starboard channel
-#     cursor = mongo_manager.manager.get_all_data("servers", query)
-#     try:
-#         data = cursor[0]
-#     except:
-#         data = await init_manager.register_guild_without_bs(server_id)
-
-#     starboard_channel_id = data["starboard"]
-
-#     # return if module is disabled
-#     if starboard_channel_id == "0":
-#         return await general_helper.get_info_embd("No starboard channel set", "", NORMAL_COLOR)
-
-#     # get starboard embed
-#     reply = Embed(title=":star: Rare Pokemon Found :star:")
-#     reply.description = "**Pokemon** : {}\n".format(pokemon)
-#     reply.description += "**Level** : {} [Teleport]({})\n".format(level, message.jump_url)
-
-#     reply.timestamp = datetime.datetime.now()
-
-#     # send that starboard embed to the starboard channel
-#     starboard_channel : TextChannel= message.guild.get_channel(int(starboard_channel_id))
-
-#     if starboard_channel is None:
-#         return await general_helper.get_info_embd("No Access", f"Can't send message in <#{starboard_channel_id}>")
-
-#     try:
-#         await starboard_channel.send(embed=reply)
-#     except errors.Forbidden as e:
-#         return await general_helper.get_info_embd(f"Missing Permissions!", f"Can't send message in <#{starboard_channel_id}>")
-#     except Exception as e:
-#         print(">>"*20)
-#         print(type(e))
-#         print(e)
-
-#     return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
-
 """returns the embed containing the rare catch info"""
 async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str="", _streak=0, is_hunt=False):
 
@@ -266,7 +224,7 @@ async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str=
         "server_id" : server_id
     }
 
-    cursor = mongo_manager.manager.get_all_data("servers", query)
+    cursor = await mongo_manager.manager.get_all_data("servers", query)
 
     try:
         data = cursor[0]

@@ -3,3 +3,5 @@ requests
 TextWrapper
 pymongo[srv]
 python-dotenv
+motor
+dnspython
