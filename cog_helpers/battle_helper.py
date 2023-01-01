@@ -42,7 +42,7 @@ async def get_battle_acceptance(ctx, winner_id, loser_id):
 async def register_battle_log(server_id, winner, loser):
 
     query = {"server_id" : str(server_id)}
-    data_cursor = mongo_manager.manager.get_all_data("battles", query)
+    data_cursor = await mongo_manager.manager.get_all_data("battles", query)
 
     """
     {
@@ -70,7 +70,7 @@ async def register_battle_log(server_id, winner, loser):
 
         updated_data = {"logs" : battle_data}
 
-        mongo_manager.manager.update_all_data("battles", query, updated_data)
+        await mongo_manager.manager.update_all_data("battles", query, updated_data)
 
         return f"> GG, <@{winner}> won over <@{loser}>. Scoreboard was updated."
 
@@ -84,7 +84,7 @@ async def get_battle_score(server_id : int, user):
     server_id = str(server_id)
 
     query = {"server_id" : server_id}
-    data_cursor = mongo_manager.manager.get_all_data("battles", query)
+    data_cursor = await mongo_manager.manager.get_all_data("battles", query)
 
     """
     {
@@ -116,7 +116,7 @@ async def get_battle_leaderboard_embed(guild):
     server_name = guild.name
 
     query = {"server_id" : server_id}
-    data_cursor = mongo_manager.manager.get_all_data("battles", query)
+    data_cursor = await mongo_manager.manager.get_all_data("battles", query)
 
     try:
         battle_records = data_cursor[0]["logs"]
@@ -153,7 +153,7 @@ async def remove_user_from_battleboard(server_id : int, user : discord.Member):
 
     query = {"server_id" : server_id}
 
-    mongo_cursor = mongo_manager.manager.get_all_data("battles", query)
+    mongo_cursor = await mongo_manager.manager.get_all_data("battles", query)
 
     battle_data = mongo_cursor[0]["logs"]
 
@@ -175,7 +175,7 @@ async def remove_user_from_battleboard(server_id : int, user : discord.Member):
 
     updated_data = {"logs" : battle_data}
 
-    mongo_manager.manager.update_all_data("battles", query, updated_data)
+    await mongo_manager.manager.update_all_data("battles", query, updated_data)
 
     return f"> <@{user_id}> was removed from the battle board."
 
@@ -186,7 +186,7 @@ async def remove_user_from_battleboard_id(server_id : int, user_id:str):
 
     query = {"server_id" : server_id}
 
-    mongo_cursor = mongo_manager.manager.get_all_data("battles", query)
+    mongo_cursor = await mongo_manager.manager.get_all_data("battles", query)
 
     battle_data = mongo_cursor[0]["logs"]
 
@@ -208,7 +208,7 @@ async def remove_user_from_battleboard_id(server_id : int, user_id:str):
 
     updated_data = {"logs" : battle_data}
 
-    mongo_manager.manager.update_all_data("battles", query, updated_data)
+    await mongo_manager.manager.update_all_data("battles", query, updated_data)
 
     return f"> <@{user_id}> was removed from the battle board."
 
@@ -219,7 +219,7 @@ async def clear_battleboard(server_id : str):
 
         updated_data = {"logs" : {}}
 
-        cursor = mongo_manager.manager.update_all_data("battles", query, updated_data)
+        cursor = await mongo_manager.manager.update_all_data("battles", query, updated_data)
     except Exception as e:
         return f"Error happened while performing this command ```{e}```"
     else:

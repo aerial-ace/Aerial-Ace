@@ -16,7 +16,7 @@ async def set_starboard(server_id : str, channel : TextChannel = None) -> str:
     try:
         query = {"server_id" : server_id}
 
-        cursor = mongo_manager.manager.get_all_data("servers", query)
+        cursor = await mongo_manager.manager.get_all_data("servers", query)
 
         server_data = cursor[0]
 
@@ -41,7 +41,7 @@ async def set_starboard(server_id : str, channel : TextChannel = None) -> str:
         else:
             updated_data = {"starboard" : "0"}
 
-        mongo_manager.manager.update_all_data("servers", query, updated_data)
+        await mongo_manager.manager.update_all_data("servers", query, updated_data)
 
     except Exception as e:
         return e
@@ -184,7 +184,7 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
     query = {"server_id" : server_id}
 
     # get starboard channel
-    cursor = mongo_manager.manager.get_all_data("servers", query)
+    cursor = await mongo_manager.manager.get_all_data("servers", query)
     try:
         data = cursor[0]
     except:

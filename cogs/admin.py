@@ -20,7 +20,7 @@ class AdminSystem(commands.Cog):
         query = {"server_id" : server_id}
 
         try:
-            mongo_cursor = mongo_manager.manager.get_all_data(collection, query)
+            mongo_cursor = await mongo_manager.manager.get_all_data(collection, query)
         except Exception as e:
             await ctx.reply(f"```{e}```")
             return
