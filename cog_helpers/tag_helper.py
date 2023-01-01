@@ -134,7 +134,7 @@ async def update_timer(server_id:str, time_value:int):
     }
 
     try:
-        mongo_manager.manager.update_all_data("tags", query, updated_data)
+        await mongo_manager.manager.update_all_data("tags", query, updated_data)
     except Exception as e:
         return discord.Embed(title="Error!", description=f"```{e}```", color=config.ERROR_COLOR)
     else:
@@ -254,7 +254,7 @@ async def remove_all_tags(server_id:str) -> discord.Embed:
     }
 
     try:
-        mongo_manager.manager.update_all_data("tags", query, updated_data)
+        await mongo_manager.manager.update_all_data("tags", query, updated_data)
     except Exception as e:
         return discord.Embed(title="Error!", description="```" + e + "```", color=config.ERROR_COLOR)
     else:
