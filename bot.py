@@ -9,6 +9,7 @@ from config import TOKEN, MONGO_URI, TEST_TOKEN
 from cog_helpers import general_helper
 
 from checkers import rare_catch_detection
+from checkers import auto_battle_log
 
 # determines whether to run the bot in local, or global mode
 is_test = False
@@ -82,6 +83,8 @@ async def on_message(message:discord.Message):
 
     # detect rare catches from the poketwo bot
     await rare_catch_detection.rare_check(message)
+
+    await auto_battle_log.determine_battle_message(bot, message)
 
     # process commands
     await bot.process_commands(message)

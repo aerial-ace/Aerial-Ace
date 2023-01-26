@@ -5,6 +5,7 @@ from managers import mongo_manager
 from cog_helpers import general_helper
 import config
 
+# sends an confirmation message to accept the battle log
 async def get_battle_acceptance(ctx, winner_id, loser_id):
 
     check_id = ""
@@ -212,6 +213,7 @@ async def remove_user_from_battleboard_id(server_id : int, user_id:str):
 
     return f"> <@{user_id}> was removed from the battle board."
 
+# clears the battle leaderboard of the server
 async def clear_battleboard(server_id : str):
 
     try:
