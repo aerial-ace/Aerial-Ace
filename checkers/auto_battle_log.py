@@ -2,6 +2,7 @@ from discord import Message, Member, Reaction
 from discord import AutoShardedBot
 from asyncio import TimeoutError
 
+from managers import mongo_manager
 from cog_helpers import battle_helper
 import config
 
@@ -21,6 +22,13 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
             return
         else:
             initiation_content = initiation_content.replace(keyword, "")
+
+    # Check whether this server has Auto Battle Logging Enabled or Not.
+
+    data_cursor = await mongo_manager.manager.get_all_data("servers", {"server_id" : str(message.guild.id)})
+    
+    if data_cursor[0].get("auto_battle_log", 1) != 1:
+        return
         
     challenger_id = message.author.id
     target_id     = int(initiation_content.strip())
@@ -72,7 +80,7 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
         return await message.channel.send("> Auto Battle Log Session Timed out! Please accept the battle invitation.")
 
     else:
-        await message.channel.send("> Auto Battle Log Session Started!")
+        await message.channel.send("> Auto Battle Log Session Started! This will Automatically log the battle results into the battle leaderboard. If you don't want this functionality, use `-aa abl` to Disable this module!")
 
     conclusion_type = None
     winner          = None

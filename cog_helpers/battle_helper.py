@@ -45,38 +45,52 @@ async def register_battle_log(server_id, winner, loser):
     query = {"server_id" : str(server_id)}
     data_cursor = await mongo_manager.manager.get_all_data("battles", query)
 
-    """
-    {
-        "object_id" : 10000000,
-        "server_id" : "1000000",
-        "battles" : {
-            "user_id" : wins
+    try:
+        battle_data = data_cursor[0]["logs"]
+        users = list(battle_data.keys())
+
+        if winner not in users:
+            battle_data[winner] = 1
+        else:
+            battle_data[winner] = battle_data[winner] + 1
+
+        if loser not in users:
+            battle_data[loser] = -1
+        else:
+            battle_data[loser] = battle_data[loser] - 1
+
+        updated_data = {"logs" : battle_data}
+
+        await mongo_manager.manager.update_all_data("battles", query, updated_data)
+
+        return f"> GG, <@{winner}> won over <@{loser}>. Scoreboard was updated."
+
+    except Exception as e:
+        print(f"Error while logging battle : {e}")
+        return "Error occurred while logging battle!"
+
+async def toggle_auto_logging(server_id:str):
+    
+    query = {"server_id" : server_id}
+    data_cursor = await mongo_manager.manager.get_all_data("servers", query)
+
+    try:
+        auto_logging  = data_cursor[0].get("auto_battle_logging", 1)
+
+        auto_logging = 1 if auto_logging == 0 else 0
+
+        updated_data = {
+            "auto_battle_logging" : auto_logging
         }
-    }
-    """
 
-    battle_data = data_cursor[0]["logs"]
-    users = list(battle_data.keys())
+        await mongo_manager.manager.update_all_data("servers", query, updated_data)
 
-    if winner not in users:
-        battle_data[winner] = 1
+    except:
+        print("Error occurred while toggling Auto Battle Logging!")
+        return "Error Occurred while toggling Auto Battle Logging!"
+
     else:
-        battle_data[winner] = battle_data[winner] + 1
-
-    if loser not in users:
-        battle_data[loser] = -1
-    else:
-        battle_data[loser] = battle_data[loser] - 1
-
-    updated_data = {"logs" : battle_data}
-
-    await mongo_manager.manager.update_all_data("battles", query, updated_data)
-
-    return f"> GG, <@{winner}> won over <@{loser}>. Scoreboard was updated."
-
-    # except Exception as e:
-    #     print(f"Error while logging battle : {e}")
-    #     return "error"
+        return "Auto Battle Logging Module is now **{}**".format("Enabled" if auto_logging == 1 else "Disabled")
 
 # return the battle score of the user
 async def get_battle_score(server_id : int, user):
