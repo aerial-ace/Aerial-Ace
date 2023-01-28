@@ -5,6 +5,7 @@ from managers import mongo_manager
 from cog_helpers import general_helper
 import config
 
+# sends an confirmation message to accept the battle log
 async def get_battle_acceptance(ctx, winner_id, loser_id):
 
     check_id = ""
@@ -54,29 +55,28 @@ async def register_battle_log(server_id, winner, loser):
     }
     """
 
-    try:
-        battle_data = data_cursor[0]["logs"]
-        users = list(battle_data.keys())
+    battle_data = data_cursor[0]["logs"]
+    users = list(battle_data.keys())
 
-        if winner not in users:
-            battle_data[winner] = 1
-        else:
-            battle_data[winner] = battle_data[winner] + 1
+    if winner not in users:
+        battle_data[winner] = 1
+    else:
+        battle_data[winner] = battle_data[winner] + 1
 
-        if loser not in users:
-            battle_data[loser] = -1
-        else:
-            battle_data[loser] = battle_data[loser] - 1
+    if loser not in users:
+        battle_data[loser] = -1
+    else:
+        battle_data[loser] = battle_data[loser] - 1
 
-        updated_data = {"logs" : battle_data}
+    updated_data = {"logs" : battle_data}
 
-        await mongo_manager.manager.update_all_data("battles", query, updated_data)
+    await mongo_manager.manager.update_all_data("battles", query, updated_data)
 
-        return f"> GG, <@{winner}> won over <@{loser}>. Scoreboard was updated."
+    return f"> GG, <@{winner}> won over <@{loser}>. Scoreboard was updated."
 
-    except Exception as e:
-        print(f"Error while logging battle : {e}")
-        return "error"
+    # except Exception as e:
+    #     print(f"Error while logging battle : {e}")
+    #     return "error"
 
 # return the battle score of the user
 async def get_battle_score(server_id : int, user):
@@ -212,6 +212,7 @@ async def remove_user_from_battleboard_id(server_id : int, user_id:str):
 
     return f"> <@{user_id}> was removed from the battle board."
 
+# clears the battle leaderboard of the server
 async def clear_battleboard(server_id : str):
 
     try:
