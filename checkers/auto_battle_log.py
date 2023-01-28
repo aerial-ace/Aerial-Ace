@@ -66,13 +66,13 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
         return True
         
     try:
-        await bot.wait_for("reaction_add", check=get_confirmation_on_battle_invitation, timeout=10)
+        await bot.wait_for("reaction_add", check=get_confirmation_on_battle_invitation, timeout=15)
 
     except TimeoutError as t:
-        return await message.channel.send("Invitation was not accepted! Session Ended!")
+        return await message.channel.send("> Auto Battle Log Session Timed out! Please accept the battle invitation.")
 
     else:
-        await message.channel.send("Auto Battle Log Session Started!")
+        await message.channel.send("> Auto Battle Log Session Started!")
 
     conclusion_type = None
     winner          = None
@@ -136,10 +136,10 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
         await bot.wait_for("message", check=get_battle_conclusion, timeout=10*60)
 
     except TimeoutError:
-        await message.channel.send("Auto Battle Logging session ended with a timeout.")
+        await message.channel.send("> Auto Battle Logging session ended with a timeout. Make sure to register your battle manually.")
 
     if conclusion_type == "CANCEL":
-        return await message.channel.send("Auto Log Session Cancelled!")
+        return await message.channel.send("> Auto Log Session Cancelled!")
     
     elif conclusion_type == "FINISH":
         await message.channel.send("> Logging Battle. Please Wait!")
@@ -147,5 +147,3 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
         reply = await battle_helper.register_battle_log(message.guild.id, str(winner), str(loser))
 
         await message.channel.send(reply)
-
-    print("Session Ended Successfully!")
