@@ -47,7 +47,7 @@ class BattleSystem(commands.Cog):
     """Toggle Auto Battle Logging"""
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.has_permissions(administrator=True)
-    @commands.command(name="auto_battle_log", aliases=["abl", "auto_bl"], description="Toggles Automatic Battle Logging")
+    @commands.command(name="auto_battle_logging", aliases=["abl", "auto_bl"], description="Toggles Automatic Battle Logging")
     async def auto_battle_log(self, ctx:commands.Context):
         
         reply = await battle_helper.toggle_auto_logging(str(ctx.guild.id))
