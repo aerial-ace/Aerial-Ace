@@ -109,36 +109,27 @@ async def toggle_auto_logging(server_id:str):
         return "Auto Battle Logging Module is now **{}**".format("Enabled" if auto_logging == 1 else "Disabled")
 
 # return the battle score of the user
-async def get_battle_score(server_id : int, user):
+async def get_battle_score(server_id : int, user) -> discord.Embed:
     user_id = str(user.id)
     server_id = str(server_id)
 
     query = {"server_id" : server_id}
     data_cursor = await mongo_manager.manager.get_all_data("battles", query)
 
-    """
-    {
-        "object_id" : 1000000,
-        "server_id" : "100000",
-        "logs" : {
-            "user_id" : 10
-        }
-    }
-    """
-
     try:
         battle_data = data_cursor[0]["logs"]
         users = (battle_data.keys())
 
         if user_id not in users:
-            return "> No registered battles were found -_-"
+            return await general_helper.get_info_embd("Hold It", "> No registered battles were found.", config.WARNING_COLOR, "Register some battles first using lb command")
         else:
-            score = battle_data[user_id]
-            return f"> **{user.name}** has a battle score of **{score}**"
+            wins  = int(battle_data[user_id].split(" | ")[0])
+            loses = int(battle_data[user_id].split(" | ")[1])
+            return await general_helper.get_info_embd(f"{user.name}'s Battle Score", f"_**Overall Diff**_  : **{wins - loses}**\n\n" + f"> _WINS_ : **{wins}**\n" + f"> _LOSES_ : **{loses}**", config.NORMAL_COLOR)
 
     except Exception as e:
         print(f"Error while showing battle score : {e}")
-        return "> Error showing battle score :(, error were registered though."
+        return await general_helper.get_info_embd("Error!", "Error showing battle score :(, error were registered though.", config.ERROR_COLOR)
 
 # returns the battle leaderboard of the server
 async def get_battle_leaderboard_embed(guild):

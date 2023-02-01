@@ -29,7 +29,7 @@ class BattleSystemSlash(commands.Cog):
         reply = await battle_helper.get_battle_score(ctx.guild.id, user)
         view = GeneralView(200, True, True, False, True)
 
-        await ctx.respond(reply, view=view)
+        await ctx.respond(embed=reply, view=view)
 
     """Remove user from battle board"""
 
