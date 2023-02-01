@@ -170,7 +170,7 @@ async def get_battle_leaderboard_embed(guild):
                 wins  = (0 if value < 0 else value)
                 loses = (0 if value > 0 else abs(value))
 
-            win_perc = round((wins / (wins + loses)) * 100, 1)
+            win_perc = (round((wins / (wins + loses)) * 100, 1) if wins + loses > 0 else 0)
                 
             reply_embd.description += "`{pos} | {wins} | {loses} | {perc}% |` <@{id}> \n".format(pos=" {0}.".format(pos).center(3, " "), id=i, wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
             pos = pos + 1

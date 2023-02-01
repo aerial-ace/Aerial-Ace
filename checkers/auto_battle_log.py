@@ -27,7 +27,6 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
             initiation_content = initiation_content.replace(keyword, "")
             break
     else:
-        print("No initiation keyword")
         return
 
     # Check whether this server has Auto Battle Logging Enabled or Not.
@@ -48,7 +47,6 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
         msg:Message = reaction.message
 
         if msg.author.id != int(config.POKETWO_ID):
-            print("Not from Poketwo")
             return False
         
         battle_invitation_keywords = ["Challenging", "battle", "checkmark"]
