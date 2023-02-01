@@ -140,12 +140,19 @@ async def get_battle_leaderboard_embed(guild):
     data_cursor = await mongo_manager.manager.get_all_data("battles", query)
 
     try:
-        battle_records = data_cursor[0]["logs"]
+        battle_records:dict = data_cursor[0]["logs"]
 
-        sorted_battle_records = OrderedDict(sorted(battle_records.items(), key=lambda x: int(x[1]), reverse=True))
+        battle_records_diffs = {}
+        for item in battle_records.items():
+            try:
+                battle_records_diffs[item[0]] = int(item[1].split(" | ")[0]) - int(item[1].split(" | ")[1])
+            except:
+                battle_records_diffs[item[0]] = item[1]
+
+        sorted_battle_records = OrderedDict(sorted(battle_records_diffs.items(), key=lambda x: int(x[1]), reverse=True))
 
         reply_embd = discord.Embed(title="{server_name}'s battle leaderboard".format(server_name=server_name), color=discord.Color.blue())
-        reply_embd.description = "`-Pos- | -Score- | -Name-` \n\n"
+        reply_embd.description = "`-N- | -W- | -L- | -Win %- | -Name-` \n\n"
 
         max_leaderboard_listings = 15
         footer = ""
@@ -156,7 +163,16 @@ async def get_battle_leaderboard_embed(guild):
                 footer = "Some players were not mentioned in the leaderboard because of lower scores.\nSee your score with -aa bs"
                 break
 
-            reply_embd.description += "`{pos} | {score} |` <@{id}> \n".format(pos=" {0}.".format(pos).ljust(5, " "), id=i, score=("{0}".format(battle_records[i]).ljust(7, " ")))
+            try:
+                wins, loses  = [int(x) for x in battle_records[i].split(" | ")]
+            except:
+                value = int(battle_records[i])
+                wins  = (0 if value < 0 else value)
+                loses = (0 if value > 0 else abs(value))
+
+            win_perc = round((wins / (wins + loses)) * 100, 1)
+                
+            reply_embd.description += "`{pos} | {wins} | {loses} | {perc}% |` <@{id}> \n".format(pos=" {0}.".format(pos).center(3, " "), id=i, wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
             pos = pos + 1
 
         if footer != "":
@@ -177,15 +193,6 @@ async def remove_user_from_battleboard(server_id : int, user : discord.Member):
     mongo_cursor = await mongo_manager.manager.get_all_data("battles", query)
 
     battle_data = mongo_cursor[0]["logs"]
-
-    """
-    {
-        "server_id" : "1000000",
-        "logs" : {
-            "user_id" : wins
-        }
-    }
-    """
 
     users = list(battle_data.keys())
 
