@@ -50,14 +50,30 @@ async def register_battle_log(server_id, winner, loser):
         users = list(battle_data.keys())
 
         if winner not in users:
-            battle_data[winner] = 1
+            battle_data[winner] = "1 | 0"
         else:
-            battle_data[winner] = battle_data[winner] + 1
+            try:
+                wins  = int(battle_data[winner].split(" | ")[0]) + 1
+                loses = battle_data[winner].split(" | ")[1]
+            except:
+                diff  = int(battle_data[winner])
+                wins  = (1 if diff < 0 else diff + 1)
+                loses = (0 if diff > 0 else abs(diff))
+
+            battle_data[winner] = f"{wins} | {loses}"
 
         if loser not in users:
-            battle_data[loser] = -1
+            battle_data[loser] = "0 | 1"
         else:
-            battle_data[loser] = battle_data[loser] - 1
+            try:
+                wins  = int(battle_data[loser].split(" | ")[0])
+                loses = int(battle_data[loser].split(" | ")[1]) + 1
+            except:
+                diff  = int(battle_data[loser])
+                wins  = (0 if diff < 0 else diff)
+                loses = (1 if diff > 0 else abs(diff) + 1)
+
+            battle_data[loser] = f"{wins} | {loses}"
 
         updated_data = {"logs" : battle_data}
 
