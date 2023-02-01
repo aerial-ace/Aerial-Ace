@@ -8,20 +8,27 @@ import config
 
 async def determine_battle_message(bot:AutoShardedBot, message:Message):
 
-    battle_initiation_keywords = ["{}".format(config.POKETWO_ID), "battle "]
-
     initiation_content = message.content
-        
+
+    if not initiation_content.strip().startswith(f"<@{config.POKETWO_ID}>"):
+        return
+    else:
+        initiation_content = initiation_content.removeprefix(f"<@{config.POKETWO_ID}>")
+
     if message.content.strip().endswith(">") == False:
         return
-    
+        
     initiation_content = initiation_content.replace("<@", "").replace(">", "")
+    
+    battle_initiation_keywords = ["duel ", "battle "]
 
     for keyword in battle_initiation_keywords:
-        if keyword not in initiation_content:
-            return
-        else:
+        if keyword in initiation_content:
             initiation_content = initiation_content.replace(keyword, "")
+            break
+    else:
+        print("No initiation keyword")
+        return
 
     # Check whether this server has Auto Battle Logging Enabled or Not.
 
@@ -35,37 +42,25 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
 
     if challenger_id == target_id:
         return
+    
+    def get_confirmation_on_battle_invitation(reaction:Reaction, user:Member):
 
-    invitation_message:Message = None
-        
-    def get_battle_message_from_poketwo(_message:Message):
+        msg:Message = reaction.message
 
-        if _message.author.id != int(config.POKETWO_ID):
+        if msg.author.id != int(config.POKETWO_ID):
+            print("Not from Poketwo")
             return False
         
         battle_invitation_keywords = ["Challenging", "battle", "checkmark"]
 
         for keyword in battle_invitation_keywords:
-            if keyword not in _message.content:
+            if keyword not in msg.content:
                 return False
             
-        if _message.mentions[0].id != target_id:
+        if msg.mentions[0].id != target_id:
             return False
-
-        return True
-    
-    try:
-        invitation_message = await bot.wait_for("message", check=get_battle_message_from_poketwo, timeout=10)
-
-    except TimeoutError as t:
-        return
-    
-    def get_confirmation_on_battle_invitation(reaction:Reaction, user:Member):
 
         if reaction.emoji != "✅":
-            return False
-
-        if reaction.message.id != invitation_message.id:
             return False
 
         if user.id != target_id:
@@ -74,7 +69,7 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
         return True
         
     try:
-        await bot.wait_for("reaction_add", check=get_confirmation_on_battle_invitation, timeout=15)
+        await bot.wait_for("reaction_add", check=get_confirmation_on_battle_invitation, timeout=20)
 
     except TimeoutError as t:
         return await message.channel.send("> Auto Battle Log Session Timed out! Please accept the battle invitation.")
@@ -90,17 +85,22 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
 
         nonlocal conclusion_type
 
+        if not msg.content.strip().startswith(f"<@{config.POKETWO_ID}>"):
+            return
+
         if msg.author.id != challenger_id and msg.author.id != target_id:
             return False
         
         if "x" not in msg.content.lower() and "cancel" not in msg.content.lower():
             return False 
 
-        battle_cancel_keywords = ["{}".format(config.POKETWO_ID), "battle "]
+        battle_cancel_keywords = ["duel ", "battle "]
         
         for keyword in battle_cancel_keywords:
-            if keyword not in msg.content:
-                return False
+            if keyword in msg.content:
+                break
+        else:
+            return
 
         conclusion_type = "CANCEL"
 
