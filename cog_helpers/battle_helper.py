@@ -152,7 +152,7 @@ async def get_battle_leaderboard_embed(guild):
         sorted_battle_records = OrderedDict(sorted(battle_records_diffs.items(), key=lambda x: int(x[1]), reverse=True))
 
         reply_embd = discord.Embed(title="{server_name}'s battle leaderboard".format(server_name=server_name), color=discord.Color.blue())
-        reply_embd.description = "`-N- | -W- | -L- | -Win %- | -Name-` \n\n"
+        reply_embd.description = "`-N-  | -W- | -L- | -Win %- | -Name-` \n\n"
 
         max_leaderboard_listings = 15
         footer = ""
@@ -172,7 +172,7 @@ async def get_battle_leaderboard_embed(guild):
 
             win_perc = (round((wins / (wins + loses)) * 100, 1) if wins + loses > 0 else 0)
                 
-            reply_embd.description += "`{pos} | {wins} | {loses} | {perc}% |` <@{id}> \n".format(pos=" {0}.".format(pos).center(3, " "), id=i, wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
+            reply_embd.description += "`{pos} | {wins} | {loses} | {perc}% |` <@{id}> \n".format(pos=" {0}.".format(pos).center(4, " "), id=i, wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
             pos = pos + 1
 
         if footer != "":
