@@ -72,7 +72,7 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
         return await message.channel.send("> Auto Battle Log Session Timed out! Please accept the battle invitation.")
 
     else:
-        await message.channel.send("> Auto Battle Log Session Started! This will Automatically log the battle results into the battle leaderboard. If you don't want this functionality, use `-aa abl` to Disable this module!")
+        await message.channel.send("> Auto Battle Log Session Started! This will Automatically log the battle results into the battle leaderboard. If you don't want this functionality, use `-aa abl` to Disable this module!\n> **This feature is still in beta!**")
 
     conclusion_type = None
     winner          = None
@@ -83,7 +83,7 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
         nonlocal conclusion_type
 
         if not msg.content.strip().startswith(f"<@{config.POKETWO_ID}>"):
-            return
+            return False
 
         if msg.author.id != challenger_id and msg.author.id != target_id:
             return False
