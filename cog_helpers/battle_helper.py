@@ -154,7 +154,7 @@ async def get_battle_leaderboard_embed(guild):
         reply_embd = discord.Embed(title="{server_name}'s battle leaderboard".format(server_name=server_name), color=discord.Color.blue())
         reply_embd.description = "`-N-  | -W- | -L- | -Win %- | -Name-` \n\n"
 
-        max_leaderboard_listings = 15
+        max_leaderboard_listings = 20
         footer = ""
 
         pos = 1
