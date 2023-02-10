@@ -36,12 +36,16 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
         return
         
     challenger_id = message.author.id
+    challenger_name = message.author.name
     target_id     = int(initiation_content.strip())
+    target_name = ""
 
     if challenger_id == target_id:
         return
     
     def get_confirmation_on_battle_invitation(reaction:Reaction, user:Member):
+
+        nonlocal target_name
 
         msg:Message = reaction.message
 
@@ -62,6 +66,8 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
 
         if user.id != target_id:
             return False
+        
+        target_name = user.name
         
         return True
         
@@ -111,7 +117,7 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
             return False
     
         if "won the battle!" in msg.content:
-            winner = int(msg.content.split()[0].removeprefix("<@").removesuffix(">"))
+            winner = msg.mentions[0].id
         else:
             if "has won." in msg.content:
                 winner = int(msg.content.removesuffix("> has won.").split()[-1].removeprefix("<@"))
@@ -149,6 +155,9 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
     elif conclusion_type == "FINISH":
         await message.channel.send("> Logging Battle. Please Wait!")
 
-        reply = await battle_helper.register_battle_log(message.guild.id, str(winner), str(loser))
+        winner_name = (challenger_name if challenger_id == winner else target_name)
+        loser_name  = (challenger_name if challenger_id == loser else challenger_name)
+
+        reply = await battle_helper.register_battle_log(message.guild.id, str(winner), str(loser), winner_name, loser_name)
 
         await message.channel.send(reply)

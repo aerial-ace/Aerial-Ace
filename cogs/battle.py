@@ -18,14 +18,12 @@ class BattleSystem(commands.Cog):
     @commands.cooldown(1, 25, commands.BucketType.user)
     @commands.guild_only()
     @commands.command(name="log_battle", aliases=["lb"], description="Logs a battle in battle leaderboard")
-    async def log_battle(self, ctx : commands.Context, winner, loser):
-        winner_id = await general_helper.get_user_id_from_ping(winner)
-        loser_id = await general_helper.get_user_id_from_ping(loser)
+    async def log_battle(self, ctx : commands.Context, winner:Member, loser:Member):
 
-        info = await battle_helper.get_battle_acceptance(ctx, winner_id, loser_id)
+        info = await battle_helper.get_battle_acceptance(ctx, str(winner.id), str(loser.id))
 
         if info == "accepted":
-            reply = await battle_helper.register_battle_log(ctx.guild.id, winner_id, loser_id)
+            reply = await battle_helper.register_battle_log(ctx.guild.id, str(winner.id), str(loser.id), winner.name, loser.name)
         elif info == "notaccepted":
             reply = "> Battle log wasn't accepted."
             ctx.command.reset_cooldown(ctx)

@@ -40,17 +40,20 @@ async def get_battle_acceptance(ctx, winner_id, loser_id):
         return "accepted"
 
 # Register Battle log
-async def register_battle_log(server_id, winner, loser):
+async def register_battle_log(server_id, winner, loser, winner_name=None, loser_name=None):
 
     query = {"server_id" : str(server_id)}
     data_cursor = await mongo_manager.manager.get_all_data("battles", query)
+
+    winner_name = winner_name or winner
+    loser_name  = loser_name  or loser
 
     try:
         battle_data = data_cursor[0]["logs"]
         users = list(battle_data.keys())
 
         if winner not in users:
-            battle_data[winner] = "1 | 0"
+            battle_data[winner] = "1 | 0 | {winner_name}", 
         else:
             try:
                 wins  = int(battle_data[winner].split(" | ")[0]) + 1
@@ -60,10 +63,10 @@ async def register_battle_log(server_id, winner, loser):
                 wins  = (1 if diff < 0 else diff + 1)
                 loses = (0 if diff > 0 else abs(diff))
 
-            battle_data[winner] = f"{wins} | {loses}"
+            battle_data[winner] = f"{wins} | {loses} | {winner_name}"
 
         if loser not in users:
-            battle_data[loser] = "0 | 1"
+            battle_data[loser] = "0 | 1 | {loser_name}"
         else:
             try:
                 wins  = int(battle_data[loser].split(" | ")[0])
@@ -73,7 +76,7 @@ async def register_battle_log(server_id, winner, loser):
                 wins  = (0 if diff < 0 else diff)
                 loses = (1 if diff > 0 else abs(diff) + 1)
 
-            battle_data[loser] = f"{wins} | {loses}"
+            battle_data[loser] = f"{wins} | {loses} | {loser_name}"
 
         updated_data = {"logs" : battle_data}
 
@@ -139,49 +142,57 @@ async def get_battle_leaderboard_embed(guild):
     query = {"server_id" : server_id}
     data_cursor = await mongo_manager.manager.get_all_data("battles", query)
 
-    try:
-        battle_records:dict = data_cursor[0]["logs"]
+    # try:
+    battle_records:dict = data_cursor[0]["logs"]
 
-        battle_records_diffs = {}
-        for item in battle_records.items():
-            try:
-                battle_records_diffs[item[0]] = int(item[1].split(" | ")[0]) - int(item[1].split(" | ")[1])
-            except:
-                battle_records_diffs[item[0]] = item[1]
+    battle_records_diffs = {}
+    for item in battle_records.items():
+        try:
+            splits = item[1].split(" | ")
+            wins  = int(splits[0])
+            loses = int(splits[1])
+            name  = item[0] if len(splits) <= 2 else splits[2]
 
-        sorted_battle_records = OrderedDict(sorted(battle_records_diffs.items(), key=lambda x: int(x[1]), reverse=True))
+            battle_records_diffs[item[0]] = [wins - loses, name]
+        except:
+            battle_records_diffs[item[0]] = [item[1], item[0]]
 
-        reply_embd = discord.Embed(title="{server_name}'s battle leaderboard".format(server_name=server_name), color=discord.Color.blue())
-        reply_embd.description = "`-N-  | -W- | -L- | -Win %- | -Name-` \n\n"
+    sorted_battle_records = OrderedDict(sorted(battle_records_diffs.items(), key=lambda x: int(x[1][0]), reverse=True))
 
-        max_leaderboard_listings = 20
-        footer = ""
+    reply_embd = discord.Embed(title="{server_name}'s battle leaderboard".format(server_name=server_name), color=discord.Color.blue())
+    reply_embd.description = "`-N-  | -W- | -L- | -Win %- | -Name-` \n\n"
 
-        pos = 1
-        for i in sorted_battle_records:
-            if pos > max_leaderboard_listings:
-                footer = "Some players were not mentioned in the leaderboard because of lower scores.\nSee your score with -aa bs"
-                break
+    max_leaderboard_listings = 20
+    footer = ""
 
-            try:
-                wins, loses  = [int(x) for x in battle_records[i].split(" | ")]
-            except:
-                value = int(battle_records[i])
-                wins  = (0 if value < 0 else value)
-                loses = (0 if value > 0 else abs(value))
+    pos = 1
+    for i in sorted_battle_records:
+        if pos > max_leaderboard_listings:
+            footer = "Some players were not mentioned in the leaderboard because of lower scores.\nSee your score with -aa bs"
+            break
 
-            win_perc = (round((wins / (wins + loses)) * 100, 1) if wins + loses > 0 else 0)
-                
-            reply_embd.description += "`{pos} | {wins} | {loses} | {perc}% |` <@{id}> \n".format(pos=" {0}.".format(pos).center(4, " "), id=i, wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
-            pos = pos + 1
+        try:
+            splits = battle_records[i].split(" | ")
+            wins, loses  = int(splits[0]), int(splits[1])
+            name = i if len(splits) <= 2 else splits[2]
+        except:
+            value = int(battle_records[i])
+            wins  = (0 if value < 0 else value)
+            loses = (0 if value > 0 else abs(value))
+            name  = i
 
-        if footer != "":
-            reply_embd.set_footer(text=footer)
+        win_perc = (round((wins / (wins + loses)) * 100, 1) if wins + loses > 0 else 0)
+            
+        reply_embd.description += "`{pos} | {wins} | {loses} | {perc}% | {name}`\n".format(pos=" {0}.".format(pos).center(4, " "), name=name, wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
+        pos = pos + 1
 
-        return reply_embd
-    except Exception as e:
-        print(f"Error while showing battle leaderboard : {e}")
-        return await general_helper.get_info_embd("Oops", "Error occurred while showing battle leaderboard :|", config.ERROR_COLOR, "These errors were registered")
+    if footer != "":
+        reply_embd.set_footer(text=footer)
+
+    return reply_embd
+    # except Exception as e:
+    #     print(f"Error while showing battle leaderboard : {e}")
+    #     return await general_helper.get_info_embd("Oops", "Error occurred while showing battle leaderboard :|", config.ERROR_COLOR, "These errors were registered")
 
 # removes the user from the leaderboard
 async def remove_user_from_battleboard(server_id : int, user : discord.Member):
