@@ -74,6 +74,8 @@ async def on_ready():
 @bot.event
 async def on_message(message:discord.Message):
 
+    # await bot.wait_until_ready()
+
     if message.author == bot.user :
         return
 
