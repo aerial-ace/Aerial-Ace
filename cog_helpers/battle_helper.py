@@ -186,6 +186,8 @@ async def get_battle_leaderboard_embed(guild):
         reply_embd.description += "`{pos} | {wins} | {loses} | {perc}% | {name}`\n".format(pos=" {0}.".format(pos).center(4, " "), name=name, wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
         pos = pos + 1
 
+    reply_embd.description += "\n**Register Battles to get your name on the battle board.**"
+
     if footer != "":
         reply_embd.set_footer(text=footer)
 
