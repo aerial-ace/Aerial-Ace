@@ -7,7 +7,7 @@ import json
 
 from managers import mongo_manager, init_manager
 from cog_helpers import general_helper
-from config import NORMAL_COLOR, DEFAULT_COLOR, RARE_CATCH_COLOR, HUNT_COMPLETED_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, STREAK_EMOJI, STREAK_COLOR
+from config import NORMAL_COLOR, DEFAULT_COLOR, RARE_CATCH_COLOR, HUNT_COMPLETED_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, STREAK_EMOJI, STREAK_COLOR, ERROR_COLOR
 
 """Sets/Resets the starboard channel"""
 
@@ -209,10 +209,9 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
     try:
         await starboard_channel.send(embed=reply)
     except errors.Forbidden as e:
-        return await general_helper.get_info_embd(f"Missing Permissions!", f"Can't send message in <#{starboard_channel_id}>")
-        print(e)
+        return await general_helper.get_info_embd(f"Missing Permissions!", f"Can't send message in <#{starboard_channel_id}>", ERROR_COLOR, "Please report this bug at the support server.")
     except Exception as e:
-        print(e)
+        return await general_helper.get_info_embd(f"Error Occurred!", f"Unable to send to Starboard. \n```{e}```", ERROR_COLOR, "Please report this bug at the support server.")
 
     return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
 
