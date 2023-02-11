@@ -18,7 +18,7 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
     if message.content.strip().endswith(">") == False:
         return
         
-    initiation_content = initiation_content.replace("<@", "").replace(">", "")
+    initiation_content = initiation_content.replace("<@", "").replace(">", "").replace("&", "")
     
     battle_initiation_keywords = ["duel ", "battle "]
 

@@ -183,7 +183,7 @@ async def get_battle_leaderboard_embed(guild):
 
         win_perc = (round((wins / (wins + loses)) * 100, 1) if wins + loses > 0 else 0)
             
-        reply_embd.description += "`{pos} | {wins} | {loses} | {perc}% | {name}`\n".format(pos=" {0}.".format(pos).center(4, " "), name=name, wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
+        reply_embd.description += "`{pos} | {wins} | {loses} | {perc}% |` [{name}](https://discord.com/users/{id})\n".format(pos=" {0}.".format(pos).center(4, " "), name=name, id=i, wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
         pos = pos + 1
 
     reply_embd.description += "\n**Register Battles to get your name on the battle board.**"
