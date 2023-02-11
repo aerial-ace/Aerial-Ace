@@ -66,7 +66,7 @@ async def register_battle_log(server_id, winner, loser, winner_name=None, loser_
             battle_data[winner] = f"{wins} | {loses} | {winner_name}"
 
         if loser not in users:
-            battle_data[loser] = "0 | 1 | {loser_name}"
+            battle_data[loser] = f"0 | 1 | {loser_name}"
         else:
             try:
                 wins  = int(battle_data[loser].split(" | ")[0])
