@@ -156,7 +156,7 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
         await message.channel.send("> Logging Battle. Please Wait!")
 
         winner_name = (challenger_name if challenger_id == winner else target_name)
-        loser_name  = (challenger_name if challenger_id == loser else challenger_name)
+        loser_name  = (challenger_name if challenger_id == loser else target_name)
 
         reply = await battle_helper.register_battle_log(message.guild.id, str(winner), str(loser), winner_name, loser_name)
 
