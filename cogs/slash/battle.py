@@ -39,7 +39,7 @@ class BattleSystemSlash(commands.Cog):
         if not ctx.author.guild_permissions.administrator :
             return await ctx.respond("Be Admin when? :/")
 
-        reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user)
+        reply = await battle_helper.remove_user_from_battleboard(str(ctx.guild.id), user)
         view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(reply, view=view)
@@ -52,7 +52,7 @@ class BattleSystemSlash(commands.Cog):
         if not ctx.author.guild_permissions.administrator :
             return await ctx.respond("Be Admin when? :/")
 
-        reply = await battle_helper.remove_user_from_battleboard_id(ctx.guild.id, user_id)
+        reply = await battle_helper.remove_user_from_battleboard_id(str(ctx.guild.id), user_id)
         view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(reply, view=view)

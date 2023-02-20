@@ -88,6 +88,7 @@ async def register_battle_log(server_id, winner, loser, winner_name=None, loser_
         print(f"Error while logging battle : {e}")
         return "Error occurred while logging battle!"
 
+# Toggle server level auto battle logging functionality
 async def toggle_auto_logging(server_id:str):
     
     query = {"server_id" : server_id}
@@ -191,9 +192,7 @@ async def get_battle_leaderboard_embed(guild:Guild):
         return await general_helper.get_info_embd("Oops", "Error occurred while showing battle leaderboard :|", ERROR_COLOR, "These errors were registered")
 
 # removes the user from the leaderboard
-async def remove_user_from_battleboard(server_id:int, user:Member):
-    server_id = str(server_id)
-    user_id = str(user.id)
+async def remove_user_from_battleboard(server_id:str, user:Member):
 
     query = {"server_id" : server_id}
 
@@ -201,23 +200,21 @@ async def remove_user_from_battleboard(server_id:int, user:Member):
 
     battle_data = mongo_cursor[0]["logs"]
 
-    users = list(battle_data.keys())
+    user_data = battle_data.get(str(user.id), None)
 
-    if user_id in users:
-        del(battle_data[user_id])
-    else:
+    if user_data is None:
         return "> That user is not in the leaderboard"
+
+    del(battle_data[str(user.id)])
 
     updated_data = {"logs" : battle_data}
 
     await mongo_manager.manager.update_all_data("battles", query, updated_data)
 
-    return f"> <@{user_id}> was removed from the battle board."
+    return f"> <@{user.id}> was removed from the battle board."
 
 # removes the user from the leaderboard
-async def remove_user_from_battleboard_id(server_id : int, user_id:str):
-    server_id = str(server_id)
-    user_id = str(user_id)
+async def remove_user_from_battleboard_id(server_id:str, user_id:str):
 
     query = {"server_id" : server_id}
 
@@ -225,21 +222,12 @@ async def remove_user_from_battleboard_id(server_id : int, user_id:str):
 
     battle_data = mongo_cursor[0]["logs"]
 
-    """
-    {
-        "server_id" : "1000000",
-        "logs" : {
-            "user_id" : wins
-        }
-    }
-    """
+    user_data = battle_data.get(str(user_id), None)
 
-    users = list(battle_data.keys())
-
-    if user_id in users:
-        del(battle_data[user_id])
-    else:
+    if user_data is None:
         return "> That user is not in the leaderboard"
+
+    del(battle_data[user_id])
 
     updated_data = {"logs" : battle_data}
 
@@ -255,7 +243,8 @@ async def clear_battleboard(server_id : str):
 
         updated_data = {"logs" : {}}
 
-        cursor = await mongo_manager.manager.update_all_data("battles", query, updated_data)
+        await mongo_manager.manager.update_all_data("battles", query, updated_data)
+
     except Exception as e:
         return f"Error happened while performing this command ```{e}```"
     else:
