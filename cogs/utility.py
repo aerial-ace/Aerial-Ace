@@ -1,7 +1,7 @@
 from discord.ext import commands
 
 from views.ButtonViews import GeneralView, DonationView
-from cog_helpers import utility_helper
+from helpers import utility_helper
 
 class Utility(commands.Cog):
     def __init__(self, bot) -> None:

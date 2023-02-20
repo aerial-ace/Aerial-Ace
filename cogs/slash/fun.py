@@ -2,7 +2,7 @@ from discord import Member, ApplicationContext
 from discord.ext import commands
 from discord.commands import slash_command, Option
 
-from cog_helpers import fun_helper
+from helpers import fun_helper
 from views.ButtonViews import GeneralView
 
 class FunSystemSlash(commands.Cog):

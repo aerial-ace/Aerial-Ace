@@ -1,7 +1,7 @@
 from discord.ext import commands
 
 from views.ButtonViews import GeneralView
-from cog_helpers import suggestion_helper
+from helpers import suggestion_helper
 
 class SuggestionManager(commands.Cog):
 

@@ -2,7 +2,7 @@ from discord import Embed
 from discord.ext import commands
 import datetime
 
-from cog_helpers import general_helper
+from helpers import general_helper
 import config
 
 all_categories = {"pokedex" : "commands related to pokedex", "random" : "commands related to random gen", "info" : "commands related to information", "battle" : "commands related to battleboard", "tags" : "commands related to shinyhunts", "fun" : "other fun commands", "misc" : "commands that dont fit in other categories", "starboard" : "commands related to starboard", "customization" : "Customization commands for premium servers", "smogon" : "commands related to showdown"}

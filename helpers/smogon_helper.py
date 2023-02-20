@@ -4,7 +4,7 @@ from discord.ext import pages
 import json
 
 from views.PaginatorViews import PageView
-from cog_helpers import general_helper
+from helpers import general_helper
 from config import NORMAL_COLOR, SMOGON_API_TEMPLATE, SMOGON_COLOR, ERROR_COLOR, NON_SHINY_LINK_TEMPLATE
 
 from views import PaginatorViews

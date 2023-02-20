@@ -2,8 +2,8 @@ from discord import Member
 from discord.ext import commands
 
 from views.ButtonViews import GeneralView
-from cog_helpers import general_helper
-from cog_helpers import battle_helper
+from helpers import general_helper
+from helpers import battle_helper
 import config
 
 class BattleSystem(commands.Cog):

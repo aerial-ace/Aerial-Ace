@@ -5,7 +5,7 @@ from discord.commands import Option
 import random
 
 from views.ButtonViews import GeneralView
-from cog_helpers import random_helper
+from helpers import random_helper
 from config import TYPES
 
 class RandomMiscSlash(commands.Cog):

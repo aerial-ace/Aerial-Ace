@@ -1,7 +1,7 @@
 from discord import ButtonStyle, Interaction
 from discord.ui import View, Button
 
-from cog_helpers import general_helper
+from helpers import general_helper
 from config import PATREON_EMOJI, PAYPAL_EMOJI, PATREON_LINK, PAYPAL_LINK, INVITE_LINK, SUPPORT_SERVER_LINK, REPO_LINK, VOTE_LINK, GITHUB_EMOJI, GITHUB_SPONSORS_LINK
 
 class DonationView(View):

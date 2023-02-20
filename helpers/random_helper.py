@@ -2,8 +2,8 @@ import random
 from discord import Embed
 
 from managers import cache_manager
-from cog_helpers import general_helper
-from cog_helpers import pokedex_helper
+from helpers import general_helper
+from helpers import pokedex_helper
 from config import NORMAL_COLOR, ERROR_COLOR, COIN_HEADS_EMOJI, COIN_TAILS_EMOJI
 
 """for getting a random pokemon"""

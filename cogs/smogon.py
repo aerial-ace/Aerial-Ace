@@ -1,6 +1,6 @@
 from discord.ext import commands
 
-from cog_helpers import smogon_helper, general_helper
+from helpers import smogon_helper, general_helper
 from config import ERROR_COLOR
 
 class SmogonModule(commands.Cog):

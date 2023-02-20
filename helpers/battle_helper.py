@@ -2,7 +2,7 @@ from collections import OrderedDict
 import discord
 
 from managers import mongo_manager
-from cog_helpers import general_helper
+from helpers import general_helper
 import config
 
 # sends an confirmation message to accept the battle log

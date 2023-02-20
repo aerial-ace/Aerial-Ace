@@ -2,7 +2,7 @@ from discord import Member, ApplicationContext
 from discord.ext import commands
 from discord.commands import slash_command, Option
 
-from cog_helpers import battle_helper
+from helpers import battle_helper
 from views.ButtonViews import GeneralView
 
 class BattleSystemSlash(commands.Cog):

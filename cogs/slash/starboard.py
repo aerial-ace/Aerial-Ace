@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord import ApplicationContext, Option
 from discord.commands import slash_command, SlashCommandGroup
 
-from cog_helpers import starboard_helper
+from helpers import starboard_helper
 
 class StarboardSlash(commands.Cog):
 

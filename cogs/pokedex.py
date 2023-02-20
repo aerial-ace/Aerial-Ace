@@ -4,8 +4,8 @@ from discord import ButtonStyle
 from json import JSONDecodeError
 
 from views.ButtonViews import GeneralView
-from cog_helpers import pokedex_helper
-from cog_helpers import general_helper
+from helpers import pokedex_helper
+from helpers import general_helper
 from config import POKEMON_LINK_TEMPLATE_SMOGON, ABILITY_LINK_TEMPLATE_SMOGON, ERROR_COLOR, INVITE_LINK
 
 class PokeDex(commands.Cog):
