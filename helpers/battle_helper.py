@@ -43,6 +43,7 @@ async def get_battle_acceptance(ctx, winner_id, loser_id):
 async def register_battle_log(server_id, winner, loser, winner_name=None, loser_name=None):
 
     query = {"server_id" : str(server_id)}
+
     data_cursor = await mongo_manager.manager.get_all_data("battles", query)
 
     winner_name = winner_name or winner
@@ -50,33 +51,36 @@ async def register_battle_log(server_id, winner, loser, winner_name=None, loser_
 
     try:
         battle_data = data_cursor[0]["logs"]
-        users = list(battle_data.keys())
+        
+        winner_data = battle_data.get(winner, None)
 
-        if winner not in users:
-            battle_data[winner] = f"1 | 0 | {winner_name}"
+        if winner_data is None:
+            battle_data[winner] = {
+                "wins" : 1,
+                "loses" : 0,
+                "name" : winner_name
+            }
         else:
-            try:
-                wins  = int(battle_data[winner].split(" | ")[0]) + 1
-                loses = battle_data[winner].split(" | ")[1]
-            except:
-                diff  = int(battle_data[winner])
-                wins  = (1 if diff < 0 else diff + 1)
-                loses = (0 if diff > 0 else abs(diff))
+            battle_data[winner] = {
+                "wins" : battle_data[winner].get("wins", 0) + 1,
+                "loses" : battle_data[winner].get("loses", 0),
+                "name" : winner_name
+            }
+        
+        loser_data = battle_data.get(loser, None)
 
-            battle_data[winner] = f"{wins} | {loses} | {winner_name}"
-
-        if loser not in users:
-            battle_data[loser] = f"0 | 1 | {loser_name}"
+        if loser_data is None:
+            battle_data[loser] = {
+                "wins" : 0,
+                "loses" : 1,
+                "name" : loser_name
+            }
         else:
-            try:
-                wins  = int(battle_data[loser].split(" | ")[0])
-                loses = int(battle_data[loser].split(" | ")[1]) + 1
-            except:
-                diff  = int(battle_data[loser])
-                wins  = (0 if diff < 0 else diff)
-                loses = (1 if diff > 0 else abs(diff) + 1)
-
-            battle_data[loser] = f"{wins} | {loses} | {loser_name}"
+            battle_data[loser] = {
+                "wins" : battle_data[loser].get("wins", 0),
+                "loses" : battle_data[loser].get("loses", 0) + 1,
+                "name" : loser_name
+            }
 
         updated_data = {"logs" : battle_data}
 
