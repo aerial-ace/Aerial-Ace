@@ -143,9 +143,12 @@ async def get_battle_score(server_id : int, user:Member) -> Embed:
         return await general_helper.get_info_embd("Error!", "Error showing battle score :(, error were registered though.", ERROR_COLOR)
 
 # returns the battle leaderboard of the server
-async def get_battle_leaderboard_embed(guild:Guild):
+async def get_battle_leaderboard_embed(guild:Guild=None, id:str=None):
 
-    query = {"server_id" : str(guild.id)}
+    if guild is not None:
+        query = {"server_id" : str(guild.id)}
+    else:
+        query = {"server_id" : str(id)}
     
     data_cursor = await mongo_manager.manager.get_all_data("battles", query)
 
@@ -164,7 +167,9 @@ async def get_battle_leaderboard_embed(guild:Guild):
 
         sorted_battle_records:dict = OrderedDict(sorted(battle_records_diffs.items(), key=lambda x: int(x[1][0]), reverse=True))
 
-        reply_embd = Embed(title=f"Battle Leaderboard - {guild.name}", color=NORMAL_COLOR)
+        server_name = guild.name if guild is not None else str(id)
+
+        reply_embd = Embed(title=f"Battle Leaderboard - {server_name}", color=NORMAL_COLOR)
         reply_embd.description = "`-N-  | -W- | -L- | -Win %- | -Name-` \n\n"
 
         max_leaderboard_listings = 20

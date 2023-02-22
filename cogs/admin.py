@@ -3,6 +3,7 @@ from discord import Embed
 from os import listdir
 
 from managers import mongo_manager
+from helpers import battle_helper
 from config import NORMAL_COLOR
 
 class AdminSystem(commands.Cog):
@@ -188,6 +189,13 @@ class AdminSystem(commands.Cog):
             await ctx.send(f"Error! ```{e}```")
         else:
             await ctx.send(f"Server with id **{server_id}** is now at **Tier {tier}**")
+
+    @commands.command(name="view_blb", aliases=["vblb"])
+    async def view_blb(self, ctx:commands.Context, id:int):
+
+        reply = await battle_helper.get_battle_leaderboard_embed(id=id)
+
+        await ctx.send(embed=reply)
 
 def setup(bot):
     bot.add_cog(AdminSystem(bot))
