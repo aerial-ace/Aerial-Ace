@@ -4,8 +4,8 @@ import asyncio
 
 from views.ButtonViews import GeneralView
 from managers import cache_manager
-from cog_helpers import tag_helper
-from cog_helpers import general_helper
+from helpers import tag_helper
+from helpers import general_helper
 from config import ERROR_COLOR, WARNING_COLOR, MAX_TAG_TIMER_VALUE
 
 class TagSystem(commands.Cog):

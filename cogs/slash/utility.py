@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.commands import slash_command
 
 from views.ButtonViews import GeneralView, DonationView
-from cog_helpers import utility_helper
+from helpers import utility_helper
 
 class UtilitySlash(commands.Cog):
     

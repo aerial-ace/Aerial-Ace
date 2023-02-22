@@ -1,7 +1,7 @@
 import discord
 import datetime
 
-from cog_helpers import starboard_helper
+from helpers import starboard_helper
 from managers import cache_manager
 import config
 

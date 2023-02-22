@@ -6,7 +6,7 @@ import sys
 from managers import cache_manager, mongo_manager, init_manager, post_command_manager
 from config import TOKEN, MONGO_URI, TEST_TOKEN
 
-from cog_helpers import general_helper
+from helpers import general_helper
 
 from checkers import rare_catch_detection
 from checkers import auto_battle_log

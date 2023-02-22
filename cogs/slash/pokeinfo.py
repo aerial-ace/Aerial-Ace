@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.commands import slash_command, Option
 
 from views.ButtonViews import GeneralView
-from cog_helpers import pokemon_info_helper
+from helpers import pokemon_info_helper
 import config
 
 class PokeInfoSlash(commands.Cog):

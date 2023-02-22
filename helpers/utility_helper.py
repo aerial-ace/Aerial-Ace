@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import random
 
-from cog_helpers import general_helper
+from helpers import general_helper
 import config
 
 # returns a value for roll

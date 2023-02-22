@@ -3,7 +3,7 @@ from discord import AutoShardedBot
 from asyncio import TimeoutError
 
 from managers import mongo_manager
-from cog_helpers import battle_helper
+from helpers import battle_helper
 import config
 
 async def determine_battle_message(bot:AutoShardedBot, message:Message):

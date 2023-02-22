@@ -6,7 +6,7 @@ import datetime
 import json
 
 from managers import mongo_manager, init_manager
-from cog_helpers import general_helper
+from helpers import general_helper
 from config import NORMAL_COLOR, DEFAULT_COLOR, RARE_CATCH_COLOR, HUNT_COMPLETED_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, STREAK_EMOJI, STREAK_COLOR, ERROR_COLOR
 
 """Sets/Resets the starboard channel"""

@@ -1,7 +1,7 @@
 from discord.ext import commands
 from discord import TextChannel
 
-from cog_helpers import starboard_helper
+from helpers import starboard_helper
 
 class StarboardSystem(commands.Cog):
 

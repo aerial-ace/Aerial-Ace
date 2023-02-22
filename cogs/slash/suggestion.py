@@ -3,7 +3,7 @@ from discord import ApplicationContext
 from discord.commands import slash_command, Option
 
 from views.ButtonViews import GeneralView
-from cog_helpers import suggestion_helper
+from helpers import suggestion_helper
 
 class SuggestionSlash(commands.Cog):
 

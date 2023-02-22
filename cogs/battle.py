@@ -2,8 +2,8 @@ from discord import Member
 from discord.ext import commands
 
 from views.ButtonViews import GeneralView
-from cog_helpers import general_helper
-from cog_helpers import battle_helper
+from helpers import general_helper
+from helpers import battle_helper
 import config
 
 class BattleSystem(commands.Cog):
@@ -88,7 +88,7 @@ class BattleSystem(commands.Cog):
     @commands.command(name="battle_remove", aliases=["br"], description="Removes a server member from the battle leaderboard")
     @commands.has_permissions(administrator=True)
     async def battle_remove(self, ctx, user : Member):
-        reply = await battle_helper.remove_user_from_battleboard(ctx.guild.id, user)
+        reply = await battle_helper.remove_user_from_battleboard(str(ctx.guild.id), user)
         view = GeneralView(200, True, True, False, True)
 
         await ctx.send(reply, view=view)
@@ -110,7 +110,7 @@ class BattleSystem(commands.Cog):
     @commands.command(name="battle_remove_id", aliases=["brid"], description="Removes a server member from the battle leaderboard using member id")
     @commands.has_permissions(administrator=True)
     async def battle_remove_id(self, ctx, user_id:str):
-        reply = await battle_helper.remove_user_from_battleboard_id(ctx.guild.id, user_id)
+        reply = await battle_helper.remove_user_from_battleboard_id(str(ctx.guild.id), user_id)
         view = GeneralView(200, True, True, False, True)
 
         await ctx.send(reply, view=view)

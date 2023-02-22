@@ -5,7 +5,7 @@ from discord.commands import slash_command
 from discord.commands import Option
 from json import JSONDecodeError
 
-from cog_helpers import pokedex_helper, general_helper
+from helpers import pokedex_helper, general_helper
 from config import ABILITY_LINK_TEMPLATE_SMOGON, POKEMON_LINK_TEMPLATE_SMOGON, INVITE_LINK
 
 class PokedexSlash(commands.Cog):

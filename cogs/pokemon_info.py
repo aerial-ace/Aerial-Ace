@@ -1,8 +1,8 @@
 from discord.ext import commands
 
 from views.ButtonViews import GeneralView
-from cog_helpers import pokemon_info_helper
-from cog_helpers import general_helper
+from helpers import pokemon_info_helper
+from helpers import general_helper
 import config
 
 class Pokemon_Info(commands.Cog):

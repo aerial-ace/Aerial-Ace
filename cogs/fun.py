@@ -2,8 +2,8 @@ import discord
 from discord.ext import commands
 
 from views.ButtonViews import GeneralView
-from cog_helpers import general_helper
-from cog_helpers import fun_helper
+from helpers import general_helper
+from helpers import fun_helper
 import config
 
 class FunModule(commands.Cog):

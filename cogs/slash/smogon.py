@@ -2,7 +2,7 @@ from discord.ext import commands
 from discord.commands import slash_command
 from discord import ApplicationContext, Option
 
-from cog_helpers import smogon_helper
+from helpers import smogon_helper
 
 class SmogonSlashModule(commands.Cog):
 
