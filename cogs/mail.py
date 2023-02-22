@@ -16,10 +16,12 @@ class MailModule(commands.Cog):
         view = DonationView(2000)
         
         embd.description = ">>>>>>>__**New**__\n\n"
-        embd.description += f"Galar Battle Data is now available in Aerial Ace. Train your pokemons now."
+        embd.description += f"Due to the recent database refreshing, some servers might face problem with logging battle or with any other battle command. If so please report your server id at the support server."
 
         embd.description += "\n\n>>>>>>>__**Old**__\n\n"
-        embd.description += f"After **A VERY LONG** time, we finally have Galar Pokemon Moves in Poketwo. We are working towards including all the required battle data for these galar pokemon, so that you can build your best teams and hopefully survive the new meta that is going to develop around these galar pokemons. \nWe have already included **Galar Stats**, and you can check those using `-aa stats <pokemon>` command. \n\n**NOTE** : Galar Pokemons are a very new introduction to the previous battle system, so it will take time until we all figure out which stats are best for which pokemon. So take these stats with a grain of salt, We do encourage players to try out different sets and help us make our stats database robust and error proof. \n\nThanks for using Aerial Ace as always <3"
+        embd.description += f"Galar Battle Data is now available in Aerial Ace. Train your pokemons now."
+
+        embd.description += "\n\nThanks for using Aerial Ace as always."
 
         await ctx.send(embed=embd, view=view)
 
@@ -31,7 +33,7 @@ async def process_mail(ctx):
 
         if roll > 0 and roll < prob:
             embd = discord.Embed(title=f"{config.ALERT_EMOJI} NOTICE {config.ALERT_EMOJI}", color=config.NORMAL_COLOR)
-            embd.description = f"**Galar Battle Data** is here!"
+            embd.description = f"**Battle Data is refreshed** \nIf Battle Leaderboard Commands are not working in your server, please report the issue at the support server."
             try:
                 embd.set_footer(text=f"Check the complete mail using {ctx.prefix}mail")
             except:
