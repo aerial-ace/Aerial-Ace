@@ -237,6 +237,9 @@ async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str=
 
     embd = Embed()
 
+    embd.title = "Sample Title"
+    embd.description = "Sample Description"
+
     if _type == "rare":
         embd.title = ":star: Rare Catch Detected :star:"
         embd.color = DEFAULT_COLOR
