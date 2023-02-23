@@ -68,6 +68,7 @@ async def on_guild_remove(guild):
 async def on_ready():
     mongo_manager.init_mongo(MONGO_URI, "aerialace")
     await cache_manager.cache_data()
+
     print(f"Logged in as {bot.user}")
     print(f"Discord Version : {discord.__version__}")
 
@@ -82,7 +83,7 @@ async def on_message(message:discord.Message):
         await message.channel.send(embed=(await general_helper.get_info_embd(title="Alola :wave:, This is Aerial Ace.", desc="Prefix : `-aa` or `aa.`\n**Slash Commands are available**\nPing : **{ping} ms** \nHelp Command : `-aa help`".format(ping=round(bot.latency * 1000, 2)))))
 
     # detect rare catches from the poketwo bot
-    await rare_catch_detection.rare_check(message)
+    #await rare_catch_detection.rare_check(message)
 
     await auto_battle_log.determine_battle_message(bot, message)
 
