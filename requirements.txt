@@ -1,4 +1,4 @@
-git+https://github.com/Pycord-Development/pycord
+py-cord==2.4.0
 requests
 TextWrapper
 pymongo[srv]
