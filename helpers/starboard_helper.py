@@ -248,6 +248,7 @@ async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str=
         embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")
 
         embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
+        
     elif _type == "shiny":
         if is_hunt is False:
             embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
@@ -261,10 +262,14 @@ async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str=
         embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")
 
         embd.set_image(url=(PIKA_SHOCK if data.get("starboard_image_shiny", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_shiny", "DEFAULT")))
+
     elif _streak != 0 and tier > 0:
         embd.title = f"{STREAK_EMOJI} Catch Streak {STREAK_EMOJI}"
         embd.color = STREAK_COLOR
         embd.description = "{ping} caught their {streak}th {pokemon}\n\n:tada: Congratulations :tada:".format(ping=_ping, streak=_streak, pokemon=_pokemon)
+
+    else:
+        return None
 
     embd.timestamp = datetime.datetime.now()
 

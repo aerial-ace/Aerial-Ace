@@ -21,6 +21,9 @@ async def rare_check(message : discord.Message):
     reply = await starboard_helper.get_rare_catch_embd(str(message.guild.id), catch_info["user"], catch_info["pokemon"], catch_info["level"], catch_info["type"], catch_info["streak"], catch_info["hunt"])
 
     # Send to current Channel
+    if reply is None:
+        return
+    
     await message.channel.send(embed=reply)
 
     # Send to Starboard

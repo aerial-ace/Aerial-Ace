@@ -184,7 +184,7 @@ class AdminSystem(commands.Cog):
         }
 
         try:
-            mongo_manager.manager.update_all_data("servers", query, updated_data)
+            await mongo_manager.manager.update_all_data("servers", query, updated_data)
         except Exception as e:
             await ctx.send(f"Error! ```{e}```")
         else:
