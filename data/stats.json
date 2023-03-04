@@ -413,5 +413,8 @@
 	"regidrago": "HP | Attack | Sp.Attack",
 	"glastrier": "Attack | Defense | Sp.Defense",
 	"spectrier": "Sp.Attack | Sp.Defense | Speed",
-	"calyrex": "Please NO"
+	"calyrex": "Please NO",
+	"articuno-galar": "Attack | Sp.Attack | Sp.Defense \n(Best moveset requires high attack even though its sp.attacker ¯\\_(ツ)_/¯)",
+	"zapdos-galar": "Attack | Sp.Attack | Speed",
+	"moltres-galar": "Attack | Sp.Attack | Sp.Defense | Speed"
 }
