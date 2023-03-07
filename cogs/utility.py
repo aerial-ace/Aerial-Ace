@@ -67,7 +67,7 @@ class Utility(commands.Cog):
 
     """Get Donation Links"""
 
-    @commands.command(name="donate", aliases=["patreon", "donation"], description="Donate or Subscribe to Patreon to get exclusive perks.")
+    @commands.command(name="premium", aliases=["patreon", "donation"], description="Subscribe to Patreon/Ko-Fi to get exclusive perks.")
     async def donation(self, ctx):
         reply = await utility_helper.get_donation_embed()
         view = DonationView(200)
