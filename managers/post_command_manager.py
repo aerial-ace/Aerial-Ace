@@ -27,5 +27,4 @@ async def donation_reminder(ctx:commands.Context):
 
 async def process_post_commands(ctx:commands.Context):
 
-    await donation_reminder(ctx)
     await mail_manager.process_mail(ctx)
