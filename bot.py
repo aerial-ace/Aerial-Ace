@@ -38,7 +38,6 @@ initial_cogs = [
     "pokedex",
     "pokemon_info",
     "random_misc",
-    "ruleset",
     "tag",
     "fun",
     "battle"
