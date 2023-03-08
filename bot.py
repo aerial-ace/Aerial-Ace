@@ -3,6 +3,7 @@ from discord import Bot, Intents
 import discord
 import sys
 
+from helpers.logger import Logger
 from managers import cache_manager, mongo_manager, init_manager, post_command_manager
 from config import TOKEN, MONGO_URI, TEST_TOKEN
 
@@ -37,6 +38,7 @@ initial_cogs = [
     "pokedex",
     "pokemon_info",
     "random_misc",
+    "ruleset",
     "tag",
     "fun",
     "battle"
@@ -69,8 +71,8 @@ async def on_ready():
     mongo_manager.init_mongo(MONGO_URI, "aerialace")
     await cache_manager.cache_data()
 
-    print(f"Logged in as {bot.user}")
-    print(f"Discord Version : {discord.__version__}")
+    Logger.logMessage(f"Logged in as {bot.user}")
+    Logger.logMessage(f"Discord Version : {discord.__version__}")
 
 @bot.event
 async def on_message(message:discord.Message):

@@ -2,7 +2,7 @@ from collections import OrderedDict
 from discord import Member, Embed, Guild
 
 from managers import mongo_manager
-from helpers import general_helper
+from helpers import general_helper, logger
 from config import NORMAL_COLOR, ERROR_COLOR
 
 # sends an confirmation message to accept the battle log
@@ -89,7 +89,7 @@ async def register_battle_log(server_id, winner, loser, winner_name=None, loser_
         return f"> GG, <@{winner}> won over <@{loser}>. Scoreboard was updated."
 
     except Exception as e:
-        print(f"Error while logging battle : {e}")
+        logger.Logger.logError(e, "Error occurred while logging battle!")
         return "Error occurred while logging battle!"
 
 # Toggle server level auto battle logging functionality
@@ -109,8 +109,8 @@ async def toggle_auto_logging(server_id:str):
 
         await mongo_manager.manager.update_all_data("servers", query, updated_data)
 
-    except:
-        print("Error occurred while toggling Auto Battle Logging!")
+    except Exception as e:
+        logger.Logger.logError(e, "Error occurred while toggling Auto Battle Logging!")
         return "Error Occurred while toggling Auto Battle Logging!"
 
     else:
@@ -139,7 +139,7 @@ async def get_battle_score(server_id : int, user:Member) -> Embed:
         return await general_helper.get_info_embd(f"Battle Score - {user.name}", f"Wins : **{wins}**\n" + f"Loses : **{loses}**\n" + f"Win Perc : **{win_perc}**\n" + f"Overall Diff : **{wins - loses}**", NORMAL_COLOR)
 
     except Exception as e:
-        print(f"Error while showing battle score : {e}")
+        logger.Logger.logError(e, f"Error while showing battle score")
         return await general_helper.get_info_embd("Error!", "Error showing battle score :(, error were registered though.", ERROR_COLOR)
 
 # returns the battle leaderboard of the server
@@ -197,7 +197,7 @@ async def get_battle_leaderboard_embed(guild:Guild=None, id:str=None):
         return reply_embd
     
     except Exception as e:
-        print(f"Error while showing battle leaderboard : {e}")
+        logger.Logger.logError(e, f"Error while showing battle leaderboard")
         return await general_helper.get_info_embd("Oops", "Error occurred while showing battle leaderboard :|", ERROR_COLOR, "These errors were registered")
 
 # removes the user from the leaderboard
