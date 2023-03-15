@@ -40,15 +40,18 @@ async def register_guild(bot : commands.Bot, guild : discord.Guild):
     embed.add_field(
         name="Server Name",
         value=guild.name,
-        inline=False
+        inline=True
+    )
+    embed.add_field(
+        name="Member Count",
+        value=guild.member_count,
+        inline=True
     )
     embed.add_field(
         name="Server Count",
         value=len(bot.guilds),
         inline=False
     )
-
-    embed.set_thumbnail(url=config.AVATAR_LINK)
 
     await log_channel.send(embed=embed)
 
@@ -60,7 +63,7 @@ async def register_guild(bot : commands.Bot, guild : discord.Guild):
 
     return data
 
-# register guild in the database without other bs
+# register guild in the database without other bullshit
 
 async def register_guild_without_bs(guild_id:str, guild_name:str="NONE"):
 
@@ -117,14 +120,17 @@ async def remove_guild(bot : commands.Bot, guild : discord.Guild):
     embed.add_field(
         name="Server Name",
         value=guild.name,
-        inline=False
+        inline=True
+    )
+    embed.add_field(
+        name="Member Count",
+        value=guild.member_count,
+        inline=True
     )
     embed.add_field(
         name="Server Count",
         value=len(bot.guilds),
         inline=False
     )
-
-    embed.set_thumbnail(url=config.AVATAR_LINK)
 
     await log_channel.send(embed=embed)
