@@ -24,7 +24,7 @@ SUGGESTION_LOG_CHANNEL_ID = 938352848448659466
 DEVELOPER_DISCORD_PROFILE_LINK = "https://discordapp.com/users/734754644286504991"
 INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=277025647680&scope=bot%20applications.commands"
 AVATAR_LINK = "https://i.imgur.com/TAWr46v.png"
-SUPPORT_SERVER_LINK = "https://discord.gg/4mPdqevgsH"
+SUPPORT_SERVER_LINK = "https://discord.gg/ZpBttKAHwg"
 REPO_LINK = "https://github.com/aerial-ace/Aerial-Ace/"
 GITHUB_PROFILE_LINK = "https://github.com/Devanshu19/"
 VOTE_LINK = "https://top.gg/bot/908384747393286174/vote/"
