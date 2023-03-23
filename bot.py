@@ -38,6 +38,7 @@ initial_cogs = [
     "pokedex",
     "pokemon_info",
     "random_misc",
+    "ruleset",
     "tag",
     "fun",
     "battle"
@@ -48,6 +49,7 @@ initial_slash_cogs = [
     "pokeinfo",
     "starboard",
     "random_misc",
+    "ruleset",
     "suggestion",
     "tag",
     "smogon",
