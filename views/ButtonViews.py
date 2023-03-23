@@ -24,7 +24,7 @@ class DonationView(View):
 
 class GeneralView(View):
 
-    def __init__(self, timeout:int, invite:bool=True, support_server:bool=True, source:bool=False, donate:bool=True, vote=False):
+    def __init__(self, timeout:int=200, invite:bool=True, support_server:bool=True, source:bool=False, donate:bool=True, vote=False):
 
         super().__init__()
 
