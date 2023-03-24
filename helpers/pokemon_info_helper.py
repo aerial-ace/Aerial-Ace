@@ -16,7 +16,6 @@ async def get_stats_embed(pokemon):
 
     if pokemon in all_pokemon:
         embd.title = "{poke}'s Stats".format(poke=pokemon.capitalize())
-        embd.description = "HP, Def, Sp.Def and Speed are `The more the better` stats \n"
         embd.add_field(name="Stats", value="```{stats}```".format(stats=cached_stats_data[pokemon]), inline=False)
 
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon.lower())
