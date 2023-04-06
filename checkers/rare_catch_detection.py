@@ -1,14 +1,14 @@
 import discord
-import datetime
+import random
 
-from helpers import starboard_helper
 from managers import cache_manager
+from helpers import starboard_helper, general_helper
 import config
 
 """detect rare catch message"""
 
 async def rare_check(message : discord.Message):    
-    if str(message.author.id) != config.POKETWO_ID:
+    if str(message.author.id) != config.ADMIN_ID:
         return
 
     catch_info = await determine_rare_catch(message.content)
@@ -25,6 +25,14 @@ async def rare_check(message : discord.Message):
         return
     
     await message.channel.send(embed=reply)
+
+    customization_reminder_possibility = 30
+
+    if random.randint(0, 99) < customization_reminder_possibility:
+
+        embd = await general_helper.get_info_embd(f"{config.AERIAL_ACE_EMOJI} Customize Starboard Embed!", "Enhance the starboard embed using various customization features available to premium servers. Get premium now and customize your starboard embeds to suit your servers. ", config.DEFAULT_COLOR, "Use -aa premium or join support server to know more.")
+
+        await message.channel.send(embed=embd)
 
     # Send to Starboard
     starboard_reply = await starboard_helper.send_starboard(str(message.guild.id), catch_info["user"], catch_info["level"], catch_info["pokemon"], message, catch_info["type"], catch_info["streak"], catch_info["hunt"])
