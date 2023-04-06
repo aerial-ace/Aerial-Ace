@@ -35,7 +35,9 @@ KO_FI_LINK = "https://ko-fi.com/aerial_ace"
 GITHUB_SPONSORS_LINK = "https://github.com/sponsors/aerial-ace"
 
 # Emojis
+AERIAL_ACE_EMOJI = "<:aalogo:1089238103975268433>"
 BULLET_EMOJI = "<a:arrow_arrow:939409283668410381>"
+SUB_SECTION_EMOJI = "<:CA2:1081449816271360040>"
 IMPORTANT_EMOJI = "<a:Important:940582149797601391>"
 ALERT_EMOJI = "<:alert:940589741714317332>"
 STREAK_EMOJI = "<:upgrades:1043145357070176407>"
@@ -77,7 +79,7 @@ DUELISH_POKEMON_FILE_LOCATION = "data/duelish_pokemons.json"
 
 # colors
 NORMAL_COLOR = 0x2B2D31
-DEFAULT_COLOR = discord.Color.blue()
+DEFAULT_COLOR = discord.Color.darker_grey()
 ERROR_COLOR = discord.Color.red()
 WARNING_COLOR = discord.Color.orange()
 RARE_CATCH_COLOR = discord.Color.gold()
