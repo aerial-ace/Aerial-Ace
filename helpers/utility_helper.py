@@ -154,22 +154,42 @@ async def register_suggestion(ctx, text : list()) -> None:
 # returns the donation embed
 async def get_donation_embed() -> discord.Embed:
 
-    embd = await general_helper.get_info_embd(title="Support Aerial Ace", desc="")
+    embd = await general_helper.get_info_embd(title=f"{config.PREMIUM_EMOJI}┃Premium - Aerial Ace", desc="")
 
-    embd.description += f"{config.BULLET_EMOJI} **TIER-3 : **\n"
+    #_You can now update the text of rare catch embed, and say a lot of things whether it be something more than Congrats, or straight out ask for its stats._
 
-    embd.description += "Fully customizable starboard text! \n_You can now update the text of rare catch embed, and say a lot of things whether it be something more than Congrats, or straight out ask for its stats._\n\n"
+    embd.add_field(
+        name=f"{config.BULLET_EMOJI} **Trainer Tier @** $2/month only",
+        value=f"{config.SUB_SECTION_EMOJI} Fully customizable starboard text!\n{config.SUB_SECTION_EMOJI} Supporter Role on Support Server.\n{config.SUB_SECTION_EMOJI} Catch-Streak detection System!",
+        inline=True
+    )
 
-    embd.description += f"{config.BULLET_EMOJI} **TIER-2 : **\n"
-    embd.description += "Fully customizable starboard image. \n_Server of this tier will get access to custom starboard rare/shiny catch image. Update it to your server mascot or pick a good anime gif, and slap it in, the choice is yours._\n"
-    embd.description += "Include rewards from the previous tiers.\n\n"
+    #_Server of this tier will get access to custom starboard rare/shiny catch image. Update it to your server mascot or pick a good anime gif, and slap it in, the choice is yours._
 
-    embd.description += f"{config.BULLET_EMOJI} **TIER-1 : **\n"
-    embd.description += "Fully [ We mean FULLY ] customizable starboard embed. \n_Servers of this tier have full control over how the starboard embed should look like. You can add custom invite links, vote links, messages, ask the users to perform certain task on catching a rare/shiny [ Good for events ] and what not. Definitely the most powerful and good for servers with a lot of events happening._\n"
-    embd.description += "Includes rewards from the previous tiers\n\n"
+    embd.add_field(
+        name=f"{config.BULLET_EMOJI} **Gym Leader Tier** @ $5/month only",
+        value=f"{config.SUB_SECTION_EMOJI} Fully customizable starboard image.\n{config.SUB_SECTION_EMOJI} Exclusive Access to Development Channels, and early sneak peak into new features. \n{config.SUB_SECTION_EMOJI} Include rewards from the previous tiers.",
+        inline=True
+    )
 
-    embd.description += "**To check the pricing, visit our patreon page.**\n\n"
+    #_Servers of this tier have full control over how the starboard embed should look like. You can add custom invite links, vote links, messages, ask the users to perform certain task on catching a rare/shiny [ Good for events ] and what not. Definitely the most powerful and good for servers with a lot of events happening._
 
-    embd.description += "__By becoming a member of these tiers, you directly support the development of Aerial Ace. The base functionality of aerial-ace is and will always be 100% free. These customizations are just a way to thank our awesome supporters who keep the bot alive.__"
+    embd.add_field(
+        name=f"{config.BULLET_EMOJI} **Champion Tier** @ $10/month only",
+        value=f"{config.SUB_SECTION_EMOJI} Fully [ We mean FULLY ] customizable starboard embed. \n{config.SUB_SECTION_EMOJI} Priority given to commands suggested and Premium Support. \n{config.SUB_SECTION_EMOJI} Includes a bonus 2 servers. \n{config.SUB_SECTION_EMOJI} Includes rewards from the previous tiers",
+        inline=True
+    )
+
+    embd.add_field(
+        name=f"{config.BULLET_EMOJI} **Elite Tier**",
+        value=f"{config.SUB_SECTION_EMOJI} Know more by vising our Patreon Page.",
+        inline=False
+    )
+
+    embd.add_field(
+        name=f"{config.BULLET_EMOJI} Thank you",
+        value="By becoming a member of these tiers, you directly support the development of Aerial Ace. The base functionality of aerial-ace is and will always be 100% free. These customizations are just a way to thank our awesome supporters who keep the bot alive.",
+        inline=False
+    )
 
     return embd
