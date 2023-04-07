@@ -5,7 +5,7 @@ from helpers import ruleset_helper
 
 class RuleSetModule(commands.Cog):
     
-    @commands.command(name="random_ruleset", aliases=["rrs, rr"], description="Returns a bunch of random rules for pokemon battles.")
+    @commands.command(name="random_ruleset", aliases=["rrs", "rr"], description="Returns a bunch of random rules for pokemon battles.")
     async def random_ruleset(self, ctx:commands.Context):
 
         reply = await ruleset_helper.get_random_ruleset_embed()
