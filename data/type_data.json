@@ -3820,5 +3820,33 @@
     "calyrex-shadow-rider": [
         "psychic",
         "ghost"
+    ],
+    "wyrdeer": [
+        "normal",
+        "psychic"
+    ],
+    "kleavor": [
+        "bug",
+        "rock"
+    ],
+    "ursaluna": [
+        "normal",
+        "ground"
+    ],
+    "basculegion": [
+        "water",
+        "ghost"
+    ],
+    "sneasler": [
+        "fighting",
+        "poison"
+    ],
+    "overqwil": [
+        "dark",
+        "poison"
+    ],
+    "enamorus": [
+        "fairy",
+        "flying"
     ]
 }
