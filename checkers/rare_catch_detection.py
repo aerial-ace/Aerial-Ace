@@ -1,7 +1,7 @@
 import discord
 import random
 
-from managers import cache_manager
+from managers import cache_manager, mongo_manager
 from helpers import starboard_helper, general_helper
 import config
 
@@ -17,8 +17,12 @@ async def rare_check(message : discord.Message):
     if catch_info is None or (catch_info["type"] == "" and catch_info["streak"] == 0):
         return None
 
+    server_details = await mongo_manager.manager.get_all_data("servers", {
+        "server_id" : str(message.guild.id)
+    })
+
     # get the rare catch details
-    reply = await starboard_helper.get_rare_catch_embd(str(message.guild.id), catch_info["user"], catch_info["pokemon"], catch_info["level"], catch_info["type"], catch_info["streak"], catch_info["hunt"])
+    reply = await starboard_helper.get_rare_catch_embd(server_details, catch_info["user"], catch_info["pokemon"], catch_info["level"], catch_info["type"], catch_info["streak"], catch_info["hunt"])
 
     # Send to current Channel
     if reply is None:
@@ -28,14 +32,14 @@ async def rare_check(message : discord.Message):
 
     customization_reminder_possibility = 30
 
-    if random.randint(0, 99) < customization_reminder_possibility:
+    if server_details[0].get("tier") == 0 and random.randint(0, 99) < customization_reminder_possibility:
 
         embd = await general_helper.get_info_embd(f"{config.AERIAL_ACE_EMOJI} Customize Starboard Embed!", "Enhance the starboard embed using various customization features available to premium servers. Get premium now and customize your starboard embeds to suit your servers. ", config.DEFAULT_COLOR, "Use -aa premium or join support server to know more.")
 
         await message.channel.send(embed=embd)
 
     # Send to Starboard
-    starboard_reply = await starboard_helper.send_starboard(str(message.guild.id), catch_info["user"], catch_info["level"], catch_info["pokemon"], message, catch_info["type"], catch_info["streak"], catch_info["hunt"])
+    starboard_reply = await starboard_helper.send_starboard(server_details, catch_info["user"], catch_info["level"], catch_info["pokemon"], message, catch_info["type"], catch_info["streak"], catch_info["hunt"])
 
     # send feedback in the current channel
     await message.channel.send(embed=starboard_reply)

@@ -179,16 +179,12 @@ async def get_starboard_embed(user_name : str, level : str, pokemon_id:str, mess
     return embd
 
 """Sends the star catch embed to the starboard"""
-async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, message:Message, type="", streak=0, is_hunt=False):
+async def send_starboard(server_details, user_id:str, level:str, pokemon:str, message:Message, type="", streak=0, is_hunt=False):
     
-    query = {"server_id" : server_id}
-
-    # get starboard channel
-    cursor = await mongo_manager.manager.get_all_data("servers", query)
     try:
-        data = cursor[0]
+        data = server_details[0]
     except:
-        data = await init_manager.register_guild_without_bs(server_id)
+        data = await init_manager.register_guild_without_bs(server_details[0].get("server_id"))
 
     starboard_channel_id = data["starboard"]
     tier = data.get("tier", 0)
@@ -216,18 +212,12 @@ async def send_starboard(server_id:str, user_id:str, level:str, pokemon:str, mes
     return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
 
 """returns the embed containing the rare catch info"""
-async def get_rare_catch_embd(server_id:str, _ping, _pokemon, _level, _type:str="", _streak=0, is_hunt=False):
-
-    query = {
-        "server_id" : server_id
-    }
-
-    cursor = await mongo_manager.manager.get_all_data("servers", query)
+async def get_rare_catch_embd(server_details, _ping, _pokemon, _level, _type:str="", _streak=0, is_hunt=False):
 
     try:
-        data = cursor[0]
+        data = server_details[0]
     except:
-        data = await init_manager.register_guild_without_bs(server_id)
+        data = await init_manager.register_guild_without_bs(server_details[0].get("server_id"))
 
     tier:int = data.get("tier", 0)
 
