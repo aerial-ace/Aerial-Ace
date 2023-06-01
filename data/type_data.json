@@ -3821,6 +3821,70 @@
         "psychic",
         "ghost"
     ],
+    "growlithe-hisui" : [
+        "fire",
+        "rock"
+    ],
+    "arcanine-hisui" : [
+        "fire",
+        "rock"
+    ],
+    "voltorb-hisui" : [
+        "electric",
+        "grass"
+    ],
+    "electrode-hisui" : [
+        "electric",
+        "grass"
+    ],
+    "typhlosion-hisui" : [
+        "fire",
+        "ghost"
+    ],
+    "qwilfish-hisui" : [
+        "dark",
+        "poison"
+    ],
+    "sneasel-hisui" : [
+        "fighting",
+        "poison"
+    ],
+    "samurott-hisui" : [
+        "water",
+        "dark"
+    ],
+    "lilligant-hisui" : [
+        "grass",
+        "fighting"
+    ],
+    "zorua-hisui" : [
+        "normal",
+        "ghost"
+    ],
+    "zoroark-hisui" : [
+        "normal",
+        "ghost"
+    ],
+    "braviary-hisui" : [
+        "psychic",
+        "flying"
+    ],
+    "sliggoo-hisui" : [
+        "steel",
+        "dragon"
+    ],
+    "goodra-hisui" : [
+        "steel",
+        "dragon"
+    ],
+    "avalugg-hisui" : [
+        "ice",
+        "rock"
+    ],
+    "decidueye-hisui" : [
+        "grass",
+        "fighting"
+    ],
     "wyrdeer": [
         "normal",
         "psychic"
@@ -3848,5 +3912,384 @@
     "enamorus": [
         "fairy",
         "flying"
+    ],
+    "sprigatito": [
+        "grass"
+    ],
+    "floragato": [
+        "grass"
+    ],
+    "meowscarada": [
+        "grass",
+        "dark"
+    ],
+    "fuecoco": [
+        "fire"
+    ],
+    "crocalor": [
+        "fire"
+    ],
+    "skeledirge": [
+        "fire",
+        "ghost"
+    ],
+    "quaxly": [
+        "water"
+    ],
+    "quaxwell": [
+        "water"
+    ],
+    "quaquaval": [
+        "water",
+        "fighting"
+    ],
+    "lechonk": [
+        "normal"
+    ],
+    "oinkologne": [
+        "normal"
+    ],
+    "tarountula": [
+        "bug"
+    ],
+    "spidops": [
+        "bug"
+    ],
+    "nymble": [
+        "bug"
+    ],
+    "lokix": [
+        "bug",
+        "dark"
+    ],
+    "pawmi": [
+        "electric"
+    ],
+    "pawmo": [
+        "electric",
+        "fighting"
+    ],
+    "pawmot": [
+        "electric",
+        "fighting"
+    ],
+    "tandemaus": [
+        "normal"
+    ],
+    "maushold": [
+        "normal"
+    ],
+    "fidough": [
+        "fairy"
+    ],
+    "dachsbun": [
+        "fairy"
+    ],
+    "smoliv": [
+        "grass",
+        "normal"
+    ],
+    "dolliv": [
+        "grass",
+        "normal"
+    ],
+    "arboliva": [
+        "grass",
+        "normal"
+    ],
+    "squawkabilly": [
+        "normal",
+        "flying"
+    ],
+    "nacli": [
+        "rock"
+    ],
+    "naclstack": [
+        "rock"
+    ],
+    "garganacl": [
+        "rock"
+    ],
+    "charcadet": [
+        "fire"
+    ],
+    "armarouge": [
+        "fire",
+        "psychic"
+    ],
+    "ceruledge": [
+        "fire",
+        "ghost"
+    ],
+    "tadbulb": [
+        "electric"
+    ],
+    "bellibolt": [
+        "electric"
+    ],
+    "wattrel": [
+        "electric",
+        "flying"
+    ],
+    "kilowattrel": [
+        "electric",
+        "flying"
+    ],
+    "maschiff": [
+        "dark"
+    ],
+    "mabosstiff": [
+        "dark"
+    ],
+    "shroodle": [
+        "poison",
+        "normal"
+    ],
+    "grafaiai": [
+        "poison",
+        "normal"
+    ],
+    "bramblin": [
+        "grass",
+        "ghost"
+    ],
+    "brambleghast": [
+        "grass",
+        "ghost"
+    ],
+    "toedscool": [
+        "ground",
+        "grass"
+    ],
+    "toedscruel": [
+        "ground",
+        "grass"
+    ],
+    "klawf": [
+        "rock"
+    ],
+    "capsakid": [
+        "grass"
+    ],
+    "scovillain": [
+        "grass",
+        "fire"
+    ],
+    "rellor": [
+        "bug"
+    ],
+    "rabsca": [
+        "bug",
+        "psychic"
+    ],
+    "flittle": [
+        "psychic"
+    ],
+    "espathra": [
+        "psychic"
+    ],
+    "tinkatink": [
+        "fairy",
+        "steel"
+    ],
+    "tinkatuff": [
+        "fairy",
+        "steel"
+    ],
+    "tinkaton": [
+        "fairy",
+        "steel"
+    ],
+    "wiglett": [
+        "water"
+    ],
+    "wugtrio": [
+        "water"
+    ],
+    "bombirdier": [
+        "flying",
+        "dark"
+    ],
+    "finizen": [
+        "water"
+    ],
+    "palafin": [
+        "water"
+    ],
+    "varoom": [
+        "steel",
+        "poison"
+    ],
+    "revavroom": [
+        "steel",
+        "poison"
+    ],
+    "cyclizar": [
+        "dragon",
+        "normal"
+    ],
+    "orthworm": [
+        "steel"
+    ],
+    "glimmet": [
+        "rock",
+        "poison"
+    ],
+    "glimmora": [
+        "rock",
+        "poison"
+    ],
+    "greavard": [
+        "ghost"
+    ],
+    "houndstone": [
+        "ghost"
+    ],
+    "flamigo": [
+        "flying",
+        "fighting"
+    ],
+    "cetoddle": [
+        "ice"
+    ],
+    "cetitan": [
+        "ice"
+    ],
+    "veluza": [
+        "water",
+        "psychic"
+    ],
+    "dondozo": [
+        "water"
+    ],
+    "tatsugiri": [
+        "dragon",
+        "water"
+    ],
+    "annihilape": [
+        "fighting",
+        "ghost"
+    ],
+    "clodsire": [
+        "poison",
+        "ground"
+    ],
+    "farigiraf": [
+        "normal",
+        "psychic"
+    ],
+    "dudunsparce": [
+        "normal"
+    ],
+    "kingambit": [
+        "dark",
+        "steel"
+    ],
+    "great-tusk": [
+        "ground",
+        "fighting"
+    ],
+    "scream-tail": [
+        "fairy",
+        "psychic"
+    ],
+    "brute-bonnet": [
+        "grass",
+        "dark"
+    ],
+    "flutter-mane": [
+        "ghost",
+        "fairy"
+    ],
+    "slither-wing": [
+        "bug",
+        "fighting"
+    ],
+    "sandy-shocks": [
+        "electric",
+        "ground"
+    ],
+    "iron-treads": [
+        "ground",
+        "steel"
+    ],
+    "iron-bundle": [
+        "ice",
+        "water"
+    ],
+    "iron-hands": [
+        "fighting",
+        "electric"
+    ],
+    "iron-jugulis": [
+        "dark",
+        "flying"
+    ],
+    "iron-moth": [
+        "fire",
+        "poison"
+    ],
+    "iron-thorns": [
+        "rock",
+        "electric"
+    ],
+    "frigibax": [
+        "dragon",
+        "ice"
+    ],
+    "arctibax": [
+        "dragon",
+        "ice"
+    ],
+    "baxcalibur": [
+        "dragon",
+        "ice"
+    ],
+    "gimmighoul": [
+        "ghost"
+    ],
+    "gholdengo": [
+        "steel",
+        "ghost"
+    ],
+    "wo-chien": [
+        "dark",
+        "grass"
+    ],
+    "chien-pao": [
+        "dark",
+        "ice"
+    ],
+    "ting-lu": [
+        "dark",
+        "ground"
+    ],
+    "chi-yu": [
+        "dark",
+        "fire"
+    ],
+    "roaring-moon": [
+        "dragon",
+        "dark"
+    ],
+    "iron-valiant": [
+        "fairy",
+        "fighting"
+    ],
+    "koraidon": [
+        "fighting",
+        "dragon"
+    ],
+    "miraidon": [
+        "electric",
+        "dragon"
+    ],
+    "walking-wake": [
+        "water",
+        "dragon"
+    ],
+    "iron-leaves": [
+        "grass",
+        "psychic"
     ]
 }
