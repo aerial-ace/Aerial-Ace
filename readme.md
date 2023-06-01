@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://i.imgur.com/TAWr46v.png" style="width : 150px; height : auto;" />
+  <img src="https://i.imgur.com/abFHWXf.png" style="width : 150px; height : auto;" />
 </h1>
 
 <h1 align="center">Aerial Ace</h1>
