@@ -2,8 +2,9 @@ from discord.ext import commands
 from discord import Embed
 import random
 
-from cogs import mail as mail_manager
 from views.ButtonViews import DonationView
+from cogs import mail as mail_manager
+from cogs import tips as tip_manager
 import config
 
 async def donation_reminder(ctx:commands.Context):
@@ -27,4 +28,10 @@ async def donation_reminder(ctx:commands.Context):
 
 async def process_post_commands(ctx:commands.Context):
 
-    await mail_manager.process_mail(ctx)
+    mail_reminder_probability = 30
+    tip_reminder_probability  = 50
+
+    if random.randrange(1, 100) < mail_reminder_probability:
+        await mail_manager.process_mail(ctx)
+    elif random.randint(1, 100) < tip_reminder_probability:
+        await tip_manager.TipsModule.send_random_tip(ctx.channel)

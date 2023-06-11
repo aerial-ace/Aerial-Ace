@@ -28,18 +28,14 @@ class MailModule(commands.Cog):
 # Mail reminder
 async def process_mail(ctx):
 
-        prob : int = 30
-        roll = random.randint(0, 100)
+        embd = discord.Embed(title=f"{config.ALERT_EMOJI} NOTICE {config.ALERT_EMOJI}", color=config.NORMAL_COLOR)
+        embd.description = f"**Random Rulesets** are here! Try them now!"
+        try:
+            embd.set_footer(text=f"Check the complete mail using {ctx.prefix}mail")
+        except:
+            pass # Dont add footer in mail reminder through slash commands
 
-        if roll > 0 and roll < prob:
-            embd = discord.Embed(title=f"{config.ALERT_EMOJI} NOTICE {config.ALERT_EMOJI}", color=config.NORMAL_COLOR)
-            embd.description = f"**Random Rulesets** are here! Try them now!"
-            try:
-                embd.set_footer(text=f"Check the complete mail using {ctx.prefix}mail")
-            except:
-                pass # Dont add footer in mail reminder through slash commands
-
-            await ctx.send(embed=embd)
+        await ctx.send(embed=embd)
 
 def setup(bot):
     mail_module = MailModule()

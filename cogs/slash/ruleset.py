@@ -8,7 +8,7 @@ from helpers import ruleset_helper
 
 class RuleSetSlashModule(commands.Cog):
     
-    @slash_command(name="random_ruleset", description="Returns a bunch of random rules for pokemon battles.")
+    @slash_command(name="random-ruleset", description="Returns a bunch of random rules for pokemon battles.")
     async def random_ruleset(self, ctx:ApplicationContext):
 
         reply = await ruleset_helper.get_random_ruleset_embed()
