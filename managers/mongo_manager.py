@@ -1,5 +1,6 @@
 import motor.motor_asyncio
 
+from managers import init_manager
 from helpers import logger
 
 class MongoManager:
@@ -21,6 +22,14 @@ class MongoManager:
 
         try:
             result_cursor = await self.db[collection_name].find(query).to_list(length=100)
+
+            # if no entry in the particular collection is present, create an empty entry into that collection
+            
+            if len(result_cursor) <= 0:
+                if collection_name == "battle":
+                    return [await init_manager.register_guild_for_battles(query.get("server_id"))]
+                elif collection_name == "tags":
+                    return [await init_manager.register_guild_for_tags(query.get("server_id"))]
         except:
             return None
 
