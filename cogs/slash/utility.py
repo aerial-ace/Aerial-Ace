@@ -61,9 +61,9 @@ class UtilitySlash(commands.Cog):
 
     """Donation Links"""
 
-    @slash_command(name="donation", description="Donate or become a patron to support the development of aerial ace")
+    @slash_command(name="premium", description="Donate or become a patron to support the development of aerial ace")
     async def donation(self, ctx:ApplicationContext):
-        reply = await utility_helper.get_donation_embed()
+        reply = await utility_helper.get_premium_embed()
         view = DonationView(200)
 
         await ctx.respond(embed=reply, view=view)

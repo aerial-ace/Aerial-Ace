@@ -69,7 +69,7 @@ class Utility(commands.Cog):
 
     @commands.command(name="premium", aliases=["patreon", "donation"], description="Subscribe to Patreon/Ko-Fi to get exclusive perks.")
     async def donation(self, ctx):
-        reply = await utility_helper.get_donation_embed()
+        reply = await utility_helper.get_premium_embed()
         view = DonationView(200)
 
         await ctx.send(embed=reply, view=view)

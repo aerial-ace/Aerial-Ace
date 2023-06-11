@@ -152,7 +152,7 @@ async def register_suggestion(ctx, text : list()) -> None:
     await suggestion_channel.send(embed=embd)
 
 # returns the donation embed
-async def get_donation_embed() -> discord.Embed:
+async def get_premium_embed() -> discord.Embed:
 
     embd = await general_helper.get_info_embd(title=f"{config.PREMIUM_EMOJI}┃Premium - Aerial Ace", desc="")
 
