@@ -10,7 +10,7 @@ tips = [
     "You can get premium customization and advanced aerial ace features by subscribing to aerial ace patreon. Use </premium:999727265908789408> to know more.",
     "You can customize the starboard embed's looks. Get premium now!",
     "You can log catch-streaks in starboard module as well. Available to all the premium servers.",
-    "You can use the auto-battle log module to log win/loss records of every battle in your server. Use </auto-battle-logging:1117315840333860865> to learn more",
+    "You can use the auto-battle log module to log win/loss records of every battle in your server. Use </auto-battle-logging:1117326199434256417> to learn more",
     "You can generate random rules for battling and add an extra layer of challenge. Use </random-ruleset:1088587224167231489> to know more",
     "You can generate random teams added challenge in your battles. Use </random-team:978913900005322776> or </random-matchup:978913900005322777> ",
     "You can create tags, assign users to them and ping them for shiny hunts, collections whatever. Use </tag:939844587529326633>, </pingtag:939844589433552896>",

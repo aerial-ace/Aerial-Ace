@@ -73,7 +73,7 @@ class BattleSystemSlash(commands.Cog):
 
     """Toggle AutoBattle Log module"""
 
-    @slash_command(name="auto-battle-logging", description="Toggles the auto logging for battles on/off", guilds=[751076697884852389])
+    @slash_command(name="auto-battle-logging", description="Toggles the auto logging for battles on/off")
     async def toggle_abl(self, ctx:ApplicationContext):
 
         reply = await battle_helper.toggle_auto_logging(str(ctx.guild.id))
