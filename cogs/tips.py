@@ -14,7 +14,7 @@ tips = [
     "You can generate random rules for battling and add an extra layer of challenge. Use </random-ruleset:1088587224167231489> to know more",
     "You can generate random teams added challenge in your battles. Use </random-team:978913900005322776> or </random-matchup:978913900005322777> ",
     "You can create tags, assign users to them and ping them for shiny hunts, collections whatever. Use </tag:939844587529326633>, </pingtag:939844589433552896>",
-    "You can get the best stats/movesets/nature info for your pokemon and train them to be the best for what they can be. Use </stats:939844386425024532>, </moveset:939844387893030933>, </nature:939844389948260382>",
+    "You can get the best </stats:939844386425024532>/</moveset:939844387893030933>/</nature:939844389948260382> info for your pokemon and train them to be the best for what they can be.",
     "You can get ability info using </ability:978913900005322774>",
     "You can express yourself with pokemon gifs using various commands like </cry:978913900378587179>, </dance:939545280351731733>, </pat:939845060298674236> etc.",
     "You can log battles(win/loss) manually by using `-aa lb` command and add them to battle leaderboard of your server.",
