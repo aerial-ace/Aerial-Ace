@@ -16,7 +16,12 @@ async def register_guild(bot : commands.Bot, guild : discord.Guild):
     server_duplicates = await mongo_manager.manager.get_documents_length("servers", {"server_id" : server_id})
     
     if server_duplicates <= 0:
-        entry = {"server_id" : server_id, "server_name" : server_name, "starboard" : "0"}
+        entry = {
+            "server_id" : server_id, 
+            "server_name" : server_name, 
+            "starboard" : "0",
+            "auto_battle_logging" : "0"
+        }
         await mongo_manager.manager.add_data("servers", entry)
 
     # Log it in support server
