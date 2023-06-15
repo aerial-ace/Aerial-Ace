@@ -20,8 +20,9 @@ async def register_guild(bot : commands.Bot, guild : discord.Guild):
             "server_id" : server_id, 
             "server_name" : server_name, 
             "starboard" : "0",
-            "auto_battle_logging" : "0"
+            "auto_battle_logging" : 0
         }
+
         await mongo_manager.manager.add_data("servers", entry)
 
     # Log it in support server
@@ -32,6 +33,11 @@ async def register_guild(bot : commands.Bot, guild : discord.Guild):
         name="Server Name",
         value=guild.name,
         inline=True
+    )
+    embed.add_field(
+        name="Server ID",
+        value=guild.id,
+        inline = True
     )
     embed.add_field(
         name="Member Count",
