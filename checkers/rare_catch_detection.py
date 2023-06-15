@@ -24,11 +24,14 @@ async def rare_check(message : discord.Message):
     # get the rare catch details
     reply = await starboard_helper.get_rare_catch_embd(server_details, catch_info["user"], catch_info["pokemon"], catch_info["level"], catch_info["type"], catch_info["streak"], catch_info["hunt"])
 
-    # Send to current Channel
     if reply is None:
         return
-    
-    await message.channel.send(embed=reply)
+
+    # send the rare catch alert in the current channel
+    try:    
+        await message.channel.send(embed=reply)
+    except discord.errors.Forbidden:
+        return # return if not allowed to send messages in the current channel
 
     customization_reminder_possibility = 30
 
