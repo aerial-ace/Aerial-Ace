@@ -7,7 +7,13 @@ import config
 
 """detect rare catch message"""
 
-async def rare_check(message : discord.Message):    
+async def rare_check(bot:discord.AutoShardedBot, message : discord.Message):    
+
+    bot_member:discord.Member = message.guild.get_member(bot.user.id)
+
+    if message.channel.permissions_for(bot_member).send_messages is False:
+        return
+
     if str(message.author.id) != config.POKETWO_ID:
         return
 

@@ -1,5 +1,4 @@
-from discord import Message, Member, Reaction
-from discord import AutoShardedBot
+from discord import AutoShardedBot, Message, Member, Reaction
 from asyncio import TimeoutError
 
 from managers import mongo_manager
@@ -7,6 +6,12 @@ from helpers import battle_helper
 import config
 
 async def determine_battle_message(bot:AutoShardedBot, message:Message):
+
+    bot_member:Member = message.guild.get_member(bot.user.id)
+
+    # return if bot is not allowed to send messages in this channel
+    if message.channel.permissions_for(bot_member).send_messages is False:
+        return 
 
     initiation_content = message.content
 
