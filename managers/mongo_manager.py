@@ -24,10 +24,11 @@ class MongoManager:
             result_cursor = await self.db[collection_name].find(query).to_list(length=100)
 
             # if no entry in the particular collection is present, create an empty entry into that collection
-            
             if len(result_cursor) <= 0:
                 if collection_name == "battles":
                     return [await init_manager.register_guild_for_battles(query.get("server_id"))]
+                elif collection_name == "servers":
+                    return [await init_manager.register_guild_without_bs(query.get("server_id"))]
                 elif collection_name == "tags":
                     return [await init_manager.register_guild_for_tags(query.get("server_id"))]
         except:
