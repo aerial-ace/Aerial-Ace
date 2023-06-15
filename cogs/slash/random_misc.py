@@ -15,7 +15,7 @@ class RandomMiscSlash(commands.Cog):
     @slash_command(name="random_pokemon", description="Shows a randomly chosen pokemon")
     async def random_pokemon(self, ctx:ApplicationContext):
         poke = await random_helper.get_random_poke()
-        reply = await random_helper.get_random_pokemon_embed(poke)
+        reply = await random_helper.get_random_pokemon_embed()
         view = GeneralView(200, True, True, False, True)
 
         await ctx.respond(embed=reply, view=view)
