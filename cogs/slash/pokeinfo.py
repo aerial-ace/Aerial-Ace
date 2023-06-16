@@ -10,7 +10,8 @@ class PokeInfoSlash(commands.Cog):
 
     default_view:GeneralView = None
 
-    def __init__(self):
+    @commands.Cog.listener()
+    async def on_ready(self):
         self.default_view = GeneralView(200, True, True, False, True)
 
     """For getting best duel stats"""
