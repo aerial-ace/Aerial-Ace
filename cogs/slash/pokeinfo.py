@@ -8,15 +8,19 @@ import config
 
 class PokeInfoSlash(commands.Cog):
 
+    default_view:GeneralView = None
+
+    def __init__(self):
+        self.default_view = GeneralView(200, True, True, False, True)
+
     """For getting best duel stats"""
 
     @slash_command(name="stats", description="Returns the best duel stats of the pokemon")
     async def stats(self, ctx : ApplicationContext, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_stats_embed(pokemon)
-        view = GeneralView(200, True, True, False, True)
 
-        await ctx.respond(embed=reply, view=view)
+        await ctx.respond(embed=reply, view=self.default_view)
 
     """For getting best duel moveset"""
 
@@ -24,9 +28,9 @@ class PokeInfoSlash(commands.Cog):
     async def moveset(self, ctx : ApplicationContext, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_moveset_embed(pokemon)
-        view = GeneralView(200, True, True, False, True)
 
-        await ctx.respond(embed=reply, view=view)
+
+        await ctx.respond(embed=reply, view=self.default_view)
 
     """For getting the best duel nature"""
 
@@ -34,9 +38,9 @@ class PokeInfoSlash(commands.Cog):
     async def nature(self, ctx : ApplicationContext, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_nature_embed(pokemon)
-        view = GeneralView(200, True, True, False, True)
 
-        await ctx.respond(embed=reply, view=view)
+
+        await ctx.respond(embed=reply, view=self.default_view)
 
     """For getting the weakness"""
 
@@ -44,9 +48,9 @@ class PokeInfoSlash(commands.Cog):
     async def weakness(self, ctx : ApplicationContext, pokemon : Option(str, description="Name of the pokemon", required=True)):
 
         reply = await pokemon_info_helper.get_weakness_embed([pokemon])
-        view = GeneralView(200, True, True, False, True)
 
-        await ctx.respond(embed=reply, view=view)
+
+        await ctx.respond(embed=reply, view=self.default_view)
 
 
     """For getting tierlists"""
@@ -60,10 +64,12 @@ class PokeInfoSlash(commands.Cog):
     @slash_command(name="tierlist", description="Returns the tier list of the select category")
     async def tierlist(self, ctx : ApplicationContext, category : Option(str, description="Select category", required=True, autocomplete=get_category)):
 
-        tier_link = config.TIER_LINK[category]
-        view = GeneralView(200, True, True, False, True)
-
-        await ctx.respond(tier_link, view=view)
+        try:
+            tier_link = config.TIER_LINK[category.lower()]
+        except:
+            return await ctx.respond(f"That is not a tier. Enter a good tier like `rare`, `mega`, `common`, `steel`, `eeveelution`")
+        
+        await ctx.respond(tier_link, view=self.default_view)
 
 def setup(bot : commands.Bot):
     bot.add_cog(PokeInfoSlash())
