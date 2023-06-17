@@ -1,5 +1,5 @@
 from discord.ext import commands
-from discord import HTTPException
+from discord import HTTPException, Forbidden
 
 from views.ButtonViews import GeneralView
 
@@ -23,6 +23,9 @@ class ErrorHandler(commands.Cog):
 
         # return if error is one from ignored exceptions
         if isinstance(error, ignored_exceptions):
+            return
+        
+        if isinstance(error, Forbidden):
             return
 
         if isinstance(error, commands.DisabledCommand):
