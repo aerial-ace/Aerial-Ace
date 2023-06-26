@@ -86,7 +86,7 @@ async def determine_battle_message(bot:AutoShardedBot, message:Message):
         return await message.channel.send("> Auto Battle Log Session Timed out! Please accept the battle invitation.")
 
     else:
-        await message.channel.send("> Auto Battle Log Session Started! This will Automatically log the battle results into the battle leaderboard. If you don't want this functionality, use `-aa abl` to Disable this module!\n> **This feature is still in beta!**")
+        await message.channel.send("> Auto Battle Log Session Started! \n**NOTE: **Auto Battle Logging Module is coming out of beta and will be released as a premium feature! If you want to continue using it, please support aerial ace on patreon.")
 
     conclusion_type = None
     winner          = None
