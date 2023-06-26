@@ -168,7 +168,7 @@ async def get_premium_embed() -> discord.Embed:
 
     embd.add_field(
         name=f"{config.BULLET_EMOJI} **Gym Leader Tier** @ $5/month only",
-        value=f"{config.SUB_SECTION_EMOJI} Fully customizable starboard image.\n{config.SUB_SECTION_EMOJI} Exclusive Access to Development Channels, and early sneak peak into new features. \n{config.SUB_SECTION_EMOJI} Include rewards from the previous tiers.",
+        value=f"{config.SUB_SECTION_EMOJI} Server Wide Automatic Battle Logging\n{config.SUB_SECTION_EMOJI} Fully customizable starboard image.\n{config.SUB_SECTION_EMOJI} Exclusive Access to Development Channels, and early sneak peak into new features. \n{config.SUB_SECTION_EMOJI} Include rewards from the previous tiers.",
         inline=True
     )
 
