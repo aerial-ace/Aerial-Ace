@@ -16,7 +16,8 @@
 <p align="center">
   Aerial Ace is a helper bot for <a href="https://github.com/poketwo/poketwo">Poketwo</a> and <a href="https://play.pokemonshowdown.com/">Showdown</a> which provide various functionalities on top of being a Pokédex.<br><br>
   <b>Prefix</b> : `-aa`<br>
-  <b>Website : <a href="https://aerial-ace.github.io/">Aerial Ace</a></b>
+  <b>Website : <a href="https://aerial-ace.github.io/">Aerial Ace</a></b><br><br>
+  <img src="https://discord.c99.nl/widget/theme-1/908384747393286174.png">
 </p>
 <hr>
 <h2 align="center">
