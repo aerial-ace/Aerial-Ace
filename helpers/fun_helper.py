@@ -45,7 +45,11 @@ links = {
         "{user} is crying, sad" : "https://i.imgur.com/hJc70Sa.gif",
         "{user} cried hard" : "https://i.imgur.com/iVfgbHw.gif",
         "{user} is crying" : "https://i.imgur.com/lucbsXD.gif",
-        "cry cry bruh" : "https://i.imgur.com/SoTPtkx.gif"
+        "cry cry bruh" : "https://i.imgur.com/SoTPtkx.gif",
+        "cry cry cry" : "https://media.tenor.com/lmA7VALYIAsAAAAC/sad-pikachu.gif",
+        "cry {user} cry" : "https://media.tenor.com/wBqI9JmzssAAAAAC/sad-pikachu.gif",
+        "{user} is group crying" : "https://media.tenor.com/lbXDE-kattMAAAAC/raboot-pikachu.gif",
+        "{user} cried, hard" : "https://media.tenor.com/7RirD_dcewgAAAAC/crying-pokemon.gif"
     },
     "hug" : {
         "{user} hugged {target}" : "https://i.imgur.com/WKSjzXx.gif",
