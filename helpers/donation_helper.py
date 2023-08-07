@@ -1,7 +1,8 @@
-from discord import Embed, Guild
+from discord import Embed, Guild, Member
+import pdb
 
 from managers import mongo_manager
-from helpers import logger
+from helpers import logger, general_helper
 from config import NORMAL_COLOR
 
 async def set_channel(server_id:int, channel_id:int):
@@ -68,5 +69,45 @@ async def get_donation_leaderboard_embed(server:Guild) -> Embed:
         user_id   = donation[0]
 
         embd.description += "`{} | {} | {} | {} | {} |` {} \n".format(f"{pos + 1}".ljust(3, " "), f"{pokecoins}".ljust(9, " "), f"{shinies}".ljust(5, " "), f"{rares}".ljust(5, " "), f"{redeems}".ljust(7, " "), f"[{user_name[:12]}](https://discord.com/users/{user_id})".ljust(9, " "))
+        embd.description += "`-#- | Pokecoins | Shiny | Rares | Redeems | Donator`"
+        embd.description += "`-------------------------------------------`"
 
     return embd
+
+async def change_donation_values(server:Guild, target:Member, pokecoins:int, shinies:int, rares:int, redeems:int) -> bool:
+
+    query = {"server_id" : str(server.id)}
+
+    cursor = await mongo_manager.manager.get_all_data("donations", query)
+
+    data = cursor[0]
+
+    donations = data.get("donations")
+
+    target_data = donations.get(str(target.id))
+
+    target_data["name"]      = target.name
+    target_data["pokecoins"] = int(pokecoins)
+    target_data["shinies"]   = int(shinies)
+    target_data["rares"]     = int(rares)
+    target_data["redeems"]   = int(redeems)
+
+    value = await general_helper.get_trade_value(pokecoins, shinies, rares, redeems)
+
+    target_data["value"] = value
+
+    donations[str(target.id)] = target_data
+
+    try:
+        await mongo_manager.manager.update_all_data(
+            col_name="donations",
+            query=query,
+            updated_data={"donations" : donations}
+        )
+
+    except:
+        return False
+
+    else:
+        return True
+
