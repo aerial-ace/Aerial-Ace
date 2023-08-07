@@ -1,9 +1,39 @@
 from discord import Embed, Guild, Member
-import pdb
 
 from managers import mongo_manager
 from helpers import logger, general_helper
 from config import NORMAL_COLOR
+
+async def get_donation_information_embed(server:Guild) -> Embed:
+
+    cursor = await mongo_manager.manager.get_all_data("donations", {"server_id" : str(server.id)})
+
+    data = cursor[0]
+
+    embd = Embed(title=f"{server.name}'s Donation Information", color=NORMAL_COLOR)
+
+    channel_id = data.get("channel_id", None)
+    embd.add_field(
+        name="Channel",
+        value=f"<#{channel_id}>" if channel_id is not None else "N/A",
+        inline=True
+    )
+
+    staff_role_id = data.get("staff_role_id", None)
+    embd.add_field(
+        name="Staff Role",
+        value=f"<@&{staff_role_id}>" if staff_role_id is not None else "N/A",
+        inline=True
+    )
+
+    log_channel_id = data.get("log_channel_id", None)
+    embd.add_field(
+        name="Log Channel",
+        value=f"<#{log_channel_id}>" if log_channel_id is not None else "N/A",
+        inline=True
+    )
+
+    return embd
 
 async def set_channel(server_id:int, channel_id:int):
 
@@ -69,8 +99,6 @@ async def get_donation_leaderboard_embed(server:Guild) -> Embed:
         user_id   = donation[0]
 
         embd.description += "`{} | {} | {} | {} | {} |` {} \n".format(f"{pos + 1}".ljust(3, " "), f"{pokecoins}".ljust(9, " "), f"{shinies}".ljust(5, " "), f"{rares}".ljust(5, " "), f"{redeems}".ljust(7, " "), f"[{user_name[:12]}](https://discord.com/users/{user_id})".ljust(9, " "))
-        embd.description += "`-#- | Pokecoins | Shiny | Rares | Redeems | Donator`"
-        embd.description += "`-------------------------------------------`"
 
     return embd
 

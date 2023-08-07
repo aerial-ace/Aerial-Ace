@@ -9,7 +9,10 @@ class DonationModule(commands.Cog):
     @commands.group(name="donation", aliases=["dono"], description="Parent command for all the donation related commands.")
     async def donation(self, context:commands.Context):
         if context.subcommand_passed is None:
-            return await context.reply("Please provide a valid subcommand.")
+            
+            reply = await donation_helper.get_donation_information_embed(context.guild)
+
+            await context.send(embed=reply)
         
     @donation.command(name="channel", aliases=["ch"], description="Change the donation channel using this command")
     async def channel(self, context:commands.Context, channel:TextChannel):
@@ -104,6 +107,7 @@ class DonationModule(commands.Cog):
 
         if isinstance(error, commands.errors.BadArgument) or isinstance(error, commands.errors.TooManyArguments):
             await context.reply("The parameters must follow this structure : \n`-aa donation change <user-id> <pokecoins> <shinies> <rares> <redeems>`")
+
 
 def setup(bot : commands.Bot):
     bot.add_cog(DonationModule())
