@@ -12,6 +12,13 @@ POKETWO_ID = "716390085896962058"
 
 MAX_TAG_TIMER_VALUE = 500
 
+TRADE_ITEM_WEIGHT = {
+    "pokecoins" : 1,
+    "shinies"    : 50000,
+    "rares"     : 5000,
+    "redeems"   : 40000
+}
+
 # Mongo Data
 MONGO_URI = os.environ["MONGO"]
 

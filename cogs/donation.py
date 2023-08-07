@@ -25,6 +25,24 @@ class DonationModule(commands.Cog):
         else:
             await context.reply("Some Error occurred while trying to set Donation Channel!")
 
+    @donation.command(name="staff", description="Change the staff role ID.")
+    async def staff(self, context:commands.Context, role_id:int):
+
+        if context.author.id != context.guild.owner.id:
+            return await context.reply("This command can only be run by server owner!")
+        
+        if await donation_helper.set_staff_role(context.guild.id, role_id):
+            return await context.send("Donation Staff Role ID is now set to `{}`".format(role_id))
+        else:
+            return await context.send("Error Occurred!")
+
+    @donation.command(name="leaderboard", aliases=["lb"], description="Returns the top server donators")
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def leaderboard(self, context:commands.Context):
+
+        embd = await donation_helper.get_donation_leaderboard_embed(context.guild)
+
+        await context.send(embed=embd)
 
 def setup(bot : commands.Bot):
     bot.add_cog(DonationModule())

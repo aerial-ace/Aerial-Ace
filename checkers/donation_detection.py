@@ -3,7 +3,8 @@ from discord import Message
 
 from managers import mongo_manager
 from managers import cache_manager
-from config import POKETWO_ID
+from helpers import general_helper
+from config import POKETWO_ID, TRADE_ITEM_WEIGHT
 
 async def donation_check(bot:AutoShardedBot, message:Message):
 
@@ -95,7 +96,7 @@ async def donation_check(bot:AutoShardedBot, message:Message):
     except:
         return await message.channel.send("> No response from Poketwo Recieved, Donation Log session cancelled!")
     else:
-        await message.channel.send("> Donation Log Session Started! This donation will be logged automatically on completion!")
+        await message.channel.send("> Donation Log Session Started! This donation will be logged automatically on completion!\n**NOTE** : Please don't add more than 20 items (1 page) at a time.")
 
     pokecoins = 0
     rares     = 0
@@ -152,9 +153,8 @@ async def donation_check(bot:AutoShardedBot, message:Message):
         await log_donation(message.guild.id, donator.id, pokecoins, rares, shinies, redeems)
 
         await message.channel.send("Donation has been logged!")
-
         
-async def log_donation(server_id:int, donator_id:int, pokecoins:int=0, rares:int=0, shinies:int=0, redeems:int=0):
+async def log_donation(server_id:int, donator:Member, pokecoins:int=0, rares:int=0, shinies:int=0, redeems:int=0):
 
     cursor = await mongo_manager.manager.get_all_data(
         collection_name="donations",
@@ -167,23 +167,31 @@ async def log_donation(server_id:int, donator_id:int, pokecoins:int=0, rares:int
 
     """
     donations : {
-        "398309574938570357" : {
-            "shinies" : 43,
-            "rares" : 33,
-            "pokecoins" : 34545,
-            "redeems" : 4534534
+        "348239489238473298" : {
+        
+            "name"      : "Dev",
+            "pokecoins" : 23942042,
+            "shinies"   : 23,
+            "rares"     : 199,
+            "redeems"   : 25,
+            "value"     : 0
         }
-    }
+    ]
     """
 
-    user_donations = donations.get(str(donator_id), {})
+    # Calculate the approximate pokecoin value of all items
+    value = await general_helper.get_trade_value(pokecoins, shinies, rares, redeems)
 
+    user_donations = donations.get(str(donator.id), {})
+
+    user_donations["name"] = donator.name
     user_donations["shinies"] = user_donations.get("shinies", 0) + shinies
     user_donations["rares"] = user_donations.get("rares", 0) + rares
     user_donations["pokecoins"] = user_donations.get("pokecoins", 0) + pokecoins
     user_donations["redeems"] = user_donations.get("redeems", 0) + redeems
+    user_donations["value"] = value
 
-    donations[str(donator_id)] = user_donations
+    donations[str(donator.id)] = user_donations
 
     await mongo_manager.manager.update_all_data(
         col_name="donations",
