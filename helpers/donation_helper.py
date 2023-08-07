@@ -139,3 +139,13 @@ async def change_donation_values(server:Guild, target:Member, pokecoins:int, shi
     else:
         return True
 
+async def set_log_channel(server_id:int, log_channel_id:int):
+
+    await mongo_manager.manager.update_all_data(
+        col_name="donations",
+        query={"server_id" : str(server_id)},
+        updated_data={
+            "log_channel_id" : str(log_channel_id)
+        } 
+    )
+

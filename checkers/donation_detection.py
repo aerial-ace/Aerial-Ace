@@ -1,10 +1,12 @@
 from discord import AutoShardedBot, Member
-from discord import Message
+from discord import Message, TextChannel, Embed
+from datetime import datetime
+import pdb
 
 from managers import mongo_manager
 from managers import cache_manager
 from helpers import general_helper
-from config import POKETWO_ID, TRADE_ITEM_WEIGHT
+from config import POKETWO_ID, NORMAL_COLOR
 
 async def donation_check(bot:AutoShardedBot, message:Message):
 
@@ -150,18 +152,55 @@ async def donation_check(bot:AutoShardedBot, message:Message):
         return await message.channel.send("> Donation Logging Session Timed Out!")
     else:
 
-        await log_donation(message.guild.id, donator.id, pokecoins, rares, shinies, redeems)
+        await log_donation(message.guild.id, donator, pokecoins, rares, shinies, redeems, data_cursor)
+
+        pdb.set_trace() 
+
+        log_channel:TextChannel = message.guild.get_channel(int(data_cursor[0].get("log_channel_id")))
+
+        log_embd = Embed(title="Donation Log", color=NORMAL_COLOR)
+
+        log_embd.add_field(
+            name="Donator",
+            value=donator.mention,
+            inline=True
+        )
+
+        log_embd.add_field(
+            name="Staff Involved",
+            value=staff.mention,
+            inline=True
+        )
+
+        log_embd.add_field(
+            name="Reference ID",
+            value=int(datetime.now().timestamp()),
+            inline=False
+        )
+
+        donated_items_str = "**Pokecoins** : {}\n**Shinies** : {}\n**Rares** : {}\n**Redeems** : {}".format(pokecoins, shinies, rares, redeems)
+
+        log_embd.add_field(
+            name="Items Donated",
+            value=donated_items_str,
+            inline=False
+        )
+
+        log_embd.timestamp = datetime.now()
+
+        await log_channel.send(embed=log_embd)
 
         await message.channel.send("Donation has been logged!")
         
-async def log_donation(server_id:int, donator:Member, pokecoins:int=0, rares:int=0, shinies:int=0, redeems:int=0):
+async def log_donation(server_id:int, donator:Member, pokecoins:int=0, rares:int=0, shinies:int=0, redeems:int=0, data_cursor=None):
 
-    cursor = await mongo_manager.manager.get_all_data(
-        collection_name="donations",
-        query={"server_id" : str(server_id)}
-    )
+    if data_cursor is None:
+        data_cursor = await mongo_manager.manager.get_all_data(
+            collection_name="donations",
+            query={"server_id" : str(server_id)}
+        )
 
-    data = cursor[0]
+    data = data_cursor[0]
 
     donations = data.get("donations", None)
 

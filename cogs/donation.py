@@ -108,6 +108,18 @@ class DonationModule(commands.Cog):
         if isinstance(error, commands.errors.BadArgument) or isinstance(error, commands.errors.TooManyArguments):
             await context.reply("The parameters must follow this structure : \n`-aa donation change <user-id> <pokecoins> <shinies> <rares> <redeems>`")
 
+    @donation.command(name="log", aliases=["lc"], description="Change the log channel")
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def log_channel(self, context:commands.Context, log_channel:TextChannel):
+
+        bot_member = context.guild.get_member(context.bot.user.id)
+
+        if log_channel.permissions_for(bot_member).send_messages is False:
+            return await context.send("Not allowed to send messages in {}! Check Permissions.".format(log_channel.mention))
+
+        await donation_helper.set_log_channel(context.guild.id, log_channel.id)
+
+        await context.reply("Log Channel Updated!")
 
 def setup(bot : commands.Bot):
     bot.add_cog(DonationModule())
