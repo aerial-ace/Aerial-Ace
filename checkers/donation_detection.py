@@ -1,12 +1,11 @@
 from discord import AutoShardedBot, Member
 from discord import Message, TextChannel, Embed
 from datetime import datetime
-import pdb
 
 from managers import mongo_manager
 from managers import cache_manager
 from helpers import general_helper
-from config import POKETWO_ID, NORMAL_COLOR
+from config import POKETWO_ID, NORMAL_COLOR, INFO_EMOJI
 
 async def donation_check(bot:AutoShardedBot, message:Message):
 
@@ -154,8 +153,6 @@ async def donation_check(bot:AutoShardedBot, message:Message):
 
         await log_donation(message.guild.id, donator, pokecoins, rares, shinies, redeems, data_cursor)
 
-        pdb.set_trace() 
-
         log_channel:TextChannel = message.guild.get_channel(int(data_cursor[0].get("log_channel_id")))
 
         log_embd = Embed(title="Donation Log", color=NORMAL_COLOR)
@@ -173,12 +170,12 @@ async def donation_check(bot:AutoShardedBot, message:Message):
         )
 
         log_embd.add_field(
-            name="Reference ID",
-            value=int(datetime.now().timestamp()),
-            inline=False
+            name="Status",
+            value=f"{INFO_EMOJI} Not Collected",
+            inline=True
         )
 
-        donated_items_str = "**Pokecoins** : {}\n**Shinies** : {}\n**Rares** : {}\n**Redeems** : {}".format(pokecoins, shinies, rares, redeems)
+        donated_items_str = "```Pokecoins : {}\nShinies : {}\nRares : {}\nRedeems : {}```".format(pokecoins, shinies, rares, redeems)
 
         log_embd.add_field(
             name="Items Donated",
@@ -186,7 +183,7 @@ async def donation_check(bot:AutoShardedBot, message:Message):
             inline=False
         )
 
-        log_embd.timestamp = datetime.now()
+        log_embd.set_thumbnail(url=donator.avatar.url)
 
         await log_channel.send(embed=log_embd)
 

@@ -1,8 +1,10 @@
 from discord.ext import commands
-from discord import TextChannel, Member, Embed, Interaction
+from discord import TextChannel, Member, Embed, Interaction, Message
+from discord import message_command, ApplicationContext
 
 from views.ButtonViews import AcceptanceView
 from helpers import donation_helper
+from config import ACCEPTED_EMOJI, INFO_EMOJI
 
 class DonationModule(commands.Cog):
 
@@ -32,8 +34,9 @@ class DonationModule(commands.Cog):
     @donation.command(name="staff", description="Change the staff role ID.")
     async def staff(self, context:commands.Context, role_id:int):
 
-        if context.author.id != context.guild.owner.id:
-            return await context.reply("This command can only be run by server owner!")
+        # TODO : Owner Only Command
+        # if context.author.id != context.guild.owner.id:
+        #     return await context.reply("This command can only be run by server owner!")
         
         if await donation_helper.set_staff_role(context.guild.id, role_id):
             return await context.send("Donation Staff Role ID is now set to `{}`".format(role_id))
@@ -120,6 +123,52 @@ class DonationModule(commands.Cog):
         await donation_helper.set_log_channel(context.guild.id, log_channel.id)
 
         await context.reply("Log Channel Updated!")
+
+    @message_command(name="Collected", guild_ids=[751076697884852389])
+    async def collect(self, ctx: ApplicationContext, message:Message):
+
+        if message.author != ctx.bot.user or len(message.embeds) <= 0:
+            return await ctx.respond("This is not a Log Message! Please use this command on a Log Message to the donation as collected!", ephemeral=True)
+
+        # TODO : Owner Only Command
+        # if ctx.author.id != ctx.guild.owner.id:
+        #     return await ctx.respond("This command can only be used by the server owner!")
+
+        main_embd = message.embeds[0]
+
+        if main_embd.title != "Donation Log":
+            return await ctx.respond("This is not a Log Message! Please use this command on a Log Message to the donation as collected!", ephemeral=True)
+
+        main_embd.set_field_at(2, name="Status", value=f"{ACCEPTED_EMOJI} Collected", inline=True)
+
+        await ctx.interaction.response.defer(ephemeral=True)
+
+        await message.edit(embed=main_embd)
+
+        await ctx.interaction.followup.send("Marked as Collected!", ephemeral=True)
+
+    @message_command(name="Not Collected", guild_ids=[751076697884852389])
+    async def not_collect(self, ctx: ApplicationContext, message:Message):
+
+        if message.author != ctx.bot.user or len(message.embeds) <= 0:
+            return await ctx.respond("This is not a Log Message! Please use this command on a Log Message to the donation as collected!", ephemeral=True)
+
+        # TODO : Owner Only Command
+        # if ctx.author.id != message.guild.owner.id:
+        #     return await ctx.respond("This command can only be used by the server owner!")
+
+        main_embd = message.embeds[0]
+
+        if main_embd.title != "Donation Log":
+            return await ctx.respond("This is not a Log Message! Please use this command on a Log Message to the donation as collected!", ephemeral=True)
+
+        main_embd.set_field_at(2, name="Status", value=f"{INFO_EMOJI} Not Collected", inline=True)
+
+        await ctx.interaction.response.defer(ephemeral=True)
+
+        await message.edit(embed=main_embd)
+
+        await ctx.interaction.followup.send("Marked as Collected!", ephemeral=True)
 
 def setup(bot : commands.Bot):
     bot.add_cog(DonationModule())
