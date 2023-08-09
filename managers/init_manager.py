@@ -89,6 +89,23 @@ async def register_guild_for_tags(guild_id:str):
         "timer" : {}
     }
 
+async def register_guild_for_donations(guild_id:str):
+
+    # create empty tags entry
+    server_duplicates = await mongo_manager.manager.get_documents_length("donations", {"server_id" : guild_id})
+
+    if server_duplicates <= 0:
+        entry = {"server_id" : guild_id, "channel_id" : "0", "donations" : {}, "staff_role_id" : "0", "log_channel_id" : "0"}
+        await mongo_manager.manager.add_data("donations", entry)
+
+    return {
+        "server_id" : guild_id,
+        "channel_id" : "0",
+        "donations" : {},
+        "staff_role_id" : "0",
+        "log_channel_id" : "0"
+    }
+
 # register guild in the database without other bullshit
 
 async def register_guild_without_bs(guild_id:str, guild_name:str="NONE"):

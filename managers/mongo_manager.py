@@ -31,6 +31,8 @@ class MongoManager:
                     return [await init_manager.register_guild_without_bs(query.get("server_id"))]
                 elif collection_name == "tags":
                     return [await init_manager.register_guild_for_tags(query.get("server_id"))]
+                elif collection_name == "donations":
+                    return [await init_manager.register_guild_for_donations(query.get("server_id"))]
         except:
             return None
 

@@ -17,14 +17,18 @@ class DonationModule(commands.Cog):
             await context.send(embed=reply)
         
     @donation.command(name="channel", aliases=["ch"], description="Change the donation channel using this command")
-    async def channel(self, context:commands.Context, channel:TextChannel):
+    async def channel(self, context:commands.Context, channel:TextChannel=None):
 
         bot:commands.Bot = context.bot
 
-        if channel.permissions_for(context.guild.get_member(bot.user.id)).send_messages is False:
-            return await context.reply("Aerial Ace isn't allowed to send messages in that channel! Please give appropriate permissions.")
-        
-        outcome = await donation_helper.set_channel(context.guild.id, channel.id)
+        if channel is not None:
+            if channel.permissions_for(context.guild.get_member(bot.user.id)).send_messages is False:
+                return await context.reply("Aerial Ace isn't allowed to send messages in that channel! Please give appropriate permissions.")
+                
+            outcome = await donation_helper.set_channel(context.guild.id, channel.id)
+        else:
+            outcome = await donation_helper.set_channel(context.guild.id, None)
+
 
         if outcome is True:
             await context.reply("Donation Channel was successfully set to {}".format(channel.mention))
@@ -57,7 +61,7 @@ class DonationModule(commands.Cog):
 
         confirmation = Embed(title="Confirm?")
 
-        confirmation.add_field(
+        confirmation.add_field( 
             name="Pokecoins",
             value=pokecoins,
             inline=True
@@ -100,7 +104,7 @@ class DonationModule(commands.Cog):
                 await context.reply("Error Occurred while trying to make changes!")
                 return False
 
-        def decline_callback():
+        async def decline_callback(interaction:Interaction):
             return False
 
         await context.send(embed=confirmation, view=AcceptanceView(200, acceptance_callback, decline_callback))
@@ -112,6 +116,7 @@ class DonationModule(commands.Cog):
             await context.reply("The parameters must follow this structure : \n`-aa donation change <user-id> <pokecoins> <shinies> <rares> <redeems>`")
 
     @donation.command(name="log", aliases=["lc"], description="Change the log channel")
+    @commands.check(administrator=True)
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def log_channel(self, context:commands.Context, log_channel:TextChannel):
 
@@ -124,7 +129,43 @@ class DonationModule(commands.Cog):
 
         await context.reply("Log Channel Updated!")
 
-    @message_command(name="Collected", guild_ids=[751076697884852389])
+    @donation.command(name="clear", description="Clears the battle leaderboard.")
+    @commands.cooldown(1, 20, commands.BucketType.user)
+    @commands.check(administrator=True)
+    async def leaderboard_clear(self, context:commands.Context):
+        
+        async def acceptance_callback(interaction:Interaction):
+            await interaction.response.defer()
+
+            outcome = await donation_helper.clear_leaderboard(context.guild.id)
+
+            if outcome:
+                await interaction.response.send_message("Donation Leaderboard Cleared")
+                return True
+            else:
+                await interaction.response.send_message("Error Occurred!")
+                return False
+
+        async def decline_callback(interaction:Interaction):
+            return False
+
+        embd = Embed(title="Are you sure?", description="This change is irreversible!")
+
+        await context.reply(embed=embd, view=AcceptanceView(200, acceptance_callback, decline_callback))
+
+    @donation.command(name="remove", aliases=["rm"], description="Remove a member from the leaderboard.")
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.check(administrator=True)
+    async def leaderboard_remove(self, context:commands.Context, target:Member):
+
+        outcome = await donation_helper.remove_user(context.guild.id, target.id)
+
+        if outcome:
+            return await context.reply("{} has been removed from the leaderboard.".format(target.mention))
+        else:
+            return await context.reply("Error occurred while trying to remove the user.")
+        
+    @message_command(name="Collected")
     async def collect(self, ctx: ApplicationContext, message:Message):
 
         if message.author != ctx.bot.user or len(message.embeds) <= 0:
@@ -147,7 +188,7 @@ class DonationModule(commands.Cog):
 
         await ctx.interaction.followup.send("Marked as Collected!", ephemeral=True)
 
-    @message_command(name="Not Collected", guild_ids=[751076697884852389])
+    @message_command(name="Not Collected")
     async def not_collect(self, ctx: ApplicationContext, message:Message):
 
         if message.author != ctx.bot.user or len(message.embeds) <= 0:

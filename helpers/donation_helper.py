@@ -45,6 +45,8 @@ async def set_channel(server_id:int, channel_id:int):
             query=query,
             updated_data={
                 "channel_id" : str(channel_id)
+            } if channel_id is not None else {
+                "channel_id" : "0"
             }
         )
 
@@ -148,4 +150,34 @@ async def set_log_channel(server_id:int, log_channel_id:int):
             "log_channel_id" : str(log_channel_id)
         } 
     )
+
+async def clear_leaderboard(server_id:int):
+
+    try:
+        await mongo_manager.manager.update_all_data(
+            col_name="donations",
+            query={"server_id" : str(server_id)},
+            updated_data={
+                "donations" : {}
+            }
+        )
+    except:
+        return False
+    else:
+        return True
+
+async def remove_user(server_id:int, user_id:int):
+
+    await mongo_manager.manager.update_all_data(
+        col_name="donations",
+        query={"server_id" : str(server_id)},
+        
+    )
+
+
+
+
+
+
+
 
