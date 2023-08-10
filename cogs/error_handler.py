@@ -42,8 +42,6 @@ class ErrorHandler(commands.Cog):
 
         if isinstance(error, commands.NotOwner):
             return await ctx.reply("You are not supposed to use this command :>", view=view)
-
-        await ctx.reply("Error Occurred ```{}```".format(error), view=view)
     
 
 def setup(bot:commands.Bot):
