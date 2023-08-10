@@ -1,6 +1,5 @@
 from discord import AutoShardedBot, Member
 from discord import Message, TextChannel, Embed
-from datetime import datetime
 
 from managers import mongo_manager
 from managers import cache_manager
@@ -146,7 +145,7 @@ async def donation_check(bot:AutoShardedBot, message:Message):
         return True
 
     try:
-        await bot.wait_for("message", check=wait_for_trade_completion, timeout=360)
+        trade_complete_message = await bot.wait_for("message", check=wait_for_trade_completion, timeout=360)
     except TimeoutError as e:
         return await message.channel.send("> Donation Logging Session Timed Out!")
     else:
@@ -172,6 +171,12 @@ async def donation_check(bot:AutoShardedBot, message:Message):
         log_embd.add_field(
             name="Status",
             value=f"{INFO_EMOJI} Not Collected",
+            inline=False
+        )
+
+        log_embd.add_field(
+            name="Teleport",
+            value="[Click Here]({})".format(trade_complete_message.jump_url),
             inline=True
         )
 
@@ -215,16 +220,21 @@ async def log_donation(server_id:int, donator:Member, pokecoins:int=0, rares:int
     ]
     """
 
-    # Calculate the approximate pokecoin value of all items
-    value = await general_helper.get_trade_value(pokecoins, shinies, rares, redeems)
+    user_donations     = donations.get(str(donator.id), {})
 
-    user_donations = donations.get(str(donator.id), {})
+    new_pokecoin_count = user_donations.get("pokecoins", 0) + pokecoins
+    new_shiny_count    = user_donations.get("shinies", 0) + shinies
+    new_rare_count     = user_donations.get("rares", 0) + rares
+    new_redeem_count   = user_donations.get("redeems", 0) + redeems
+
+    # Calculate the approximate pokecoin value of all items
+    value = await general_helper.get_trade_value(new_pokecoin_count, new_shiny_count, new_rare_count, new_redeem_count)
 
     user_donations["name"] = donator.name
-    user_donations["shinies"] = user_donations.get("shinies", 0) + shinies
-    user_donations["rares"] = user_donations.get("rares", 0) + rares
-    user_donations["pokecoins"] = user_donations.get("pokecoins", 0) + pokecoins
-    user_donations["redeems"] = user_donations.get("redeems", 0) + redeems
+    user_donations["shinies"] = new_shiny_count
+    user_donations["rares"] = new_rare_count
+    user_donations["pokecoins"] = new_pokecoin_count
+    user_donations["redeems"] = new_redeem_count
     user_donations["value"] = value
 
     donations[str(donator.id)] = user_donations

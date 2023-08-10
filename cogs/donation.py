@@ -29,7 +29,6 @@ class DonationModule(commands.Cog):
         else:
             outcome = await donation_helper.set_channel(context.guild.id, None)
 
-
         if outcome is True:
             await context.reply("Donation Channel was successfully set to {}".format(channel.mention))
         else:
@@ -116,7 +115,7 @@ class DonationModule(commands.Cog):
             await context.reply("The parameters must follow this structure : \n`-aa donation change <user-id> <pokecoins> <shinies> <rares> <redeems>`")
 
     @donation.command(name="log", aliases=["lc"], description="Change the log channel")
-    @commands.check(administrator=True)
+    @commands.has_permissions(administrator=True)
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def log_channel(self, context:commands.Context, log_channel:TextChannel):
 
@@ -131,7 +130,7 @@ class DonationModule(commands.Cog):
 
     @donation.command(name="clear", description="Clears the battle leaderboard.")
     @commands.cooldown(1, 20, commands.BucketType.user)
-    @commands.check(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def leaderboard_clear(self, context:commands.Context):
         
         async def acceptance_callback(interaction:Interaction):
@@ -155,7 +154,7 @@ class DonationModule(commands.Cog):
 
     @donation.command(name="remove", aliases=["rm"], description="Remove a member from the leaderboard.")
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.check(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def leaderboard_remove(self, context:commands.Context, target:Member):
 
         outcome = await donation_helper.remove_user(context.guild.id, target.id)
@@ -188,6 +187,8 @@ class DonationModule(commands.Cog):
 
         await ctx.interaction.followup.send("Marked as Collected!", ephemeral=True)
 
+    """
+    
     @message_command(name="Not Collected")
     async def not_collect(self, ctx: ApplicationContext, message:Message):
 
@@ -210,6 +211,8 @@ class DonationModule(commands.Cog):
         await message.edit(embed=main_embd)
 
         await ctx.interaction.followup.send("Marked as Collected!", ephemeral=True)
+
+    """
 
 def setup(bot : commands.Bot):
     bot.add_cog(DonationModule())
