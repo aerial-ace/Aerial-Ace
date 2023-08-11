@@ -27,7 +27,9 @@ class AcceptanceView(View):
     acceptance_callback = None
     decline_callback    = None
 
-    def __init__(self, timeout:int, accept_callback, decline_callback):
+    context = None
+
+    def __init__(self, timeout:int, context, accept_callback, decline_callback):
 
         super().__init__()
 
@@ -38,6 +40,7 @@ class AcceptanceView(View):
 
         self.acceptance_callback = accept_callback
         self.decline_callback    = decline_callback
+        self.context = context
 
         accept_btn.callback  = self.acceptance_callback_main
         decline_btn.callback = self.decline_callback_main
@@ -49,6 +52,11 @@ class AcceptanceView(View):
 
     async def acceptance_callback_main(self, interaction:Interaction):
 
+        await interaction.response.defer()
+
+        if interaction.user != self.context.author:
+            return await interaction.response.send_message("This is not your command!", ephemeral=True)
+
         result = await self.acceptance_callback(interaction)
 
         if result:
@@ -57,6 +65,11 @@ class AcceptanceView(View):
             await interaction.message.edit(view=self)
         
     async def decline_callback_main(self, interaction:Interaction):
+
+        await interaction.response.defer()
+
+        if interaction.user != self.context.author:
+            return await interaction.response.send_message("This is not your command!", ephemeral=True)
 
         result = await self.decline_callback(interaction)
 

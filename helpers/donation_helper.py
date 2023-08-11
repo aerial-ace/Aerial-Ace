@@ -168,11 +168,15 @@ async def clear_leaderboard(server_id:int):
 
 async def remove_user(server_id:int, user_id:int):
 
-    await mongo_manager.manager.update_all_data(
-        col_name="donations",
+    await mongo_manager.manager.remove_entry(
+        collection_name="donations",
         query={"server_id" : str(server_id)},
-        
+        unset_data={
+            "donations.{}".format(user_id) : ""
+        }
     )
+
+    return True
 
 
 
