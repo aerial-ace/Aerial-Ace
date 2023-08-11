@@ -15,21 +15,21 @@ async def get_donation_information_embed(server:Guild) -> Embed:
     channel_id = data.get("channel_id", None)
     embd.add_field(
         name="Channel",
-        value=f"<#{channel_id}>" if channel_id is not None else "N/A",
+        value=f"<#{channel_id}>" if channel_id != "0" else "N/A",
         inline=True
     )
 
     staff_role_id = data.get("staff_role_id", None)
     embd.add_field(
         name="Staff Role",
-        value=f"<@&{staff_role_id}>" if staff_role_id is not None else "N/A",
+        value=f"<@&{staff_role_id}>" if staff_role_id != "0" else "N/A",
         inline=True
     )
 
     log_channel_id = data.get("log_channel_id", None)
     embd.add_field(
         name="Log Channel",
-        value=f"<#{log_channel_id}>" if log_channel_id is not None else "N/A",
+        value=f"<#{log_channel_id}>" if log_channel_id != "0" else "N/A",
         inline=True
     )
 
@@ -114,7 +114,10 @@ async def change_donation_values(server:Guild, target:Member, pokecoins:int, shi
 
     donations = data.get("donations")
 
-    target_data = donations.get(str(target.id))
+    target_data = donations.get(str(target.id), None)
+
+    if target_data is None:
+        return None
 
     target_data["name"]      = target.name
     target_data["pokecoins"] = int(pokecoins)

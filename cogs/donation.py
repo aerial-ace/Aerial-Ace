@@ -69,12 +69,15 @@ class DonationModule(commands.Cog):
 
             outcome = await donation_helper.change_donation_values(context.guild, target, pokecoins, shinies, rares, redeems)
 
-            if outcome:
+            if outcome is True:
                 await interaction.followup.send("Changes Made!")
                 return True
-            else:
+            elif outcome is False:
                 await interaction.followup.send("Error Occurred while trying to make changes!")
-                return False
+                return True
+            elif outcome is None:
+                await interaction.followup.send("{} doesn't exists in the leaderboard.".format(target.mention))
+                return True
 
         async def decline_callback(interaction:Interaction):
             return True
