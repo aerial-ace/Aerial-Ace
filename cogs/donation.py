@@ -4,7 +4,9 @@ from discord import message_command, ApplicationContext
 
 from views.ButtonViews import AcceptanceView
 from helpers import donation_helper
-from config import ACCEPTED_EMOJI, INFO_EMOJI
+from config import ACCEPTED_EMOJI
+
+import pdb
 
 class DonationModule(commands.Cog):
 
@@ -38,8 +40,8 @@ class DonationModule(commands.Cog):
     async def staff(self, context:commands.Context, role_id:int):
 
         # TODO : Owner Only Command
-        # if context.author.id != context.guild.owner.id:
-        #     return await context.reply("This command can only be run by server owner!")
+        if context.author.id != context.guild.owner_id:
+            return await context.reply("This command can only be run by server owner!", ephemeral=True)
         
         if await donation_helper.set_staff_role(context.guild.id, role_id):
             return await context.send("Donation Staff Role ID is now set to `{}`".format(role_id))
@@ -171,8 +173,8 @@ class DonationModule(commands.Cog):
             return await ctx.respond("This is not a Log Message! Please use this command on a Log Message to the donation as collected!", ephemeral=True)
 
         # TODO : Owner Only Command
-        # if ctx.author.id != ctx.guild.owner.id:
-        #     return await ctx.respond("This command can only be used by the server owner!")
+        if ctx.author.id != ctx.guild.owner_id:
+            return await ctx.respond("This command can only be used by the server owner!", ephemeral=True)
 
         main_embd = message.embeds[0]
 
