@@ -2,7 +2,7 @@ from discord import Embed, Guild, Member
 
 from managers import mongo_manager
 from helpers import logger, general_helper
-from config import NORMAL_COLOR
+from config import NORMAL_COLOR, WARNING_COLOR
 
 async def get_donation_information_embed(server:Guild) -> Embed:
 
@@ -35,7 +35,7 @@ async def get_donation_information_embed(server:Guild) -> Embed:
 
     return embd
 
-async def set_channel(server_id:int, channel_id:int):
+async def set_channel(server_id:int, channel_id):
 
     query = {"server_id" : str(server_id)}
 
@@ -87,6 +87,9 @@ async def get_donation_leaderboard_embed(server:Guild) -> Embed:
     data = cursor[0]
     donations = data.get("donations", {})
 
+    if len(donations.items()) <= 0:
+        return Embed(title="Whoops!", description="No Donations Found!", color=WARNING_COLOR)
+
     sorted_donations = dict(sorted(donations.items(), key=lambda item: item[1]["value"], reverse=True))
 
     embd:Embed = Embed(title=f"{server.name}'s Donation Leaderboard", color=NORMAL_COLOR, description="")
@@ -104,53 +107,37 @@ async def get_donation_leaderboard_embed(server:Guild) -> Embed:
 
     return embd
 
-async def change_donation_values(server:Guild, target:Member, pokecoins:int, shinies:int, rares:int, redeems:int) -> bool:
+async def change_donation_values(server:Guild, target:Member, pokecoins:int=0, shinies:int=0, rares:int=0, redeems:int=0) -> bool:
 
     query = {"server_id" : str(server.id)}
 
-    cursor = await mongo_manager.manager.get_all_data("donations", query)
-
-    data = cursor[0]
-
-    donations = data.get("donations")
-
-    target_data = donations.get(str(target.id), None)
-
-    if target_data is None:
-        return None
-
-    target_data["name"]      = target.name
-    target_data["pokecoins"] = int(pokecoins)
-    target_data["shinies"]   = int(shinies)
-    target_data["rares"]     = int(rares)
-    target_data["redeems"]   = int(redeems)
-
-    value = await general_helper.get_trade_value(pokecoins, shinies, rares, redeems)
-
-    target_data["value"] = value
-
-    donations[str(target.id)] = target_data
-
     try:
+        value = await general_helper.get_trade_value(pokecoins, shinies, rares, redeems)
+
         await mongo_manager.manager.update_all_data(
             col_name="donations",
             query=query,
-            updated_data={"donations" : donations}
+            updated_data={
+                f"donations.{target.id}.name" : target.name,
+                f"donations.{target.id}.pokecoins" : pokecoins,
+                f"donations.{target.id}.shinies" : shinies,
+                f"donations.{target.id}.rares" : rares,
+                f"donations.{target.id}.redeems" : redeems,
+                f"donations.{target.id}.value" : value
+            }
         )
-
     except:
         return False
-
     else:
         return True
 
-async def set_log_channel(server_id:int, log_channel_id:int):
+async def set_log_channel(server_id:int, log_channel_id):
 
     await mongo_manager.manager.update_all_data(
         col_name="donations",
         query={"server_id" : str(server_id)},
         updated_data={
-            "log_channel_id" : str(log_channel_id)
+            "log_channel_id" : str(log_channel_id) if log_channel_id is not None else "0"
         } 
     )
 
@@ -180,11 +167,4 @@ async def remove_user(server_id:int, user_id:int):
     )
 
     return True
-
-
-
-
-
-
-
 

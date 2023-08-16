@@ -4,7 +4,7 @@ from discord import message_command, ApplicationContext
 
 from views.ButtonViews import AcceptanceView
 from helpers import donation_helper
-from config import ACCEPTED_EMOJI
+from config import ACCEPTED_EMOJI, NORMAL_COLOR
 
 class DonationModule(commands.Cog):
 
@@ -15,9 +15,12 @@ class DonationModule(commands.Cog):
             reply = await donation_helper.get_donation_information_embed(context.guild)
 
             await context.send(embed=reply)
-        
+
+    """A channel where donations are logged! ( ADMIN ONLY )"""
+
     @donation.command(name="channel", aliases=["ch"], description="Change the donation channel using this command")
     @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.has_permissions(administrator=True)
     async def channel(self, context:commands.Context, channel:TextChannel=None):
 
         bot:commands.Bot = context.bot
@@ -31,14 +34,17 @@ class DonationModule(commands.Cog):
             outcome = await donation_helper.set_channel(context.guild.id, None)
 
         if outcome is True:
-            await context.reply("Donation Channel was successfully set to {}".format(channel.mention))
+            await context.reply("Donation Channel was successfully set to {}".format(channel.mention) if channel is not None else "Donation Channel Removed!")
         else:
             await context.reply("Some Error occurred while trying to set Donation Channel!")
+
+    """Set the role allowed to collect donations ( OWNER ONLY )"""
 
     @donation.command(name="staff", description="Change the staff role ID.")
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def staff(self, context:commands.Context, role_id:int):
 
+        # owner check
         if context.author.id != context.guild.owner_id:
             return await context.reply("This command can only be run by server owner!")
         
@@ -46,6 +52,8 @@ class DonationModule(commands.Cog):
             return await context.send("Donation Staff Role ID is now set to `{}`".format(role_id))
         else:
             return await context.send("Error Occurred!")
+
+    """View the donation leaderboard"""
 
     @donation.command(name="leaderboard", aliases=["lb"], description="Returns the top server donators")
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -55,11 +63,14 @@ class DonationModule(commands.Cog):
 
         await context.send(embed=embd)
 
+    """Change the donation values of a user ( ADMIN ONLY )"""
+
     @donation.command(name="change", description="Change the donation values of a certain member")
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def change(self, context:commands.Context, target:Member, pokecoins, shinies=None, rares=None, redeems=None):
+    @commands.has_permissions(administrator=True)
+    async def change(self, context:commands.Context, target:Member, pokecoins=0, shinies=0, rares=0, redeems=0):
 
-        confirmation = Embed(title="Confirm?", description="Final Values : \n")
+        confirmation = Embed(title="Confirm?", description="Final Values : \n", color=NORMAL_COLOR)
 
         confirmation.description += "```Pokecoins : {}\nShinies : {}\nRares : {}\nRedeems : {}```".format(pokecoins, shinies, rares, redeems)
 
@@ -84,19 +95,26 @@ class DonationModule(commands.Cog):
 
         await context.send(embed=confirmation, view=AcceptanceView(200, context, acceptance_callback, decline_callback))
 
+    """Change the logging channel"""
+
     @donation.command(name="log", aliases=["lc"], description="Change the log channel")
     @commands.has_permissions(administrator=True)
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def log_channel(self, context:commands.Context, log_channel:TextChannel):
+    async def log_channel(self, context:commands.Context, log_channel:TextChannel=None):
 
         bot_member = context.guild.get_member(context.bot.user.id)
 
-        if log_channel.permissions_for(bot_member).send_messages is False:
-            return await context.send("Not allowed to send messages in {}! Check Permissions.".format(log_channel.mention))
+        if log_channel is None:
+            await donation_helper.set_log_channel(context.guild.id, None)
+        else:
+            if log_channel.permissions_for(bot_member).send_messages is False:
+                return await context.send("Not allowed to send messages in {}! Check Permissions.".format(log_channel.mention))
 
-        await donation_helper.set_log_channel(context.guild.id, log_channel.id)
+            await donation_helper.set_log_channel(context.guild.id, log_channel.id)
 
         await context.reply("Log Channel Updated!")
+
+    """Clears the leaderboard"""
 
     @donation.command(name="clear", description="Clears the battle leaderboard.")
     @commands.cooldown(1, 20, commands.BucketType.user)
@@ -121,6 +139,8 @@ class DonationModule(commands.Cog):
 
         await context.reply(embed=embd, view=AcceptanceView(200, context, acceptance_callback, decline_callback))
 
+    """Removes the user from the leaderboard"""
+
     @donation.command(name="remove", aliases=["rm"], description="Remove a member from the leaderboard.")
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.has_permissions(administrator=True)
@@ -136,12 +156,13 @@ class DonationModule(commands.Cog):
                 await interaction.followup.send("Error occurred while trying to remove the user.")
                 return False
 
-
         async def declined(interaction:Interaction):
             return True
 
         await context.send(embed=Embed(title="Are you Sure?", description="{} will be removed from the leaderboard.".format(target.mention)), view=AcceptanceView(200, context, accepted, declined))
         
+    """Mark the donation as collected! ( OWNER ONLY )"""
+
     @message_command(name="Collected")
     async def collect(self, ctx: ApplicationContext, message:Message):
 

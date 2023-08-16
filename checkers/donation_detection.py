@@ -1,4 +1,4 @@
-from discord import AutoShardedBot, Member
+from discord import AutoShardedBot, Member, Forbidden
 from discord import Message, TextChannel, Embed
 
 from managers import mongo_manager
@@ -152,7 +152,13 @@ async def donation_check(bot:AutoShardedBot, message:Message):
 
         await log_donation(message.guild.id, donator, pokecoins, rares, shinies, redeems, data_cursor)
 
-        log_channel:TextChannel = message.guild.get_channel(int(data_cursor[0].get("log_channel_id")))
+        log_channel_id = data_cursor[0].get("log_channel_id")
+
+        # Only log if log channel is provided!
+        if log_channel_id == "0":
+            return
+
+        log_channel:TextChannel = message.guild.get_channel(int(log_channel_id))
 
         log_embd = Embed(title="Donation Log", color=NORMAL_COLOR)
 
@@ -190,7 +196,10 @@ async def donation_check(bot:AutoShardedBot, message:Message):
 
         log_embd.set_thumbnail(url=donator.avatar.url)
 
-        await log_channel.send(embed=log_embd)
+        try:
+            await log_channel.send(embed=log_embd)
+        except Forbidden:
+            return await message.channel.send("Not Allowed to send messages in {}! Please Check Permissions".format(log_channel.mention))
 
         await message.channel.send("Donation has been logged!")
         
