@@ -67,6 +67,9 @@ class BattleSystemSlash(commands.Cog):
     @slash_command(name="battleboard-clear", description="Clears the complete battleboard of the server")
     async def clear_battleboard(self, ctx:ApplicationContext):
 
+        if not ctx.author.guild_permissions.administrator:
+            return await ctx.respond("Admin Permissions are needed to run this command.")
+
         reply = await battle_helper.clear_battleboard(str(ctx.guild_id))
 
         await ctx.respond(reply, view=self.view)
@@ -75,6 +78,9 @@ class BattleSystemSlash(commands.Cog):
 
     @slash_command(name="auto-battle-logging", description="Toggles the auto logging for battles on/off")
     async def toggle_abl(self, ctx:ApplicationContext):
+
+        if not ctx.author.guild_permissions.administrator:
+            return await ctx.respond("Admin Permissions are needed to run this command.")
 
         reply = await battle_helper.toggle_auto_logging(str(ctx.guild.id))
 
