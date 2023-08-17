@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord.ext.pages import Paginator
 from discord import TextChannel, Member, Embed, Interaction, Message
 from discord import message_command, ApplicationContext
 
@@ -59,9 +60,9 @@ class DonationModule(commands.Cog):
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def leaderboard(self, context:commands.Context):
 
-        embd = await donation_helper.get_donation_leaderboard_embed(context.guild)
+        paginator:Paginator = await donation_helper.get_donation_leaderboard_embed(context.guild)
 
-        await context.send(embed=embd)
+        await paginator.send(context)
 
     """Change the donation values of a user ( ADMIN ONLY )"""
 

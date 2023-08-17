@@ -1,5 +1,6 @@
 from discord import Embed, Guild, Member
 
+from views.PaginatorViews import PageView
 from managers import mongo_manager
 from helpers import logger, general_helper
 from config import NORMAL_COLOR, WARNING_COLOR
@@ -93,9 +94,16 @@ async def get_donation_leaderboard_embed(server:Guild) -> Embed:
     sorted_donations = dict(sorted(donations.items(), key=lambda item: item[1]["value"], reverse=True))
 
     embd:Embed = Embed(title=f"{server.name}'s Donation Leaderboard", color=NORMAL_COLOR, description="")
-    embd.description += "`-#- | Pokecoins | Shiny | Rares | Redeems | Donator `\n\n"
+    embd.description += "`No. | Pokecoins | Shiny | Rares | Redeems | Donator `\n\n"
 
-    for pos, donation in enumerate(sorted_donations.items()):
+    max_number_of_entries_per_embed = 20
+
+    pages:list = []
+
+    donation_items = sorted_donations.items()
+
+    for pos, donation in enumerate(donation_items):
+
         pokecoins = donation[1].get("pokecoins")
         shinies   = donation[1].get("shinies")
         rares     = donation[1].get("rares")
@@ -105,7 +113,19 @@ async def get_donation_leaderboard_embed(server:Guild) -> Embed:
 
         embd.description += "`{} | {} | {} | {} | {} |` {} \n".format(f"{pos + 1}".ljust(3, " "), f"{pokecoins}".ljust(9, " "), f"{shinies}".ljust(5, " "), f"{rares}".ljust(5, " "), f"{redeems}".ljust(7, " "), f"[{user_name[:12]}](https://discord.com/users/{user_id})".ljust(9, " "))
 
-    return embd
+        if pos + 1 == len(donation_items):
+            pages.append(embd)
+            break
+
+        if (pos + 1) % max_number_of_entries_per_embed == 0:
+            pages.append(embd)
+
+            embd = Embed(title=f"{server.name}'s Donation Leaderboard", color=NORMAL_COLOR, description="")
+            embd.description += "`No. | Pokecoins | Shiny | Rares | Redeems | Donator `\n\n"
+
+    paginator = PageView(pages, True)
+
+    return paginator    
 
 async def change_donation_values(server:Guild, target:Member, pokecoins:int=0, shinies:int=0, rares:int=0, redeems:int=0) -> bool:
 
