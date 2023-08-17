@@ -6,7 +6,8 @@ import config
 links = {
     "kill" : {
         "Good Job {user}, you killed {target}" : "https://i.imgur.com/blvCv4k.gif",
-        "{user} ~~crushed~~ killed {target}" : "https://i.imgur.com/NNYGnLe.gif"
+        "{user} ~~crushed~~ killed {target}" : "https://i.imgur.com/NNYGnLe.gif",
+        "It is the END for you!" : "https://i.imgur.com/F7jXaTX.gif",
     },
     "hit" : {
         "{user} tried hitting {target} but got nerfed, LMAO" : "https://i.imgur.com/Xg0zYp7.gif",

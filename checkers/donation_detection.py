@@ -121,7 +121,7 @@ async def donation_check(bot:AutoShardedBot, message:Message):
             if keyword in message.content:
                 break
         else:
-            return
+            return False
 
         conclusion_type = "CANCELLED"
 
