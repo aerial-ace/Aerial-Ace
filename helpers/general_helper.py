@@ -37,3 +37,7 @@ async def get_user_id_from_ping(ping):
         user_id = user_id.replace(char, "")
 
     return user_id
+
+async def get_trade_value(pokecoins:int, shinies:int, rares:int, redeems:int) -> int:
+
+    return int(pokecoins) + config.TRADE_ITEM_WEIGHT["shinies"] * int(shinies) + config.TRADE_ITEM_WEIGHT["rares"] * int(rares) + config.TRADE_ITEM_WEIGHT["redeems"] * int(redeems)

@@ -12,16 +12,72 @@ class DonationView(View):
 
         self.timeout = timeout
 
-        paypal_btn = Button(label="PayPal", emoji=PAYPAL_EMOJI, style=ButtonStyle.link, url=PAYPAL_LINK)
+        paypal_btn  = Button(label="PayPal", emoji=PAYPAL_EMOJI, style=ButtonStyle.link, url=PAYPAL_LINK)
         patreon_btn = Button(label="Patreon", emoji=PATREON_EMOJI, style=ButtonStyle.link, url=PATREON_LINK)
-        ko_fi_btn = Button(label="Ko-Fi", emoji=KO_FI_EMOJI, style=ButtonStyle.link, url=KO_FI_LINK)
-        github_btn = Button(label="Github Sponsors", emoji=GITHUB_EMOJI, style=ButtonStyle.link, url=GITHUB_SPONSORS_LINK)
+        ko_fi_btn   = Button(label="Ko-Fi", emoji=KO_FI_EMOJI, style=ButtonStyle.link, url=KO_FI_LINK)
+        github_btn  = Button(label="Github Sponsors", emoji=GITHUB_EMOJI, style=ButtonStyle.link, url=GITHUB_SPONSORS_LINK)
 
         self.add_item(patreon_btn)
         self.add_item(ko_fi_btn)
         self.add_item(paypal_btn)
         self.add_item(github_btn)
 
+class AcceptanceView(View):
+
+    acceptance_callback = None
+    decline_callback    = None
+
+    context = None
+
+    def __init__(self, timeout:int, context, accept_callback, decline_callback):
+
+        super().__init__()
+
+        self.timeout = timeout
+
+        accept_btn  = Button(label="Accept", style=ButtonStyle.green)
+        decline_btn = Button(label="Decline", style=ButtonStyle.gray)
+
+        self.acceptance_callback = accept_callback
+        self.decline_callback    = decline_callback
+        self.context = context
+
+        accept_btn.callback  = self.acceptance_callback_main
+        decline_btn.callback = self.decline_callback_main
+
+        self.disable_on_timeout = True
+
+        self.add_item(accept_btn)
+        self.add_item(decline_btn)
+
+    async def acceptance_callback_main(self, interaction:Interaction):
+
+        await interaction.response.defer()
+
+        if interaction.user != self.context.author:
+            return await interaction.response.send_message("This is not your command!", ephemeral=True)
+
+        result = await self.acceptance_callback(interaction)
+
+        if result:
+            self.disable_all_items()
+
+            await interaction.message.edit(view=self)
+        
+    async def decline_callback_main(self, interaction:Interaction):
+
+        await interaction.response.defer()
+
+        if interaction.user != self.context.author:
+            return await interaction.response.send_message("This is not your command!", ephemeral=True)
+
+        result = await self.decline_callback(interaction)
+
+        if result:
+            self.disable_all_items()
+
+            await interaction.message.edit(view=self)
+        
 class GeneralView(View):
 
     def __init__(self, timeout:int=200, invite:bool=True, support_server:bool=True, source:bool=False, donate:bool=True, vote=False):

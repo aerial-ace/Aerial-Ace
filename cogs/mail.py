@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
-import random
 
-from views.ButtonViews import GeneralView, DonationView
+from views.ButtonViews import DonationView
 import config
 
 class MailModule(commands.Cog):

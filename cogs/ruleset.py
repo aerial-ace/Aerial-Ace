@@ -19,8 +19,6 @@ class RuleSetModule(commands.Cog):
 
         details_parts = " ".join(details).split("|")
 
-        print(details_parts)
-
         name = details_parts[0].strip()
         user = details_parts[-1].strip()
         rules = details_parts[1:-1]

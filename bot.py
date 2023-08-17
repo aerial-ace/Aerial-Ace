@@ -11,6 +11,7 @@ from helpers import general_helper
 
 from checkers import rare_catch_detection
 from checkers import auto_battle_log
+from checkers import donation_detection
 
 # determines whether to run the bot in local, or global mode
 is_test = False
@@ -41,7 +42,8 @@ initial_cogs = [
     "ruleset",
     "tag",
     "fun",
-    "battle"
+    "battle",
+    "donation"
 ]
 
 initial_slash_cogs = [
@@ -90,6 +92,8 @@ async def on_message(message:discord.Message):
     await rare_catch_detection.rare_check(bot, message)
 
     await auto_battle_log.determine_battle_message(bot, message)
+
+    await donation_detection.donation_check(bot, message)
 
     # process commands
     await bot.process_commands(message)

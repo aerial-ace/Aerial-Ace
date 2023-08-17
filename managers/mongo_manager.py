@@ -31,6 +31,8 @@ class MongoManager:
                     return [await init_manager.register_guild_without_bs(query.get("server_id"))]
                 elif collection_name == "tags":
                     return [await init_manager.register_guild_for_tags(query.get("server_id"))]
+                elif collection_name == "donations":
+                    return [await init_manager.register_guild_for_donations(query.get("server_id"))]
         except:
             return None
 
@@ -51,6 +53,8 @@ class MongoManager:
     async def update_all_data(self, col_name : str, query : dict, updated_data: dict):
         await self.db[col_name].update_many(query, {"$set" : updated_data})
 
+    async def remove_entry(self, collection_name:str, query:dict, unset_data:dict):
+        await self.db[collection_name].update_one(query, {"$unset" : unset_data})
 
 manager = None
 
