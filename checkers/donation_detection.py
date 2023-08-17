@@ -103,9 +103,33 @@ async def donation_check(bot:AutoShardedBot, message:Message):
     shinies   = 0
     redeems   = 0
 
-    def wait_for_trade_completion(message:Message):
+    conclusion_type = None
 
-        nonlocal pokecoins, rares, shinies, redeems
+    def wait_for_cancellation(message:Message):
+
+        nonlocal conclusion_type
+
+        if not message.content.strip().startswith(f"<@{POKETWO_ID}>"):
+            return False
+        
+        if "x" not in message.content.lower() and "cancel" not in message.content.lower():
+            return False 
+
+        battle_cancel_keywords = ["trade ", "t "]
+        
+        for keyword in battle_cancel_keywords:
+            if keyword in message.content:
+                break
+        else:
+            return
+
+        conclusion_type = "CANCELLED"
+
+        return True
+    
+    def wait_for_completion(message:Message):
+
+        nonlocal pokecoins, rares, shinies, redeems, conclusion_type
 
         if message.author.id != int(POKETWO_ID):
             return False
@@ -142,13 +166,29 @@ async def donation_check(bot:AutoShardedBot, message:Message):
                 if cache_manager.cached_rarity_data.get(pokemon, "common") in ["legendary", "mythical", "ultra beast"]:
                     rares = rares + 1
 
+        conclusion_type = "COMPLETED"
+
         return True
 
+    def wait_for_conclusion(message:Message):
+
+        if wait_for_cancellation(message) is not False:
+            return True
+        
+        if wait_for_completion(message) is not False:
+            return True
+        
+        return False
+
     try:
-        trade_complete_message = await bot.wait_for("message", check=wait_for_trade_completion, timeout=360)
+        trade_complete_message = await bot.wait_for("message", check=wait_for_conclusion, timeout=360)
+
     except TimeoutError as e:
         return await message.channel.send("> Donation Logging Session Timed Out!")
+
     else:
+        if conclusion_type == "CANCELLED":
+            return await message.channel.send("Session Cancelled!")
 
         await log_donation(message.guild.id, donator, pokecoins, rares, shinies, redeems, data_cursor)
 
