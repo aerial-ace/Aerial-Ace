@@ -47,6 +47,9 @@ async def donation_check(bot:AutoShardedBot, message:Message):
 
     data_cursor = await mongo_manager.manager.get_all_data("donations", {"server_id" : str(message.guild.id)})
 
+    if data_cursor[0].get("channel_id") != str(message.channel.id):
+        return 
+
     staff_role_id = int(data_cursor[0].get("staff_role_id", 0))
 
     donator = None
