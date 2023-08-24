@@ -5,10 +5,11 @@ from discord.commands import slash_command, Option
 from helpers import help_helper
 from views.ButtonViews import GeneralView
 
+
 class HelpSystemSlash(commands.Cog):
-    
+
     @slash_command(name="help", description="Get help for a command")
-    async def help(self, ctx : ApplicationContext, input : Option(str, description="Command to get help for", required=False, default=None)):
+    async def help(self, ctx: ApplicationContext, input: Option(str, description="Command to get help for", required=False, default=None)):
 
         view = GeneralView(200, True, True, True, True)
 
@@ -19,5 +20,6 @@ class HelpSystemSlash(commands.Cog):
             reply = await help_helper.get_category_help_embed(ctx=None, input=input.lower())
             await ctx.respond(embed=reply, view=view)
 
-def setup(bot : commands.Bot):
+
+def setup(bot: commands.Bot):
     bot.add_cog(HelpSystemSlash())

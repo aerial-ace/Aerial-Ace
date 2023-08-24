@@ -4,7 +4,6 @@ import random
 
 from config import INFO_EMOJI
 
-
 tips = [
     "You can use the /starboard module to log rare pokemon catches in your server.",
     "You can get premium customization and advanced aerial ace features by subscribing to aerial ace patreon. Use </premium:999727265908789408> to know more.",
@@ -21,16 +20,20 @@ tips = [
     "View your server's battle leaderboard using </battle-leaderboard:939844903486259300>. Log battles using `-aa lb` command"
 ]
 
+
 class TipsModule(commands.Cog):
 
     def __init__(self):
         return
-    
+
+    @staticmethod
     async def get_random_tip():
-        return random.sample(tips, k=1)[0]    
-    
-    async def send_random_tip(channel:TextChannel):
+        return random.sample(tips, k=1)[0]
+
+    @staticmethod
+    async def send_random_tip(channel: TextChannel):
         await channel.send(f"{INFO_EMOJI} **Pro Tip :** {random.sample(tips, k=1)[0]}")
 
-def setup(bot:commands.Bot):
+
+def setup(bot: commands.Bot):
     bot.add_cog(TipsModule())

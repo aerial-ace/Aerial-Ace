@@ -5,7 +5,8 @@ from helpers import pokemon_info_helper
 from helpers import general_helper
 import config
 
-class Pokemon_Info(commands.Cog):
+
+class PokemonInfo(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -13,7 +14,7 @@ class Pokemon_Info(commands.Cog):
 
     @commands.guild_only()
     @commands.command(name="stats", description="Get the best stats of pokemons")
-    async def stats(self, ctx, poke:str):
+    async def stats(self, ctx, poke: str):
         reply = await pokemon_info_helper.get_stats_embed(poke)
 
         view = GeneralView(200, True, True, False, True)
@@ -27,13 +28,12 @@ class Pokemon_Info(commands.Cog):
             view = GeneralView(200, True, True, False, True)
 
             await ctx.send(embed=reply, view=view)
-        
 
     """For getting the duel moveset"""
 
     @commands.guild_only()
     @commands.command(name="moveset", aliases=["ms"], description="Get best movesets of pokemons")
-    async def moveset(self, ctx, poke : str):
+    async def moveset(self, ctx, poke: str):
         reply = await pokemon_info_helper.get_moveset_embed(poke)
         view = GeneralView(200, True, True, False, True)
 
@@ -46,13 +46,12 @@ class Pokemon_Info(commands.Cog):
             view = GeneralView(200, True, True, False, True)
 
             await ctx.send(embed=reply, view=view)
-        
 
     """For getting the duel nature"""
 
     @commands.guild_only()
     @commands.command(name="nature", description="Get the best nature of pokemons")
-    async def nature(self, ctx, poke : str):
+    async def nature(self, ctx, poke: str):
         reply = await pokemon_info_helper.get_nature_embed(poke)
         view = GeneralView(200, True, True, False, True)
 
@@ -65,13 +64,12 @@ class Pokemon_Info(commands.Cog):
             view = GeneralView(200, True, True, False, True)
 
             await ctx.send(embed=reply, view=view)
-        
 
     """For getting the tierlists"""
 
     @commands.guild_only()
     @commands.command(name="tierlist", aliases=["tl"], description="View the pokemon tier lists")
-    async def tierlist(self, ctx, tier : str):
+    async def tierlist(self, ctx, tier: str):
         try:
             tier_link = config.TIER_LINK[tier.lower()]
         except:
@@ -84,7 +82,7 @@ class Pokemon_Info(commands.Cog):
     async def tierlist_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.reply("Give a tier name as a parameter :/ Like `rare`, `common`, `mega`, `steel`, `fighting`, `eeveelution`")
-        
+
     """For getting the weakness"""
 
     @commands.guild_only()
@@ -96,5 +94,6 @@ class Pokemon_Info(commands.Cog):
 
         await ctx.send(embed=reply, view=view)
 
+
 def setup(bot):
-    bot.add_cog(Pokemon_Info(bot))
+    bot.add_cog(PokemonInfo(bot))

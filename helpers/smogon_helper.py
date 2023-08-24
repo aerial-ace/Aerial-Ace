@@ -1,6 +1,5 @@
 import requests
 from discord import Embed
-from discord.ext import pages
 import json
 
 from views.PaginatorViews import PageView
@@ -9,24 +8,24 @@ from config import NORMAL_COLOR, SMOGON_API_TEMPLATE, SMOGON_COLOR, ERROR_COLOR,
 
 from views import PaginatorViews
 
-class SmogonData:
 
-    name:str = ""
-    gen:int = 0
-    tier:str = ""
-    rank:str = ""
-    usage:float = 0.0
-    abilities:dict = {}
-    stats:dict = {}
-    moveset:dict = {}
-    items:dict = {}
-    checks:dict = {}
+class SmogonData:
+    name: str = ""
+    gen: int = 0
+    tier: str = ""
+    rank: str = ""
+    usage: float = 0.0
+    abilities: dict = {}
+    stats: dict = {}
+    moveset: dict = {}
+    items: dict = {}
+    checks: dict = {}
 
     error = None
     message = None
 
-async def get_smogon_data(gen:int, tier:str, pokemon:str) -> SmogonData:
-    
+
+async def get_smogon_data(gen: int, tier: str, pokemon: str) -> SmogonData | None:
     smogon_url = SMOGON_API_TEMPLATE.format(gen=gen, tier=tier, pokemon=pokemon)
     smogon_request = requests.get(url=smogon_url)
 
@@ -45,20 +44,19 @@ async def get_smogon_data(gen:int, tier:str, pokemon:str) -> SmogonData:
         smogon_data.items = data["items"]
         smogon_data.checks = data["checks"]
         smogon_data.stats = data["spreads"]
-    except:
+    except KeyError:
         try:
             smogon_data.error = data["error"]
             smogon_data.message = data["message"]
 
             return smogon_data
-        except:
+        except KeyError:
             return None
 
     return smogon_data
 
 
-async def get_smogon_paginator(data:SmogonData) -> PageView:
-
+async def get_smogon_paginator(data: SmogonData) -> PageView:
     if data.error is not None:
         return await general_helper.get_info_embd("Error!!", "**Error Code :** {code}\n**Error Description** {desc}\n\nThere is a possibility that the searched pokemon is not available in that generation or in that tier. \nTry with gen it was first introduced in.".format(code=data.error, desc=data.message), color=ERROR_COLOR)
 

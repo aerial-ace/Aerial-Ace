@@ -8,18 +8,19 @@ from config import NORMAL_COLOR, ERROR_COLOR, COIN_HEADS_EMOJI, COIN_TAILS_EMOJI
 
 """for getting a random pokemon"""
 
-async def get_random_poke():
 
+async def get_random_poke():
     rand_pokemon_id = random.randint(1, 898)
 
     poke = await pokedex_helper.get_poke_by_id(rand_pokemon_id)
 
     return poke
 
+
 """returns the random pokemon embed """
 
-async def get_random_pokemon_embed():
 
+async def get_random_pokemon_embed():
     poke_data = await get_random_poke()
 
     embd = Embed(color=NORMAL_COLOR)
@@ -41,47 +42,49 @@ async def get_random_pokemon_embed():
 
     return embd
 
+
 """Returns a list of random duelish pokemons"""
 
-async def get_random_team(tier:str) -> list:
-    
-    MAX_SCORE = 90      # maximum score of the team
-    MAX_TEAM_SIZE = 3   # maximum team size
 
-    current_score = 0   # current team score
+async def get_random_team(tier: str) -> list | None:
+    MAX_SCORE = 90  # maximum score of the team
+    MAX_TEAM_SIZE = 3  # maximum team size
+
+    current_score = 0  # current team score
 
     tier_duelish_pokemons = {}
     team = []
 
     try:
         tier_duelish_pokemons = cache_manager.cached_duelish_data[tier.lower()]
-    except:
+    except KeyError:
         return None
 
     for i in range(MAX_TEAM_SIZE):
-        max_possible_range = int(((MAX_SCORE - current_score) - 10 * (MAX_TEAM_SIZE - 1 - i)) / 10) # get the maximum tier from which pokemon can be pulled leaving enough room for other pokemons 
-        valid_score_tiers = [score * 10 for score in range(1, max_possible_range + 1)]              # get all the valid score tiers based on the maximum tier, so that pokemon drawn from any of these tier leaves enough score for other pokemons
+        max_possible_range = int(((MAX_SCORE - current_score) - 10 * (MAX_TEAM_SIZE - 1 - i)) / 10)  # get the maximum tier from which pokemon can be pulled leaving enough room for other Pokémon
+        valid_score_tiers = [score * 10 for score in range(1, max_possible_range + 1)]  # get all the valid score tiers based on the maximum tier, so that pokemon drawn from any of these tier leaves enough score for other Pokémon
 
-        if MAX_TEAM_SIZE - i - 1 == 0:                                                              
-            random_score_tier = max_possible_range * 10                                             # if this is the last iteration, just pick from the highest tier as only this tier can maintain a perfect score
+        if MAX_TEAM_SIZE - i - 1 == 0:
+            random_score_tier = max_possible_range * 10  # if this is the last iteration, just pick from the highest tier as only this tier can maintain a perfect score
         else:
-            random_score_tier = valid_score_tiers[random.randint(1, max_possible_range) - 1]        # pick a random score tier from all the valid tiers
+            random_score_tier = valid_score_tiers[random.randint(1, max_possible_range) - 1]  # pick a random score tier from all the valid tiers
 
-        random_tier = tier_duelish_pokemons[str(random_score_tier)]                                 # get the pokemons of that random tier
-        random_pokemon_from_random_tier = random_tier[random.randint(0, len(random_tier) - 1)]      # get a random pokemon from that random tier
+        random_tier = tier_duelish_pokemons[str(random_score_tier)]  # get the Pokémon of that random tier
+        random_pokemon_from_random_tier = random_tier[random.randint(0, len(random_tier) - 1)]  # get a random pokemon from that random tier
 
-        while random_pokemon_from_random_tier + f" - {random_score_tier}" in team:                  # if this pokemon is already in the team, then look for another pokemon from the same tier
+        while random_pokemon_from_random_tier + f" - {random_score_tier}" in team:  # if this pokemon is already in the team, then look for another pokemon from the same tier
             random_pokemon_from_random_tier = random_tier[random.randint(0, len(random_tier) - 1)]  # get a random pokemon from that random tier
 
-        team.append(random_pokemon_from_random_tier + " - " + str(random_score_tier))               # add that random pokemon to the team       
-        current_score = current_score + int(random_score_tier)                                      # update the score by subtracting the score of the current pokemon
+        team.append(random_pokemon_from_random_tier + " - " + str(random_score_tier))  # add that random pokemon to the team
+        current_score = current_score + int(random_score_tier)  # update the score by subtracting the score of the current pokemon
 
     return team
 
+
 """Returns the embed for single random team"""
 
-async def get_random_team_embed(tier:str) -> Embed:
 
+async def get_random_team_embed(tier: str) -> Embed:
     team = await get_random_team(tier.lower())
 
     if team is None:
@@ -108,10 +111,11 @@ async def get_random_team_embed(tier:str) -> Embed:
 
     return embd
 
+
 """Returns the embed for Random Matchups"""
 
-async def get_random_matchup_embd(tier:str) -> Embed:
 
+async def get_random_matchup_embd(tier: str) -> Embed:
     player_team = await get_random_team(tier.lower())
     opponent_team = await get_random_team(tier.lower())
 

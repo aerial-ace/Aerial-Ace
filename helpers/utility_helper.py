@@ -5,14 +5,15 @@ import random
 from helpers import general_helper
 import config
 
+
 # returns a value for roll
 async def roll(max_value, user) -> str:
-
     if max_value < 0:
         return f"> **{user.name}** rolled and got ||Nothing|| :]"
 
     random_value = random.randint(0, max_value)
     return f"> **{user.name}** rolled and got {random_value} :game_die: [0 - {max_value}]"
+
 
 # returns the about the bot embed
 async def get_about_embed(ctx) -> discord.Embed:
@@ -71,7 +72,7 @@ async def get_about_embed(ctx) -> discord.Embed:
         inline=True
     )
 
-    bot:commands.Bot = ctx.bot
+    bot: commands.Bot = ctx.bot
 
     shards = bot.shard_count
 
@@ -97,6 +98,7 @@ async def get_about_embed(ctx) -> discord.Embed:
 
     return embd
 
+
 # returns the vote embed
 async def get_vote_embed() -> discord.Embed:
     embd = discord.Embed(title="__Vote for Aerial Ace__", color=config.NORMAL_COLOR)
@@ -106,6 +108,7 @@ async def get_vote_embed() -> discord.Embed:
 
     return embd
 
+
 # returns the support server embed
 async def get_support_server_embed() -> discord.Embed:
     embd = discord.Embed(title="__Support Server__", color=config.NORMAL_COLOR)
@@ -113,6 +116,7 @@ async def get_support_server_embed() -> discord.Embed:
     embd.set_thumbnail(url=config.AVATAR_LINK)
 
     return embd
+
 
 # returns the invite embed
 async def get_invite_embed() -> discord.Embed:
@@ -123,10 +127,10 @@ async def get_invite_embed() -> discord.Embed:
 
     return embd
 
-# logs the suggestions
-async def register_suggestion(ctx, text : list()) -> None:
 
-    suggestion_channel : discord.TextChannel = ctx.bot.get_guild(config.SUPPORT_SERVER_ID).get_channel(config.SUGGESTION_LOG_CHANNEL_ID)
+# logs the suggestions
+async def register_suggestion(ctx, text: list) -> None:
+    suggestion_channel: discord.TextChannel = ctx.bot.get_guild(config.SUPPORT_SERVER_ID).get_channel(config.SUGGESTION_LOG_CHANNEL_ID)
 
     embd = discord.Embed(title="__Suggestion Recieved__", color=discord.Color.green())
 
@@ -135,7 +139,7 @@ async def register_suggestion(ctx, text : list()) -> None:
         value=ctx.author.name,
         inline=False
     )
-    
+
     embd.add_field(
         name="Sent from",
         value=ctx.guild.name,
@@ -151,12 +155,12 @@ async def register_suggestion(ctx, text : list()) -> None:
 
     await suggestion_channel.send(embed=embd)
 
+
 # returns the donation embed
 async def get_premium_embed() -> discord.Embed:
-
     embd = await general_helper.get_info_embd(title=f"{config.PREMIUM_EMOJI}┃Premium - Aerial Ace", desc="")
 
-    #_You can now update the text of rare catch embed, and say a lot of things whether it be something more than Congrats, or straight out ask for its stats._
+    # _You can now update the text of rare catch embed, and say a lot of things whether it be something more than Congrats, or straight out ask for its stats._
 
     embd.add_field(
         name=f"{config.BULLET_EMOJI} **Trainer Tier @** $2/month only",
@@ -164,7 +168,7 @@ async def get_premium_embed() -> discord.Embed:
         inline=True
     )
 
-    #_Server of this tier will get access to custom starboard rare/shiny catch image. Update it to your server mascot or pick a good anime gif, and slap it in, the choice is yours._
+    # _Server of this tier will get access to custom starboard rare/shiny catch image. Update it to your server mascot or pick a good anime gif, and slap it in, the choice is yours._
 
     embd.add_field(
         name=f"{config.BULLET_EMOJI} **Gym Leader Tier** @ $5/month only",
@@ -172,7 +176,7 @@ async def get_premium_embed() -> discord.Embed:
         inline=True
     )
 
-    #_Servers of this tier have full control over how the starboard embed should look like. You can add custom invite links, vote links, messages, ask the users to perform certain task on catching a rare/shiny [ Good for events ] and what not. Definitely the most powerful and good for servers with a lot of events happening._
+    # _Servers of this tier have full control over how the starboard embed should look like. You can add custom invite links, vote links, messages, ask the users to perform certain task on catching a rare/shiny [ Good for events ] and what not. Definitely the most powerful and good for servers with a lot of events happening._
 
     embd.add_field(
         name=f"{config.BULLET_EMOJI} **Champion Tier** @ $10/month only",

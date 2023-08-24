@@ -6,9 +6,9 @@ from managers import cache_manager
 from helpers import general_helper
 from config import POKETWO_ID, NORMAL_COLOR, INFO_EMOJI
 
-async def donation_check(bot:AutoShardedBot, message:Message):
 
-    bot_member:Member = message.guild.get_member(bot.user.id)
+async def donation_check(bot: AutoShardedBot, message: Message):
+    bot_member: Member = message.guild.get_member(bot.user.id)
 
     # Return if not allowed to send messages
     if message.channel.permissions_for(bot_member).send_messages is False:
@@ -21,10 +21,10 @@ async def donation_check(bot:AutoShardedBot, message:Message):
         content = message.content.removeprefix(f"<@{POKETWO_ID}")
     else:
         return
-    
+
     if content.strip().endswith(">") is False:
         return
-    
+
     content = content.replace("<@", "").replace(">", "").replace("&", "")
 
     # Check if the message is a trade command
@@ -35,20 +35,20 @@ async def donation_check(bot:AutoShardedBot, message:Message):
             content = content.replace(keyword, "")
             break
     else:
-        return  
+        return
 
-    # check whether this server is premium or not
+        # check whether this server is premium or not
     minimum_required_tier = 2
 
-    server_data_cursor = await mongo_manager.manager.get_all_data("servers", {"server_id" : str(message.guild.id)})
+    server_data_cursor = await mongo_manager.manager.get_all_data("servers", {"server_id": str(message.guild.id)})
 
     if server_data_cursor[0].get("tier", 0) < minimum_required_tier:
         return
 
-    data_cursor = await mongo_manager.manager.get_all_data("donations", {"server_id" : str(message.guild.id)})
+    data_cursor = await mongo_manager.manager.get_all_data("donations", {"server_id": str(message.guild.id)})
 
     if data_cursor[0].get("channel_id") != str(message.channel.id):
-        return 
+        return
 
     staff_role_id = int(data_cursor[0].get("staff_role_id", 0))
 
@@ -79,15 +79,15 @@ async def donation_check(bot:AutoShardedBot, message:Message):
     if staff is None:
         return await message.channel.send("No Donation Staff is involved in this trade! No logs will be recorded!")
 
-    def wait_for_trade_initiation(message:Message):
-        
-        if message.author.id != int(POKETWO_ID):
+    def wait_for_trade_initiation(_message: Message):
+
+        if _message.author.id != int(POKETWO_ID):
             return False
 
-        if len(message.embeds) <= 0:
+        if len(_message.embeds) <= 0:
             return False
 
-        embd = message.embeds[0]
+        embd = _message.embeds[0]
 
         if "Trade between" not in embd.title or donator.display_name not in embd.title or staff.display_name not in embd.title:
             return False
@@ -96,30 +96,31 @@ async def donation_check(bot:AutoShardedBot, message:Message):
 
     try:
         await bot.wait_for("message", check=wait_for_trade_initiation, timeout=60)
-    except:
+    except TimeoutError:
         return await message.channel.send("> No response from Poketwo Recieved, Donation Log session cancelled!")
     else:
-        await message.channel.send("> Donation Log Session Started! This donation will be logged automatically on completion!\n**NOTE** : Please don't add more than 20 items (1 page) at a time.")
+        await message.channel.send(
+            "> Donation Log Session Started! This donation will be logged automatically on completion!\n**NOTE** : Please don't add more than 20 items (1 page) at a time.")
 
     pokecoins = 0
-    rares     = 0
-    shinies   = 0
-    redeems   = 0
+    rares = 0
+    shinies = 0
+    redeems = 0
 
     conclusion_type = None
 
-    def wait_for_cancellation(message:Message):
+    def wait_for_cancellation(message: Message):
 
         nonlocal conclusion_type
 
         if not message.content.strip().startswith(f"<@{POKETWO_ID}>"):
             return False
-        
+
         if "x" not in message.content.lower() and "cancel" not in message.content.lower():
-            return False 
+            return False
 
         battle_cancel_keywords = ["trade ", "t "]
-        
+
         for keyword in battle_cancel_keywords:
             if keyword in message.content:
                 break
@@ -129,22 +130,22 @@ async def donation_check(bot:AutoShardedBot, message:Message):
         conclusion_type = "CANCELLED"
 
         return True
-    
-    def wait_for_completion(message:Message):
+
+    def wait_for_completion(message: Message):
 
         nonlocal pokecoins, rares, shinies, redeems, conclusion_type
 
         if message.author.id != int(POKETWO_ID):
             return False
-        
+
         if len(message.embeds) <= 0:
             return False
-        
+
         embd = message.embeds[0]
 
         if "Completed trade between" not in embd.title or donator.display_name not in embd.title or staff.display_name not in embd.title:
             return False
-        
+
         donator_field = [field for field in embd.fields if donator.display_name in field.name]
 
         field_lines = donator_field[0].value.split("\n")
@@ -173,20 +174,20 @@ async def donation_check(bot:AutoShardedBot, message:Message):
 
         return True
 
-    def wait_for_conclusion(message:Message):
+    def wait_for_conclusion(message: Message):
 
         if wait_for_cancellation(message) is not False:
             return True
-        
+
         if wait_for_completion(message) is not False:
             return True
-        
+
         return False
 
     try:
         trade_complete_message = await bot.wait_for("message", check=wait_for_conclusion, timeout=360)
 
-    except TimeoutError as e:
+    except TimeoutError:
         return await message.channel.send("> Donation Logging Session Timed Out!")
 
     else:
@@ -201,7 +202,7 @@ async def donation_check(bot:AutoShardedBot, message:Message):
         if log_channel_id == "0":
             return
 
-        log_channel:TextChannel = message.guild.get_channel(int(log_channel_id))
+        log_channel: TextChannel = message.guild.get_channel(int(log_channel_id))
 
         log_embd = Embed(title="Donation Log", color=NORMAL_COLOR)
 
@@ -229,7 +230,8 @@ async def donation_check(bot:AutoShardedBot, message:Message):
             inline=True
         )
 
-        donated_items_str = "```Pokecoins : {}\nShinies : {}\nRares : {}\nRedeems : {}```".format(pokecoins, shinies, rares, redeems)
+        donated_items_str = "```Pokecoins : {}\nShinies : {}\nRares : {}\nRedeems : {}```".format(pokecoins, shinies,
+                                                                                                  rares, redeems)
 
         log_embd.add_field(
             name="Items Donated",
@@ -242,16 +244,18 @@ async def donation_check(bot:AutoShardedBot, message:Message):
         try:
             await log_channel.send(embed=log_embd)
         except Forbidden:
-            return await message.channel.send("Not Allowed to send messages in {}! Please Check Permissions".format(log_channel.mention))
+            return await message.channel.send(
+                "Not Allowed to send messages in {}! Please Check Permissions".format(log_channel.mention))
 
         await message.channel.send("Donation has been logged!")
-        
-async def log_donation(server_id:int, donator:Member, pokecoins:int=0, rares:int=0, shinies:int=0, redeems:int=0, data_cursor=None):
 
+
+async def log_donation(server_id: int, donator: Member, pokecoins: int = 0, rares: int = 0, shinies: int = 0,
+                       redeems: int = 0, data_cursor=None):
     if data_cursor is None:
         data_cursor = await mongo_manager.manager.get_all_data(
             collection_name="donations",
-            query={"server_id" : str(server_id)}
+            query={"server_id": str(server_id)}
         )
 
     data = data_cursor[0]
@@ -272,12 +276,12 @@ async def log_donation(server_id:int, donator:Member, pokecoins:int=0, rares:int
     ]
     """
 
-    user_donations     = donations.get(str(donator.id), {})
+    user_donations = donations.get(str(donator.id), {})
 
     new_pokecoin_count = user_donations.get("pokecoins", 0) + pokecoins
-    new_shiny_count    = user_donations.get("shinies", 0) + shinies
-    new_rare_count     = user_donations.get("rares", 0) + rares
-    new_redeem_count   = user_donations.get("redeems", 0) + redeems
+    new_shiny_count = user_donations.get("shinies", 0) + shinies
+    new_rare_count = user_donations.get("rares", 0) + rares
+    new_redeem_count = user_donations.get("redeems", 0) + redeems
 
     # Calculate the approximate pokecoin value of all items
     value = await general_helper.get_trade_value(new_pokecoin_count, new_shiny_count, new_rare_count, new_redeem_count)
@@ -293,6 +297,6 @@ async def log_donation(server_id:int, donator:Member, pokecoins:int=0, rares:int
 
     await mongo_manager.manager.update_all_data(
         col_name="donations",
-        query={"server_id" : str(server_id)},
-        updated_data={"donations" : donations}
+        query={"server_id": str(server_id)},
+        updated_data={"donations": donations}
     )

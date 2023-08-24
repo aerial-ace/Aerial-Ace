@@ -30,7 +30,7 @@ class PageView(pages.Paginator):
             buttons.append(last_btn)
 
         for i in range(len(pages)):
-            pages[i].set_footer(text=f"Page {i+1} of {len(pages)}")
+            pages[i].set_footer(text=f"Page {i + 1} of {len(pages)}")
 
         super().__init__(
             pages,

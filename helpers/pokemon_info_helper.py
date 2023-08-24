@@ -4,6 +4,7 @@ from managers import cache_manager
 from helpers import general_helper
 from config import TYPES, NON_SHINY_LINK_TEMPLATE, NORMAL_COLOR, ERROR_COLOR
 
+
 # get stats
 async def get_stats_embed(pokemon):
     pokemon = pokemon.lower()
@@ -36,6 +37,7 @@ async def get_stats_embed(pokemon):
 
         return embd
 
+
 # get moveset
 async def get_moveset_embed(poke):
     poke = poke.lower()
@@ -67,7 +69,8 @@ async def get_moveset_embed(poke):
 
         return embd
 
-# get nature 
+
+# get nature
 async def get_nature_embed(poke: str):
     poke = poke.lower()
     embd = discord.Embed()
@@ -82,7 +85,7 @@ async def get_nature_embed(poke: str):
         embd.set_thumbnail(url=image_link)
 
         embd.set_footer(text="Missing nature for a potentially good pokemon? Report it at official server.")
-    except:
+    except KeyError:
         embd.title = "That pokemon was not found in the database"
         embd.description = "> If the name is correct then \n"
         embd.description += "> PROBABLY this pokemon is not good for battling"
@@ -90,8 +93,9 @@ async def get_nature_embed(poke: str):
         embd.set_footer(text="Missing nature for a potentially good pokemon? Report it at official server.")
 
         embd.color = ERROR_COLOR
-    
+
     return embd
+
 
 # get weakness
 async def get_weakness_embed(params):
@@ -104,11 +108,11 @@ async def get_weakness_embed(params):
     if type_input:
         for t in params:
             if t.lower() not in TYPES:
-                reply = await general_helper.get_info_embd(title="Breh, whats this?", desc="Input Error, either give a valid type set or a valid pokemon name",color=ERROR_COLOR)
+                reply = await general_helper.get_info_embd(title="Breh, whats this?", desc="Input Error, either give a valid type set or a valid pokemon name", color=ERROR_COLOR)
                 return reply
     else:
         if len(params) > 1:
-            reply = await general_helper.get_info_embd(title="Breh, whats this?", desc="Input Error, either give a valid type set or a valid pokemon name",color=ERROR_COLOR)
+            reply = await general_helper.get_info_embd(title="Breh, whats this?", desc="Input Error, either give a valid type set or a valid pokemon name", color=ERROR_COLOR)
             return reply
 
     # get types from the input
@@ -134,7 +138,7 @@ async def get_weakness_embed(params):
             overall_weakness[j] = overall_weakness[j] * individual_weakness[i][j]
 
     # divide the overall weaknesses into tiers
-    weakness_tiers = {"super weak" : "", "weak" : "", "neutral" : "", "resistive" : "", "super resistive" : "","immune" : ""}
+    weakness_tiers = {"super weak": "", "weak": "", "neutral": "", "resistive": "", "super resistive": "", "immune": ""}
 
     for type in list(overall_weakness.keys()):
         if overall_weakness[type] > 2:
@@ -166,7 +170,7 @@ async def get_weakness_embed(params):
         embed.description = f"Types : {type_text}"
 
     for tier in list(weakness_tiers.keys()):
-        
+
         if len(weakness_tiers[tier]) <= 0:
             continue
 

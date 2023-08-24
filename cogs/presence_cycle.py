@@ -3,11 +3,11 @@ from discord.ext import tasks
 from itertools import cycle
 import discord
 
-class Presence(commands.Cog):
 
+class Presence(commands.Cog):
     presence_change_time = 15
 
-    bot : commands.Bot = None
+    bot: commands.Bot = None
 
     activity = cycle([
         discord.Activity(name="Dev's Shitty Games", type=discord.ActivityType.playing, status=discord.Status.online),
@@ -26,7 +26,7 @@ class Presence(commands.Cog):
 
     @tasks.loop(seconds=presence_change_time)
     async def update_presence(self):
-        await self.set_presence()  
+        await self.set_presence()
 
     @update_presence.before_loop
     async def waiter(self):
@@ -34,6 +34,7 @@ class Presence(commands.Cog):
 
     async def set_presence(self):
         await self.bot.change_presence(activity=self.activity.__next__())
+
 
 def setup(bot):
     bot.add_cog(Presence(bot))

@@ -5,8 +5,8 @@ from managers import mongo_manager
 from helpers import logger
 from config import NORMAL_COLOR
 
-async def get_random_ruleset_embed() -> Embed:
 
+async def get_random_ruleset_embed() -> Embed:
     cursor = await mongo_manager.manager.get_all_data("rulesets", {})
     number_of_rules = await mongo_manager.manager.get_documents_length("rulesets", {})
 
@@ -25,28 +25,20 @@ async def get_random_ruleset_embed() -> Embed:
 
     return embd
 
-async def add_ruleset(name:str, rules:list, user:str):
 
+async def add_ruleset(name: str, rules: list, user: str):
     number_of_rulesets = await mongo_manager.manager.get_documents_length("rulesets", {})
 
     new_db_entry = {
-        "id" : number_of_rulesets + 1,
-        "name" : name, 
-        "rules" : rules,
-        "user" : user
+        "id": number_of_rulesets + 1,
+        "name": name,
+        "rules": rules,
+        "user": user
     }
 
     try:
         await mongo_manager.manager.add_data("rulesets", new_db_entry)
     except Exception as e:
-        logger.Logger.logError(e, "Error occurred while adding ruleset to the db.")
+        logger.Logger.log_error(e, "Error occurred while adding ruleset to the db.")
     else:
         return "Entry Added! Id : {}".format(number_of_rulesets + 1)
-
-
-
-
-    
-
-
-

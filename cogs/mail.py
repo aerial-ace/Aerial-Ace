@@ -4,16 +4,16 @@ from discord.ext import commands
 from views.ButtonViews import DonationView
 import config
 
+
 class MailModule(commands.Cog):
     @commands.guild_only()
     @commands.command(name="mail", aliases=["ml"], description="open the mail box to get alerts")
-    async def open_mail(self, ctx : commands.Context):
-
-        """View all the mails in the mail box"""
+    async def open_mail(self, ctx: commands.Context):
+        """View all the mails in the mailbox"""
 
         embd = discord.Embed(title="__Mail Box - Aerial Ace__", color=config.NORMAL_COLOR)
         view = DonationView(2000)
-        
+
         embd.description = ">>>>>>>__**New**__\n\n"
         embd.description += f"All the Scarlet/Violet Pokemon Movesets are now added! "
 
@@ -24,17 +24,18 @@ class MailModule(commands.Cog):
 
         await ctx.send(embed=embd, view=view)
 
+
 # Mail reminder
 async def process_mail(ctx):
+    embd = discord.Embed(title=f"{config.ALERT_EMOJI} NOTICE {config.ALERT_EMOJI}", color=config.NORMAL_COLOR)
+    embd.description = f"**Scarlet/Violet** pokemon movesets are here!"
+    try:
+        embd.set_footer(text=f"Check the complete mail using {ctx.prefix}mail")
+    except:
+        pass  # Don't add footer in mail reminder through slash commands
 
-        embd = discord.Embed(title=f"{config.ALERT_EMOJI} NOTICE {config.ALERT_EMOJI}", color=config.NORMAL_COLOR)
-        embd.description = f"**Scarlet/Violet** pokemon movesets are here!"
-        try:
-            embd.set_footer(text=f"Check the complete mail using {ctx.prefix}mail")
-        except:
-            pass # Dont add footer in mail reminder through slash commands
+    await ctx.send(embed=embd)
 
-        await ctx.send(embed=embd)
 
 def setup(bot):
     mail_module = MailModule()

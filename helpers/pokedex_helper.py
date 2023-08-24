@@ -8,8 +8,8 @@ from config import NORMAL_COLOR, ERROR_COLOR, NO_IMAGE
 
 """data structure used to store pokemon data"""
 
-class PokeData:
 
+class PokeData:
     p_id = 0
     p_name = ""
     p_types = ""
@@ -24,17 +24,18 @@ class PokeData:
     p_evolution_chain = ""
     p_rarity = ""
 
-class AbilityData:
 
-    a_name : str = ""
-    a_desc_short : str = ""
-    a_desc : str = ""
-    a_gen : str = ""
+class AbilityData:
+    a_name: str = ""
+    a_desc_short: str = ""
+    a_desc: str = ""
+    a_gen: str = ""
+
 
 """returns the data of pokemon fetched from api"""
 
-async def get_poke_by_id(poke_id):
 
+async def get_poke_by_id(poke_id):
     is_shiny = False
 
     if poke_id == "":
@@ -50,7 +51,7 @@ async def get_poke_by_id(poke_id):
 
     try:
         poke_id = cache_manager.cached_alt_name_data[poke_id]
-    except:
+    except KeyError:
         poke_id = poke_id
 
     poke = PokeData()
@@ -126,7 +127,7 @@ async def get_poke_by_id(poke_id):
         evolution_chain.append(chain_data["species"]["name"])
         try:
             chain_data = chain_data["evolves_to"][0]
-        except:
+        except KeyError | Exception:
             break
     for i in range(0, len(evolution_chain)):
         poke.p_evolution_chain += evolution_chain[i].capitalize()
@@ -143,12 +144,14 @@ async def get_poke_by_id(poke_id):
             poke.p_rarity = rarity.capitalize()
         else:
             poke.p_rarity = "Common"
-    except:
+    except KeyError:
         poke.p_rarity = None
 
     return poke
 
+
 """returns the dex embed from a pokemon's id or name"""
+
 
 async def get_dex_entry_embed(poke_data):
     max_character_width = 40
@@ -213,8 +216,8 @@ async def get_dex_entry_embed(poke_data):
 
     return embd
 
-def get_ability_data(ability:str) -> AbilityData:
 
+def get_ability_data(ability: str) -> AbilityData:
     data = AbilityData()
 
     ability_link = f"https://pokeapi.co/api/v2/ability/{ability}"
@@ -235,8 +238,7 @@ def get_ability_data(ability:str) -> AbilityData:
     return data
 
 
-async def get_ability_embed(ability:str) -> discord.Embed:
-
+async def get_ability_embed(ability: str) -> discord.Embed:
     ability_data = get_ability_data(ability)
 
     embd = discord.Embed(title=ability_data.a_name.capitalize(), color=NORMAL_COLOR)

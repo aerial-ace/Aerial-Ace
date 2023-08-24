@@ -3,6 +3,7 @@ from discord.ext import commands
 from views.ButtonViews import GeneralView, DonationView
 from helpers import utility_helper
 
+
 class Utility(commands.Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
@@ -18,16 +19,15 @@ class Utility(commands.Cog):
 
     @commands.guild_only()
     @commands.command(name="roll", description="Rolls a die")
-    async def roll(self, ctx, max_value : int = 100):
+    async def roll(self, ctx, max_value: int = 100):
         reply = await utility_helper.roll(max_value, ctx.author)
-        
+
         await ctx.send(reply)
 
     @roll.error
     async def roll_handler(self, ctx, error):
         if isinstance(error, commands.errors.BadArgument):
             await ctx.reply(f"Gib a integer as an argument like `{ctx.prefix}roll 69`")
-        
 
     """Get links to support servers"""
 
@@ -73,6 +73,7 @@ class Utility(commands.Cog):
         view = DonationView(200)
 
         await ctx.send(embed=reply, view=view)
-            
+
+
 def setup(bot):
     bot.add_cog(Utility(bot))

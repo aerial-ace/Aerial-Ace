@@ -3,12 +3,13 @@ from discord import HTTPException, Forbidden
 
 from views.ButtonViews import GeneralView
 
-class ErrorHandler(commands.Cog):
-    
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx:commands.Context, error:commands.CommandError):
 
-        cog:commands.Cog = ctx.cog
+class ErrorHandler(commands.Cog):
+
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
+
+        cog: commands.Cog = ctx.cog
         view = GeneralView(200, True, True, False, True)
 
         # return if cog has its own handler
@@ -17,14 +18,14 @@ class ErrorHandler(commands.Cog):
                 return
 
         # exceptions that don't need to handled
-        ignored_exceptions = (commands.CommandNotFound, )
+        ignored_exceptions = (commands.CommandNotFound,)
 
-        error = getattr(error, "original", error)    
+        error = getattr(error, "original", error)
 
         # return if error is one from ignored exceptions
         if isinstance(error, ignored_exceptions):
             return
-        
+
         if isinstance(error, Forbidden):
             return
 
@@ -32,7 +33,7 @@ class ErrorHandler(commands.Cog):
             return await ctx.reply("This command is currently disabled due to some reasons.", view=view)
 
         if isinstance(error, commands.CommandOnCooldown):
-            return await ctx.reply(f"Woah there!! You are on cooldown for this command. Try again in {round(error.retry_after, 2)} seconds", view=view)
+            return await ctx.reply(f"Woah there!! You are on cool down for this command. Try again in {round(error.retry_after, 2)} seconds", view=view)
 
         if isinstance(error, commands.NoPrivateMessage):
             try:
@@ -42,7 +43,7 @@ class ErrorHandler(commands.Cog):
 
         if isinstance(error, commands.NotOwner):
             return await ctx.reply("You are not supposed to use this command :>", view=view)
-    
 
-def setup(bot:commands.Bot):
+
+def setup(bot: commands.Bot):
     bot.add_cog(ErrorHandler())

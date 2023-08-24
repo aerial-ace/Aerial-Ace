@@ -3,6 +3,7 @@ from textwrap import TextWrapper
 
 import config
 
+
 # for wrapping text
 def wrap_text(width, text):
     wrapped_text = ""
@@ -13,7 +14,8 @@ def wrap_text(width, text):
 
     return wrapped_text
 
-# returns a embed provided the data 
+
+# returns an embed provided the data
 async def get_info_embd(title, desc="", color=config.NORMAL_COLOR, footer=None, show_thumbnail=False):
     embd = discord.Embed()
 
@@ -29,6 +31,7 @@ async def get_info_embd(title, desc="", color=config.NORMAL_COLOR, footer=None, 
 
     return embd
 
+
 async def get_user_id_from_ping(ping):
     user_id = ping
 
@@ -38,6 +41,6 @@ async def get_user_id_from_ping(ping):
 
     return user_id
 
-async def get_trade_value(pokecoins:int, shinies:int, rares:int, redeems:int) -> int:
 
+async def get_trade_value(pokecoins: int, shinies: int, rares: int, redeems: int) -> int:
     return int(pokecoins) + config.TRADE_ITEM_WEIGHT["shinies"] * int(shinies) + config.TRADE_ITEM_WEIGHT["rares"] * int(rares) + config.TRADE_ITEM_WEIGHT["redeems"] * int(redeems)

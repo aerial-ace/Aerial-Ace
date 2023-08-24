@@ -3,16 +3,17 @@ import discord
 from managers import mongo_manager
 import config
 
+
 class TagData:
-    hunters:list = None
-    timer:int    = 0
+    hunters: list = None
+    timer: int = 0
+
 
 # register shiny tags
 async def register_tag(server_id, user, tag):
-
     tag = tag.lower()
 
-    query = {"server_id" : str(server_id)}
+    query = {"server_id": str(server_id)}
 
     """
     Structure : 
@@ -61,29 +62,29 @@ async def register_tag(server_id, user, tag):
 
     try:
         users_assigned_to_new_tag = tag_data[tag]
-    except:
+    except KeyError:
         tag_data[tag] = []
         users_assigned_to_new_tag = []
 
     if str(user.id) not in users_assigned_to_new_tag:
         users_assigned_to_new_tag.append(str(user.id))
 
-    tag_data[tag] = users_assigned_to_new_tag 
+    tag_data[tag] = users_assigned_to_new_tag
 
-    updated_data = {"tags" : tag_data}
+    updated_data = {"tags": tag_data}
 
-    await mongo_manager.manager.update_all_data("tags", {"server_id" : str(server_id)}, updated_data)
+    await mongo_manager.manager.update_all_data("tags", {"server_id": str(server_id)}, updated_data)
 
     if old_tag == "":
         return f"> **{user.name}** was assigned to `{tag.capitalize()}` tag"
     else:
         return f"> **{user.name}** was removed from `{old_tag.capitalize()}` and assigned to `{tag.capitalize()}` tag"
 
+
 # Get shiny tags
 async def get_tag_data(server_id, tag) -> TagData:
-    
     tag = tag.lower()
-    query = {"server_id" : str(server_id)}
+    query = {"server_id": str(server_id)}
 
     data_cursor = await mongo_manager.manager.get_all_data("tags", query)
 
@@ -103,34 +104,34 @@ async def get_tag_data(server_id, tag) -> TagData:
 
     try:
         data.hunters = tag_data["tags"].get(tag, [])
-        data.timer   = tag_data["timer"]
+        data.timer = tag_data["timer"]
     except KeyError:
         await update_timer(str(server_id), 0)
-        data.timer   = 0
+        data.timer = 0
 
     return data
 
+
 # Get show hunters embed
 async def get_show_hunters_embd(tag, hunters):
-
     embd = discord.Embed(color=config.NORMAL_COLOR)
     embd.title = "{tag}".format(tag=tag.capitalize())
     embd.description = f"Users assigned to `{tag.capitalize()}` tag \n\n"
 
     for i in hunters:
-        embd.description += "<@{hunter_id}>\n".format(hunter_id=i.replace("/",""))
+        embd.description += "<@{hunter_id}>\n".format(hunter_id=i.replace("/", ""))
 
     return embd
 
-# Set Timer
-async def update_timer(server_id:str, time_value:int):
 
+# Set Timer
+async def update_timer(server_id: str, time_value: int):
     query = {
-        "server_id" : server_id
+        "server_id": server_id
     }
 
     updated_data = {
-        "timer" : time_value
+        "timer": time_value
     }
 
     try:
@@ -140,12 +141,12 @@ async def update_timer(server_id:str, time_value:int):
     else:
         return discord.Embed(title="Timer Updated!", description="Post Tag Timer is now set to **{}** seconds".format(time_value), color=discord.Color.dark_theme())
 
+
 # remove user from their tag
 async def remove_user(server_id, user):
-    
     user_id = user.id
 
-    query = {"server_id" : str(server_id)}
+    query = {"server_id": str(server_id)}
 
     mongo_cursor = await mongo_manager.manager.get_all_data("tags", query)
 
@@ -186,18 +187,18 @@ async def remove_user(server_id, user):
         if len(tag_data[old_tag]) <= 0:
             del tag_data[old_tag]
 
-    updated_tag = {"tags" : tag_data}
+    updated_tag = {"tags": tag_data}
 
     await mongo_manager.manager.update_all_data("tags", query, updated_tag)
 
     return f"> <@{user_id}> was removed from `{old_tag.capitalize()}` tag"
+
 
 # remove user from their tag
-async def remove_user_id(server_id, user_id : str):
-    
+async def remove_user_id(server_id, user_id: str):
     user_id = str(user_id)
 
-    query = {"server_id" : str(server_id)}
+    query = {"server_id": str(server_id)}
 
     mongo_cursor = await mongo_manager.manager.get_all_data("tags", query)
 
@@ -238,32 +239,32 @@ async def remove_user_id(server_id, user_id : str):
         if len(tag_data[old_tag]) <= 0:
             del tag_data[old_tag]
 
-    updated_tag = {"tags" : tag_data}
+    updated_tag = {"tags": tag_data}
 
     await mongo_manager.manager.update_all_data("tags", query, updated_tag)
 
     return f"> <@{user_id}> was removed from `{old_tag.capitalize()}` tag"
 
-# remove all tags of a particular server
-async def remove_all_tags(server_id:str) -> discord.Embed:
 
-    query = {"server_id" : server_id}
+# remove all tags of a particular server
+async def remove_all_tags(server_id: str) -> discord.Embed:
+    query = {"server_id": server_id}
 
     updated_data = {
-        "tags" : {}
+        "tags": {}
     }
 
     try:
         await mongo_manager.manager.update_all_data("tags", query, updated_data)
     except Exception as e:
-        return discord.Embed(title="Error!", description="```" + e + "```", color=config.ERROR_COLOR)
+        return discord.Embed(title="Error!", description="```" + e.__str__() + "```", color=config.ERROR_COLOR)
     else:
         return discord.Embed(title="Success!", description="All tags cleared!")
 
-# set the afk status of the user
-async def set_afk(server_id : str, user_id : str, state : str):
 
-    query = {"server_id" : server_id}
+# set the afk status of the user
+async def set_afk(server_id: str, user_id: str, state: str):
+    query = {"server_id": server_id}
 
     mongo_cursor = await mongo_manager.manager.get_all_data("tags", query)
 
@@ -297,7 +298,7 @@ async def set_afk(server_id : str, user_id : str, state : str):
 
         tag_data[current_tag].append(new_user_id)
 
-        updated_data = {"tags" : tag_data}
+        updated_data = {"tags": tag_data}
 
         await mongo_manager.manager.update_all_data("tags", query, updated_data)
 
@@ -319,17 +320,17 @@ async def set_afk(server_id : str, user_id : str, state : str):
 
         tag_data[current_tag].append(new_user_id)
 
-        updated_data = {"tags" : tag_data}
+        updated_data = {"tags": tag_data}
 
         await mongo_manager.manager.update_all_data("tags", query, updated_data)
 
-        return "> AFK removed, you will receive pings now." 
+        return "> AFK removed, you will receive pings now."
 
-async def get_all_tags_embed(server : discord.Guild) -> discord.Embed:
 
+async def get_all_tags_embed(server: discord.Guild) -> discord.Embed:
     embd = discord.Embed(title=f"All Tags in {server.name}", color=config.NORMAL_COLOR)
- 
-    query = {"server_id" : str(server.id)}
+
+    query = {"server_id": str(server.id)}
 
     cursor = await mongo_manager.manager.get_all_data("tags", query)
 
