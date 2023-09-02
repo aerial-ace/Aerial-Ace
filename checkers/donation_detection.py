@@ -8,6 +8,8 @@ from config import POKETWO_ID, NORMAL_COLOR, INFO_EMOJI
 
 
 async def donation_check(bot: AutoShardedBot, message: Message):
+    '''Performs a check on the provided message to look for data about donations'''
+
     bot_member: Member = message.guild.get_member(bot.user.id)
 
     # Return if not allowed to send messages
@@ -226,12 +228,11 @@ async def donation_check(bot: AutoShardedBot, message: Message):
 
         log_embd.add_field(
             name="Teleport",
-            value="[Click Here]({})".format(trade_complete_message.jump_url),
+            value=f"[Click Here]({trade_complete_message.jump_url})",
             inline=True
         )
 
-        donated_items_str = "```Pokecoins : {}\nShinies : {}\nRares : {}\nRedeems : {}```".format(pokecoins, shinies,
-                                                                                                  rares, redeems)
+        donated_items_str = f"```Pokecoins : {pokecoins}\nShinies : {shinies}\nRares : {rares}\nRedeems : {redeems}```"
 
         log_embd.add_field(
             name="Items Donated",
@@ -244,14 +245,14 @@ async def donation_check(bot: AutoShardedBot, message: Message):
         try:
             await log_channel.send(embed=log_embd)
         except Forbidden:
-            return await message.channel.send(
-                "Not Allowed to send messages in {}! Please Check Permissions".format(log_channel.mention))
+            return await message.channel.send(f"Not Allowed to send messages in {log_channel.mention}! Please Check Permissions")
 
         await message.channel.send("Donation has been logged!")
 
 
-async def log_donation(server_id: int, donator: Member, pokecoins: int = 0, rares: int = 0, shinies: int = 0,
-                       redeems: int = 0, data_cursor=None):
+async def log_donation(server_id: int, donator: Member, pokecoins: int = 0, rares: int = 0, shinies: int = 0, redeems: int = 0, data_cursor=None):
+    """Logs the donation into the current logging channel"""
+
     if data_cursor is None:
         data_cursor = await mongo_manager.manager.get_all_data(
             collection_name="donations",
@@ -261,20 +262,6 @@ async def log_donation(server_id: int, donator: Member, pokecoins: int = 0, rare
     data = data_cursor[0]
 
     donations = data.get("donations", None)
-
-    """
-    donations : {
-        "348239489238473298" : {
-        
-            "name"      : "Dev",
-            "pokecoins" : 23942042,
-            "shinies"   : 23,
-            "rares"     : 199,
-            "redeems"   : 25,
-            "value"     : 0
-        }
-    ]
-    """
 
     user_donations = donations.get(str(donator.id), {})
 
