@@ -120,15 +120,20 @@ async def get_poke_by_id(poke_id):
         poke.p_total_stats += stat_value
         poke.p_stats[stat_name] = stat_value
 
+    
+
     # get evolution chain
     evolution_chain = []
     chain_data = evolution_data["chain"]
+
     while chain_data != "":
         evolution_chain.append(chain_data["species"]["name"])
+
         try:
             chain_data = chain_data["evolves_to"][0]
-        except KeyError | Exception:
+        except IndexError:
             break
+
     for i in range(0, len(evolution_chain)):
         poke.p_evolution_chain += evolution_chain[i].capitalize()
 
