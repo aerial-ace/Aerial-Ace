@@ -1,6 +1,7 @@
 from discord import ButtonStyle, Interaction
 from discord.ui import View, Button
 
+from views.ModalViews import SurveyModal
 from helpers import general_helper
 from config import PATREON_EMOJI, PAYPAL_EMOJI, KO_FI_EMOJI, PREMIUM_EMOJI, PATREON_LINK, PAYPAL_LINK, INVITE_LINK, SUPPORT_SERVER_LINK, REPO_LINK, VOTE_LINK, GITHUB_EMOJI, GITHUB_SPONSORS_LINK, KO_FI_LINK
 
@@ -81,7 +82,7 @@ class AcceptanceView(View):
 
 class GeneralView(View):
 
-    def __init__(self, timeout: int = 200, invite: bool = True, support_server: bool = True, source: bool = False, donate: bool = True, vote=False):
+    def __init__(self, timeout: int = 200, invite: bool = True, support_server: bool = True, source: bool = False, donate: bool = True, vote=False, survey=True):
 
         super().__init__()
 
@@ -93,6 +94,8 @@ class GeneralView(View):
         vote_button: Button = Button(label="Vote", style=ButtonStyle.link, url=VOTE_LINK)
         premium_button: Button = Button(label="Premium", style=ButtonStyle.gray, emoji=PREMIUM_EMOJI)
         premium_button.callback = self.donate_callback
+        survey_button: Button = Button(label="Take a short survey", style=ButtonStyle.gray, emoji="✉️")
+        survey_button.callback = self.survey_callback
 
         if invite:
             self.add_item(invite_button)
@@ -104,6 +107,8 @@ class GeneralView(View):
             self.add_item(vote_button)
         if donate:
             self.add_item(premium_button)
+        if survey:
+            self.add_item(survey_button)
 
     async def donate_callback(self, interaction: Interaction) -> None:
 
@@ -116,3 +121,7 @@ class GeneralView(View):
         view = DonationView(2000)
 
         await interaction.response.send_message(embed=embd, view=view)
+
+    async def survey_callback(self, interaction: Interaction) -> None:
+
+        await interaction.response.send_modal(SurveyModal())
