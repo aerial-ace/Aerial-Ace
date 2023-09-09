@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from views.ButtonViews import DonationView
+from views.ButtonViews import GeneralView
 import config
 
 
@@ -12,13 +12,13 @@ class MailModule(commands.Cog):
         """View all the mails in the mailbox"""
 
         embd = discord.Embed(title="__Mail Box - Aerial Ace__", color=config.NORMAL_COLOR)
-        view = DonationView(2000)
+        view = GeneralView()
 
-        embd.description = ">>>>>>>__**New**__\n\n"
-        embd.description += f"All the Scarlet/Violet Pokemon Movesets are now added! "
+        embd.description = "---------------------_**New**_---------------------\n\n"
+        embd.description += "Its time for a brand new feature coming to aerial ace. Introducing...\n# Donation Logging\n\nDonation Logging is a module ( set of commands ) which automatically logs donation, calculate their approximate worth, create a leaderboard based on the pc value of the donations all while making them easier to track and manage. Owner can allow their admins to collect donation when they are afk, and when they are online, they can collect the same donations from the admins and mark the donation as collected. \n\nIt is a very intuitive feature and will make donation management of your server a breeze. \n\nIt is already implemented in the support server and will soon be implement in some other aerial ace partner servers as well. If you want to look at how it works, head on over to [donation-logging-module-guide](https://discord.com/channels/751076697884852389/1141829994688041092) _(link to the support server)_. \n\nIt is a free to use feature with additional features for all tiers above the first tier! \n\nIts still an early release, so any bug reports, feedbacks, suggestions are highly appreciated."
 
-        embd.description += "\n\n>>>>>>>__**Old**__\n\n"
-        embd.description += f"Introducing the all-new Random Ruleset feature of Aerial Ace. Are you bored of doing your usual battles? Are in for some fun battle experience? Run the command `-aa random_ruleset` to fetch random rules for your next battle. Enforce these rules on your battles to make them fun and challenging. There are many rules added, and you can contribute your own rulesets too. Hope on our Support Server and suggest your own cool ruleset for everyone to try. Good luck on your next rando battles."
+        embd.description += "\n\n---------------------_**Old**_---------------------\n\n"
+        embd.description += "All the Scarlet/Violet Pokemon Movesets are now added! "
 
         embd.description += "\n\nThanks for using Aerial Ace as always."
 
@@ -28,10 +28,10 @@ class MailModule(commands.Cog):
 # Mail reminder
 async def process_mail(ctx):
     embd = discord.Embed(title=f"{config.ALERT_EMOJI} NOTICE {config.ALERT_EMOJI}", color=config.NORMAL_COLOR)
-    embd.description = f"**Scarlet/Violet** pokemon movesets are here!"
+    embd.description = f"**Donation Leaderboards** are here!"
     try:
         embd.set_footer(text=f"Check the complete mail using {ctx.prefix}mail")
-    except:
+    except Exception as e:
         pass  # Don't add footer in mail reminder through slash commands
 
     await ctx.send(embed=embd)
