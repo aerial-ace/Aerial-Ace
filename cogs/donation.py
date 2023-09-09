@@ -186,32 +186,6 @@ class DonationModule(commands.Cog):
 
         await ctx.interaction.followup.send("Marked as Collected!", ephemeral=True)
 
-    """
-    
-    @message_command(name="Not Collected")
-    async def not_collect(self, ctx: ApplicationContext, message:Message):
-
-        if message.author != ctx.bot.user or len(message.embeds) <= 0:
-            return await ctx.respond("This is not a Log Message! Please use this command on a Log Message to the donation as collected!", ephemeral=True)
-
-        # if ctx.author.id != message.guild.owner.id:
-        #     return await ctx.respond("This command can only be used by the server owner!")
-
-        main_embd = message.embeds[0]
-
-        if main_embd.title != "Donation Log":
-            return await ctx.respond("This is not a Log Message! Please use this command on a Log Message to the donation as collected!", ephemeral=True)
-
-        main_embd.set_field_at(2, name="Status", value=f"{INFO_EMOJI} Not Collected", inline=True)
-
-        await ctx.interaction.response.defer(ephemeral=True)
-
-        await message.edit(embed=main_embd)
-
-        await ctx.interaction.followup.send("Marked as Collected!", ephemeral=True)
-
-    """
-
 
 def setup(bot: commands.Bot):
     bot.add_cog(DonationModule())

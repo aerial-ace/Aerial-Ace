@@ -5,10 +5,10 @@ from managers import cache_manager, mongo_manager
 from helpers import starboard_helper, general_helper
 import config
 
-"""detect rare catch message"""
 
 
 async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
+    """detect rare catch message"""
     bot_member: discord.Member = message.guild.get_member(bot.user.id)
 
     if message.channel.permissions_for(bot_member).send_messages is False:
@@ -57,11 +57,9 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     # send feedback in the current channel
     await message.channel.send(embed=starboard_reply)
 
-
-"""check if any message is a rare catch message"""
-
-
 async def determine_rare_catch(msg):
+    """check if any message is a rare catch message"""
+
     message = msg.replace("!", "").replace(".", "").replace("♂️", "").replace("♀️", "")  # remove the shit
     message_words = message.split()
 
