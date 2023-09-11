@@ -6,7 +6,7 @@ from helpers import general_helper, logger
 import config
 
 all_categories = {"pokedex": "commands related to pokedex", "random": "commands related to random gen", "info": "commands related to information", "battle": "commands related to battleboard", "tags": "commands related to shinyhunts", "fun": "other fun commands", "misc": "commands that dont fit in other categories", "starboard": "commands related to starboard",
-                  "customization": "Customization commands for premium servers", "smogon": "commands related to showdown"}
+                  "customization": "Customization commands for premium servers", "smogon": "commands related to showdown", "donation" : "Displays the current donation information and holds commands related to donation module"}
 
 commands_in_category = {
     "pokedex": ["dex", "ability"],
@@ -18,7 +18,8 @@ commands_in_category = {
     "starboard": ["starboard"],
     "customization": ["rare_text", "shiny_text", "rare_image", "shiny_image"],
     "misc": ["ping", "roll", "support", "vote", "invite", "mail", "all"],
-    "smogon": ["smogon"]
+    "smogon": ["smogon"],
+    "dono" : ["", "dono_channel", "dono_log", "dono_staff", "dono_change", "dono_clear", "dono_remove"]
 }
 
 all_commands = {
@@ -63,7 +64,14 @@ all_commands = {
     "rare_text": "```{prefix}sb rt <text>\n{prefix}sb rt Woohoo \{ping\}! Congrats on catching a \{pokemon\}. Show us its stats :3``` updates the text shown on the rare catch embed. Add \{ping\}, \{level\} and \{pokemon\} in the text, which will be auto replaced to correct values",
     "shiny_text": "```{prefix}sb st <text>\n{prefix}sb st Holy Smokes {ping}! Congrats on catching a SHINY {pokemon}. Good luck on your next hunt, if this was your hunt.``` updates the text shown on the shiny catch embed. Add {ping}, {level} and {pokemon} in the text, which will be auto replaced to correct values",
     "rare_image": "```{prefix}sb ri <link>\n{prefix}sb ri https://i.waifu.pics/wFFu3UE.gif``` updates the image show in the rare catch image.",
-    "shiny_image": "```{prefix}sb si <link>\n{prefix}sb si https://i.waifu.pics/wFFu3UE.gif``` updates the image show in the shiny catch image.```"
+    "shiny_image": "```{prefix}sb si <link>\n{prefix}sb si https://i.waifu.pics/wFFu3UE.gif``` updates the image show in the shiny catch image.```",
+    "dono_lb": "```{prefix}dono lb``` shows the current donation leaderboard of the server",
+    "dono_channel": "```{prefix}dono ch #channel``` donations made only in the #channel will be counted for the leaderboard",
+    "dono_log": "```{prefix}dono log #channel``` all the donation logs are sent in the #channel",
+    "dono_staff": "```{prefix}dono staff <role-id>``` sets the <role-id> as the staff role id. Donations taken by the staff with this role will be counted in the leaderboard.",
+    "dono_change": "```{prefix}dono change @user <pc> <shiny> <rare> <redeem>``` updates the leaderboard for the @user and sets their pc, shiny, rare, redeem values to the provided values.",
+    "dono_clear": "```{prefix}dono clear``` clears the leaderboard.",
+    "dono_remove": "```{prefix}dono remove @user``` removes @user from the leaderboard."
 }
 
 
