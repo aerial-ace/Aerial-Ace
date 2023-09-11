@@ -146,10 +146,8 @@ async def get_battle_score(server_id: int, user: Member) -> Embed:
         return await general_helper.get_info_embd("Error!", "Error showing battle score :(, error were registered though.", ERROR_COLOR)
 
 
-# returns the battle leaderboard of the server
 async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) -> PageView:
-
-    pdb.set_trace()
+    """returns the battle leaderboard of the server"""
 
     # works with both Guild Object and Guild Id alone
     if guild is not None:
@@ -171,8 +169,6 @@ async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) 
 
             battle_records_diffs[item[0]] = [wins - loses, wins, loses, name]
 
-        pdb.set_trace()
-
         sorted_battle_records: dict = OrderedDict(sorted(battle_records_diffs.items(), key=lambda x: int(x[1][0]), reverse=True))
 
         server_name = guild.name if guild is not None else str(id)
@@ -185,8 +181,6 @@ async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) 
         current_embd.description = "`-N-  | -W- | -L- | -Win %- | -Name-` \n\n"
 
         for index, item in enumerate(sorted_battle_records.items()):
-
-            pdb.set_trace()
 
             # after max number of listings are added, add the previous embed to embds and start a new page.
             if index > max_leaderboard_listings:
