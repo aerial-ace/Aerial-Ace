@@ -24,7 +24,7 @@ class BattleSystemSlash(commands.Cog):
 
         paginator = await battle_helper.get_battle_leaderboard_paginator(ctx.guild)
 
-        await paginator.send(ctx)
+        await paginator.respond(ctx.interaction)
 
     """For viewing the battle score"""
 

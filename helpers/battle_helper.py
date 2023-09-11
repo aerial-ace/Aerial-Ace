@@ -6,6 +6,7 @@ from managers import mongo_manager
 from helpers import general_helper, logger
 from config import NORMAL_COLOR, ERROR_COLOR
 
+import pdb
 
 # sends a confirmation message to accept the battle log
 async def get_battle_acceptance(ctx, winner_id, loser_id):
@@ -148,6 +149,8 @@ async def get_battle_score(server_id: int, user: Member) -> Embed:
 # returns the battle leaderboard of the server
 async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) -> PageView:
 
+    pdb.set_trace()
+
     # works with both Guild Object and Guild Id alone
     if guild is not None:
         query = {"server_id": str(guild.id)}
@@ -168,6 +171,8 @@ async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) 
 
             battle_records_diffs[item[0]] = [wins - loses, wins, loses, name]
 
+        pdb.set_trace()
+
         sorted_battle_records: dict = OrderedDict(sorted(battle_records_diffs.items(), key=lambda x: int(x[1][0]), reverse=True))
 
         server_name = guild.name if guild is not None else str(id)
@@ -180,6 +185,8 @@ async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) 
         current_embd.description = "`-N-  | -W- | -L- | -Win %- | -Name-` \n\n"
 
         for index, item in enumerate(sorted_battle_records.items()):
+
+            pdb.set_trace()
 
             # after max number of listings are added, add the previous embed to embds and start a new page.
             if index > max_leaderboard_listings:
@@ -200,6 +207,9 @@ async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) 
             win_perc = (round((wins / (wins + loses)) * 100, 1) if wins + loses > 0 else 0)
 
             current_embd.description += "`{pos} | {wins} | {loses} | {perc}% |` [{name}](https://discord.com/users/{id})\n".format(pos=" {0}.".format(index+1).center(4, " "), name=name, id=item[0], wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
+
+        if len(embds) <= 0:
+            embds.append(Embed(title="Empty Leaderboard!"))
 
         paginator:PageView = PageView(pages=embds, show_all_btns=True)
 
