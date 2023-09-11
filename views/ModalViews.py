@@ -34,7 +34,7 @@ class SurveyModal(discord.ui.Modal):
         super().__init__(title="Survey - Page 1 of 2", timeout=200)
 
         self.add_item(InputText(label="Question 1", style=discord.InputTextStyle.long, placeholder="Which Aerial Ace feature do you use the most?", required=True, min_length=5))
-        self.add_item(InputText(label="Question 2", style=discord.InputTextStyle.long, placeholder="Is there any feature you feel is missing from Aerial Ace?", required=True))
+        self.add_item(InputText(label="Question 2", style=discord.InputTextStyle.long, placeholder="What feature would you like to see in Aerial Ace?", required=True))
         self.add_item(InputText(label="Question 3", style=discord.InputTextStyle.long, placeholder="Do you know that Aerial Ace has a premium version with more features?", required=True))
         self.add_item(InputText(label="Question 4", style=discord.InputTextStyle.long, placeholder="Have you joined the support server? If yes, how do you feel there?", required=True))
         self.add_item(InputText(label="Question 5", style=discord.InputTextStyle.long, placeholder="Do you check the mail command to get latest updates about new features?", required=True))
