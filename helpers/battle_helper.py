@@ -1,6 +1,9 @@
+import pdb
+
 from collections import OrderedDict
 from discord import Member, Embed, Guild
 
+from views.PaginatorViews import PageView
 from managers import mongo_manager
 from helpers import general_helper, logger
 from config import NORMAL_COLOR, ERROR_COLOR
@@ -145,7 +148,9 @@ async def get_battle_score(server_id: int, user: Member) -> Embed:
 
 
 # returns the battle leaderboard of the server
-async def get_battle_leaderboard_embed(guild: Guild = None, id: str = None):
+async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) -> PageView:
+
+    # works with both Guild Object and Guild Id alone
     if guild is not None:
         query = {"server_id": str(guild.id)}
     else:
@@ -169,32 +174,40 @@ async def get_battle_leaderboard_embed(guild: Guild = None, id: str = None):
 
         server_name = guild.name if guild is not None else str(id)
 
-        reply_embd = Embed(title=f"Battle Leaderboard - {server_name}", color=NORMAL_COLOR)
-        reply_embd.description = "`-N-  | -W- | -L- | -Win %- | -Name-` \n\n"
-
         max_leaderboard_listings = 20
-        footer = ""
 
-        pos = 1
+        embds:list[Embed] = []
 
-        for i in sorted_battle_records.items():
-            if pos > max_leaderboard_listings:
-                footer = "Some players were not mentioned in the leaderboard because of lower scores.\nSee your score with -aa bs"
+        current_embd = Embed(title=f"Battle Leaderboard - {server_name}", color=NORMAL_COLOR)
+        current_embd.description = "`-N-  | -W- | -L- | -Win %- | -Name-` \n\n"
+
+        pdb.set_trace()
+
+        for index, item in enumerate(sorted_battle_records.items()):
+
+            # after max number of listings are added, add the previous embed to embds and start a new page.
+            if index > max_leaderboard_listings:
+
+                embds.append(current_embd)
+
+                current_embd = Embed(title=f"Battle Leaderboard - {server_name}", color=NORMAL_COLOR)
+                current_embd.description = "`-N-  | -W- | -L- | -Win %- | -Name-` \n\n"
+
+            # stop loop if all listings are done.
+            if index >= len(sorted_battle_records.items()) - 1:
+
                 break
 
-            wins = i[1][1]
-            loses = i[1][2]
-            name = i[1][3][:15] + "..." if len(i[1][3]) > 10 else i[1][3]
-
+            wins = item[1][1]
+            loses = item[1][2]
+            name = item[1][3][:15] + "..." if len(item[1][3]) > 10 else item[1][3]
             win_perc = (round((wins / (wins + loses)) * 100, 1) if wins + loses > 0 else 0)
 
-            reply_embd.description += "`{pos} | {wins} | {loses} | {perc}% |` [{name}](https://discord.com/users/{id})\n".format(pos=" {0}.".format(pos).center(4, " "), name=name, id=i[0], wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
-            pos = pos + 1
+            current_embd.description += "`{pos} | {wins} | {loses} | {perc}% |` [{name}](https://discord.com/users/{id})\n".format(pos=" {0}.".format(index+1).center(4, " "), name=name, id=item[0], wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
 
-        if footer != "":
-            reply_embd.set_footer(text=footer)
+        paginator:PageView = PageView(pages=embds, show_all_btns=True)
 
-        return reply_embd
+        return paginator
 
     except Exception as e:
         logger.Logger.log_error(e, f"Error while showing battle leaderboard")

@@ -58,10 +58,10 @@ class BattleSystem(commands.Cog):
     @commands.guild_only()
     @commands.command(name="battle_lb", aliases=["blb"], description="Shows the battle leaderboard of the server")
     async def battle_lb(self, ctx):
-        reply = await battle_helper.get_battle_leaderboard_embed(ctx.guild)
-        view = GeneralView(200, True, True, False, True)
 
-        await ctx.send(embed=reply, view=view)
+        paginator = await battle_helper.get_battle_leaderboard_paginator(ctx.guild)
+
+        await paginator.send(ctx)
 
     @battle_lb.error
     async def battle_lb_handler(self, ctx, error):
