@@ -1,5 +1,3 @@
-import pdb
-
 from collections import OrderedDict
 from discord import Member, Embed, Guild
 
@@ -180,8 +178,6 @@ async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) 
 
         current_embd = Embed(title=f"Battle Leaderboard - {server_name}", color=NORMAL_COLOR)
         current_embd.description = "`-N-  | -W- | -L- | -Win %- | -Name-` \n\n"
-
-        pdb.set_trace()
 
         for index, item in enumerate(sorted_battle_records.items()):
 

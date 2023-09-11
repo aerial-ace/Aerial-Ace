@@ -22,9 +22,9 @@ class BattleSystemSlash(commands.Cog):
     @slash_command(name="battle-leaderboard", description="View the battle leaderboard of this server")
     async def view_leaderboard(self, ctx: ApplicationContext):
 
-        embd = await battle_helper.get_battle_leaderboard_paginator(ctx.guild)
+        paginator = await battle_helper.get_battle_leaderboard_paginator(ctx.guild)
 
-        await ctx.respond(embed=embd, view=self.view)
+        await paginator.send(ctx)
 
     """For viewing the battle score"""
 

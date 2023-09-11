@@ -194,9 +194,9 @@ class AdminSystem(commands.Cog):
     @commands.command(name="view_blb", aliases=["vblb"])
     async def view_blb(self, ctx: commands.Context, guild_id: str):
 
-        reply = await battle_helper.get_battle_leaderboard_paginator(id=guild_id)
+        paginator = await battle_helper.get_battle_leaderboard_paginator(id=guild_id)
 
-        await ctx.send(embed=reply)
+        await paginator.send(ctx)
 
 
 def setup(bot):
