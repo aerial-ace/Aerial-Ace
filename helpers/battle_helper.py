@@ -192,7 +192,7 @@ async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) 
 
             # stop loop if all listings are done.
             if index >= len(sorted_battle_records.items()) - 1:
-
+                embds.append(current_embd)
                 break
 
             wins = item[1][1]
