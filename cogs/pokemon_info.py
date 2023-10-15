@@ -17,7 +17,7 @@ class PokemonInfo(commands.Cog):
     async def stats(self, ctx, poke: str):
         reply = await pokemon_info_helper.get_stats_embed(poke)
 
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -25,7 +25,7 @@ class PokemonInfo(commands.Cog):
     async def stats_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", f"A pokemon name is required for this command. Try this ```{ctx.prefix}stats Solgaleo\n{ctx.prefix}stats raichu-alola```", config.ERROR_COLOR)
-            view = GeneralView(200, True, True, False, True)
+            view = GeneralView(200, True, False, False, True)
 
             await ctx.send(embed=reply, view=view)
 
@@ -35,7 +35,7 @@ class PokemonInfo(commands.Cog):
     @commands.command(name="moveset", aliases=["ms"], description="Get best movesets of pokemons")
     async def moveset(self, ctx, poke: str):
         reply = await pokemon_info_helper.get_moveset_embed(poke)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -43,7 +43,7 @@ class PokemonInfo(commands.Cog):
     async def moveset_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", f"A pokemon name is required for this command, try this ```{ctx.prefix}moveset Zekrom\n{ctx.prefix}moveset raichu-alola```", config.ERROR_COLOR)
-            view = GeneralView(200, True, True, False, True)
+            view = GeneralView(200, True, False, False, True)
 
             await ctx.send(embed=reply, view=view)
 
@@ -53,7 +53,7 @@ class PokemonInfo(commands.Cog):
     @commands.command(name="nature", description="Get the best nature of pokemons")
     async def nature(self, ctx, poke: str):
         reply = await pokemon_info_helper.get_nature_embed(poke)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -61,7 +61,7 @@ class PokemonInfo(commands.Cog):
     async def nature_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Gib pokemon name as a param when :/", f"A pokemon name is required for this command, try this ```{ctx.prefix}nature Nihilego\n{ctx.prefix}nature raichu-alola```", config.ERROR_COLOR)
-            view = GeneralView(200, True, True, False, True)
+            view = GeneralView(200, True, False, False, True)
 
             await ctx.send(embed=reply, view=view)
 
@@ -90,7 +90,7 @@ class PokemonInfo(commands.Cog):
     async def get_weakness(self, ctx, *params):
 
         reply = await pokemon_info_helper.get_weakness_embed(params)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.send(embed=reply, view=view)
 

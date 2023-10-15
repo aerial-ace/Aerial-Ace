@@ -11,7 +11,7 @@ class SuggestionSlash(commands.Cog):
     @slash_command(name="suggest", description="Suggest something to the developers")
     async def suggest(self, ctx: ApplicationContext, suggestion: Option(str, description="Suggestion Goes Here", required=True)):
         reply = await suggestion_helper.send_suggestion(ctx, suggestion)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.respond(reply, view=view)
 

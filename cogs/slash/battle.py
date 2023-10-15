@@ -17,7 +17,7 @@ class BattleSystemSlash(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.view = GeneralView(200, True, True, False, True)
+        self.view = GeneralView(200, True, False, False, True)
 
     @slash_command(name="battle-leaderboard", description="View the battle leaderboard of this server")
     async def view_leaderboard(self, ctx: ApplicationContext):

@@ -10,7 +10,7 @@ class ErrorHandler(commands.Cog):
     async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
 
         cog: commands.Cog = ctx.cog
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         # return if cog has its own handler
         if cog:

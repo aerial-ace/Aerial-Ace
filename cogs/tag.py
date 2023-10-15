@@ -14,7 +14,7 @@ async def validate_tag(ctx: commands.Context, tag) -> bool:
         cache_manager.cached_type_data[tag.lower()]
     except KeyError:
         reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english.", ERROR_COLOR)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
         await ctx.send(embed=reply, view=view)
         return False
     else:
@@ -35,7 +35,7 @@ class TagSystem(commands.Cog):
             return
 
         reply = await tag_helper.register_tag(ctx.guild.id, ctx.author, tag)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
         await ctx.send(reply, view=view)
 
     @tag.error
@@ -56,7 +56,7 @@ class TagSystem(commands.Cog):
 
         if len(data.hunters) == 0:
             reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), WARNING_COLOR)
-            view = GeneralView(200, True, True, False, True)
+            view = GeneralView(200, True, False, False, True)
 
             await ctx.send(embed=reply, view=view)
             return
@@ -94,7 +94,7 @@ class TagSystem(commands.Cog):
     async def tag_ping_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a tag as a parameter.\n```{ctx.prefix}tag_ping Espurr```", ERROR_COLOR)
-            view = GeneralView(200, True, True, False, True)
+            view = GeneralView(200, True, False, False, True)
 
             await ctx.reply(embed=reply, view=view)
 
@@ -116,7 +116,7 @@ class TagSystem(commands.Cog):
             return
 
         reply = await tag_helper.get_show_hunters_embd(tag, hunters)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -124,7 +124,7 @@ class TagSystem(commands.Cog):
     async def tag_show_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a tag as a parameter.\n```{ctx.prefix}tag_show Darumaka```", ERROR_COLOR)
-            view = GeneralView(200, True, True, False, True)
+            view = GeneralView(200, True, False, False, True)
 
             await ctx.reply(embed=reply, view=view)
 
@@ -146,7 +146,7 @@ class TagSystem(commands.Cog):
             return
 
         reply = await tag_helper.update_timer(str(ctx.guild.id), value)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -156,7 +156,7 @@ class TagSystem(commands.Cog):
     @commands.command(name="tag_clear", aliases=["tc"], description="Removes the users from his current tag.")
     async def tag_clear(self, ctx: commands.Context):
         reply = await tag_helper.remove_user(ctx.guild.id, ctx.author)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.send(reply, view=view)
 
@@ -181,7 +181,7 @@ class TagSystem(commands.Cog):
             return await ctx.send(embed=await general_helper.get_info_embd("Cancelled!", ""))
 
         reply = await tag_helper.remove_all_tags(str(ctx.guild.id))
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.send(embed=reply, view=view)
 
@@ -192,19 +192,19 @@ class TagSystem(commands.Cog):
     @commands.command(name="tag_remove", aliases=["tr"], description="Remove users from their current tag (Admins Only)")
     async def tag_remove(self, ctx, user: Member):
         reply = await tag_helper.remove_user(ctx.guild.id, user)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
         await ctx.send(reply, view=view)
 
     @tag_remove.error
     async def tag_remove_helper(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a user as a parameter.\n```{ctx.prefix}tag_remove @shit_guy_69```", ERROR_COLOR)
-            view = GeneralView(200, True, True, False, True)
+            view = GeneralView(200, True, False, False, True)
 
             await ctx.reply(embed=reply, view=view)
         elif isinstance(error, commands.errors.MissingPermissions):
             reply = "Be a Admin when?"
-            view = GeneralView(200, True, True, False, True)
+            view = GeneralView(200, True, False, False, True)
             await ctx.reply(reply, view=view)
 
     """Remove Tag By User ID"""
@@ -214,14 +214,14 @@ class TagSystem(commands.Cog):
     @commands.command(name="tag_remove_id", aliases=["trid"], description="Remove user from their current tag using id (Admins Only)")
     async def tag_remove_id(self, ctx, user_id: str):
         reply = await tag_helper.remove_user_id(ctx.guild.id, user_id)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
         await ctx.send(reply, view=view)
 
     @tag_remove_id.error
     async def tag_remove_id_helper(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires a user_id as a parameter.\n```{ctx.prefix}tag_remove_id 716390085896962058```", ERROR_COLOR)
-            view = GeneralView(200, True, True, False, True)
+            view = GeneralView(200, True, False, False, True)
 
             await ctx.reply(embed=reply, view=view)
         elif isinstance(error, commands.errors.MissingPermissions):
@@ -238,14 +238,14 @@ class TagSystem(commands.Cog):
             return
 
         reply = await tag_helper.set_afk(str(ctx.guild.id), str(ctx.author.id), state.lower())
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
         await ctx.send(reply, view=view)
 
     @afk.error
     async def afk_handler(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             reply = await general_helper.get_info_embd("Breh, Whats this?", f"This command requires `State` as a parameter. Like this```{ctx.prefix}afk on [off]```", color=ERROR_COLOR)
-            view = GeneralView(200, True, True, False, True)
+            view = GeneralView(200, True, False, False, True)
 
             await ctx.reply(embed=reply, view=view)
             return
@@ -259,7 +259,7 @@ class TagSystem(commands.Cog):
     async def view_all_tags(self, ctx: commands.Context):
 
         reply = await tag_helper.get_all_tags_embed(ctx.guild)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.send(embed=reply, view=view)
 

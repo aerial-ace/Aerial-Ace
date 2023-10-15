@@ -15,7 +15,7 @@ async def validate_tag(ctx: ApplicationContext, tag) -> bool:
         cache_manager.cached_type_data[tag.lower()]
     except KeyError:
         reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english and that follow this format ```/dex marowak-alola\n/dex gallade-mega\n/dex meowstic-female\n/dex deoxys-defense\n/dex necrozma-dawn\n/dex calyrex-shadow-rider\n/dex cinderace-gmax```", ERROR_COLOR)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
         await ctx.respond(embed=reply, view=view)
         return False
     else:
@@ -37,7 +37,7 @@ class TagSystemSlash(commands.Cog):
             return
 
         reply = await tag_helper.register_tag(ctx.guild.id, ctx.author, tag)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.respond(reply, view=view)
 
@@ -53,7 +53,7 @@ class TagSystemSlash(commands.Cog):
 
         if len(data.hunters) == 0:
             reply = await general_helper.get_info_embd("Tag not found", "No one is assigned to `{tag}` tag".format(tag=tag.capitalize()), WARNING_COLOR)
-            view = GeneralView(200, True, True, False, True)
+            view = GeneralView(200, True, False, False, True)
 
             await ctx.respond(embed=reply, view=view)
             return
@@ -104,7 +104,7 @@ class TagSystemSlash(commands.Cog):
             return
         else:
             reply = await tag_helper.get_show_hunters_embd(tag, hunters)
-            view = GeneralView(200, True, True, False, True)
+            view = GeneralView(200, True, False, False, True)
 
             await ctx.respond(embed=reply, view=view)
 
@@ -118,7 +118,7 @@ class TagSystemSlash(commands.Cog):
             return
 
         reply = await tag_helper.update_timer(str(ctx.guild.id), value)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -133,7 +133,7 @@ class TagSystemSlash(commands.Cog):
     async def afk(self, ctx: ApplicationContext, state: Option(str, "Pick a state", autocomplete=get_afk_state)):
 
         reply = await tag_helper.set_afk(str(ctx.guild.id), str(ctx.author.id), state)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.respond(reply, view=view)
 
@@ -143,7 +143,7 @@ class TagSystemSlash(commands.Cog):
     async def tag_clear(self, ctx: ApplicationContext):
 
         reply = await tag_helper.remove_user(ctx.guild.id, ctx.author)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.respond(reply, view=view)
 
@@ -169,7 +169,7 @@ class TagSystemSlash(commands.Cog):
             return await ctx.send(embed=await general_helper.get_info_embd("Cancelled!", ""))
 
         reply = await tag_helper.remove_all_tags(str(ctx.guild.id))
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.respond(embed=reply, view=view)
 
@@ -182,7 +182,7 @@ class TagSystemSlash(commands.Cog):
             return await ctx.respond("Be Admin when? :/")
 
         reply = await tag_helper.remove_user(ctx.guild.id, user)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.respond(reply, view=view)
 
@@ -195,7 +195,7 @@ class TagSystemSlash(commands.Cog):
             return await ctx.respond("Be Admin when? :/")
 
         reply = await tag_helper.remove_user_id(ctx.guild.id, user_id)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.respond(reply, view=view)
 
@@ -205,7 +205,7 @@ class TagSystemSlash(commands.Cog):
     async def view_all_tags(self, ctx: ApplicationContext):
 
         reply = await tag_helper.get_all_tags_embed(ctx.guild)
-        view = GeneralView(200, True, True, False, True)
+        view = GeneralView(200, True, False, False, True)
 
         await ctx.respond(embed=reply, view=view)
 

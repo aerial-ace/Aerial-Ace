@@ -15,11 +15,9 @@ class DonationView(View):
 
         paypal_btn = Button(label="PayPal", emoji=PAYPAL_EMOJI, style=ButtonStyle.link, url=PAYPAL_LINK)
         patreon_btn = Button(label="Patreon", emoji=PATREON_EMOJI, style=ButtonStyle.link, url=PATREON_LINK)
-        ko_fi_btn = Button(label="Ko-Fi", emoji=KO_FI_EMOJI, style=ButtonStyle.link, url=KO_FI_LINK)
         github_btn = Button(label="Github Sponsors", emoji=GITHUB_EMOJI, style=ButtonStyle.link, url=GITHUB_SPONSORS_LINK)
 
         self.add_item(patreon_btn)
-        self.add_item(ko_fi_btn)
         self.add_item(paypal_btn)
         self.add_item(github_btn)
 
@@ -82,7 +80,7 @@ class AcceptanceView(View):
 
 class GeneralView(View):
 
-    def __init__(self, timeout: int = 200, invite: bool = True, support_server: bool = True, source: bool = False, donate: bool = True, vote=False, survey=True):
+    def __init__(self, timeout: int = 200, invite: bool = True, support_server: bool = False, source: bool = False, donate: bool = True, vote=False, survey=False):
 
         super().__init__()
 

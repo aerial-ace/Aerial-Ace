@@ -61,6 +61,13 @@ PATREON_EMOJI = "<:Patreon:999717040057237634>"
 KO_FI_EMOJI = "<:kofi:1082687243052921012>"
 GITHUB_EMOJI = "<:github:1035069645763383307>"
 PREMIUM_EMOJI = "<:premium:1082653563571941438>"
+FILLED_START_EMOJI = "<a:loading1:1163072852686274630>"
+FILLED_INTERMEDIATE_EMOJI = "<a:loading2:1163072801629016194>"
+FILLED_END_EMOJI = "<a:loading3:1163072635723337818>"
+EMPTY_START_EMOJI = "<:EmptyStart:1163076164823289987>"
+EMPTY_MIDDLE_EMOJI = "<:EmptyMiddle:1163076160633196564>"
+EMPTY_END_EMOJI = "<:EmptyEnd:1163076156396933140>"
+FILLED_MID_EMOJI = "<a:FilledMiddle:1163086257908367410>"
 
 TYPES = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water"]
 
