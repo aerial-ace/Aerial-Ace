@@ -107,8 +107,8 @@ class GeneralView(View):
             self.add_item(vote_button)
         if donate:
             self.add_item(premium_button)
-        if survey:
-            self.add_item(survey_button)
+        # if survey:
+        #     self.add_item(survey_button)
 
     async def donate_callback(self, interaction: Interaction) -> None:
 

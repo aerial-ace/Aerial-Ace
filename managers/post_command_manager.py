@@ -10,6 +10,7 @@ import config
 
 async def donation_reminder(ctx: commands.Context):
     # Probability that donation embed will be sent after a command execution.
+    
     DONATION_PROB = 10
 
     roll = random.randint(0, 100)
