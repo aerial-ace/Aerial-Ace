@@ -1,10 +1,10 @@
-<h1 align="center">
-  <img src="https://i.imgur.com/abFHWXf.png" style="width : 150px; height : auto;" />
+<h1 >
+  <img src="https://i.imgur.com/abFHWXf.png" style="width : 150px; height : auto;"  alt=""/>
 </h1>
 
-<h1 align="center">Aerial Ace</h1>
+<h1 >Aerial Ace</h1>
 
-<h2 align="center">
+<h2>
   <a href="https://img.shields.io/badge/Status-online-green?style=for-the-badge">
     <img src="https://img.shields.io/badge/Status-online-green?style=for-the-badge" alt="Status" />
   </a>
@@ -13,14 +13,14 @@
   </a>
 </h2>
 
-<p align="center">
+<p >
   Aerial Ace is a helper bot for <a href="https://github.com/poketwo/poketwo">Poketwo</a> and <a href="https://play.pokemonshowdown.com/">Showdown</a> which provide various functionalities on top of being a Pokédex.<br><br>
   <b>Prefix</b> : `-aa`<br>
   <b>Website : <a href="https://aerial-ace.github.io/">Aerial Ace</a></b><br><br>
   <img src="https://discord.c99.nl/widget/theme-1/908384747393286174.png">
 </p>
 <hr>
-<h2 align="center">
+<h2 >
   <a href="https://ko-fi.com/T6T3GI6XH">
     <img src="https://ko-fi.com/img/githubbutton_sm.svg" />
   </a>  
@@ -101,6 +101,6 @@
 
 
 <hr />
-<h2 align="center">
+<h2 >
   <a href="https://discord.com/api/oauth2/authorize?client_id=908384747393286174&permissions=277025647680&scope=bot%20applications.commands">Invite</a> | <a href="https://top.gg/bot/908384747393286174/vote">Vote</a> | <a href="https://discord.gg/ZpBttKAHwg">Support Server</a>
 </h2>

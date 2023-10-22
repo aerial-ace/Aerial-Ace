@@ -42,8 +42,9 @@ async def get_battle_acceptance(ctx, winner_id, loser_id):
         return "accepted"
 
 
-# Register Battle log
 async def register_battle_log(server_id, winner, loser, winner_name=None, loser_name=None):
+    """" Registers the battle log """
+
     query = {"server_id": str(server_id)}
 
     data_cursor = await mongo_manager.manager.get_all_data("battles", query)
@@ -95,8 +96,9 @@ async def register_battle_log(server_id, winner, loser, winner_name=None, loser_
         return "Error occurred while logging battle!"
 
 
-# Toggle server level auto battle logging functionality
 async def toggle_auto_logging(server_id: str):
+    """Toggle server level auto battle logging functionality"""
+
     query = {"server_id": server_id}
     data_cursor = await mongo_manager.manager.get_all_data("servers", query)
 
@@ -119,8 +121,9 @@ async def toggle_auto_logging(server_id: str):
         return "Auto Battle Logging Module is now **{}**".format("Enabled" if auto_logging == 1 else "Disabled")
 
 
-# return the battle score of the user
 async def get_battle_score(server_id: int, user: Member) -> Embed:
+    """return the battle score of the user"""
+
     user_id = str(user.id)
     server_id = str(server_id)
 
@@ -190,17 +193,17 @@ async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) 
                 current_embd = Embed(title=f"Battle Leaderboard - {server_name}", color=NORMAL_COLOR)
                 current_embd.description = "`-N-  | -W- | -L- | -Win %- | -Name-` \n\n"
 
-            # stop loop if all listings are done.
-            if index >= len(sorted_battle_records.items()) - 1:
-                embds.append(current_embd)
-                break
-
             wins = item[1][1]
             loses = item[1][2]
             name = item[1][3][:15] + "..." if len(item[1][3]) > 10 else item[1][3]
             win_perc = (round((wins / (wins + loses)) * 100, 1) if wins + loses > 0 else 0)
 
             current_embd.description += "`{pos} | {wins} | {loses} | {perc}% |` [{name}](https://discord.com/users/{id})\n".format(pos=" {0}.".format(index+1).center(4, " "), name=name, id=item[0], wins=("{0}".format(wins).center(3, " ")), loses=("{}".format(loses).center(3, " ")), perc=("{}".format(win_perc).rjust(6, " ")))
+
+            # stop loop if all listings are done.
+            if index >= len(sorted_battle_records.items()) - 1:
+                embds.append(current_embd)
+                break
 
         if len(embds) <= 0:
             embds.append(Embed(title="Empty Leaderboard!"))
@@ -214,8 +217,9 @@ async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) 
         return await general_helper.get_info_embd("Oops", "Error occurred while showing battle leaderboard :|", ERROR_COLOR, "These errors were registered")
 
 
-# removes the user from the leaderboard
 async def remove_user_from_battleboard(server_id: str, user: Member):
+    """removes the user from the leaderboard"""
+
     query = {"server_id": server_id}
 
     mongo_cursor = await mongo_manager.manager.get_all_data("battles", query)
@@ -236,8 +240,9 @@ async def remove_user_from_battleboard(server_id: str, user: Member):
     return f"> <@{user.id}> was removed from the battle board."
 
 
-# removes the user from the leaderboard
 async def remove_user_from_battleboard_id(server_id: str, user_id: str):
+    """removes the user from the leaderboard"""
+
     query = {"server_id": server_id}
 
     mongo_cursor = await mongo_manager.manager.get_all_data("battles", query)
