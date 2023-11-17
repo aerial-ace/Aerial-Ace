@@ -18,6 +18,7 @@ is_test = False
 
 intents = Intents.default()
 intents.message_content = True
+intents.members = True
 
 
 # for getting the prefix
@@ -31,6 +32,7 @@ bot.remove_command("help")
 initial_cogs = [
     "presence_cycle",
     "admin",
+    "alt",
     "starboard",
     "help",
     "smogon",

@@ -34,14 +34,46 @@ class MongoManager:
                     return [await init_manager.register_guild_for_tags(query.get("server_id"))]
                 elif collection_name == "donations":
                     return [await init_manager.register_guild_for_donations(query.get("server_id"))]
+                elif collection_name == "alts":
+                    return [await init_manager.register_user_for_alts(query.get("user_id"))]
         except:
             return None
 
         return result_cursor
 
+    async def get_one(self, collection_name:str, query:dict):
+        """ Get one DOCUMENT from the database """
+
+        try:
+            result_document = await self.db[collection_name].find_one(query)
+
+            # if no entry in the particular collection is present, create an empty entry into that collection
+            if result_document is None:
+                if collection_name == "battles":
+                    return await init_manager.register_guild_for_battles(query.get("server_id"))
+                elif collection_name == "servers":
+                    return await init_manager.register_guild_without_bs(query.get("server_id"))
+                elif collection_name == "tags":
+                    return await init_manager.register_guild_for_tags(query.get("server_id"))
+                elif collection_name == "donations":
+                    return await init_manager.register_guild_for_donations(query.get("server_id"))
+                elif collection_name == "alts":
+                    return await init_manager.register_user_for_alts(query.get("user_id"))
+        except:
+            return None
+
+        return result_document
+
     async def get_documents_length(self, col_name: str, query: dict) -> int:
         count = await self.db[col_name].count_documents(query)
         return count
+    
+    async def check_existence(self, col_name:str, query:dict) -> bool:
+
+        if await self.db[col_name].count_documents(query, limit=1):
+            return True
+        
+        return False
 
     async def remove_all_data(self, col_name: str, query: dict) -> bool:
         try:

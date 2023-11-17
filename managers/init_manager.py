@@ -106,6 +106,20 @@ async def register_guild_for_donations(guild_id: str):
         "log_channel_id": "0"
     }
 
+async def register_user_for_alts(user_id):
+
+    server_duplicates = await mongo_manager.manager.get_documents_length("alts", {"user_id" : str(user_id)})
+
+    if server_duplicates <= 0:
+        entry = {"user_id" : str(user_id), "type" : "main", "main" : str(user_id), "alts" : {}}
+        await mongo_manager.manager.add_data("alts", entry)
+
+    return {
+        "user_id" : str(user_id),
+        "type" : "main",
+        "main" : str(user_id),
+        "alts" : {}
+    }
 
 # register guild in the database without other bullshit
 
