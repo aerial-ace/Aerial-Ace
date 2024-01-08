@@ -77,6 +77,7 @@ SHINY_LINK_TEMPLATE = "https://play.pokemonshowdown.com/sprites/gen5-shiny/{poke
 POKEMON_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/pokemon/{pokemon}/"
 ABILITY_LINK_TEMPLATE_SMOGON = "https://smogon.com/dex/ss/abilities/{ability}/"
 SMOGON_API_TEMPLATE = "https://smogon-usage-stats.herokuapp.com/gen{gen}{tier}/{pokemon}"
+USER_PROFILE_TEMPLATE = "https://discord.com/users/{user_id}"
 
 # file locations
 SERVER_FILE_LOCATION = "data/servers.json"
@@ -117,22 +118,22 @@ TIER_LINK = {
     "mega": "https://i.imgur.com/aEkh8Mm.png",
     "common": "https://i.imgur.com/NIq1RZK.png https://i.imgur.com/OgrPggn.png https://i.imgur.com/hjr5aXs.png https://i.imgur.com/9M4oQJr.png",
     "bug": "https://i.imgur.com/pFZmJU1.png",
-    "dark": "https://i.imgur.com/50fQwp5.png",
+    "dark": "https://i.imgur.com/hZhsfnj.png",
     "dragon": "https://i.imgur.com/xVSeQZg.png",
     "electric": "https://i.imgur.com/Mm9IP3h.png",
     "fairy": "https://i.imgur.com/YzPJHei.png",
     "fighting": "https://i.imgur.com/xPOwt2J.png",
-    "fire": "https://i.imgur.com/HlyLW5I.png",
+    "fire": "https://i.imgur.com/U0XYNBa.png",
     "flying": "https://i.imgur.com/quWnAgG.png",
-    "ghost": "https://i.imgur.com/YbFC3qr.png",
-    "grass": "https://i.imgur.com/NFszuTb.png",
+    "ghost": "https://i.imgur.com/QqDrOCP.png",
+    "grass": "https://i.imgur.com/WbVVPMg.png",
     "ground": "https://i.imgur.com/nJEZuSc.png",
     "ice": "https://i.imgur.com/2JUuEl0.png",
-    "normal": "https://i.imgur.com/z2pXPLb.png",
+    "normal": "https://i.imgur.com/0V2rQE0.png",
     "poison": "https://i.imgur.com/6hoKTD9.png",
-    "psychic": "https://i.imgur.com/MIwNq5V.png",
+    "psychic": "https://i.imgur.com/Vt64GPz.png",
     "rock": "https://i.imgur.com/2rWh30S.png",
     "steel": "https://i.imgur.com/sV7gaY6.png",
-    "water": "https://i.imgur.com/fdUuqg6.png",
+    "water": "https://i.imgur.com/8Xaj0YF.png",
     "eeveelution": "**Beta : ** https://i.imgur.com/WXTPYHv.png"
 }

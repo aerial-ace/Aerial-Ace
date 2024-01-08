@@ -31,6 +31,38 @@ async def get_info_embd(title, desc="", color=config.NORMAL_COLOR, footer=None, 
 
     return embd
 
+# returns an error embed provided the data
+async def get_error_embd(title, desc="", footer=None, show_thumbnail=False):
+    embd = discord.Embed()
+
+    embd.color = config.ERROR_COLOR
+    embd.title = title
+    embd.description = desc
+
+    if footer is not None:
+        embd.set_footer(text=footer)
+
+    if show_thumbnail is True:
+        embd.set_thumbnail(url=f"{config.AVATAR_LINK}")
+
+    return embd
+
+# returns an error embed provided the data
+async def get_warning_embd(title, desc="", footer=None, show_thumbnail=False):
+    embd = discord.Embed()
+
+    embd.color = config.WARNING_COLOR
+    embd.title = title
+    embd.description = desc
+
+    if footer is not None:
+        embd.set_footer(text=footer)
+
+    if show_thumbnail is True:
+        embd.set_thumbnail(url=f"{config.AVATAR_LINK}")
+
+    return embd
+
 
 async def get_user_id_from_ping(ping):
     user_id = ping
