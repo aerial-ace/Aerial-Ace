@@ -14,15 +14,15 @@ class MailModule(commands.Cog):
         embd = discord.Embed(title="__Mail Box - Aerial Ace__", color=config.NORMAL_COLOR)
         view = GeneralView()
 
-        embd.description = "---------------------_**New**_---------------------\n\n"
+        embd.description = "```New```\n"
         # embd.description += f"# Tierlists \nNew GEN9 ready pokemon tierlists are now available thanks to [falonius]({config.USER_PROFILE_TEMPLATE.format(user_id=450849605358321675)}). \n\nYou think someone is not at their correct place? Lets discuss it at the [official server]({config.SUPPORT_SERVER_LINK})"
 
-        embd.description += "\n\n---------------------_**Old**_---------------------\n\n"
+        embd.description += "```Old```\n"
         embd.description += "Its time for a brand new feature coming to aerial ace. Introducing...\n# Donation Logging\n\nDonation Logging is a module ( set of commands ) which automatically logs donation, calculate their approximate worth, create a leaderboard based on the pc value of the donations all while making them easier to track and manage."
 
         embd.description += "\n\nThanks for using Aerial Ace as always."
 
-        await ctx.send(embed=embd, view=view)
+        await ctx.send(embed=embd, view=view)   
 
 
 # Mail reminder
