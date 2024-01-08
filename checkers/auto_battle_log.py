@@ -1,3 +1,4 @@
+import pdb
 from discord import AutoShardedBot, Message, Member, Reaction
 from asyncio import TimeoutError
 
@@ -37,7 +38,9 @@ async def determine_battle_message(bot: AutoShardedBot, message: Message):
     # Check whether this server has Auto Battle Logging Enabled or Not.
     data_cursor = await mongo_manager.manager.get_all_data("servers", {"server_id": str(message.guild.id)})
 
-    if data_cursor[0].get("auto_battle_log", 1) != 1:
+    pdb.set_trace()
+
+    if data_cursor[0].get("auto_battle_logging", 1) != 1:
         return
 
     challenger_id = message.author.id
