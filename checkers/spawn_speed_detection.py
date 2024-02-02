@@ -1,3 +1,4 @@
+import pdb
 from discord import Message, Embed
 
 from managers import cache_manager
@@ -25,7 +26,7 @@ async def detect_spawn(msg:Message) -> None:
     if embd is None:
         return
 
-    if "pokémon has appeared!" in embd.title:
+    if "pokémon has appeared!" not in embd.title:
         return
     
     server_id = str(msg.guild.id)
