@@ -1,6 +1,6 @@
 from discord import Guild, Member
 
-import pdb
+
 from managers import mongo_manager
 
 async def register_account(user_id:str, type:str) -> bool:

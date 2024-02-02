@@ -6,7 +6,7 @@ from managers import mongo_manager
 from helpers import general_helper, logger
 from config import NORMAL_COLOR, ERROR_COLOR
 
-import pdb
+
 
 # sends a confirmation message to accept the battle log
 async def get_battle_acceptance(ctx, winner_id, loser_id):

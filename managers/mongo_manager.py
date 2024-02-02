@@ -1,6 +1,8 @@
+
 import motor.motor_asyncio
 
 from managers import init_manager
+from managers import cache_manager
 from helpers import logger
 
 
@@ -22,7 +24,7 @@ class MongoManager:
     async def get_all_data(self, collection_name: str, query: dict):
 
         try:
-            result_cursor = await self.db[collection_name].find(query).to_list(length=100)
+            result_cursor = await self.db[collection_name].find(query).to_list(length=None)
 
             # if no entry in the particular collection is present, create an empty entry into that collection
             if len(result_cursor) <= 0:
@@ -52,11 +54,21 @@ class MongoManager:
         return True
 
     async def update_all_data(self, col_name: str, query: dict, updated_data: dict):
+
         await self.db[col_name].update_many(query, {"$set": updated_data})
 
     async def remove_entry(self, collection_name: str, query: dict, unset_data: dict):
         await self.db[collection_name].update_one(query, {"$unset": unset_data})
 
+    async def update_spawnrate(self, server_id:str, active:bool, channel_id:str):
+
+        
+
+        updated_data = await cache_manager.update_spawnrates(server_id, active, channel_id)
+
+        query = {"server_id" : server_id}
+
+        await self.db["spawnrate"].update_many(query, {"$set" : updated_data})
 
 manager = None
 

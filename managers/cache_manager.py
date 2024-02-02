@@ -1,5 +1,8 @@
 import json
 
+
+from managers import mongo_manager
+
 import config
 
 # data containers
@@ -12,10 +15,11 @@ cached_type_data = None
 cached_weakness_data = None
 cached_duelish_data = None
 
+cached_spawnrate_data = None
 
 # caches the data
 async def cache_data():
-    global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data, cached_weakness_data, cached_type_data, cached_duelish_data
+    global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data, cached_weakness_data, cached_type_data, cached_duelish_data, cached_spawnrate_data
 
     cached_stats_data = get_all_stats()
     cached_moveset_data = get_all_moveset()
@@ -26,6 +30,7 @@ async def cache_data():
     cached_weakness_data = get_all_weakness_data()
     cached_duelish_data = get_all_duelish_data()
 
+    cached_spawnrate_data = await fetch_spawnrate_info()
 
 # returns all the stats from stats file
 def get_all_stats():
@@ -87,3 +92,34 @@ def get_all_duelish_data():
         duelish_data = json.loads(duelish_file.read())
 
         return duelish_data
+    
+async def fetch_spawnrate_info():
+
+    storage = {
+
+    }
+
+    data = await mongo_manager.manager.get_all_data("spawnrate", {})
+
+    for x in data:
+        storage.update({x.get("server_id") : {
+            "active" : x.get("active"),
+            "channel_id" : x.get("channel_id")
+        }})
+
+    return storage
+
+async def update_spawnrates(server_id:str, active:bool, channel_id:str):
+
+    global cached_spawnrate_data
+
+    prev_data = cached_spawnrate_data.get(server_id, None)
+
+    updated_data = {
+        "active" : active if active is not None else False if prev_data is None else prev_data.get("active"), 
+        "channel_id" : channel_id if channel_id is not None else "" if prev_data is None else prev_data.get("channel_id")
+    }
+
+    cached_spawnrate_data.update({server_id : updated_data})
+
+    return updated_data
