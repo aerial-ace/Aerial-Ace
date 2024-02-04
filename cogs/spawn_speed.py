@@ -3,6 +3,8 @@ from discord.ext import tasks
 from discord.abc import GuildChannel
 from discord import TextChannel, VoiceChannel, StageChannel
 
+import datetime
+
 from managers import cache_manager
 from managers import mongo_manager
 
@@ -19,7 +21,7 @@ class SpawnSpeedModule(commands.Cog):
     def cog_unload(self) -> None:
         self.update_spawn_speeds.cancel()
 
-    @tasks.loop(minutes=10)
+    @tasks.loop(minutes=11)
     async def update_spawn_speeds(self):
 
         if cache_manager.cached_spawnrate_data is None:
@@ -39,7 +41,7 @@ class SpawnSpeedModule(commands.Cog):
 
             if isinstance(speed_display_channel, TextChannel) or isinstance(speed_display_channel, VoiceChannel) or isinstance(speed_display_channel, StageChannel):
                 try:
-                    await speed_display_channel.edit(name=f"Spawn Speed : {spawn_speed}")
+                    await speed_display_channel.edit(name=f"Spawn Speed : {spawn_speed} [{datetime.datetime.now().minute}]")
                     await spawn_speed_detection.reset_spawns(x)
                 except:
                     continue # Unable to send messages.
@@ -86,11 +88,22 @@ class SpawnSpeedModule(commands.Cog):
         data = cache_manager.cached_spawnrate_data.get(str(context.guild.id), None)
 
         if data is None:
-            return await context.send("Please set up spawnrate channel before activating the module!")
+            return await context.send("Please set up spawnrate channel before deactivating the module!")
         
         await mongo_manager.manager.update_spawnrate(str(context.guild.id), False, channel_id=None)
 
         await context.send("SpawnRate Module was deactivated")
+
+    @spawnrate.command(name="count", description="Current Spawn Count of the server")
+    async def spawn_count(self, context:commands.Context):
+
+        data = cache_manager.cached_spawnrate_data.get(str(context.guild.id), None)
+
+        if data is None:
+            return await context.send("No Data recorded")
+        
+        await context.send(str(data.items()))
+        await context.send(str(await spawn_speed_detection.get_server_spawn_speed(str(context.guild.id))))
 
 def setup(bot:commands.Bot):
     bot.add_cog(SpawnSpeedModule(bot))

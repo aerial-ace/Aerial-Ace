@@ -62,13 +62,15 @@ class MongoManager:
 
     async def update_spawnrate(self, server_id:str, active:bool, channel_id:str):
 
-        
-
         updated_data = await cache_manager.update_spawnrates(server_id, active, channel_id)
+
+        # Return if there is nothing to update.
+        if updated_data is None:
+            return
 
         query = {"server_id" : server_id}
 
-        await self.db["spawnrate"].update_many(query, {"$set" : updated_data})
+        await self.db["spawnrate"].update_one(query, {"$set" : updated_data}, upsert=True)
 
 manager = None
 

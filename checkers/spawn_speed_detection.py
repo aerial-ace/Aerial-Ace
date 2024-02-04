@@ -13,7 +13,10 @@ async def get_server_spawn_speed(server_id:str) -> int:
 
 async def detect_spawn(msg:Message) -> None:
 
-    server_data = cache_manager.cached_spawnrate_data.get(str(msg.guild.id))
+    if cache_manager.cached_spawnrate_data is None:
+        return
+
+    server_data = cache_manager.cached_spawnrate_data.get(str(msg.guild.id), None)
 
     if server_data == None or server_data.get("active") is False:
         return

@@ -1,4 +1,5 @@
 import json
+import pdb
 
 
 from managers import mongo_manager
@@ -119,6 +120,10 @@ async def update_spawnrates(server_id:str, active:bool, channel_id:str):
         "active" : active if active is not None else False if prev_data is None else prev_data.get("active"), 
         "channel_id" : channel_id if channel_id is not None else "" if prev_data is None else prev_data.get("channel_id")
     }
+
+    # Return None if the new data is same as the current data.
+    if prev_data == updated_data:
+        return None
 
     cached_spawnrate_data.update({server_id : updated_data})
 
