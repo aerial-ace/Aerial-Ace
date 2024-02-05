@@ -81,6 +81,30 @@ class StarboardSystem(commands.Cog):
         if isinstance(error, commands.errors.MissingPermissions):
             await ctx.reply("Be an Admin when :/")
 
+    """Send Sample Message in starboard channel"""
+
+    @starboard.command(name="sample", description="Sends a sample message in the assigned channel")
+    async def send_sample(self, context:commands.Context):
+
+        channel_id = await starboard_helper.send_sample(context.guild.id)
+
+        bt:commands.Bot = context.bot
+
+        starboard_channel = bt.get_channel(int(channel_id))
+
+        if starboard_channel is None:
+            return await context.send(f"Can not find a channel with ID : {channel_id}. Try resetting the channel!")
+        
+        if not isinstance(starboard_channel, TextChannel):
+            return await context.send(f"Can only assign Text Channels not {starboard_channel.type}")
+        
+        if not starboard_channel.permissions_for(context.guild.me).send_messages:
+            return await context.send(f"No Permission to send messages!")
+
+        try:
+            await starboard_channel.send("Sample Message! This channel is good for receiving starboard logs.")
+        except Exception as e:
+            await starboard_channel.send(embed=f"** SOME PROBLEM OCCURRED!**\nReport this at support server!```{e}```")
 
 def setup(bot: commands.Bot):
     bot.add_cog(StarboardSystem())

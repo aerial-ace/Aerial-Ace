@@ -275,3 +275,15 @@ async def get_rare_catch_embd(server_details, _ping, _pokemon, _level, _type: st
     embd.timestamp = datetime.datetime.now()
 
     return embd
+
+async def send_sample(server_id):
+
+    query = {
+        "server_id": str(server_id)
+    }
+
+    cursor = await mongo_manager.manager.get_all_data("servers", query)
+
+    data = cursor[0] if len(cursor) > 0 else None
+
+    return data.get("starboard") if data is not None else None   

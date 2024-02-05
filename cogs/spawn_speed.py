@@ -21,7 +21,7 @@ class SpawnSpeedModule(commands.Cog):
     def cog_unload(self) -> None:
         self.update_spawn_speeds.cancel()
 
-    @tasks.loop(hour=1)
+    @tasks.loop(hours=1)
     async def update_spawn_speeds(self):
 
         if cache_manager.cached_spawnrate_data is None:
