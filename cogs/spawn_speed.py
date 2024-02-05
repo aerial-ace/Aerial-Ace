@@ -21,7 +21,7 @@ class SpawnSpeedModule(commands.Cog):
     def cog_unload(self) -> None:
         self.update_spawn_speeds.cancel()
 
-    @tasks.loop(minutes=11)
+    @tasks.loop(hour=1)
     async def update_spawn_speeds(self):
 
         if cache_manager.cached_spawnrate_data is None:
@@ -41,7 +41,7 @@ class SpawnSpeedModule(commands.Cog):
 
             if isinstance(speed_display_channel, TextChannel) or isinstance(speed_display_channel, VoiceChannel) or isinstance(speed_display_channel, StageChannel):
                 try:
-                    await speed_display_channel.edit(name=f"Spawn Speed : {spawn_speed} [{datetime.datetime.now().minute}]")
+                    await speed_display_channel.edit(name=f"{spawn_speed} spawns / hour")
                     await spawn_speed_detection.reset_spawns(x)
                 except:
                     continue # Unable to send messages.
@@ -54,7 +54,7 @@ class SpawnSpeedModule(commands.Cog):
 
 
 
-
+    @commands.has_permissions(administrator=True)
     @commands.group(name="spawnrate", aliases=["sr"], description="The container for spawnrate commands")
     async def spawnrate(self, context:commands.Context):
         if context.subcommand_passed is None:
