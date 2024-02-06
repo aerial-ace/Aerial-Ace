@@ -11,7 +11,7 @@ import config
 async def donation_reminder(ctx: commands.Context):
     # Sends a support reminder ever so often
 
-    donation_goal_progress_percentage = 16
+    donation_goal_progress_percentage = 43
     
     empty_chunks = [config.EMPTY_START_EMOJI] + [config.EMPTY_MIDDLE_EMOJI] * 8 + [config.EMPTY_END_EMOJI]
 

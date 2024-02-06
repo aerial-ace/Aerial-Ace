@@ -53,13 +53,12 @@ class SpawnSpeedModule(commands.Cog):
 
 
 
-
-    @commands.has_permissions(administrator=True)
     @commands.group(name="spawnrate", aliases=["sr"], description="The container for spawnrate commands")
     async def spawnrate(self, context:commands.Context):
         if context.subcommand_passed is None:
             return await context.send("Please provide a valid subcommand")
-        
+
+    @commands.has_permissions(administrator=True)        
     @spawnrate.command(name="channel", aliases=["ch"], description="Set the spawn rate display channel")
     async def channel(self, context:commands.Context, channel:GuildChannel):
 
@@ -70,6 +69,7 @@ class SpawnSpeedModule(commands.Cog):
 
         await context.send("SpawnRate Display Channel was set to " + channel.mention)
 
+    @commands.has_permissions(administrator=True)
     @spawnrate.command(name="activate", aliases=["a"], description="Activate the spawn rate display")
     async def activate(self, context:commands.Context):
 
@@ -82,6 +82,7 @@ class SpawnSpeedModule(commands.Cog):
 
         await context.send("SpawnRate Module was activated")
 
+    @commands.has_permissions(administrator=True)
     @spawnrate.command(name="deactivate", aliases=["da"], description="Activate the spawn rate display")
     async def deactivate(self, context:commands.Context):
 
@@ -101,9 +102,8 @@ class SpawnSpeedModule(commands.Cog):
 
         if data is None:
             return await context.send("No Data recorded")
-        
-        await context.send(str(data.items()))
-        await context.send(str(await spawn_speed_detection.get_server_spawn_speed(str(context.guild.id))))
+
+        await context.send("Current Spawn Count : **{}**".format(str(await spawn_speed_detection.get_server_spawn_speed(str(context.guild.id)))))
 
 def setup(bot:commands.Bot):
     bot.add_cog(SpawnSpeedModule(bot))
