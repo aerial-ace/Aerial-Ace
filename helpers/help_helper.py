@@ -6,7 +6,7 @@ from helpers import general_helper, logger
 import config
 
 all_categories = {"pokedex": "commands related to pokedex", "random": "commands related to random gen", "info": "commands related to information", "battle": "commands related to battleboard", "tags": "commands related to shinyhunts", "fun": "other fun commands", "misc": "commands that dont fit in other categories", "starboard": "commands related to starboard",
-                  "customization": "Customization commands for premium servers", "smogon": "commands related to showdown", "donation" : "Displays the current donation information and holds commands related to donation module"}
+                  "customization": "Customization commands for premium servers", "smogon": "commands related to showdown", "donation" : "Displays the current donation information and holds commands related to donation module", "spawnrate" : "Commands related to Spawn Rate Module"}
 
 commands_in_category = {
     "pokedex": ["dex", "ability"],
@@ -19,7 +19,8 @@ commands_in_category = {
     "customization": ["rare_text", "shiny_text", "rare_image", "shiny_image"],
     "misc": ["ping", "roll", "support", "vote", "invite", "mail", "all"],
     "smogon": ["smogon"],
-    "dono" : ["", "dono_channel", "dono_log", "dono_staff", "dono_change", "dono_clear", "dono_remove"]
+    "dono" : ["", "dono_channel", "dono_log", "dono_staff", "dono_change", "dono_clear", "dono_remove"],
+    "spawnrate" : ["spawnrate.channel", "spawnrate.activate", "spawnrate.deactivate", "spawnrate.count"]
 }
 
 all_commands = {
@@ -71,7 +72,11 @@ all_commands = {
     "dono_staff": "```{prefix}dono staff <role-id>``` sets the <role-id> as the staff role id. Donations taken by the staff with this role will be counted in the leaderboard.",
     "dono_change": "```{prefix}dono change @user <pc> <shiny> <rare> <redeem>``` updates the leaderboard for the @user and sets their pc, shiny, rare, redeem values to the provided values.",
     "dono_clear": "```{prefix}dono clear``` clears the leaderboard.",
-    "dono_remove": "```{prefix}dono remove @user``` removes @user from the leaderboard."
+    "dono_remove": "```{prefix}dono remove @user``` removes @user from the leaderboard.",
+    "spawnrate.channel": "```{prefix}spawnrate[sr] channel[ch] #channel```\nsets the provided channel for spwan speed display.",
+    "spawnrate.activate": "```{prefix}spawnrate[sr] activate[a]```\nactivates the spawnrate display! Make sure to set the channel first.",
+    "spawnrate.deactivate": "```{prefix}spawnrate[sr] deactivate[da]```\ndeactivates the spawnrate display!",
+    "spawnrate.count": "```{prefix}spawnrate[sr] count[c]```\nthe current spawn rate of the server!"
 }
 
 
@@ -136,7 +141,8 @@ async def get_category_help_embed(ctx: commands.Context | None, input) -> Embed:
 
             for i in cmds:
                 try:
-                    desc = ctx.bot.get_command(i).description
+                    j = " ".join(i.split("."))
+                    desc = ctx.bot.get_command(j).description
                 except:
                     desc = i
 

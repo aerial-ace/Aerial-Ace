@@ -15,12 +15,15 @@ class MailModule(commands.Cog):
         view = GeneralView()
 
         embd.description = "```New```\n"
-        # embd.description += f"# Tierlists \nNew GEN9 ready pokemon tierlists are now available thanks to [falonius]({config.USER_PROFILE_TEMPLATE.format(user_id=450849605358321675)}). \n\nYou think someone is not at their correct place? Lets discuss it at the [official server]({config.SUPPORT_SERVER_LINK})"
+        embd.description += f"Introducing Spawn Speed Module! Using this module, you can assign a Voice/Stage Channel and it will show the number of spawns per hour in your server. Get started with `-aa help spawnrate`"
+        embd.description += "\n\n"
 
         embd.description += "```Old```\n"
         embd.description += "Its time for a brand new feature coming to aerial ace. Introducing...\n# Donation Logging\n\nDonation Logging is a module ( set of commands ) which automatically logs donation, calculate their approximate worth, create a leaderboard based on the pc value of the donations all while making them easier to track and manage."
 
         embd.description += "\n\nThanks for using Aerial Ace as always."
+
+        embd.set_image(url="https://cdn.discordapp.com/attachments/908392246158700607/1204798879816613950/image.png?ex=65d60b65&is=65c39665&hm=89bdb9952f01bdd1ce032f3919b88c249183d613235a4323bff96ecfaa39587d")
 
         await ctx.send(embed=embd, view=view)   
 
@@ -28,7 +31,7 @@ class MailModule(commands.Cog):
 # Mail reminder
 async def process_mail(ctx):
     embd = discord.Embed(title=f"{config.ALERT_EMOJI} NOTICE {config.ALERT_EMOJI}", color=config.NORMAL_COLOR)
-    embd.description = f"** New Updated Tierlists **"
+    embd.description = f"** Spawn Speed Display **"
     try:
         embd.set_footer(text=f"Check the complete mail using {ctx.prefix}mail")
     except Exception as e:

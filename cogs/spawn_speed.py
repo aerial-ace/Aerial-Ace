@@ -3,8 +3,6 @@ from discord.ext import tasks
 from discord.abc import GuildChannel
 from discord import TextChannel, VoiceChannel, StageChannel
 
-import datetime
-
 from managers import cache_manager
 from managers import mongo_manager
 
@@ -95,7 +93,7 @@ class SpawnSpeedModule(commands.Cog):
 
         await context.send("SpawnRate Module was deactivated")
 
-    @spawnrate.command(name="count", description="Current Spawn Count of the server")
+    @spawnrate.command(name="count", aliases=["c"], description="Current Spawn Count of the server")
     async def spawn_count(self, context:commands.Context):
 
         data = cache_manager.cached_spawnrate_data.get(str(context.guild.id), None)
