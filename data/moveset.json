@@ -1,6 +1,6 @@
 {
 	"venusaur": "Solar Beam | Petal Blizzard | Synthesis | Vine Whip",
-	"charizard": "Normal : Inferno | Slash | Flame Burst | Dragon Claw\nMega X : Flare Blitz | Dragon Claw | Shadow Claw \nMega Y : Flamethrower | Dragon Claw | Air Slash | Shadow Claw",
+	"charizard": "Normal : Inferno | Slash | Flame Burst | Dragon Claw\nMega X : Flare Blitz | Dragon Claw | Wing Attack | Crunch \nMega Y : Flare Blitz | Dragon Claw | Wing Attack | Crunch",
 	"blastoise": "Hydro Pump | Flash Cannon | Skull Bash | Bite",
 	"butterfree": "Air Slash | Bug Buzz | Gust | Psybeam",
 	"beedrill": "Bug Bite(Weedle) | Poison Jab | Assurance | Fell Stinger",
@@ -406,7 +406,7 @@
 	"dracozolt": "Dragon Rush | Dragon Pulse | Bolt Beak | Discharge",
 	"arctovish": "Fishious Rend | Blizzard | Icicle Crash | Crunch",
 	"duraludon": "Hyper Beam | Flash Canon | Dragon Claw",
-	"dragapult": "Phantom Force | Dragon Rush | Last Resort | Sucker Punch or Quick Attack",
+	"dragapult": "Phantom Force | Dragon Rush | Last Resort | Quick Attack",
 	"zacian": "Close Combat | Crunch | Moonblast | Iron Head",
 	"zamazenta": "Close Combat | Crunch | Moonblast | Iron Head",
 	"eternatus": "Eternabeam | Flamethrower | Dynamax Cannon | Recover",
