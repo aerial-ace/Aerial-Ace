@@ -118,7 +118,16 @@ async def set_starboard_image(server_id: str, text: str, type: str) -> Embed:
 """Returns the starboard embed for starboard channel"""
 
 
-async def get_starboard_embed(user_name: str, level: str, pokemon_id: str, message_link: str, type: str = "", streak=0, tier: int = 0, is_hunt=False):
+async def get_starboard_embed(catch_details, message_link: str, tier: int = 0):
+
+    user_name = catch_details["user"]
+    level = catch_details["level"]
+    pokemon_id = catch_details["pokemon"]
+    iv = catch_details["iv"]
+    type = catch_details["type"]
+    streak = catch_details["streak"]
+    is_hunt = catch_details["hunt"]
+
     pokemon = pokemon_id.replace(" ", "").lower()
     pokemon = pokemon.replace("é", "e")  # This is because of you Flabébé >:|
     pokemon = pokemon.removeprefix("defense").removeprefix("attack").removeprefix("speed")
@@ -143,17 +152,18 @@ async def get_starboard_embed(user_name: str, level: str, pokemon_id: str, messa
 
     embd = Embed()
 
+    embd.description = f"**`Trainer :`** {user_name}\n"
+    embd.description +=f"**`Pokemon :`** {pokemon_id.title()}\n"
+    embd.description +=f"**`Level   :`** {level} \n"
+    embd.description +=f"**`IVs     :`** {iv} [TELEPORT]({message_link})\n\n"
+
     if type == "rare":
         embd.title = ":star: Rare Catch Detected :star:"
         embd.color = DEFAULT_COLOR
-
-        embd.description = f"**Trainer :** {user_name}\n"
-        embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
-        embd.description += f"**Level :** {level} [Teleport]({message_link})\n\n"
-        embd.description += ("**Streak :** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
+        embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
 
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
-        embd.set_thumbnail(url=image_link)
+        
     elif type == "shiny":
         if is_hunt is False:
             embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
@@ -162,25 +172,16 @@ async def get_starboard_embed(user_name: str, level: str, pokemon_id: str, messa
             embd.title = ":fire: Hunt Completed :fire:"
             embd.color = HUNT_COMPLETED_COLOR
 
-        embd.description = f"**Trainer :** {user_name}\n"
-        embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
-        embd.description += f"**Level :** {level} [Teleport]({message_link})\n\n"
-        embd.description += ("**Streak :** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
-
+        embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
         image_link = SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
-        embd.set_thumbnail(url=image_link)
+
     elif streak != 0 and tier > 0:
         embd.title = "{emote} Catch Streak Detected {emote}".format(emote=STREAK_EMOJI)
         embd.color = STREAK_COLOR
-
-        embd.description = f"**Trainer :** {user_name}\n"
-        embd.description += f"**Pokemon :** {pokemon_id.capitalize()}\n"
-        embd.description += f"**Level :** {level} [Teleport]({message_link})\n\n"
-        embd.description += "**Streak :** {streak}".format(streak=streak)
-
+        embd.description += "**`Streak  :`** {streak}".format(streak=streak)
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
-        embd.set_thumbnail(url=image_link)
 
+    embd.set_thumbnail(url=image_link)
     embd.timestamp = datetime.datetime.now()
 
     return embd
@@ -189,7 +190,8 @@ async def get_starboard_embed(user_name: str, level: str, pokemon_id: str, messa
 """Sends the star catch embed to the starboard"""
 
 
-async def send_starboard(server_details, user_id: str, level: str, pokemon: str, message: Message, type="", streak=0, is_hunt=False):
+async def send_starboard(server_details, catch_details, message:Message):
+
     try:
         data = server_details[0]
     except KeyError:
@@ -203,7 +205,7 @@ async def send_starboard(server_details, user_id: str, level: str, pokemon: str,
         return await general_helper.get_info_embd("No starboard channel set", "", NORMAL_COLOR)
 
     # get starboard embed
-    reply = await get_starboard_embed(user_id, level, pokemon, message.jump_url, type, streak, tier, is_hunt)
+    reply = await get_starboard_embed(catch_details, message.jump_url, tier)
 
     # send that starboard embed to the starboard channel
     starboard_channel: TextChannel = message.guild.get_channel(int(starboard_channel_id))
@@ -224,7 +226,16 @@ async def send_starboard(server_details, user_id: str, level: str, pokemon: str,
 """returns the embed containing the rare catch info"""
 
 
-async def get_rare_catch_embd(server_details, _ping, _pokemon, _level, _type: str = "", _streak=0, is_hunt=False):
+async def get_rare_catch_embd(server_details, catch_details):
+
+    _ping = catch_details["user"]
+    _type = catch_details["type"]
+    _pokemon = catch_details["pokemon"]
+    _level = catch_details["level"]
+    _streak = catch_details["streak"]
+    _iv = catch_details["iv"]
+    is_hunt = catch_details["hunt"]
+
     try:
         data = server_details[0]
     except KeyError:
