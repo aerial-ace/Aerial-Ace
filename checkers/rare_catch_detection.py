@@ -1,3 +1,4 @@
+import pdb
 import discord
 import random
 
@@ -9,6 +10,7 @@ import config
 
 async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     """detect rare catch message"""
+
     bot_member: discord.Member = message.guild.get_member(bot.user.id)
 
     if message.channel.permissions_for(bot_member).send_messages is False:
@@ -67,7 +69,7 @@ async def determine_rare_catch(msg):
     is_hunt = False
     catch_info = {}  # stores the info of the catch
 
-    catch_keywords = ["Congratulations", "You", "caught", "a", "level"]
+    catch_keywords = ["Congratulations", "You", "caught", "a", "Level"]
     shiny_keywords = ["These", "colors", "seem", "unusual"]
 
     # determines whether this message is a catch message by checking the presence of the all catch keywords
@@ -82,8 +84,8 @@ async def determine_rare_catch(msg):
             break
 
     hunt_keywords = ["+1 Shiny chain!", "Shiny streak reset."]
-    extra_text = ["Congratulations", "You caught a level", "This is your", "10th", "Added to Pokédex", "You received",
-                  "Pokécoins", "These colors seem unusual...", "✨", ".", "!", "(", ")", "*", ","]
+    extra_text = ["Congratulations", "You caught a Level", "This is your", "10th", "Added to Pokédex", "You received",
+                  "Pokécoins", ":male:", ":female:", "These colors seem unusual...", "✨", ".", "!", "(", ")", "*", ",", "%"]
 
     info_text = msg
 
@@ -94,6 +96,8 @@ async def determine_rare_catch(msg):
 
     for extra in extra_text:
         info_text = info_text.replace(extra, "")
+
+    
 
     # stores the information as values in the list
     info_words: list = info_text.split()
@@ -134,6 +138,9 @@ async def determine_rare_catch(msg):
     # remove duplicates from pokemon_name_words
     unique_pokemon_name_words = []
     for i in pokemon_name_words:
+        if i.isnumeric():
+            continue
+
         if i not in unique_pokemon_name_words:
             unique_pokemon_name_words.append(i)
 
