@@ -1,4 +1,3 @@
-import pdb
 import discord
 import random
 import re
@@ -17,12 +16,12 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     if message.channel.permissions_for(bot_member).send_messages is False:
         return
 
-    # if str(message.author.id) != config.POKETWO_ID:
-    #     return
+    if str(message.author.id) != config.POKETWO_ID:
+        return
 
     catch_info = await determine_rare_catch(message)
 
-    # return if not a rare catch
+    # return if not a rare catch or a streak
     if catch_info is None or (catch_info["type"] == "" and catch_info["streak"] == 0):
         return None
 
@@ -30,34 +29,29 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
         "server_id": str(message.guild.id)
     })
 
-    # get the rare catch details
-    reply = await starboard_helper.get_rare_catch_embd(server_details, catch_info["user"], catch_info["pokemon"], catch_info["level"], catch_info["type"], catch_info["streak"], catch_info["hunt"])
+    """ Get and Send Catch Detection Embed"""
+    reply = await starboard_helper.get_rare_catch_embd(server_details, catch_info)
 
     if reply is None:
         return
-
-    # send the rare catch alert in the current channel
+    
     try:
         await message.channel.send(embed=reply)
     except discord.errors.Forbidden:
         return  # return if not allowed to send messages in the current channel
 
+    """ Send Customization Reminder for non premium servers"""
     customization_reminder_possibility = 30
 
     if server_details[0].get("tier") == 0 and random.randint(0, 99) < customization_reminder_possibility:
-        embd = await general_helper.get_info_embd(f"{config.AERIAL_ACE_EMOJI} Customize Starboard Embed!",
-                                                  "Enhance the starboard embed using various customization features available to premium servers. Get premium now and customize your starboard embeds to suit your servers. ",
-                                                  config.DEFAULT_COLOR,
-                                                  "Use -aa premium or join support server to know more.")
-
+        embd = await general_helper.get_info_embd(f"{config.AERIAL_ACE_EMOJI} Customize Starboard Embed!", "Enhance the starboard embed using various customization features available to premium servers. Get premium now and customize your starboard embeds to suit your servers. ", config.DEFAULT_COLOR, "Use -aa premium or join support server to know more.")
         await message.channel.send(embed=embd)
 
-    # Send to Starboard
-    starboard_reply = await starboard_helper.send_starboard(server_details, catch_info["user"], catch_info["level"],
-                                                            catch_info["pokemon"], message, catch_info["type"],
-                                                            catch_info["streak"], catch_info["hunt"])
+    
+    """ Send the starboard embed in the starboard channel """
+    starboard_reply = await starboard_helper.send_starboard(server_details, catch_info, message)
 
-    # send feedback in the current channel
+    """ Send feedback in the current channel """
     await message.channel.send(embed=starboard_reply)
 
 async def determine_rare_catch(message:discord.Message):
