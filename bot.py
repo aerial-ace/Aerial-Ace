@@ -88,7 +88,7 @@ async def on_ready():
 @bot.event
 async def on_message(message: discord.Message):
     # ignore your own stuff
-    if message.author.id != 734754644286504991:
+    if message.author == bot.user:
         return
 
     # reply to solo pings
