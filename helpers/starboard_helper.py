@@ -224,7 +224,10 @@ async def send_starboard(server_details, user_id: str, level: str, pokemon: str,
 """returns the embed containing the rare catch info"""
 
 
-async def get_rare_catch_embd(server_details, _ping, _pokemon, _level, _type: str = "", _streak=0, is_hunt=False):
+async def get_rare_catch_embd(server_details, catch_details):
+
+    _ping = catch_details["user"]
+
     try:
         data = server_details[0]
     except KeyError:
