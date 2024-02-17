@@ -1,4 +1,3 @@
-import pdb
 import discord
 import random
 
@@ -85,7 +84,7 @@ async def determine_rare_catch(msg):
 
     hunt_keywords = ["+1 Shiny chain!", "Shiny streak reset."]
     extra_text = ["Congratulations", "You caught a Level", "This is your", "10th", "Added to Pokédex", "You received",
-                  "Pokécoins", ":male:", ":female:", "These colors seem unusual...", "✨", ".", "!", "(", ")", "*", ",", "%"]
+                  "Pokécoins", ":male:", ":female:", ":unknown:", "These colors seem unusual...", "✨", ".", "!", "(", ")", "*", ",", "%"]
 
     info_text = msg
 
