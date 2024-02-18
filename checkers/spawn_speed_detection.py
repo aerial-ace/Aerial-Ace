@@ -1,4 +1,3 @@
-import pdb
 from discord import Message, Embed
 
 from managers import cache_manager

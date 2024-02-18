@@ -96,7 +96,9 @@ async def determine_rare_catch(message:discord.Message):
     iv_regex_outcome = re.findall(iv_regex, msg)
     iv = iv_regex_outcome[0] if len(iv_regex_outcome) > 0 else "0%"
 
-    user = message.mentions[0].mention
+    user_regex = "<@\d+>"
+    user_regex_outcome = re.findall(user_regex, msg)
+    user = user_regex_outcome[0] if len(user_regex_outcome) > 0 else None
 
     catch_streak_text = ["100th", "1000th", "10000th"]
 
