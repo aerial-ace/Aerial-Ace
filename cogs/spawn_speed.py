@@ -209,15 +209,5 @@ class SpawnSpeedModule(commands.Cog):
 
         await context.send("Shiny Counter Applied.")
 
-    @commands.command(name="uwu")
-    async def uwu(self, context:commands.Context):
-
-        await mongo_manager.manager.increment_shiny_counter(str(context.guild.id))
-
-    @commands.command(name="check")
-    async def check(self, context:commands.Context):
-
-        await context.send(cache_manager.cached_shinycounter_data)
-
 def setup(bot:commands.Bot):
     bot.add_cog(SpawnSpeedModule(bot))
