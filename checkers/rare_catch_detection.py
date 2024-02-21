@@ -16,14 +16,17 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     if message.channel.permissions_for(bot_member).send_messages is False:
         return
 
-    # if str(message.author.id) != config.POKETWO_ID:
-    #     return
+    if str(message.author.id) != config.POKETWO_ID:
+        return
 
     catch_info = await determine_rare_catch(message)
 
     # return if not a rare catch or a streak
     if catch_info is None or (catch_info["type"] == "" and catch_info["streak"] == 0):
         return None
+    
+    if catch_info.get("type") == "shiny":
+        await mongo_manager.manager.increment_shiny_counter(str(message.guild.id))
 
     server_details = await mongo_manager.manager.get_all_data("servers", {
         "server_id": str(message.guild.id)

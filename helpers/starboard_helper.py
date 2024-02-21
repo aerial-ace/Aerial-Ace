@@ -132,7 +132,12 @@ async def get_starboard_embed(catch_details, message_link: str, tier: int = 0):
     pokemon = pokemon.replace("é", "e")  # This is because of you Flabébé >:|
     pokemon = pokemon.removeprefix("defense").removeprefix("attack").removeprefix("speed")
 
-    name_aliter = {"ho-oh": "hooh"}
+    name_aliter = {
+        "ho-oh": "hooh", 
+        "chien-pao" : "chienpao", 
+        "wo-chien" : "wochien", 
+        "ting-lu" : "tinglu"
+    }
 
     try:
         pokemon = name_aliter[pokemon]

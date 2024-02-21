@@ -14,10 +14,11 @@ cached_weakness_data = None
 cached_duelish_data = None
 
 cached_spawnrate_data = None
+cached_shinycounter_data = None
 
 # caches the data
 async def cache_data():
-    global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data, cached_weakness_data, cached_type_data, cached_duelish_data, cached_spawnrate_data
+    global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data, cached_weakness_data, cached_type_data, cached_duelish_data, cached_spawnrate_data, cached_shinycounter_data
 
     cached_stats_data = get_all_stats()
     cached_moveset_data = get_all_moveset()
@@ -29,6 +30,9 @@ async def cache_data():
     cached_duelish_data = get_all_duelish_data()
 
     cached_spawnrate_data = await fetch_spawnrate_info()
+    cached_shinycounter_data = await fetch_shinycounter_info()
+
+    print(cached_shinycounter_data)
 
 # returns all the stats from stats file
 def get_all_stats():
@@ -107,6 +111,23 @@ async def fetch_spawnrate_info():
 
     return storage
 
+async def fetch_shinycounter_info():
+
+    storage = {
+
+    }
+
+    data = await mongo_manager.manager.get_all_data("shinycounter", {})
+
+    for x in data:
+        storage.update({x.get("server_id") : {
+            "active" : x.get("active"),
+            "channel_id" : x.get("channel_id"),
+            "count" : x.get("count")
+        }})
+
+    return storage
+
 async def update_spawnrates(server_id:str, active:bool, channel_id:str):
 
     global cached_spawnrate_data
@@ -115,7 +136,7 @@ async def update_spawnrates(server_id:str, active:bool, channel_id:str):
 
     updated_data = {
         "active" : active if active is not None else False if prev_data is None else prev_data.get("active"), 
-        "channel_id" : channel_id if channel_id is not None else "" if prev_data is None else prev_data.get("channel_id")
+        "channel_id" : channel_id if channel_id is not None else "" if prev_data is None else prev_data.get("channel_id"),
     }
 
     # Return None if the new data is same as the current data.
@@ -125,3 +146,39 @@ async def update_spawnrates(server_id:str, active:bool, channel_id:str):
     cached_spawnrate_data.update({server_id : updated_data})
 
     return updated_data
+
+async def update_shinycounter(server_id:str, active:bool, channel_id:str):
+
+    global cached_shinycounter_data
+
+    prev_data = cached_shinycounter_data.get(server_id, None)
+
+    updated_data = {
+        "active" : active if active is not None else False if prev_data is None else prev_data.get("active"), 
+        "channel_id" : channel_id if channel_id is not None else "" if prev_data is None else prev_data.get("channel_id"),
+        "count" : 0
+    }
+
+    # Return None if the new data is same as the current data.
+    if prev_data == updated_data:
+        return None
+
+    cached_shinycounter_data.update({server_id : updated_data})
+
+    return updated_data
+
+async def increment_shiny_counter(server_id):
+
+    global cached_shinycounter_data
+
+    server_data = cached_shinycounter_data.get(str(server_id), None)
+
+    if server_data is None:
+        print("SERVER IS NOT CACHED!")
+        return    
+        
+    server_data["count"] = server_data["count"] + 1
+        
+    cached_shinycounter_data.update({
+        server_id : server_data
+    })

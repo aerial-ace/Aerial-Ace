@@ -25,7 +25,23 @@ class SpawnSpeedModule(commands.Cog):
         if cache_manager.cached_spawnrate_data is None:
             return
 
-        for x, y in cache_manager.cached_spawnrate_data.items():
+        await self.apply_spawn_counter()
+
+        await self.apply_shiny_counter()
+
+    @update_spawn_speeds.before_loop
+    async def waiter(self):
+        await self.bot.wait_until_ready()
+
+    async def apply_spawn_counter(self, server_id:str=None):
+        """ Updates the spawn-speed channel name of each and every server """
+
+        d = cache_manager.cached_spawnrate_data.items()
+
+        if server_id != None:
+            d = [{server_id: cache_manager.get(server_id)}]
+
+        for x, y in d:
 
             if y.get("active") is False:
                 continue
@@ -35,7 +51,7 @@ class SpawnSpeedModule(commands.Cog):
             try:
                 speed_display_channel:GuildChannel = await self.bot.fetch_channel(y.get("channel_id"))
             except:
-                return # Channel Not Found
+                continue # Channel Not Found
 
             if isinstance(speed_display_channel, TextChannel) or isinstance(speed_display_channel, VoiceChannel) or isinstance(speed_display_channel, StageChannel):
                 try:
@@ -44,12 +60,32 @@ class SpawnSpeedModule(commands.Cog):
                 except:
                     continue # Unable to send messages.
 
-    @update_spawn_speeds.before_loop
-    async def waiter(self):
-        await self.bot.wait_until_ready()
+    async def apply_shiny_counter(self, server_id:str=None):
+        """ Updates the shiny-counter channel name of each and every server """
 
+        d = cache_manager.cached_shinycounter_data.items()
 
+        if server_id != None:
+            d = [{server_id: cache_manager.get(server_id)}]
 
+        for x, y in d:
+
+            if y.get("active") is False:
+                continue
+
+            try:
+                display_channel : GuildChannel = await self.bot.fetch_channel(int(y.get("channel_id")))
+            except:
+                continue
+
+            if isinstance(display_channel, TextChannel) or isinstance(display_channel, VoiceChannel) or isinstance(display_channel, StageChannel):
+
+                try:
+                    await display_channel.edit(name="{} shinies / alltime".format(y.get("count")))
+                except:
+                    continue
+
+    """ SPAWN COUNTER """
 
     @commands.group(name="spawnrate", aliases=["sr"], description="The container for spawnrate commands")
     async def spawnrate(self, context:commands.Context):
@@ -81,7 +117,7 @@ class SpawnSpeedModule(commands.Cog):
         await context.send("SpawnRate Module was activated")
 
     @commands.has_permissions(administrator=True)
-    @spawnrate.command(name="deactivate", aliases=["da"], description="Activate the spawn rate display")
+    @spawnrate.command(name="deactivate", aliases=["da"], description="DeActivate the spawn rate display")
     async def deactivate(self, context:commands.Context):
 
         data = cache_manager.cached_spawnrate_data.get(str(context.guild.id), None)
@@ -102,6 +138,86 @@ class SpawnSpeedModule(commands.Cog):
             return await context.send("No Data recorded")
 
         await context.send("Current Spawn Count : **{}**".format(str(await spawn_speed_detection.get_server_spawn_speed(str(context.guild.id)))))
+
+    @commands.is_owner()
+    @spawn_count.command("apply", description="Applies the counter values of the current server.")
+    async def sc_apply(self, context:commands.Context, server_id:str=None):
+
+        await self.apply_spawn_counter(server_id)
+
+        await context.send("Spawn Counter Applied.")
+
+
+    """ SHINY COUNTER """
+
+    @commands.group(name="shiny-counter", aliases=["sc"], description="Commands related to shiny counter")
+    async def shiny_counter(self, context:commands.Context):
+        if context.subcommand_passed is None:
+            await context.send("Please provide a valid subcommand!")
+
+    @shiny_counter.command(name="channel", aliases=["ch"], description="Set the shiny count channel")
+    async def channel(self, context:commands.Context, channel:GuildChannel):
+
+        if channel is None:
+            return await context.send("Please provide a valid channel as parameter!")
+
+        await mongo_manager.manager.update_shiny_counter(str(context.guild.id), None, str(channel.id))
+
+        await context.send("Shiny Counter Channel Updated! New Shiny Counter Display : {}".format(channel.mention))
+
+    @commands.has_permissions(administrator=True)
+    @shiny_counter.command(name="activate", aliases=["a"], description="Activate the shiny counter display")
+    async def activate(self, context:commands.Context):
+
+        data = cache_manager.cached_shinycounter_data.get(str(context.guild.id), None)
+
+        if data is None:
+            return await context.send("Please set up shiny counter channel before activating the module!")
+        
+        await mongo_manager.manager.update_shiny_counter(str(context.guild.id), True, channel_id=None)
+
+        await context.send("ShinyCounter Module was activated")
+
+    @commands.has_permissions(administrator=True)
+    @shiny_counter.command(name="deactivate", aliases=["da"], description="DeActivate the shiny counter display")
+    async def deactivate(self, context:commands.Context):
+
+        data = cache_manager.cached_spawnrate_data.get(str(context.guild.id), None)
+
+        if data is None:
+            return await context.send("Please set up spawnrate channel before deactivating the module!")
+        
+        await mongo_manager.manager.update_shiny_counter(str(context.guild.id), False, channel_id=None)
+
+        await context.send("ShinyCounter Module was deactivated")
+
+    @shiny_counter.command(name="count", aliases=["c"], description="Current Shiny Counter of the server")
+    async def spawn_count(self, context:commands.Context):
+
+        data = cache_manager.cached_spawnrate_data.get(str(context.guild.id), None)
+
+        if data is None:
+            return await context.send("No Data recorded")
+
+        await context.send("Current Shiny Count : **{}**".format(cache_manager.cached_shinycounter_data.get("count")))
+
+    @commands.is_owner()
+    @shiny_counter.command("apply", description="Applies the counter values of the current server.")
+    async def sc_apply(self, context:commands.Context, server_id:str=None):
+
+        await self.apply_shiny_counter(server_id)
+
+        await context.send("Shiny Counter Applied.")
+
+    @commands.command(name="uwu")
+    async def uwu(self, context:commands.Context):
+
+        await mongo_manager.manager.increment_shiny_counter(str(context.guild.id))
+
+    @commands.command(name="check")
+    async def check(self, context:commands.Context):
+
+        await context.send(cache_manager.cached_shinycounter_data)
 
 def setup(bot:commands.Bot):
     bot.add_cog(SpawnSpeedModule(bot))

@@ -72,6 +72,22 @@ class MongoManager:
 
         await self.db["spawnrate"].update_one(query, {"$set" : updated_data}, upsert=True)
 
+    async def update_shiny_counter(self, server_id, active, channel_id):
+
+        updated_data = await cache_manager.update_shinycounter(server_id, active, channel_id)
+
+        query = {"server_id" : str(server_id)}
+
+        await self.db["shinycounter"].update_one(query, {"$set" : updated_data}, upsert=True)
+
+    async def increment_shiny_counter(self, server_id):
+
+        query = {"server_id" : str(server_id)}
+
+        await cache_manager.increment_shiny_counter(server_id)
+
+        await self.db["shinycounter"].update_one(query, {"$inc" : {"count" : 1}})
+
 manager = None
 
 
