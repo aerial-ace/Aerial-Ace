@@ -32,8 +32,6 @@ async def cache_data():
     cached_spawnrate_data = await fetch_spawnrate_info()
     cached_shinycounter_data = await fetch_shinycounter_info()
 
-    print(cached_shinycounter_data)
-
 # returns all the stats from stats file
 def get_all_stats():
     stats_file = open(config.STATS_FILE_LOCATION, "r")

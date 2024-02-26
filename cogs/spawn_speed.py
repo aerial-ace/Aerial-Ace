@@ -139,8 +139,8 @@ class SpawnSpeedModule(commands.Cog):
 
         await context.send("Current Spawn Count : **{}**".format(str(await spawn_speed_detection.get_server_spawn_speed(str(context.guild.id)))))
 
+    @spawnrate.command("apply", description="Applies the counter values of the current server.")
     @commands.is_owner()
-    @spawn_count.command("apply", description="Applies the counter values of the current server.")
     async def sc_apply(self, context:commands.Context, server_id:str=None):
 
         await self.apply_spawn_counter(server_id)
