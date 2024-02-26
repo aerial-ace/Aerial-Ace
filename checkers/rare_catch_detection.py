@@ -103,7 +103,7 @@ async def determine_rare_catch(message:discord.Message):
     user_regex_outcome = re.findall(user_regex, msg)
     user = user_regex_outcome[0] if len(user_regex_outcome) > 0 else None
 
-    catch_streak_text = ["100th", "1000th", "10000th"]
+    catch_streak_text = ["100th", "1,000th", "10,000th"]
 
     streak = 0
 
