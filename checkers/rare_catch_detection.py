@@ -69,7 +69,7 @@ async def determine_rare_catch(message:discord.Message):
 
     catch_keywords = ["Congratulations", "You", "caught", "a", "Level"]
     shiny_keywords = ["These", "colors", "seem", "unusual"]
-    hunt_keywords  = ["+1 Shiny chain!", "Shiny streak reset."]
+    hunt_keywords  = ["Shiny streak reset."]
 
     # determines whether this message is a catch message by checking the presence of the all catch keywords
     for catch_keyword in catch_keywords:

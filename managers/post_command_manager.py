@@ -1,5 +1,6 @@
 from discord.ext import commands
 from discord import Embed
+from discord.errors import Forbidden
 import random
 
 from views.ButtonViews import DonationView
@@ -48,9 +49,12 @@ async def process_post_commands(ctx: commands.Context):
     tip_reminder_probability = 5
     support_reminder_probability = 10
 
-    if random.randrange(1, 100) < mail_reminder_probability:
-        await mail_manager.process_mail(ctx)
-    elif random.randint(1, 100) < tip_reminder_probability:
-        await tip_manager.TipsModule.send_random_tip(ctx.channel)
-    elif random.randint(1, 100) < support_reminder_probability:
-        await donation_reminder(ctx)
+    try:
+        if random.randrange(1, 100) < mail_reminder_probability:
+            await mail_manager.process_mail(ctx)
+        elif random.randint(1, 100) < tip_reminder_probability:
+            await tip_manager.TipsModule.send_random_tip(ctx.channel)
+        elif random.randint(1, 100) < support_reminder_probability:
+            await donation_reminder(ctx)
+    except Forbidden as e:
+        return

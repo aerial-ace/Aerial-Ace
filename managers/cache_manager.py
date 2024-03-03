@@ -172,7 +172,6 @@ async def increment_shiny_counter(server_id):
     server_data = cached_shinycounter_data.get(str(server_id), None)
 
     if server_data is None:
-        print("SERVER IS NOT CACHED!")
         return    
         
     server_data["count"] = server_data["count"] + 1
