@@ -132,8 +132,6 @@ class SpawnSpeedModule(commands.Cog):
     @spawnrate.command(name="count", aliases=["c"], description="Current Spawn Count of the server")
     async def sr_spawn_count(self, context:commands.Context):
 
-        
-
         data = cache_manager.cached_spawnrate_data.get(str(context.guild.id), None)
 
         if data is None:
@@ -157,6 +155,7 @@ class SpawnSpeedModule(commands.Cog):
         if context.subcommand_passed is None:
             await context.send("Please provide a valid subcommand!")
 
+    @commands.has_permissions(administrator=True)
     @shiny_counter.command(name="channel", aliases=["ch"], description="Set the shiny count channel")
     async def sc_channel(self, context:commands.Context, channel:GuildChannel):
 

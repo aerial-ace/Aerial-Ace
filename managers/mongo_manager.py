@@ -76,6 +76,9 @@ class MongoManager:
 
         updated_data = await cache_manager.update_shinycounter(server_id, active, channel_id)
 
+        if updated_data is None:
+            return 
+
         query = {"server_id" : str(server_id)}
 
         await self.db["shinycounter"].update_one(query, {"$set" : updated_data}, upsert=True)
