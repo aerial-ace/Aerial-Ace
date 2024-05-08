@@ -81,7 +81,7 @@ class SpawnSpeedModule(commands.Cog):
             if isinstance(display_channel, TextChannel) or isinstance(display_channel, VoiceChannel) or isinstance(display_channel, StageChannel):
 
                 try:
-                    await display_channel.edit(name="{} shinies / alltime".format(y.get("count")))
+                    await display_channel.edit(name="{} shinies ✨ / alltime".format(y.get("count")))
                 except:
                     continue
 
