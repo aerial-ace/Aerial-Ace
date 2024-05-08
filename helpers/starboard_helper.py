@@ -6,7 +6,7 @@ import json
 
 from managers import mongo_manager, init_manager
 from helpers import general_helper
-from config import NORMAL_COLOR, DEFAULT_COLOR, RARE_CATCH_COLOR, HUNT_COMPLETED_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, STREAK_EMOJI, STREAK_COLOR, ERROR_COLOR
+from config import NORMAL_COLOR, DEFAULT_COLOR, RARE_CATCH_COLOR, SHINY_CATCH_COLOR, HUNT_COMPLETED_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, STREAK_EMOJI, LOW_IV_EMOJI, HIGH_IV_EMOJI, STREAK_COLOR, LOW_IV_COLOR, HIGH_IV_COLOR, ERROR_COLOR
 
 """Sets/Resets the starboard channel"""
 
@@ -160,11 +160,11 @@ async def get_starboard_embed(catch_details, message_link: str, tier: int = 0):
     embd.description = f"**`Trainer :`** {user_name}\n"
     embd.description +=f"**`Pokemon :`** {pokemon_id.title()}\n"
     embd.description +=f"**`Level   :`** {level} \n"
-    embd.description +=f"**`IVs     :`** {iv} [TELEPORT]({message_link})\n\n"
+    embd.description +=f"**`IVs     :`** {iv}% [TELEPORT]({message_link})\n\n"
 
     if type == "rare":
         embd.title = ":star: Rare Catch Detected :star:"
-        embd.color = DEFAULT_COLOR
+        embd.color = RARE_CATCH_COLOR
         embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
 
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
@@ -172,7 +172,7 @@ async def get_starboard_embed(catch_details, message_link: str, tier: int = 0):
     elif type == "shiny":
         if is_hunt is False:
             embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
-            embd.color = RARE_CATCH_COLOR
+            embd.color = SHINY_CATCH_COLOR
         else:
             embd.title = ":fire: Hunt Completed :fire:"
             embd.color = HUNT_COMPLETED_COLOR
@@ -184,6 +184,16 @@ async def get_starboard_embed(catch_details, message_link: str, tier: int = 0):
         embd.title = "{emote} Catch Streak Detected {emote}".format(emote=STREAK_EMOJI)
         embd.color = STREAK_COLOR
         embd.description += "**`Streak  :`** {streak}".format(streak=streak)
+        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+
+    else:
+        ivs = float(iv)
+        iv_status = "Rare Low IV" if ivs < 5 else "Rare High IV"
+        iv_emote  = LOW_IV_EMOJI if ivs < 5 else HIGH_IV_EMOJI
+
+        embd.title = "{emote} {status} Catch Detected {emote}".format(emote=iv_emote, status=iv_status)
+        embd.color = LOW_IV_COLOR if ivs < 5 else HIGH_IV_COLOR
+        embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
 
     embd.set_thumbnail(url=image_link)
@@ -259,7 +269,7 @@ async def get_rare_catch_embd(server_details, catch_details):
 
     if _type == "rare":
         embd.title = ":star: Rare Catch Detected :star:"
-        embd.color = DEFAULT_COLOR
+        embd.color = RARE_CATCH_COLOR
         embd.description = (DEFAULT_RARE_TEXT if data.get("starboard_text_rare", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_rare", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
         embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")
@@ -269,7 +279,7 @@ async def get_rare_catch_embd(server_details, catch_details):
     elif _type == "shiny":
         if is_hunt is False:
             embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
-            embd.color = RARE_CATCH_COLOR
+            embd.color = SHINY_CATCH_COLOR
         else:
             embd.title = ":fire: Hunt Completed :fire:"
             embd.color = HUNT_COMPLETED_COLOR
@@ -286,7 +296,20 @@ async def get_rare_catch_embd(server_details, catch_details):
         embd.description = "{ping} caught their {streak}th {pokemon}\n\n:tada: Congratulations :tada:".format(ping=_ping, streak=_streak, pokemon=_pokemon)
 
     else:
-        return None
+        ivs = float(_iv)
+        iv_emote = LOW_IV_EMOJI if ivs < 5 else HIGH_IV_EMOJI
+        
+        if ivs < 5:
+            iv_status = "Rare Low IV"
+        elif ivs > 95:
+            iv_status = "Rare High IV"
+        else:
+            return None # Return None if no case is matched.
+
+        embd.title = f"{iv_emote} {iv_status} Catch Detected {iv_emote}"
+        embd.color = LOW_IV_COLOR if ivs < 5 else HIGH_IV_COLOR
+        embd.description = "{ping} caught a {status} Pokemon\n\n:tada: Congratulations :tada:".format(ping=_ping, streak=_streak, pokemon=_pokemon, status=iv_status)
+        embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
 
     embd.timestamp = datetime.datetime.now()
 

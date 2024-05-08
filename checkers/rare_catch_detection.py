@@ -22,7 +22,7 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     catch_info = await determine_rare_catch(message)
 
     # return if not a rare catch or a streak
-    if catch_info is None or (catch_info["type"] == "" and catch_info["streak"] == 0):
+    if catch_info is None or ( catch_info["type"] == "" and  catch_info["streak"] == 0 and float(catch_info["iv"]) > 5 and float(catch_info["iv"]) < 95 ):
         return None
     
     if catch_info.get("type") == "shiny":
@@ -95,7 +95,7 @@ async def determine_rare_catch(message:discord.Message):
     pokemon_name_regex_outcome = re.findall(pokemon_name_regex, msg)
     pokemon_name = pokemon_name_regex_outcome[0] if len(pokemon_name_regex_outcome) > 0 else None
 
-    iv_regex = r"\d+(?:\.\d+)%"
+    iv_regex = r"\d+(?:\.\d+)(?=%)"
     iv_regex_outcome = re.findall(iv_regex, msg)
     iv = iv_regex_outcome[0] if len(iv_regex_outcome) > 0 else "0%"
 
