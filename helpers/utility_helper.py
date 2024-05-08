@@ -164,7 +164,7 @@ async def get_premium_embed() -> discord.Embed:
 
     embd.add_field(
         name=f"{config.BULLET_EMOJI} **Trainer Tier @** $2/month only",
-        value=f"{config.SUB_SECTION_EMOJI} Fully customizable starboard text!\n{config.SUB_SECTION_EMOJI} Supporter Role on Support Server.\n{config.SUB_SECTION_EMOJI} Catch-Streak detection System!",
+        value=f"{config.SUB_SECTION_EMOJI} Fully customizable starboard text!\n{config.SUB_SECTION_EMOJI} Supporter Role on Support Server.\n{config.SUB_SECTION_EMOJI} Catch-Streak detection System and more!",
         inline=True
     )
 
@@ -172,7 +172,7 @@ async def get_premium_embed() -> discord.Embed:
 
     embd.add_field(
         name=f"{config.BULLET_EMOJI} **Gym Leader Tier** @ $5/month only",
-        value=f"{config.SUB_SECTION_EMOJI} Server Wide Automatic Battle Logging\n{config.SUB_SECTION_EMOJI} Fully customizable starboard image.\n{config.SUB_SECTION_EMOJI} Exclusive Access to Development Channels, and early sneak peak into new features. \n{config.SUB_SECTION_EMOJI} Include rewards from the previous tiers.",
+        value=f"{config.SUB_SECTION_EMOJI} Server Wide Automatic Battle Logging\n{config.SUB_SECTION_EMOJI} Fully customizable starboard image.\n{config.SUB_SECTION_EMOJI} Exclusive Access to Development Channels, and early sneak peak into new features. \n{config.SUB_SECTION_EMOJI} Include rewards from the previous tiers and more!",
         inline=True
     )
 
@@ -180,7 +180,7 @@ async def get_premium_embed() -> discord.Embed:
 
     embd.add_field(
         name=f"{config.BULLET_EMOJI} **Champion Tier** @ $10/month only",
-        value=f"{config.SUB_SECTION_EMOJI} Fully [ We mean FULLY ] customizable starboard embed. \n{config.SUB_SECTION_EMOJI} Priority given to commands suggested and Premium Support. \n{config.SUB_SECTION_EMOJI} Includes a bonus 2 servers. \n{config.SUB_SECTION_EMOJI} Includes rewards from the previous tiers",
+        value=f"{config.SUB_SECTION_EMOJI} Fully [ We mean FULLY ] customizable starboard embed. \n{config.SUB_SECTION_EMOJI} Priority given to commands suggested and Premium Support. \n{config.SUB_SECTION_EMOJI} Includes a bonus server. \n{config.SUB_SECTION_EMOJI} Includes rewards from the previous tiers and more!",
         inline=True
     )
 

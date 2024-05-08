@@ -15,11 +15,11 @@ class MailModule(commands.Cog):
         view = GeneralView()
 
         embd.description = "```New```\n"
-        embd.description += f"Introducing Spawn Speed Module! Using this module, you can assign a Voice/Stage Channel and it will show the number of spawns per hour in your server. Get started with `-aa help spawnrate`"
+        embd.description += f"**Starboard Update** : Premium Servers now log rare low ( < 5% ) and high ( > 95% ) iv pokemons in the starboard. This option is enabled by default. Enjoy!"
         embd.description += "\n\n"
 
         embd.description += "```Old```\n"
-        embd.description += "Its time for a brand new feature coming to aerial ace. Introducing...\n# Donation Logging\n\nDonation Logging is a module ( set of commands ) which automatically logs donation, calculate their approximate worth, create a leaderboard based on the pc value of the donations all while making them easier to track and manage."
+        embd.description += f"Introducing Spawn Speed Module! Using this module, you can assign a Voice/Stage Channel and it will show the number of spawns per hour in your server. Get started with `-aa help spawnrate`"
 
         embd.description += "\n\nThanks for using Aerial Ace as always."
 
@@ -31,7 +31,7 @@ class MailModule(commands.Cog):
 # Mail reminder
 async def process_mail(ctx):
     embd = discord.Embed(title=f"{config.ALERT_EMOJI} NOTICE {config.ALERT_EMOJI}", color=config.NORMAL_COLOR)
-    embd.description = f"** Spawn Speed Display **"
+    embd.description = f"** Low/High IV Starboard **"
     try:
         embd.set_footer(text=f"Check the complete mail using {ctx.prefix}mail")
     except Exception as e:
