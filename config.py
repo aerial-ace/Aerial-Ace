@@ -40,6 +40,9 @@ PAYPAL_LINK = "https://www.paypal.me/devgame19"
 KO_FI_LINK = "https://ko-fi.com/aerial_ace"
 GITHUB_SPONSORS_LINK = "https://github.com/sponsors/aerial-ace"
 
+# Images
+PREMIUM_IMAGE = "https://i.imgur.com/su0fQdJ.png"
+
 # Emojis
 AERIAL_ACE_EMOJI = "<:aalogo:1089238103975268433>"
 BULLET_EMOJI = "<a:arrow_arrow:939409283668410381>"

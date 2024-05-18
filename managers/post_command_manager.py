@@ -45,7 +45,7 @@ async def donation_reminder(ctx: commands.Context):
 
 
 async def process_post_commands(ctx: commands.Context):
-    mail_reminder_probability = 20
+    mail_reminder_probability = 30
     tip_reminder_probability = 5
     support_reminder_probability = 10
 
