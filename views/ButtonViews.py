@@ -3,7 +3,7 @@ from discord.ui import View, Button
 
 from views.ModalViews import SurveyModal
 from helpers import general_helper
-from config import PATREON_EMOJI, PAYPAL_EMOJI, KO_FI_EMOJI, PREMIUM_EMOJI, PATREON_LINK, PAYPAL_LINK, INVITE_LINK, SUPPORT_SERVER_LINK, REPO_LINK, VOTE_LINK, GITHUB_EMOJI, GITHUB_SPONSORS_LINK, KO_FI_LINK
+from config import PATREON_EMOJI, PAYPAL_EMOJI, PREMIUM_EMOJI, PATREON_LINK, PAYPAL_LINK, INVITE_LINK, SUPPORT_SERVER_LINK, REPO_LINK, VOTE_LINK, GITHUB_EMOJI, GITHUB_SPONSORS_LINK, PREMIUM_IMAGE
 
 
 class DonationView(View):
@@ -105,8 +105,6 @@ class GeneralView(View):
             self.add_item(vote_button)
         if donate:
             self.add_item(premium_button)
-        # if survey:
-        #     self.add_item(survey_button)
 
     async def donate_callback(self, interaction: Interaction) -> None:
 
@@ -115,6 +113,8 @@ class GeneralView(View):
             desc="Thanks for checking out the Premium Module.\nSubscribe to our patreon or paypal to avail premium features and support the development of Aerial Ace",
             show_thumbnail=True
         )
+
+        embd.set_image(url=PREMIUM_IMAGE)
 
         view = DonationView(2000)
 
