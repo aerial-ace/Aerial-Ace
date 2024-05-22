@@ -212,7 +212,23 @@ async def send_starboard(server_details, catch_details, message:Message):
     except KeyError:
         data = await init_manager.register_guild_without_bs(server_details[0].get("server_id"))
 
-    starboard_channel_id = data["starboard"]
+    """
+
+    0. Store the current SETTING. 
+    1. Store the logging channel ID for each SETTING. 
+    2. Fetch Logging channel ID based on the current SETTING. 
+    3. Send the embed to fetched channel ID.
+
+    """
+
+    starboard_channel_id = ""
+
+    # Tries to fetch the shiny logging channel, if it is found then set the starboard channel as the shiny channel else just set the default logging channel.
+    if catch_details.get("type", "rare") == "shiny":
+        starboard_channel_id = data.get("starboard") if data.get("shiny_starboard_channel", "0") == "0" else data.get("shiny_starboard_channel")
+    else:
+        starboard_channel_id = data.get("starboard", "0")
+
     tier = data.get("tier", 0)
 
     # return if module is disabled
