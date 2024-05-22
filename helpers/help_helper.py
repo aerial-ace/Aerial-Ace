@@ -5,8 +5,7 @@ import datetime
 from helpers import general_helper, logger
 import config
 
-all_categories = {"pokedex": "commands related to pokedex", "random": "commands related to random gen", "info": "commands related to information", "battle": "commands related to battleboard", "tags": "commands related to shinyhunts", "fun": "other fun commands", "misc": "commands that dont fit in other categories", "starboard": "commands related to starboard",
-                  "customization": "Customization commands for premium servers", "smogon": "commands related to showdown", "donation" : "Displays the current donation information and holds commands related to donation module", "spawnrate" : "Commands related to Spawn Rate Module"}
+all_categories = {"pokedex": "commands related to pokedex", "random": "commands related to random gen", "info": "commands related to information", "battle": "commands related to battleboard", "tags": "commands related to shinyhunts", "fun": "other fun commands", "misc": "commands that dont fit in other categories", "starboard": "commands related to starboard", "smogon": "commands related to showdown", "donation" : "Displays the current donation information and holds commands related to donation module", "spawnrate" : "Commands related to Spawn Rate Module"}
 
 commands_in_category = {
     "pokedex": ["dex", "ability"],
@@ -16,10 +15,9 @@ commands_in_category = {
     "tags": ["tag", "tag_ping", "tag_show", "afk", "tag_remove", "tag_remove_id", "alltags"],
     "fun": ["hit", "pat", "kill", "hug", "tease", "cry", "dance"],
     "starboard": ["starboard"],
-    "customization": ["rare_text", "shiny_text", "rare_image", "shiny_image"],
     "misc": ["ping", "roll", "support", "vote", "invite", "mail", "all"],
     "smogon": ["smogon"],
-    "dono" : ["", "dono_channel", "dono_log", "dono_staff", "dono_change", "dono_clear", "dono_remove"],
+    "dono" : ["dono_channel", "dono_log", "dono_staff", "dono_change", "dono_clear", "dono_remove"],
     "spawnrate" : ["spawnrate.channel", "spawnrate.activate", "spawnrate.deactivate", "spawnrate.count"]
 }
 
@@ -59,26 +57,26 @@ all_commands = {
     "vote": "```{prefix}vote```\ndisplays the vote link for the bot",
     "invite": "```{prefix}invite```\ndisplays the invite link for the bot",
     "mail": "```{prefix}mail```\nopens up the mail box with latest news about the bot",
-    "starboard": "```{prefix}starboard[sb] #channel\n{prefix}sb #poketwo-starboard```\nsends rare catch embeds to this channel",
-    "smogon": "```{prefix}smogon <gen> <tier> <pokemon>\n{prefix}smogon 5 OU durant```\nreturns the detailed usage data of the pokemon from the smogon database",
+    "starboard": "```{prefix}starboard[sb] channel[ch] #channel\n{prefix}sb shinychannel[shch] #shiny-starboard\n{prefix}sb raretext[rt] <text>\n{prefix}sb shinytext[st] <text>\n{prefix}sb shinyimage[si] <image_url>\n{prefix}sb rareimage[ri] <image_url>\n{prefix}sb sample //sends a sample embed to test perms.```\nsends rare catch embeds to this channel",
+    "smogon": "```DISCONTINUED```",
     "all": "```{prefix}all``` returns a list of all the commands in the bot",
-    "rare_text": "```{prefix}sb rt <text>\n{prefix}sb rt Woohoo \{ping\}! Congrats on catching a \{pokemon\}. Show us its stats :3``` updates the text shown on the rare catch embed. Add \{ping\}, \{level\} and \{pokemon\} in the text, which will be auto replaced to correct values",
-    "shiny_text": "```{prefix}sb st <text>\n{prefix}sb st Holy Smokes {ping}! Congrats on catching a SHINY {pokemon}. Good luck on your next hunt, if this was your hunt.``` updates the text shown on the shiny catch embed. Add {ping}, {level} and {pokemon} in the text, which will be auto replaced to correct values",
-    "rare_image": "```{prefix}sb ri <link>\n{prefix}sb ri https://i.waifu.pics/wFFu3UE.gif``` updates the image show in the rare catch image.",
-    "shiny_image": "```{prefix}sb si <link>\n{prefix}sb si https://i.waifu.pics/wFFu3UE.gif``` updates the image show in the shiny catch image.```",
-    "dono_lb": "```{prefix}dono lb``` shows the current donation leaderboard of the server",
-    "dono_channel": "```{prefix}dono ch #channel``` donations made only in the #channel will be counted for the leaderboard",
-    "dono_log": "```{prefix}dono log #channel``` all the donation logs are sent in the #channel",
-    "dono_staff": "```{prefix}dono staff <role-id>``` sets the <role-id> as the staff role id. Donations taken by the staff with this role will be counted in the leaderboard.",
-    "dono_change": "```{prefix}dono change @user <pc> <shiny> <rare> <redeem>``` updates the leaderboard for the @user and sets their pc, shiny, rare, redeem values to the provided values.",
-    "dono_clear": "```{prefix}dono clear``` clears the leaderboard.",
-    "dono_remove": "```{prefix}dono remove @user``` removes @user from the leaderboard.",
     "spawnrate.channel": "```{prefix}spawnrate[sr] channel[ch] #channel```\nsets the provided channel for spwan speed display.",
     "spawnrate.activate": "```{prefix}spawnrate[sr] activate[a]```\nactivates the spawnrate display! Make sure to set the channel first.",
     "spawnrate.deactivate": "```{prefix}spawnrate[sr] deactivate[da]```\ndeactivates the spawnrate display!",
     "spawnrate.count": "```{prefix}spawnrate[sr] count[c]```\nthe current spawn rate of the server!"
 }
 
+""" DISPOSED DONATION COMMANDS 
+
+"dono_lb": "```{prefix}dono lb``` shows the current donation leaderboard of the server",
+"dono_channel": "```{prefix}dono ch #channel``` donations made only in the #channel will be counted for the leaderboard",
+"dono_log": "```{prefix}dono log #channel``` all the donation logs are sent in the #channel",
+"dono_staff": "```{prefix}dono staff <role-id>``` sets the <role-id> as the staff role id. Donations taken by the staff with this role will be counted in the leaderboard.",
+"dono_change": "```{prefix}dono change @user <pc> <shiny> <rare> <redeem>``` updates the leaderboard for the @user and sets their pc, shiny, rare, redeem values to the provided values.",
+"dono_clear": "```{prefix}dono clear``` clears the leaderboard.",
+"dono_remove": "```{prefix}dono remove @user``` removes @user from the leaderboard.",
+
+"""
 
 async def get_help_embed(ctx=None) -> Embed:
     prefix = (ctx.prefix if ctx is not None else "/")
