@@ -11,7 +11,7 @@ from config import NORMAL_COLOR, DEFAULT_COLOR, RARE_CATCH_COLOR, SHINY_CATCH_CO
 """Sets/Resets the starboard channel"""
 
 
-async def set_starboard(server_id: str, channel: TextChannel = None) -> str:
+async def set_starboard(server_id: str, channel: TextChannel) -> str:
     try:
         query = {"server_id": server_id}
 
@@ -23,21 +23,12 @@ async def set_starboard(server_id: str, channel: TextChannel = None) -> str:
         if channel is not None:
             if server_data["starboard"] == str(channel.id):
                 return f"Starboard Channel is already set to {channel.mention}"
+                
+            updated_data = {"starboard": str(channel.id)}
         else:
             if server_data["starboard"] == "0":
                 return "Starboard Module is already disabled"
 
-        """
-        {
-            "server_name" : "name",
-            "server_id" : "id",
-            "starboard" : "1231232323231231321"
-        }
-        """
-
-        if channel is not None:
-            updated_data = {"starboard": str(channel.id)}
-        else:
             updated_data = {"starboard": "0"}
 
         await mongo_manager.manager.update_all_data("servers", query, updated_data)
@@ -50,6 +41,38 @@ async def set_starboard(server_id: str, channel: TextChannel = None) -> str:
         else:
             return "Starboard Module was disabled"
 
+
+""" Sets / Disables the shiny logging channel """
+
+async def set_shiny_starboard(server_id: str, channel: TextChannel) -> str:
+    try:
+        query = {"server_id": server_id}
+
+        cursor = await mongo_manager.manager.get_all_data("servers", query)
+
+        server_data = cursor[0]
+
+        # return if already enabled or disabled
+        if channel is not None:
+            if server_data["shiny_starboard_channel"] == str(channel.id):
+                return f"Shiny Starboard Channel is already set to {channel.mention}"
+                
+            updated_data = {"shiny_starboard_channel": str(channel.id)}
+        else:
+            if server_data["shiny_starboard_channel"] == "0":
+                return "Shiny Starboard Module is already disabled"
+
+            updated_data = {"shiny_starboard_channel": "0"}
+
+        await mongo_manager.manager.update_all_data("servers", query, updated_data)
+
+    except Exception as e:
+        return e.__str__()
+    else:
+        if channel is not None:
+            return f"Sending **SHINY** catches to {channel.mention}"
+        else:
+            return "Shiny Starboard Module was disabled"
 
 """Change the starboard text"""
 

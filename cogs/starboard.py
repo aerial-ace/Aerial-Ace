@@ -11,13 +11,22 @@ class StarboardSystem(commands.Cog):
         if ctx.subcommand_passed is None:
             await ctx.reply("Please provide a valid subcommand!")
 
-    """Toggle Starboard Module"""
+    """ Toggle Starboard Module / Set Channel """
 
     @starboard.command(name="channel", aliases=["ch"], description="Enables/Disables the starboard system with the provided channel")
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
     async def set_channel(self, ctx: commands.Context, channel: TextChannel = None):
         reply = await starboard_helper.set_starboard(str(ctx.guild.id), channel)
+
+        await ctx.reply(reply)
+
+    """ Toggle / Set Shiny Starboard Channel """
+    @starboard.command(name="shinychannel", aliases=["shch"], description="Enables/Disables the shiny starboard system with the provided channel")
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    async def set_shiny_channel(self, ctx: commands.Context, channel: TextChannel = None):
+        reply = await starboard_helper.set_shiny_starboard(str(ctx.guild.id), channel)
 
         await ctx.reply(reply)
 
