@@ -16,7 +16,7 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     if message.channel.permissions_for(bot_member).send_messages is False:
         return
 
-    if str(message.author.id) != config.ADMIN_ID:
+    if str(message.author.id) != config.POKETWO_ID:
         return
 
     catch_info = await determine_rare_catch(message)
