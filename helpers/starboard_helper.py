@@ -54,12 +54,12 @@ async def set_shiny_starboard(server_id: str, channel: TextChannel) -> str:
 
         # return if already enabled or disabled
         if channel is not None:
-            if server_data["shiny_starboard_channel"] == str(channel.id):
+            if server_data.get("shiny_starboard_channel", "0") == str(channel.id):
                 return f"Shiny Starboard Channel is already set to {channel.mention}"
                 
             updated_data = {"shiny_starboard_channel": str(channel.id)}
         else:
-            if server_data["shiny_starboard_channel"] == "0":
+            if server_data.get("shiny_starboard_channel", "0") == "0":
                 return "Shiny Starboard Module is already disabled"
 
             updated_data = {"shiny_starboard_channel": "0"}
