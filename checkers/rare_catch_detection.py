@@ -95,18 +95,30 @@ async def determine_rare_catch(message:discord.Message):
     level_regex = r"(?<=Level\s)\w+"
     level_regex_outcome = re.findall(level_regex, msg)
     level = level_regex_outcome[0] if len(level_regex_outcome) > 0 else 0
+    
+    if level == 0:
+        return
 
     pokemon_name_regex = fr"(?<=\bLevel\s{level}\s)(.*?)(?=\s*<:)"
     pokemon_name_regex_outcome = re.findall(pokemon_name_regex, msg)
     pokemon_name = pokemon_name_regex_outcome[0] if len(pokemon_name_regex_outcome) > 0 else None
 
+    if pokemon_name is None:
+        return None
+
     iv_regex = r"\d+(?:\.\d+)(?=%)"
     iv_regex_outcome = re.findall(iv_regex, msg)
-    iv = iv_regex_outcome[0] if len(iv_regex_outcome) > 0 else "0%"
+    iv = iv_regex_outcome[0] if len(iv_regex_outcome) > 0 else "0"
+
+    if iv == "0":
+        return None
 
     user_regex = "<@\d+>"
     user_regex_outcome = re.findall(user_regex, msg)
     user = user_regex_outcome[0] if len(user_regex_outcome) > 0 else None
+
+    if user is None:
+        return
 
     catch_streak_text = ["100th", "1,000th", "10,000th"]
 
