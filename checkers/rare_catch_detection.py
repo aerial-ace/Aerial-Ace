@@ -21,7 +21,7 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
 
     catch_info = await determine_rare_catch(message)
 
-    # return if not a rare catch or a streak
+    # return if not a rare catch and not a streak and not even a low/high iv.
     if catch_info is None or ( catch_info["type"] == "" and  catch_info["streak"] == 0 and float(catch_info["iv"]) > 5 and float(catch_info["iv"]) < 95 ):
         return None
     
@@ -66,6 +66,7 @@ async def determine_rare_catch(message:discord.Message):
 
     is_shiny = True
     is_hunt = False
+    is_gmax = False
 
     catch_keywords = ["Congratulations", "You", "caught", "a", "Level"]
     shiny_keywords = ["These", "colors", "seem", "unusual"]
@@ -86,6 +87,10 @@ async def determine_rare_catch(message:discord.Message):
         if hunt_keyword in msg:
             is_hunt = True
             break
+
+    gmax_regex = r"It seems that this pokémon has the Gigantamax Factor..."
+    gmax_regex_outcome = re.findall(gmax_regex, msg)
+    is_gmax = len(gmax_regex_outcome)
 
     level_regex = r"(?<=Level\s)\w+"
     level_regex_outcome = re.findall(level_regex, msg)
@@ -125,6 +130,9 @@ async def determine_rare_catch(message:discord.Message):
 
     if is_shiny:
         catch_info["type"] = "shiny"
+        return catch_info
+    elif is_gmax:
+        catch_info["type"] = "gmax" 
         return catch_info
     else:
         for i in pokemon_name.lower().split():

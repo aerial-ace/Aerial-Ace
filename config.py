@@ -51,6 +51,7 @@ IMPORTANT_EMOJI = "<a:Important:940582149797601391>"
 ALERT_EMOJI = "<:alert:940589741714317332>"
 ACCEPTED_EMOJI = "<:accepted:1138760940947525702>"
 INFO_EMOJI = "<:EG3:1080978835081805904>"
+GMAX_EMOJI = "<:gigantamax:1254519073144832124>"
 STREAK_EMOJI = "<:upgrades:1043145357070176407>"
 LOW_IV_EMOJI = "<:dragon_scale:1237580132005314592>"
 HIGH_IV_EMOJI = "<:deep_sea_tooth:1237580253614964736>"
@@ -110,10 +111,12 @@ STREAK_COLOR         = 0xc3f717
 LOW_IV_COLOR         = 0xcf65fc
 HIGH_IV_COLOR        = 0x71368A
 HUNT_COMPLETED_COLOR = 0xc27c0e
+GMAX_CATCH_COLOR     = 0xed4245
 
 # starboard defaults
 DEFAULT_RARE_TEXT = "{ping} caught a level {level} `{pokemon}` \n\n:tada: Congratulations :tada:\n"
 DEFAULT_SHINY_TEXT = "{ping} caught a level {level} **SHINY** `{pokemon}` \n\n :tada: Congratulations :tada:\n"
+DEFAULT_GMAX_TEXT = "{ping} caught a level {level} GMAX `{pokemon}` \n\n:tada: Congratulations :tada:\n"
 
 # Reactions
 PIKA_WOW = "https://cdn.discordapp.com/attachments/911547825274388511/918840026094247976/pika_woo.png"

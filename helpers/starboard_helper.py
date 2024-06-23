@@ -6,7 +6,7 @@ import json
 
 from managers import mongo_manager, init_manager
 from helpers import general_helper
-from config import NORMAL_COLOR, DEFAULT_COLOR, RARE_CATCH_COLOR, SHINY_CATCH_COLOR, HUNT_COMPLETED_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, STREAK_EMOJI, LOW_IV_EMOJI, HIGH_IV_EMOJI, STREAK_COLOR, LOW_IV_COLOR, HIGH_IV_COLOR, ERROR_COLOR
+from config import NORMAL_COLOR, RARE_CATCH_COLOR, SHINY_CATCH_COLOR, GMAX_CATCH_COLOR, HUNT_COMPLETED_COLOR, STREAK_COLOR, LOW_IV_COLOR, HIGH_IV_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, DEFAULT_GMAX_TEXT, STREAK_EMOJI, GMAX_EMOJI, LOW_IV_EMOJI, HIGH_IV_EMOJI, ERROR_COLOR
 
 """Sets/Resets the starboard channel"""
 
@@ -173,10 +173,15 @@ async def get_starboard_embed(catch_details, message_link: str, tier: int = 0):
             pokemon = pokemon.removeprefix("galarian") + "-galar"
         elif pokemon.startswith("hisuian"):
             pokemon = pokemon.removeprefix("hisuian") + "-hisui"
+        elif pokemon.startswith("paldean"):
+            pokemon = pokemon.removeprefix("paldean") + "-paldea"
         elif pokemon.startswith("complete"):
             pokemon = pokemon.removeprefix("complete") + "-complete"
         elif pokemon.startswith("10%"):
             pokemon = pokemon.removeprefix("10%") + "-10"
+
+    if type == "gmax":
+        pokemon = pokemon + "-gmax"
 
     embd = Embed()
 
@@ -202,6 +207,12 @@ async def get_starboard_embed(catch_details, message_link: str, tier: int = 0):
 
         embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
         image_link = SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+
+    elif type == "gmax":
+        embd.title = f"{GMAX_EMOJI} GMAX Catch Detected {GMAX_EMOJI}"
+        embd.color = GMAX_CATCH_COLOR
+        embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
+        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
 
     elif streak != 0 and tier > 0:
         embd.title = "{emote} Catch Streak Detected {emote}".format(emote=STREAK_EMOJI)
@@ -288,7 +299,7 @@ async def get_rare_catch_embd(server_details, catch_details):
     _level = catch_details["level"]
     _streak = catch_details["streak"]
     _iv = catch_details["iv"]
-    is_hunt = catch_details["hunt"]
+    _hunt = catch_details["hunt"]
 
     try:
         data = server_details[0]
@@ -316,7 +327,7 @@ async def get_rare_catch_embd(server_details, catch_details):
         embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
 
     elif _type == "shiny":
-        if is_hunt is False:
+        if _hunt is False:
             embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
             embd.color = SHINY_CATCH_COLOR
         else:
@@ -328,6 +339,15 @@ async def get_rare_catch_embd(server_details, catch_details):
         embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")
 
         embd.set_image(url=(PIKA_SHOCK if data.get("starboard_image_shiny", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_shiny", "DEFAULT")))
+
+    elif _type == "gmax":
+        embd.title = f"{GMAX_EMOJI} Gmax Catch Detected {GMAX_EMOJI}"
+        embd.color = GMAX_CATCH_COLOR
+        embd.description = (DEFAULT_GMAX_TEXT if data.get("starboard_text_rare", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_rare", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
+
+        embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")
+
+        embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
 
     elif _streak != 0 and tier > 0:
         embd.title = f"{STREAK_EMOJI} Catch Streak {STREAK_EMOJI}"
