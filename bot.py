@@ -10,15 +10,16 @@ from config import TOKEN, MONGO_URI, TEST_TOKEN
 from helpers import general_helper
 
 from checkers import rare_catch_detection
-from checkers import auto_battle_log
 from checkers import spawn_speed_detection
 from checkers import donation_detection
+from checkers.auto_battle_log import BattleManager
 
 # determines whether to run the bot in local, or global mode
 is_test = False
 
 intents = Intents.default()
 intents.message_content = True
+intents.members = True
 
 
 # for getting the prefix
@@ -28,6 +29,7 @@ def prefix_callable(_bot: Bot, message):
 
 bot = commands.AutoShardedBot(command_prefix=prefix_callable, description="Botto", case_insensitive=True, intents=intents)
 bot.remove_command("help")
+bot.battle_manager = BattleManager()
 
 initial_cogs = [
     "presence_cycle",
@@ -98,7 +100,7 @@ async def on_message(message: discord.Message):
     # detect rare catches from the poketwo bot
     await rare_catch_detection.rare_check(bot, message)
 
-    await auto_battle_log.determine_battle_message(bot, message)
+    await bot.battle_manager.main_handler(bot, message)
 
     await spawn_speed_detection.detect_spawn(message)
 
@@ -106,6 +108,8 @@ async def on_message(message: discord.Message):
 
     # process commands
     await bot.process_commands(message)
+
+    await bot.battle_manager.clear_old_logs()
 
 
 @bot.listen("on_command_completion")
