@@ -1,171 +1,184 @@
-from discord import AutoShardedBot, Message, Member, Reaction
-from asyncio import TimeoutError
+from datetime import timedelta
+
+from discord import AutoShardedBot, Message, Member, utils
 
 from managers import mongo_manager
 from helpers import battle_helper
 import config
 
+class BattleManager:
 
-async def determine_battle_message(bot: AutoShardedBot, message: Message):
-    bot_member: Member = message.guild.get_member(bot.user.id)
+    expire_time = 10 * 60 # After how many minutes should the keys be cleared.
+    _open_battles: dict[int, list[dict]] = {}
 
-    # return if bot is not allowed to send messages in this channel
-    if message.channel.permissions_for(bot_member).send_messages is False:
-        return
+    """
+    _open_battles structure = 
+    {
+    'server_id': [
+    {'challenger': id, 'target': id, 'expiration': time},
+    {'challenger 2': id, 'target 2': id, 'expiration 2': time},
+    ]
+    }
+    """
 
-    initiation_content = message.content
+    async def clear_user(self, guild_id: int, index: int):
+        """Run if a user start another battle and current battle hasnot ended."""
+        if self._open_battles.get(guild_id, []):
+            return self._open_battles[guild_id].pop(index)
 
-    if not initiation_content.strip().startswith(f"<@{config.POKETWO_ID}>"):
-        return
-    else:
-        initiation_content = initiation_content.removeprefix(f"<@{config.POKETWO_ID}>")
+    async def clear_old_logs(self):
+        """Clear old battle data if the time has passed too much."""
 
-    if not message.content.strip().endswith(">"):
-        return
+        pop_entries = []
+        for server in self._open_battles:
+            for index, entry in enumerate(self._open_battles[server]):
+                if entry['expire'] <= utils.utcnow():
+                    pop_entries.insert(0, index)
 
-    initiation_content = initiation_content.replace("<@", "").replace(">", "").replace("&", "")
+            for index in pop_entries:
+                self._open_battles[server].pop(index)
 
-    battle_initiation_keywords = ["duel ", "battle "]
-
-    for keyword in battle_initiation_keywords:
-        if keyword in initiation_content:
-            initiation_content = initiation_content.replace(keyword, "")
-            break
-    else:
-        return
-
-    # Check whether this server has Auto Battle Logging Enabled or Not.
-    data_cursor = await mongo_manager.manager.get_all_data("servers", {"server_id": str(message.guild.id)})
-
-    if data_cursor[0].get("auto_battle_logging", 1) != 1:
-        return
-
-    challenger_id = message.author.id
-    challenger_name = message.author.name
-    target_id = int(initiation_content.strip())
-    target_name = ""
-
-    if challenger_id == target_id:
-        return
-
-    def get_confirmation_on_battle_invitation(reaction: Reaction, user: Member):
-
-        nonlocal target_name
-
-        msg: Message = reaction.message
-
-        if msg.author.id != int(config.POKETWO_ID):
+    async def logging_enabled(self, server_id: str) -> bool:
+        data_cursor = await mongo_manager.manager.get_all_data("servers", {"server_id": server_id})
+        if data_cursor[0].get("auto_battle_logging", 1) != 1:
             return False
-
-        battle_invitation_keywords = ["Challenging", "battle", "checkmark"]
-
-        for _keyword in battle_invitation_keywords:
-            if _keyword not in msg.content:
-                return False
-
-        if msg.mentions[0].id != target_id:
-            return False
-
-        if reaction.emoji != "✅":
-            return False
-
-        if user.id != target_id:
-            return False
-
-        target_name = user.name
-
         return True
+    
+    async def get_user_id(self, name: str, members: list[Member]) -> int:
+        user = utils.find(lambda m: m.name == name, members)
+        if user:
+            return user.id
+        return False
+    
+    async def main_handler(self, bot: AutoShardedBot, message: Message):
+        bot_member: Member = message.guild.get_member(bot.user.id)
 
-    try:
-        await bot.wait_for("reaction_add", check=get_confirmation_on_battle_invitation, timeout=20)
+        # return if bot is not allowed to send messages in this channel
+        if message.channel.permissions_for(bot_member).send_messages is False:
+            return
+        
+        guild_id = message.guild.id
 
-    except TimeoutError:
-        return await message.channel.send("> Auto Battle Log Session Timed out! Please accept the battle invitation.")
+        logging_enabled = await self.logging_enabled(str(guild_id))
 
-    else:
+        if not logging_enabled:
+            return
+        
+        embed = message.embeds
+        if not embed:
+            # Also check for condition like cancel and won.
+
+            # Cancel
+            if message.content.strip().startswith(f"<@{config.POKETWO_ID}>"):
+                index = await self.get_pair(guild_id, message.author.id)
+                                
+                if index is False:
+                    return
+                
+                if "x" not in message.content.lower() and "cancel" not in message.content.lower():
+                    return 
+
+                battle_cancel_keywords = ["duel ", "battle "]
+
+                for _keyword in battle_cancel_keywords:
+                    if _keyword in message.content:
+                        await self.clear_user(guild_id, index)
+                        await message.channel.send('Logging Cancelled.')
+                else:
+                    return
+                
+            # Won
+            if message.author.id == int(config.POKETWO_ID):
+                if "won the battle!" in message.content.lower():
+                    winner = message.mentions[0].id
+                else:
+                    if "has won." in message.content:
+                        winner = int(message.content.removesuffix("> has won.").split()[-1].removeprefix("<@"))
+                    else:
+                        return
+                    
+                index = await self.get_pair(guild_id, winner)
+                if index is False:
+                    return 
+                
+                pair = self._open_battles.get(guild_id, [])[index]
+                
+                await self.clear_user(guild_id, index)
+
+                if winner not in pair.values():
+                    return
+
+                loser = pair['target'] if winner == pair['challenger'] else pair['challenger']
+
+                winner_name = pair['challenger_n'] if winner == pair['challenger'] else pair['target_n']
+                loser_name = pair['target_n'] if winner == pair['challenger'] else pair['challenger_n']
+
+                reply = await battle_helper.register_battle_log(guild_id, str(winner), str(loser), winner_name, loser_name)
+
+                await message.channel.send(reply)
+            return
+        
+        if str(message.author.id) != config.POKETWO_ID:
+            return
+        
+        embed_data = embed[0].to_dict()
+
+        if embed_data.get('title', None) and embed_data['title'] != 'Choose your party':
+            return
+
+        if embed_data.get('fields')[0]['value'] != 'None' or embed_data.get('fields')[1]['value'] != 'None':
+            return
+        
+
+        challenger_name = embed_data['fields'][0]['name'][:-8]
+        challenger_id = await self.get_user_id(challenger_name, message.guild.members)
+
+        target_name = embed_data['fields'][1]['name'][:-8]
+        target_id = await self.get_user_id(target_name, message.guild.members)
+
+        if not challenger_id or not target_id:
+            return        
+        
         await message.channel.send(
             "> Auto Battle Log Session Started! \n**NOTE: **Auto Battle Logging Module is coming out of beta and will be released as a premium feature! If you want to continue using it, please support aerial ace on patron.")
 
-    conclusion_type = None
-    winner = None
-    loser = None
 
-    def get_battle_cancel_message(msg: Message):
+        # Check if he already exits and remove it 
+        for id in [challenger_id, target_id]:
+            check = await self.get_pair(guild_id, id)
+            if check is not False:
+                await self.clear_user(guild_id, check)
 
-        nonlocal conclusion_type
-
-        if not msg.content.strip().startswith(f"<@{config.POKETWO_ID}>"):
-            return False
-
-        if msg.author.id != challenger_id and msg.author.id != target_id:
-            return False
-
-        if "x" not in msg.content.lower() and "cancel" not in msg.content.lower():
-            return False
-
-        battle_cancel_keywords = ["duel ", "battle "]
-
-        for _keyword in battle_cancel_keywords:
-            if _keyword in msg.content:
-                break
+        # Add a user to existing list
+        if guild_id in self._open_battles:
+            self._open_battles[guild_id].append(
+                {
+                    'challenger': challenger_id, 
+                    'target': target_id,
+                    'challenger_n': challenger_name,
+                    'target_n': target_name,
+                    'expire': utils.utcnow() + timedelta(seconds=self.expire_time)
+                }
+            )
         else:
-            return
-
-        conclusion_type = "CANCEL"
-
-        return True
-
-    def get_battle_end_message(msg: Message):
-
-        nonlocal conclusion_type, winner, loser
-
-        if msg.author.id != int(config.POKETWO_ID):
+            self._open_battles[guild_id] = [
+                {
+                    'challenger': challenger_id, 
+                    'target': target_id, 
+                    'challenger_n': challenger_name,
+                    'target_n': target_name,
+                    'expire': utils.utcnow() + timedelta(seconds=self.expire_time)
+                }
+            ]
+        
+    async def get_pair(self, guild_id: int, id: int) -> int:
+        """Return the pair index number."""
+        guild_data = self._open_battles.get(guild_id, [])
+        if not guild_data:
             return False
-
-        if "won the battle!" in msg.content:
-            winner = msg.mentions[0].id
-        else:
-            if "has won." in msg.content:
-                winner = int(msg.content.removesuffix("> has won.").split()[-1].removeprefix("<@"))
-            else:
-                return False
-
-        if winner != challenger_id and winner != target_id:
-            return False
-
-        conclusion_type = "FINISH"
-
-        loser = (target_id if winner == challenger_id else challenger_id)
-
-        return True
-
-    def get_battle_conclusion(msg: Message):
-
-        if get_battle_cancel_message(msg) is not False:
-            return True
-
-        if get_battle_end_message(msg) is not False:
-            return True
-
+        
+        for index, data in enumerate(guild_data):
+            if id in (data['challenger'], data['target']):
+                return index
+        
         return False
-
-    try:
-        await bot.wait_for("message", check=get_battle_conclusion, timeout=10 * 60)
-
-    except TimeoutError:
-        await message.channel.send(
-            "> Auto Battle Logging session ended with a timeout. Make sure to register your battle manually.")
-
-    if conclusion_type == "CANCEL":
-        return await message.channel.send("> Auto Log Session Cancelled!")
-
-    elif conclusion_type == "FINISH":
-        await message.channel.send("> Logging Battle. Please Wait!")
-
-        winner_name = (challenger_name if challenger_id == winner else target_name)
-        loser_name = (challenger_name if challenger_id == loser else target_name)
-
-        reply = await battle_helper.register_battle_log(message.guild.id, str(winner), str(loser), winner_name,
-                                                        loser_name)
-
-        await message.channel.send(reply)
