@@ -11,16 +11,6 @@ class BattleManager:
     expire_time = 10 * 60 # After how many minutes should the keys be cleared.
     _open_battles: dict[int, list[dict]] = {}
 
-    """
-    _open_battles structure = 
-    {
-    'server_id': [
-    {'challenger': id, 'target': id, 'expiration': time},
-    {'challenger 2': id, 'target 2': id, 'expiration 2': time},
-    ]
-    }
-    """
-
     async def clear_user(self, guild_id: int, index: int):
         """Run if a user start another battle and current battle hasnot ended."""
         if self._open_battles.get(guild_id, []):
