@@ -4,9 +4,9 @@ from discord import errors
 import datetime
 import json
 
-from managers import mongo_manager, init_manager
+from managers import mongo_manager, init_manager, cache_manager
 from helpers import general_helper
-from config import NORMAL_COLOR, RARE_CATCH_COLOR, SHINY_CATCH_COLOR, GMAX_CATCH_COLOR, HUNT_COMPLETED_COLOR, STREAK_COLOR, LOW_IV_COLOR, HIGH_IV_COLOR, NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, DEFAULT_GMAX_TEXT, STREAK_EMOJI, GMAX_EMOJI, LOW_IV_EMOJI, HIGH_IV_EMOJI, ERROR_COLOR
+from config import NORMAL_COLOR, RARE_CATCH_COLOR, SHINY_CATCH_COLOR, GMAX_CATCH_COLOR, HUNT_COMPLETED_COLOR, STREAK_COLOR, LOW_IV_COLOR, HIGH_IV_COLOR, NON_SHINY_LINK_TEMPLATE, HIGH_RES_NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, HIGH_RES_SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, DEFAULT_GMAX_TEXT, STREAK_EMOJI, GMAX_EMOJI, LOW_IV_EMOJI, HIGH_IV_EMOJI, ERROR_COLOR
 
 """Sets/Resets the starboard channel"""
 
@@ -73,6 +73,27 @@ async def set_shiny_starboard(server_id: str, channel: TextChannel) -> str:
             return f"Sending **SHINY** catches to {channel.mention}"
         else:
             return "Shiny Starboard Module was disabled"
+
+
+""" Toggles the High Res Images"""
+async def set_highres(server_id:str):
+    
+    query = {"server_id": server_id}
+
+    cursor = await mongo_manager.manager.get_all_data("servers", query)
+
+    server_data = cursor[0]
+    
+    if server_data.get("tier") <= 0:
+        return "Not a premium server! Use `-aa premium` to know more!"
+    
+    updated_data = {
+        "high_res" : not server_data.get("high_res", False)
+    }
+    
+    await mongo_manager.manager.update_all_data("servers", query, updated_data)
+    
+    return "High Res Status : **{}**".format(not server_data.get("high_res", False))
 
 """Change the starboard text"""
 
@@ -141,7 +162,7 @@ async def set_starboard_image(server_id: str, text: str, type: str) -> Embed:
 """Returns the starboard embed for starboard channel"""
 
 
-async def get_starboard_embed(catch_details, message_link: str, tier: int = 0):
+async def get_starboard_embed(catch_details, server_details, message_link: str, tier: int = 0):
 
     user_name = catch_details["user"]
     level = catch_details["level"]
@@ -190,12 +211,19 @@ async def get_starboard_embed(catch_details, message_link: str, tier: int = 0):
     embd.description +=f"**`Level   :`** {level} \n"
     embd.description +=f"**`IVs     :`** {iv}% [TELEPORT]({message_link})\n\n"
 
+    pokemon_id = cache_manager.cached_type_data[pokemon]["id"]
+
+    high_res_enabled = server_details.get("high_res", False)
+
     if type == "rare":
         embd.title = ":star: Rare Catch Detected :star:"
         embd.color = RARE_CATCH_COLOR
         embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
 
-        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+        if high_res_enabled:
+            image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
+        else:
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
         
     elif type == "shiny":
         if is_hunt is False:
@@ -206,19 +234,31 @@ async def get_starboard_embed(catch_details, message_link: str, tier: int = 0):
             embd.color = HUNT_COMPLETED_COLOR
 
         embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
-        image_link = SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+        
+        if high_res_enabled:
+            image_link = HIGH_RES_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
+        else:
+            image_link = SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
 
     elif type == "gmax":
         embd.title = f"{GMAX_EMOJI} GMAX Catch Detected {GMAX_EMOJI}"
         embd.color = GMAX_CATCH_COLOR
         embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
-        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+        
+        if high_res_enabled:
+            image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
+        else:
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
 
     elif streak != 0 and tier > 0:
         embd.title = "{emote} Catch Streak Detected {emote}".format(emote=STREAK_EMOJI)
         embd.color = STREAK_COLOR
         embd.description += "**`Streak  :`** {streak}".format(streak=streak)
-        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+        
+        if high_res_enabled:
+            image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
+        else:
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
 
     else:
         ivs = float(iv)
@@ -228,7 +268,11 @@ async def get_starboard_embed(catch_details, message_link: str, tier: int = 0):
         embd.title = "{emote} {status} Catch Detected {emote}".format(emote=iv_emote, status=iv_status)
         embd.color = LOW_IV_COLOR if ivs < 5 else HIGH_IV_COLOR
         embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
-        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+        
+        if high_res_enabled:
+            image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
+        else:
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
 
     embd.set_thumbnail(url=image_link)
     embd.timestamp = datetime.datetime.now()
@@ -270,7 +314,7 @@ async def send_starboard(server_details, catch_details, message:Message):
         return await general_helper.get_info_embd("No starboard channel set", "", NORMAL_COLOR)
 
     # get starboard embed
-    reply = await get_starboard_embed(catch_details, message.jump_url, tier)
+    reply = await get_starboard_embed(catch_details, server_details[0], message.jump_url, tier)
 
     # send that starboard embed to the starboard channel
     starboard_channel: TextChannel = message.guild.get_channel(int(starboard_channel_id))

@@ -21,6 +21,16 @@ class StarboardSystem(commands.Cog):
 
         await ctx.reply(reply)
 
+    """ Toggle High Res Images"""
+    @starboard.command(name="highres", aliases=["hr"], description="Enables High Res images in starboard")
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    async def toggle_highres(self, ctx:commands.Context):
+        
+        reply = await starboard_helper.set_highres(str(ctx.guild.id))
+        
+        await ctx.reply(reply)
+
     """ Toggle / Set Shiny Starboard Channel """
     @starboard.command(name="shinychannel", aliases=["shch"], description="Enables/Disables the shiny starboard system with the provided channel")
     @commands.guild_only()
