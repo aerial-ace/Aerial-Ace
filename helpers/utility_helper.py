@@ -21,53 +21,53 @@ async def get_about_embed(ctx) -> discord.Embed:
     embd.description = "Aerial Ace = Pokedex + Poketwo Helper Bot"
 
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Prefix",
+        name=f"Prefix",
         value="`-aa ` and `aa.`",
         inline=True
     )
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Support Server",
+        name=f"Support Server",
         value=f"[Click here]({config.SUPPORT_SERVER_LINK})",
         inline=True
     )
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Vote Link",
+        name=f"Vote Link",
         value=f"[Click Here]({config.VOTE_LINK})",
         inline=True
     )
 
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Servers",
+        name=f"Servers",
         value=len(ctx.bot.guilds),
         inline=True
     )
 
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Invite",
+        name=f"Invite",
         value=f"[Click here]({config.INVITE_LINK})",
         inline=True
     )
 
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Ping",
+        name=f"Ping",
         value=str(round(ctx.bot.latency * 100, 2)),
         inline=True
     )
 
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Language",
+        name=f"Language",
         value="Python 3.10",
         inline=True
     )
 
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Library",
+        name=f"Library",
         value="[py-cord](https://github.com/Pycord-Development/pycord)",
         inline=True
     )
 
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Repository",
+        name=f"Repository",
         value=f"[Click here]({config.REPO_LINK})",
         inline=True
     )
@@ -77,19 +77,19 @@ async def get_about_embed(ctx) -> discord.Embed:
     shards = bot.shard_count
 
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Shards",
+        name=f"Shards",
         value="{}".format(shards),
         inline=True
     )
 
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Source Details",
+        name=f"Source Details",
         value=f"**Aerial Ace** is an open source project released under GNU GPL v3 license.\nComplete source of the project is available on the github page (links above).\nRepo stars are appreciated :3",
         inline=False
     )
 
     embd.add_field(
-        name=f"{config.BULLET_EMOJI}Made with  <3  by **Dev**",
+        name=f"Made with  <3  by **Dev**",
         value=f"**Discord** : [DevGa.me]({config.DEVELOPER_PROFILE_LINK})\n**Github** : [Devanshu19]({config.GITHUB_PROFILE_LINK})",
         inline=False
     )
