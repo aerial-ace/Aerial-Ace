@@ -98,7 +98,7 @@ async def on_message(message: discord.Message):
     # detect rare catches from the poketwo bot
     await rare_catch_detection.rare_check(bot, message)
 
-    await auto_battle_log.determine_battle_message(bot, message)
+    # await auto_battle_log.determine_battle_message(bot, message)
 
     await spawn_speed_detection.detect_spawn(message)
 
