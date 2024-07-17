@@ -200,6 +200,8 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
             new_pokemon = pokemon.removeprefix("complete") + "-complete"
         elif pokemon.startswith("10%"):
             new_pokemon = pokemon.removeprefix("10%") + "-10"
+        else:
+            new_pokemon = pokemon
 
     if type == "gmax":
         new_pokemon = new_pokemon + "-gmax"
