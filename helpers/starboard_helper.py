@@ -184,25 +184,25 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
     }
 
     try:
-        pokemon = name_aliter[pokemon]
+        new_pokemon = name_aliter[pokemon]
     except KeyError:
 
         # modify the id for alolan and galarian forms
         if pokemon.startswith("alolan"):
-            pokemon = pokemon.removeprefix("alolan") + "-alola"
+            new_pokemon = pokemon.removeprefix("alolan") + "-alola"
         elif pokemon.startswith("galarian"):
-            pokemon = pokemon.removeprefix("galarian") + "-galar"
+            new_pokemon = pokemon.removeprefix("galarian") + "-galar"
         elif pokemon.startswith("hisuian"):
-            pokemon = pokemon.removeprefix("hisuian") + "-hisui"
+            new_pokemon = pokemon.removeprefix("hisuian") + "-hisui"
         elif pokemon.startswith("paldean"):
-            pokemon = pokemon.removeprefix("paldean") + "-paldea"
+            new_pokemon = pokemon.removeprefix("paldean") + "-paldea"
         elif pokemon.startswith("complete"):
-            pokemon = pokemon.removeprefix("complete") + "-complete"
+            new_pokemon = pokemon.removeprefix("complete") + "-complete"
         elif pokemon.startswith("10%"):
-            pokemon = pokemon.removeprefix("10%") + "-10"
+            new_pokemon = pokemon.removeprefix("10%") + "-10"
 
     if type == "gmax":
-        pokemon = pokemon + "-gmax"
+        new_pokemon = new_pokemon + "-gmax"
 
     embd = Embed()
 
@@ -223,7 +223,7 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
         if high_res_enabled:
             image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
-            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=new_pokemon)
         
     elif type == "shiny":
         if is_hunt is False:
@@ -238,7 +238,7 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
         if high_res_enabled:
             image_link = HIGH_RES_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
-            image_link = SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+            image_link = SHINY_LINK_TEMPLATE.format(pokemon=new_pokemon)
 
     elif type == "gmax":
         embd.title = f"{GMAX_EMOJI} GMAX Catch Detected {GMAX_EMOJI}"
@@ -248,7 +248,7 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
         if high_res_enabled:
             image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
-            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=new_pokemon)
 
     elif streak != 0 and tier > 0:
         embd.title = "{emote} Catch Streak Detected {emote}".format(emote=STREAK_EMOJI)
@@ -258,7 +258,7 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
         if high_res_enabled:
             image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
-            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=new_pokemon)
 
     else:
         ivs = float(iv)
@@ -272,7 +272,7 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
         if high_res_enabled:
             image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
-            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon)
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=new_pokemon)
 
     embd.set_thumbnail(url=image_link)
     embd.timestamp = datetime.datetime.now()
