@@ -1,12 +1,38 @@
 import discord
 import random
 import re
+from enum import Enum
 
 from managers import cache_manager, mongo_manager
 from helpers import starboard_helper, general_helper
 import config
 
 
+class AlertType(Enum):
+    ALL = 0,
+    ONLY_RARES = 1,
+    ONLY_SHINIES = 2,
+    ONLY_GMAX = 3,
+    ONLY_HUNTS = 4,
+    NONE = 5
+
+async def can_send_alert(server_details:dict, catch_details:dict) -> bool:
+
+    if server_details.get("alerts") == str(AlertType.NONE):
+        return False
+
+    if server_details.get("alerts") == str(AlertType.ALL):
+        return True
+    elif server_details.get("alerts") == str(AlertType.ONLY_SHINIES) and catch_details.get("type") == "shiny":
+        return True
+    elif server_details.get("alerts") == str(AlertType.ONLY_GMAX) and catch_details.get("type") == "gmax":
+        return True
+    elif server_details.get("alerts") == str(AlertType.ONLY_RARES) and catch_details.get("type") == "rare":
+        return True
+    elif server_details.get("alerts") == str(AlertType.ONLY_HUNTS) and catch_details.get("hunt") == True:
+        return True
+
+    return False
 
 async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     """detect rare catch message"""
@@ -33,15 +59,17 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     })
 
     """ Get and Send Catch Detection Embed"""
-    reply = await starboard_helper.get_rare_catch_embd(server_details, catch_info)
+    if can_send_alert(server_details=server_details, catch_details=catch_info):
 
-    if reply is None:
-        return
-    
-    try:
-        await message.channel.send(embed=reply)
-    except discord.errors.Forbidden:
-        return  # return if not allowed to send messages in the current channel
+        reply = await starboard_helper.get_rare_catch_embd(server_details, catch_info)
+
+        if reply is None:
+            return
+
+        try:
+            await message.channel.send(embed=reply)
+        except discord.errors.Forbidden:
+            return  # return if not allowed to send messages in the current channel
 
     """ Send Customization Reminder for non premium servers"""
     customization_reminder_possibility = 30
