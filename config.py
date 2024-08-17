@@ -18,6 +18,14 @@ TRADE_ITEM_WEIGHT = {
     "redeems": 40000
 }
 
+ALERT_TYPE_MASK = {
+    "rare" : 0b00001,
+    "shiny" : 0b00010,
+    "gmax" : 0b00100,
+    "hunt" : 0b01000,
+    "streak" : 0b10000
+}
+
 # Mongo Data
 MONGO_URI = os.environ["MONGO"]
 

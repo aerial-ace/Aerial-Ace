@@ -1,30 +1,20 @@
-import pdb
 import discord
 import random
 import re
-from enum import Enum
 
 from managers import cache_manager, mongo_manager
 from helpers import starboard_helper, general_helper
 import config
-
-alert_type_mask = {
-    "rare" : 0b00001,
-    "shiny" : 0b00010,
-    "gmax" : 0b00100,
-    "hunt" : 0b01000,
-    "streak" : 0b10000
-}
 
 async def can_send_alert(server_details:dict, catch_details:dict) -> bool:
 
     mask = int(server_details[0].get("alerts").get("mask"), 2)
     
     if catch_details.get("streak") or catch_details.get("hunt"):
-        if mask & alert_type_mask.get("streak") > 0 or mask & alert_type_mask.get("hunt") > 0:
+        if mask & config.ALERT_TYPE_MASK.get("streak") > 0 or mask & config.ALERT_TYPE_MASK.get("hunt") > 0:
             return True
         
-    if mask & alert_type_mask.get(catch_details.get("type")) > 0:
+    if mask & config.ALERT_TYPE_MASK.get(catch_details.get("type")) > 0:
         return True
     
     return False
@@ -53,9 +43,11 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
         "server_id": str(message.guild.id)
     })
 
-    """ Get and Send Catch Detection Embed"""
-    if await can_send_alert(server_details=server_details, catch_details=catch_info):
+    alerts_allowed = await can_send_alert(server_details=server_details, catch_details=catch_info)
 
+    if alerts_allowed:
+
+        """ Get and Send Catch Detection Embed"""
         reply = await starboard_helper.get_rare_catch_embd(server_details, catch_info)
 
         if reply is None:
@@ -77,8 +69,9 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     """ Send the starboard embed in the starboard channel """
     starboard_reply = await starboard_helper.send_starboard(server_details, catch_info, message)
 
-    """ Send feedback in the current channel """
-    await message.channel.send(embed=starboard_reply)
+    if alerts_allowed:
+        """ Send feedback in the current channel """
+        await message.channel.send(embed=starboard_reply)
 
 async def determine_rare_catch(message:discord.Message):
     """check if any message is a rare catch message"""

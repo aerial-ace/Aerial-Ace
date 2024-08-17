@@ -6,7 +6,7 @@ import json
 
 from managers import mongo_manager, init_manager, cache_manager
 from helpers import general_helper
-from config import NORMAL_COLOR, RARE_CATCH_COLOR, SHINY_CATCH_COLOR, GMAX_CATCH_COLOR, HUNT_COMPLETED_COLOR, STREAK_COLOR, LOW_IV_COLOR, HIGH_IV_COLOR, NON_SHINY_LINK_TEMPLATE, HIGH_RES_NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, HIGH_RES_SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, DEFAULT_GMAX_TEXT, STREAK_EMOJI, GMAX_EMOJI, LOW_IV_EMOJI, HIGH_IV_EMOJI, ERROR_COLOR
+from config import NORMAL_COLOR, RARE_CATCH_COLOR, SHINY_CATCH_COLOR, GMAX_CATCH_COLOR, HUNT_COMPLETED_COLOR, STREAK_COLOR, LOW_IV_COLOR, HIGH_IV_COLOR, NON_SHINY_LINK_TEMPLATE, HIGH_RES_NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, HIGH_RES_SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, DEFAULT_GMAX_TEXT, STREAK_EMOJI, GMAX_EMOJI, LOW_IV_EMOJI, HIGH_IV_EMOJI, ERROR_COLOR, ALERT_TYPE_MASK
 
 """Sets/Resets the starboard channel"""
 
@@ -95,6 +95,34 @@ async def set_highres(server_id:str):
     
     return "High Res Status : **{}**".format(not server_data.get("high_res", False))
 
+""" Enable Alerts for a catch type """
+async def set_alerts(server_id: str, alert_type:str, enable=True) -> str:
+    
+    query = {
+        "server_id": server_id
+    }
+    
+    data = (await mongo_manager.manager.get_all_data("servers", query))[0]
+    
+    if data.get("tier", 0) < 1:
+        return Embed(title="Whoops!", description="Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!")
+        
+    prev_mask = int( data.get("alerts").get("mask"), 2 )
+    alert_mask = ALERT_TYPE_MASK.get(alert_type)
+    
+    if enable:
+        new_mask = prev_mask | alert_mask
+    else:
+        new_mask = prev_mask & ~alert_mask
+    
+    updated_data = {
+        "alerts.mask" : bin(new_mask).removeprefix("0b")
+    }
+    
+    await mongo_manager.manager.update_all_data("servers", query, updated_data)
+    
+    return "Starboard Alerts have been {} on for `{}`".format("enabled" if enable else "disabled", alert_type.capitalize())
+
 """Change the starboard text"""
 
 
@@ -166,13 +194,13 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
 
     user_name = catch_details["user"]
     level = catch_details["level"]
-    pokemon_id = catch_details["pokemon"]
+    poke_id = catch_details["pokemon"]
     iv = catch_details["iv"]
     type = catch_details["type"]
     streak = catch_details["streak"]
     is_hunt = catch_details["hunt"]
 
-    pokemon = pokemon_id.replace(" ", "").lower()
+    pokemon = poke_id.replace(" ", "").lower()
     pokemon = pokemon.replace("é", "e")  # This is because of you Flabébé >:|
     pokemon = pokemon.removeprefix("defense").removeprefix("attack").removeprefix("speed")
 
@@ -182,38 +210,38 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
         "wo-chien" : "wochien", 
         "ting-lu" : "tinglu"
     }
+    
+    pokemon_name_storage = pokemon
 
     try:
-        new_pokemon = name_aliter[pokemon]
+        pokemon_name_storage = name_aliter[pokemon]
     except KeyError:
 
         # modify the id for alolan and galarian forms
-        if pokemon.startswith("alolan"):
-            new_pokemon = pokemon.removeprefix("alolan") + "-alola"
-        elif pokemon.startswith("galarian"):
-            new_pokemon = pokemon.removeprefix("galarian") + "-galar"
-        elif pokemon.startswith("hisuian"):
-            new_pokemon = pokemon.removeprefix("hisuian") + "-hisui"
-        elif pokemon.startswith("paldean"):
-            new_pokemon = pokemon.removeprefix("paldean") + "-paldea"
-        elif pokemon.startswith("complete"):
-            new_pokemon = pokemon.removeprefix("complete") + "-complete"
-        elif pokemon.startswith("10%"):
-            new_pokemon = pokemon.removeprefix("10%") + "-10"
-        else:
-            new_pokemon = pokemon
+        if pokemon_name_storage.startswith("alolan"):
+            pokemon_name_storage = pokemon_name_storage.removeprefix("alolan") + "-alola"
+        elif pokemon_name_storage.startswith("galarian"):
+            pokemon_name_storage = pokemon_name_storage.removeprefix("galarian") + "-galar"
+        elif pokemon_name_storage.startswith("hisuian"):
+            pokemon_name_storage = pokemon_name_storage.removeprefix("hisuian") + "-hisui"
+        elif pokemon_name_storage.startswith("paldean"):
+            pokemon_name_storage = pokemon_name_storage.removeprefix("paldean") + "-paldea"
+        elif pokemon_name_storage.startswith("complete"):
+            pokemon_name_storage = pokemon_name_storage.removeprefix("complete") + "-complete"
+        elif pokemon_name_storage.startswith("10%"):
+            pokemon_name_storage = pokemon_name_storage.removeprefix("10%") + "-10"
 
     if type == "gmax":
-        new_pokemon = new_pokemon + "-gmax"
+        pokemon_name_storage = pokemon_name_storage + "-gmax"
 
     embd = Embed()
 
     embd.description = f"**`Trainer :`** {user_name}\n"
-    embd.description +=f"**`Pokemon :`** {pokemon_id.title()}\n"
+    embd.description +=f"**`Pokemon :`** {poke_id.title()}\n"
     embd.description +=f"**`Level   :`** {level} \n"
     embd.description +=f"**`IVs     :`** {iv}% [TELEPORT]({message_link})\n\n"
 
-    pokemon_id = cache_manager.cached_type_data[pokemon]["id"]
+    pokemon_id = cache_manager.cached_type_data[pokemon_name_storage]["id"]
 
     high_res_enabled = server_details.get("high_res", False)
 
@@ -225,7 +253,7 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
         if high_res_enabled:
             image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
-            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=new_pokemon)
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_name_storage)
         
     elif type == "shiny":
         if is_hunt is False:
@@ -240,7 +268,7 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
         if high_res_enabled:
             image_link = HIGH_RES_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
-            image_link = SHINY_LINK_TEMPLATE.format(pokemon=new_pokemon)
+            image_link = SHINY_LINK_TEMPLATE.format(pokemon=pokemon_name_storage)
 
     elif type == "gmax":
         embd.title = f"{GMAX_EMOJI} GMAX Catch Detected {GMAX_EMOJI}"
@@ -250,7 +278,7 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
         if high_res_enabled:
             image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
-            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=new_pokemon)
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_name_storage)
 
     elif streak != 0 and tier > 0:
         embd.title = "{emote} Catch Streak Detected {emote}".format(emote=STREAK_EMOJI)
@@ -260,7 +288,7 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
         if high_res_enabled:
             image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
-            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=new_pokemon)
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_name_storage)
 
     else:
         ivs = float(iv)
@@ -274,7 +302,7 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
         if high_res_enabled:
             image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
-            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=new_pokemon)
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_name_storage)
 
     embd.set_thumbnail(url=image_link)
     embd.timestamp = datetime.datetime.now()
