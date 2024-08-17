@@ -1,3 +1,4 @@
+import pdb
 import discord
 import random
 import re
@@ -7,31 +8,25 @@ from managers import cache_manager, mongo_manager
 from helpers import starboard_helper, general_helper
 import config
 
-
-class AlertType(Enum):
-    ALL = 0,
-    ONLY_RARES = 1,
-    ONLY_SHINIES = 2,
-    ONLY_GMAX = 3,
-    ONLY_HUNTS = 4,
-    NONE = 5
+alert_type_mask = {
+    "rare" : 0b00001,
+    "shiny" : 0b00010,
+    "gmax" : 0b00100,
+    "hunt" : 0b01000,
+    "streak" : 0b10000
+}
 
 async def can_send_alert(server_details:dict, catch_details:dict) -> bool:
 
-    if server_details.get("alerts") == str(AlertType.NONE):
-        return False
-
-    if server_details.get("alerts") == str(AlertType.ALL):
+    mask = int(server_details[0].get("alerts").get("mask"), 2)
+    
+    if catch_details.get("streak") or catch_details.get("hunt"):
+        if mask & alert_type_mask.get("streak") > 0 or mask & alert_type_mask.get("hunt") > 0:
+            return True
+        
+    if mask & alert_type_mask.get(catch_details.get("type")) > 0:
         return True
-    elif server_details.get("alerts") == str(AlertType.ONLY_SHINIES) and catch_details.get("type") == "shiny":
-        return True
-    elif server_details.get("alerts") == str(AlertType.ONLY_GMAX) and catch_details.get("type") == "gmax":
-        return True
-    elif server_details.get("alerts") == str(AlertType.ONLY_RARES) and catch_details.get("type") == "rare":
-        return True
-    elif server_details.get("alerts") == str(AlertType.ONLY_HUNTS) and catch_details.get("hunt") == True:
-        return True
-
+    
     return False
 
 async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
@@ -42,7 +37,7 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     if message.channel.permissions_for(bot_member).send_messages is False:
         return
 
-    if str(message.author.id) != config.POKETWO_ID:
+    if str(message.author.id) != config.ADMIN_ID:
         return
 
     catch_info = await determine_rare_catch(message)
@@ -59,7 +54,7 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     })
 
     """ Get and Send Catch Detection Embed"""
-    if can_send_alert(server_details=server_details, catch_details=catch_info):
+    if await can_send_alert(server_details=server_details, catch_details=catch_info):
 
         reply = await starboard_helper.get_rare_catch_embd(server_details, catch_info)
 
