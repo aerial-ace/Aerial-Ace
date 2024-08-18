@@ -38,10 +38,10 @@ class StarboardSystem(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def enable_alerts(self, ctx:commands.Context, alert_type:str = None):
         
-        alert_types = ["rare", "shiny", "hunt", "gmax", "streak"]
+        alert_types = ["rare", "regional", "shiny", "hunt", "gmax", "streak"]
         
         if alert_type not in alert_types:
-            return await ctx.reply("Not a valid alert type! Alert type can only be one from : [rare/ shiny/ hunt/ gmax/ streak]")
+            return await ctx.reply("Not a valid alert type! Alert type can only be one from : [rare/ regional/ shiny/ hunt/ gmax/ streak]")
 
         reply = await starboard_helper.set_alerts(str(ctx.guild.id), alert_type, True)
         
@@ -53,14 +53,26 @@ class StarboardSystem(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def disable_alerts(self, ctx:commands.Context, alert_type:str = None):
         
-        alert_types = ["rare", "shiny", "hunt", "gmax", "streak"]
+        alert_types = ["rare", "regional", "shiny", "hunt", "gmax", "streak"]
         
         if alert_type not in alert_types:
-            return await ctx.reply("Not a valid alert type! Alert type can only be one from : [rare/ shiny/ hunt/ gmax/ streak]")
+            return await ctx.reply("Not a valid alert type! Alert type can only be one from : [rare/ regional/ shiny/ hunt/ gmax/ streak]")
 
         reply = await starboard_helper.set_alerts(str(ctx.guild.id), alert_type, False)
         
         await ctx.send(reply)
+
+    """ Information of Alert Mask """
+    @starboard.command(name="alertinfo", aliases=["ai"], description="Gives Detailed info about which alerts are enabled.")
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    async def alert_info(self, ctx:commands.Context):
+        
+        alert_types = ["rare", "shiny", "hunt", "gmax", "streak"]
+        
+        reply = await starboard_helper.get_alert_info(str(ctx.guild.id))
+        
+        await ctx.send(embed=reply)
 
     """ Toggle / Set Shiny Starboard Channel """
     @starboard.command(name="shinychannel", aliases=["shch"], description="Enables/Disables the shiny starboard system with the provided channel")

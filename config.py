@@ -19,11 +19,12 @@ TRADE_ITEM_WEIGHT = {
 }
 
 ALERT_TYPE_MASK = {
-    "rare" : 0b00001,
-    "shiny" : 0b00010,
-    "gmax" : 0b00100,
-    "hunt" : 0b01000,
-    "streak" : 0b10000
+    "rare" : 0b000001,
+    "regional": 0b000010,
+    "shiny" : 0b000100,
+    "hunt" : 0b001000,
+    "gmax" : 0b010000,
+    "streak" : 0b100000
 }
 
 # Mongo Data

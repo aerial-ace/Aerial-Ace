@@ -1,3 +1,4 @@
+import pdb
 import discord
 import random
 import re
@@ -8,11 +9,21 @@ import config
 
 async def can_send_alert(server_details:dict, catch_details:dict) -> bool:
 
+    pdb.set_trace()
+
     mask = int(server_details[0].get("alerts").get("mask"), 2)
     
-    if catch_details.get("streak") or catch_details.get("hunt"):
-        if mask & config.ALERT_TYPE_MASK.get("streak") > 0 or mask & config.ALERT_TYPE_MASK.get("hunt") > 0:
+    if catch_details.get("streak"):
+        if mask & config.ALERT_TYPE_MASK.get("streak") > 0:
             return True
+        else:
+            return False
+        
+    if catch_details.get("hunt"):
+        if mask & config.ALERT_TYPE_MASK.get("hunt") > 0:
+            return True
+        else:
+            return False
         
     if mask & config.ALERT_TYPE_MASK.get(catch_details.get("type")) > 0:
         return True
@@ -165,7 +176,9 @@ async def determine_rare_catch(message:discord.Message):
     else:
         for i in pokemon_name.lower().split():
             try:
-                if i == "galarian" or i == "alolan" or i == "hisuian" or cache_manager.cached_rarity_data[i] in ["legendary", "mythical", "ultra beast"]:
+                if i == "galarian" or i == "alolan" or i == "hisuian":
+                    catch_info["type"] = "regional"
+                if cache_manager.cached_rarity_data[i] in ["legendary", "mythical", "ultra beast"]:
                     catch_info["type"] = "rare"
             except Exception:
                 continue

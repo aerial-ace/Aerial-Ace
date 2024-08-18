@@ -123,6 +123,39 @@ async def set_alerts(server_id: str, alert_type:str, enable=True) -> str:
     
     return "Starboard Alerts have been {} on for `{}`".format("enabled" if enable else "disabled", alert_type.capitalize())
 
+""" Alert Info Embed """
+async def get_alert_info(server_id: str) -> Embed:
+    
+    query = {
+        "server_id" : server_id
+    }
+    
+    data = (await mongo_manager.manager.get_all_data("servers", query))[0]
+    
+    embd = await general_helper.get_info_embd("Alert Module", "")
+    
+    all_lines = []
+    line = []
+    
+    for i in ["rare", "regional", "shiny", "hunt", "gmax", "streak"]:
+        
+        alert_mask = ALERT_TYPE_MASK.get(i)
+        server_mask = int( data.get("alerts").get("mask"), 2 )
+        
+        if len(line) <= 2:
+            line.append( "{type} : {enabled}".format(type=i.upper(), enabled="✅" if alert_mask & server_mask > 0 else "❎") )
+        else:
+            all_lines.append(line)
+            line = ["{type} : {enabled}".format(type=i.upper(), enabled="✅" if alert_mask & server_mask > 0 else "❎")]
+        
+    if len(line) != 0:
+        all_lines.append(line)
+        
+    for line in all_lines:
+        embd.description += "```{}```".format(" | ".join(line))
+        
+    return embd
+
 """Change the starboard text"""
 
 
@@ -245,7 +278,7 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
 
     high_res_enabled = server_details.get("high_res", False)
 
-    if type == "rare":
+    if type == "rare" or type == "regional":
         embd.title = ":star: Rare Catch Detected :star:"
         embd.color = RARE_CATCH_COLOR
         embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
@@ -347,9 +380,9 @@ async def send_starboard(server_details, catch_details, message:Message):
     reply = await get_starboard_embed(catch_details, server_details[0], message.jump_url, tier)
 
     # send that starboard embed to the starboard channel
-    starboard_channel: TextChannel = message.guild.get_channel(int(starboard_channel_id))
-
-    if starboard_channel is None:
+    try:
+        starboard_channel: TextChannel = message.guild.get_channel(int(starboard_channel_id))
+    except:
         return await general_helper.get_info_embd("No Access", f"Can't send message in <#{starboard_channel_id}>")
 
     try:
@@ -391,7 +424,7 @@ async def get_rare_catch_embd(server_details, catch_details):
     embd.title = "Sample Title"
     embd.description = "Sample Description"
 
-    if _type == "rare":
+    if _type == "rare" or _type == "regional":
         embd.title = ":star: Rare Catch Detected :star:"
         embd.color = RARE_CATCH_COLOR
         embd.description = (DEFAULT_RARE_TEXT if data.get("starboard_text_rare", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_rare", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
