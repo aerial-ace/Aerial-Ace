@@ -1,8 +1,8 @@
+import pdb
 from discord.ext import commands
 from discord import TextChannel
 
 from helpers import starboard_helper
-from config import ALERT_TYPE_MASK
 
 
 class StarboardSystem(commands.Cog):
@@ -68,7 +68,7 @@ class StarboardSystem(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def alert_info(self, ctx:commands.Context):
         
-        alert_types = ["rare", "shiny", "hunt", "gmax", "streak"]
+        alert_types = ["rare", "regional", "shiny", "hunt", "gmax", "streak"]
         
         reply = await starboard_helper.get_alert_info(str(ctx.guild.id))
         

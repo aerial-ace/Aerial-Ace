@@ -84,7 +84,7 @@ async def set_highres(server_id:str):
 
     server_data = cursor[0]
     
-    if server_data.get("tier") <= 0:
+    if server_data.get("tier", 0) <= 0:
         return "Not a premium server! Use `-aa premium` to know more!"
     
     updated_data = {
@@ -105,7 +105,7 @@ async def set_alerts(server_id: str, alert_type:str, enable=True) -> str:
     data = (await mongo_manager.manager.get_all_data("servers", query))[0]
     
     if data.get("tier", 0) < 1:
-        return Embed(title="Whoops!", description="Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!")
+        return "Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!"
         
     default_mask = { "mask" : "111111" }
     prev_mask = int( data.get("alerts", default_mask).get("mask"), 2 )
@@ -141,7 +141,9 @@ async def get_alert_info(server_id: str) -> Embed:
     for i in ["rare", "regional", "shiny", "hunt", "gmax", "streak"]:
         
         alert_mask = ALERT_TYPE_MASK.get(i)
-        server_mask = int( data.get("alerts").get("mask"), 2 )
+        
+        default_mask = {"mask" : "111111"}
+        server_mask = int( data.get("alerts", default_mask).get("mask"), 2 )
         
         if len(line) <= 2:
             line.append( "{type} : {enabled}".format(type=i.upper(), enabled="✅" if alert_mask & server_mask > 0 else "❎") )
@@ -275,7 +277,7 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
     embd.description +=f"**`Level   :`** {level} \n"
     embd.description +=f"**`IVs     :`** {iv}% [TELEPORT]({message_link})\n\n"
 
-    pokemon_id = cache_manager.cached_type_data[pokemon_name_storage]["id"]
+    pokemon_id = (await cache_manager.search_cached_type_data(pokemon_name_storage))["id"]
 
     high_res_enabled = server_details.get("high_res", False)
 

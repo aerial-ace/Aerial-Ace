@@ -9,9 +9,8 @@ import config
 
 async def can_send_alert(server_details:dict, catch_details:dict) -> bool:
 
-    pdb.set_trace()
-
-    mask = int(server_details[0].get("alerts").get("mask"), 2)
+    default_mask = {"mask" : "111111"}
+    mask = int(server_details[0].get("alerts", default_mask).get("mask"), 2)
     
     if catch_details.get("streak"):
         if mask & config.ALERT_TYPE_MASK.get("streak") > 0:
@@ -38,7 +37,7 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     if message.channel.permissions_for(bot_member).send_messages is False:
         return
 
-    if str(message.author.id) != config.ADMIN_ID:
+    if str(message.author.id) != config.POKETWO_ID:
         return
 
     catch_info = await determine_rare_catch(message)
@@ -72,7 +71,7 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     """ Send Customization Reminder for non premium servers"""
     customization_reminder_possibility = 30
 
-    if server_details[0].get("tier") == 0 and random.randint(0, 99) < customization_reminder_possibility:
+    if server_details[0].get("tier", 0) == 0 and random.randint(0, 99) < customization_reminder_possibility:
         embd = await general_helper.get_info_embd(f"{config.AERIAL_ACE_EMOJI} Customize Starboard Embed!", "Enhance the starboard embed using various customization features available to premium servers. Get premium now and customize your starboard embeds to suit your servers. ", config.DEFAULT_COLOR, "Use -aa premium or join support server to know more.")
         await message.channel.send(embed=embd)
 

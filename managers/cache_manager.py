@@ -16,7 +16,26 @@ cached_duelish_data = None
 cached_spawnrate_data = None
 cached_shinycounter_data = None
 
-# caches the data
+
+async def search_cached_type_data(name: str) -> dict:
+    
+    global cached_type_data
+    
+    type_data_aliter = {
+        "darmanitan" : "darmanitan-standard",
+        "darmanitan-galar" : "darmanitan-galar-standard"
+    }
+    
+    try:
+        aliter = type_data_aliter[name]
+        return cached_type_data.get(aliter)
+    except KeyError as k:
+        try:
+            return cached_type_data.get(name)
+        except KeyError as kk:
+            print(f">>>>> {name} is not present in cached_type_data")
+            return None    
+
 async def cache_data():
     global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data, cached_weakness_data, cached_type_data, cached_duelish_data, cached_spawnrate_data, cached_shinycounter_data
 
@@ -32,7 +51,6 @@ async def cache_data():
     cached_spawnrate_data = await fetch_spawnrate_info()
     cached_shinycounter_data = await fetch_shinycounter_info()
 
-# returns all the stats from stats file
 def get_all_stats():
     stats_file = open(config.STATS_FILE_LOCATION, "r")
     stats_data_raw = stats_file.read()
@@ -40,8 +58,6 @@ def get_all_stats():
 
     return stats_data
 
-
-# return all the moveset from the moveset file
 def get_all_moveset():
     ms_file = open(config.MOVESET_FILE_LOCATION, "r")
     ms_data_raw = ms_file.read()
@@ -49,22 +65,17 @@ def get_all_moveset():
 
     return ms_data
 
-
-# returns all the alt names from the alt name file
 def get_all_alt_names():
     alt_name_file = open(config.ALT_NAME_FILE_LOCATION, "r")
     alt_name_data = json.loads(alt_name_file.read())
 
     return alt_name_data
 
-
-# returns all the rarity data from the rarity file
 def get_all_rarity_data():
     rarity_file = open(config.RARITY_FILE_LOCATION, "r")
     rarity_data = json.loads(rarity_file.read())
 
     return rarity_data
-
 
 def get_all_nature_data():
     nature_file = open(config.NATURE_FILE_LOCATION, "r")
@@ -72,20 +83,17 @@ def get_all_nature_data():
 
     return nature_data
 
-
 def get_all_type_data():
     with open(config.TYPE_FILE_LOCATION, "r") as type_file:
         type_data = json.loads(type_file.read())
 
         return type_data
 
-
 def get_all_weakness_data():
     with open(config.WEAKNESS_FILE_LOCATION, "r") as weakness_file:
         weakness_data = json.loads(weakness_file.read())
 
         return weakness_data
-
 
 def get_all_duelish_data():
     with open(config.DUELISH_POKEMON_FILE_LOCATION, "r") as duelish_file:

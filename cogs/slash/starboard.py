@@ -32,7 +32,7 @@ class StarboardSlash(commands.Cog):
     """ Set Alert Mask """
 
     @starboard_group.command(name="alert-enable", description="Enables alerts for the provided catch type!")
-    async def enable_alerts(self, ctx:ApplicationContext, alert_type: Option(str, description="The type of alert to enable. Pick one from : [rare/ regional/ shiny/ hunt/ gmax/ streak]"))
+    async def enable_alerts(self, ctx:ApplicationContext, alert_type: Option(str, description="The type of alert to enable. Pick one from : [rare/ regional/ shiny/ hunt/ gmax/ streak]")):
 
         alert_types = ["rare", "regional", "shiny", "hunt", "gmax", "streak"]
         
@@ -41,12 +41,12 @@ class StarboardSlash(commands.Cog):
 
         reply = await starboard_helper.set_alerts(str(ctx.guild.id), alert_type, True)
         
-        await ctx.send(reply)
+        await ctx.respond(reply)
 
     """ Disable Alert Mask """
 
     @starboard_group.command(name="alert-disable", description="Disables alerts for the provided catch type!")
-    async def disable_alerts(self, ctx:ApplicationContext, alert_type: Option(str, description="The type of alert to disable. Pick one from : [rare/ regional/ shiny/ hunt/ gmax/ streak]"))
+    async def disable_alerts(self, ctx:ApplicationContext, alert_type: Option(str, description="The type of alert to disable. Pick one from : [rare/ regional/ shiny/ hunt/ gmax/ streak]")):
 
         alert_types = ["rare", "regional", "shiny", "hunt", "gmax", "streak"]
         
@@ -55,7 +55,7 @@ class StarboardSlash(commands.Cog):
 
         reply = await starboard_helper.set_alerts(str(ctx.guild.id), alert_type, False)
         
-        await ctx.send(reply)
+        await ctx.respond(reply)
 
     """ Toggle/Set Shiny Starboard Channel """
 

@@ -12,7 +12,7 @@ from config import ERROR_COLOR, WARNING_COLOR, MAX_TAG_TIMER_VALUE
 
 async def validate_tag(ctx: ApplicationContext, tag) -> bool:
     try:
-        cache_manager.cached_type_data[tag.lower()]
+        await cache_manager.search_cached_type_data(tag.lower())
     except KeyError:
         reply = await general_helper.get_info_embd("Not Found Error!", f"`{tag.capitalize()}` is not a pokemon name, atleast in english\nPlease provide valid pokemon names in english and that follow this format ```/dex marowak-alola\n/dex gallade-mega\n/dex meowstic-female\n/dex deoxys-defense\n/dex necrozma-dawn\n/dex calyrex-shadow-rider\n/dex cinderace-gmax```", ERROR_COLOR)
         view = GeneralView(200, True, False, False, True)

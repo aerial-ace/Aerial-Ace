@@ -118,7 +118,7 @@ async def get_weakness_embed(params):
     # get types from the input
     try:
         if not type_input:
-            types = cache_manager.cached_type_data[params[0]]["types"]
+            types = (await cache_manager.search_cached_type_data(params[0]))["types"]
         else:
             types = params
     except KeyError as err:
