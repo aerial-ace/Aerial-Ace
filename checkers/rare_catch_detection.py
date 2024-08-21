@@ -1,3 +1,4 @@
+import pdb
 import discord
 import random
 import re
@@ -6,7 +7,27 @@ from managers import cache_manager, mongo_manager
 from helpers import starboard_helper, general_helper
 import config
 
+async def can_send_alert(server_details:dict, catch_details:dict) -> bool:
 
+    default_mask = {"mask" : "111111"}
+    mask = int(server_details[0].get("alerts", default_mask).get("mask"), 2)
+    
+    if catch_details.get("streak"):
+        if mask & config.ALERT_TYPE_MASK.get("streak") > 0:
+            return True
+        else:
+            return False
+        
+    if catch_details.get("hunt"):
+        if mask & config.ALERT_TYPE_MASK.get("hunt") > 0:
+            return True
+        else:
+            return False
+        
+    if mask & config.ALERT_TYPE_MASK.get(catch_details.get("type")) > 0:
+        return True
+    
+    return False
 
 async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     """detect rare catch message"""
@@ -32,21 +53,25 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
         "server_id": str(message.guild.id)
     })
 
-    """ Get and Send Catch Detection Embed"""
-    reply = await starboard_helper.get_rare_catch_embd(server_details, catch_info)
+    alerts_allowed = await can_send_alert(server_details=server_details, catch_details=catch_info)
 
-    if reply is None:
-        return
-    
-    try:
-        await message.channel.send(embed=reply)
-    except discord.errors.Forbidden:
-        return  # return if not allowed to send messages in the current channel
+    if alerts_allowed:
+
+        """ Get and Send Catch Detection Embed"""
+        reply = await starboard_helper.get_rare_catch_embd(server_details, catch_info)
+
+        if reply is None:
+            return
+
+        try:
+            await message.channel.send(embed=reply)
+        except discord.errors.Forbidden:
+            return  # return if not allowed to send messages in the current channel
 
     """ Send Customization Reminder for non premium servers"""
     customization_reminder_possibility = 30
 
-    if server_details[0].get("tier") == 0 and random.randint(0, 99) < customization_reminder_possibility:
+    if server_details[0].get("tier", 0) == 0 and random.randint(0, 99) < customization_reminder_possibility:
         embd = await general_helper.get_info_embd(f"{config.AERIAL_ACE_EMOJI} Customize Starboard Embed!", "Enhance the starboard embed using various customization features available to premium servers. Get premium now and customize your starboard embeds to suit your servers. ", config.DEFAULT_COLOR, "Use -aa premium or join support server to know more.")
         await message.channel.send(embed=embd)
 
@@ -54,8 +79,9 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     """ Send the starboard embed in the starboard channel """
     starboard_reply = await starboard_helper.send_starboard(server_details, catch_info, message)
 
-    """ Send feedback in the current channel """
-    await message.channel.send(embed=starboard_reply)
+    if alerts_allowed:
+        """ Send feedback in the current channel """
+        await message.channel.send(embed=starboard_reply)
 
 async def determine_rare_catch(message:discord.Message):
     """check if any message is a rare catch message"""
@@ -149,7 +175,9 @@ async def determine_rare_catch(message:discord.Message):
     else:
         for i in pokemon_name.lower().split():
             try:
-                if i == "galarian" or i == "alolan" or i == "hisuian" or cache_manager.cached_rarity_data[i] in ["legendary", "mythical", "ultra beast"]:
+                if i == "galarian" or i == "alolan" or i == "hisuian":
+                    catch_info["type"] = "regional"
+                if cache_manager.cached_rarity_data[i] in ["legendary", "mythical", "ultra beast"]:
                     catch_info["type"] = "rare"
             except Exception:
                 continue

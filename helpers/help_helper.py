@@ -14,7 +14,7 @@ commands_in_category = {
     "battle": ["log_battle", "battle_score", "battle_lb", "battle_remove", "battle_remove_id", "battleboard_clear", "auto_battle_logging"],
     "tags": ["tag", "tag_ping", "tag_show", "afk", "tag_remove", "tag_remove_id", "alltags"],
     "fun": ["hit", "pat", "kill", "hug", "tease", "cry", "dance"],
-    "starboard": ["starboard"],
+    "starboard": ["starboard.channel", "starboard.shinychannel", "starboard.raretext", "starboard.shinytext", "starboard.rareimage", "starboard.shinyimage", "starboard.sample", "starboard.alertenable", "starboard.alertdisable", "starboard.alertinfo"],
     "misc": ["ping", "roll", "support", "vote", "invite", "mail", "all"],
     "smogon": ["smogon"],
     "dono" : ["dono_channel", "dono_log", "dono_staff", "dono_change", "dono_clear", "dono_remove"],
@@ -57,14 +57,24 @@ all_commands = {
     "vote": "```{prefix}vote```\ndisplays the vote link for the bot",
     "invite": "```{prefix}invite```\ndisplays the invite link for the bot",
     "mail": "```{prefix}mail```\nopens up the mail box with latest news about the bot",
-    "starboard": "```{prefix}starboard[sb] channel[ch] #channel\n{prefix}sb shinychannel[shch] #shiny-starboard\n{prefix}sb raretext[rt] <text>\n{prefix}sb shinytext[st] <text>\n{prefix}sb shinyimage[si] <image_url>\n{prefix}sb rareimage[ri] <image_url>\n{prefix}sb sample //sends a sample embed to test perms.```\nsends rare catch embeds to this channel",
+    "starboard.channel": "```{prefix}starboard[sb] channel[ch] #channel```\n if channel is provided, it sets that channel as starboard log channel otherwise disable the starboard module \n{prefix}starboard[sb] channel[ch]```\n disable the starboard module",
+    "starboard.shinychannel": "```{prefix}sb shinychannel[shch] #shiny-starboard``` set shiny channel \n```{prefix}sb shinychannel[shch]``` disable shiny channel \n",
+    "starboard.raretext" : "```{prefix}sb raretext[rt] <text>``` sets the text of the rare catch embed.\n",
+    "starboard.shinytext" : "```{prefix}sb shinytext[st] <text>```sets the text of the rare catch embed.\n", 
+    "starboard.rareimage" : "```{prefix}sb rareimage[ri] <image_url>``` sets the image of the rare catch embed.\n",
+    "starboard.shinyimage" : "```{prefix}sb shinyimage[si] <image_url>``` sets the text of the shiny catch embed.\n",
+    "starboard.sample" : "```{prefix}sb sample``` Sends a sample message to text starboard channel logs.",
+    "starboard.alertenable": "```{prefix}sb alertenable[ae] <catch_type>```\n Enables the catch alerts of this type\n ```<catch_type> : [rare/ regional/ shiny/ hunt/ gmax/ streak]```",
+    "starboard.alertdisable": "```{prefix}sb alertdisable[ad] <catch_type>```\n Disables the catch alerts of this type\n ```<catch_type> : [rare/ regional/ shiny/ hunt/ gmax/ streak]```",
+    "starboard.alertinfo": "```{prefix}sb alertinfo[ai]```\n shows the status of each catch_type in the server",
     "smogon": "```DISCONTINUED```",
     "all": "```{prefix}all``` returns a list of all the commands in the bot",
     "spawnrate.channel": "```{prefix}spawnrate[sr] channel[ch] #channel```\nsets the provided channel for spwan speed display.",
     "spawnrate.activate": "```{prefix}spawnrate[sr] activate[a]```\nactivates the spawnrate display! Make sure to set the channel first.",
     "spawnrate.deactivate": "```{prefix}spawnrate[sr] deactivate[da]```\ndeactivates the spawnrate display!",
-    "spawnrate.count": "```{prefix}spawnrate[sr] count[c]```\nthe current spawn rate of the server!"
-}
+    "spawnrate.count": "```{prefix}spawnrate[sr] count[c]```\nthe current spawn rate of the server!",
+    
+} 
 
 """ DISPOSED DONATION COMMANDS 
 
