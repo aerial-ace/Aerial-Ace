@@ -107,7 +107,8 @@ async def set_alerts(server_id: str, alert_type:str, enable=True) -> str:
     if data.get("tier", 0) < 1:
         return Embed(title="Whoops!", description="Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!")
         
-    prev_mask = int( data.get("alerts").get("mask"), 2 )
+    default_mask = { "mask" : "111111" }
+    prev_mask = int( data.get("alerts", default_mask).get("mask"), 2 )
     alert_mask = ALERT_TYPE_MASK.get(alert_type)
     
     if enable:
