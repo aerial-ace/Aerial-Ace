@@ -23,7 +23,10 @@ async def search_cached_type_data(name: str) -> dict:
     
     type_data_aliter = {
         "darmanitan" : "darmanitan-standard",
-        "darmanitan-galar" : "darmanitan-galar-standard"
+        "darmanitan-galar" : "darmanitan-galar-standard",
+        "deoxys" : "deoxys-normal",
+        "meloetta" : "meloetta-aria",
+        "zygarde" : "zygarde-50"
     }
     
     try:

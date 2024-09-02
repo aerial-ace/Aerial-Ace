@@ -238,7 +238,16 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
 
     pokemon = poke_id.replace(" ", "").lower()
     pokemon = pokemon.replace("é", "e")  # This is because of you Flabébé >:|
-    pokemon = pokemon.removeprefix("defense").removeprefix("attack").removeprefix("speed")
+    pokemon = pokemon.replace("'", "") # This is because of you Farfetch'd >:|
+    
+    removable_prefix = ["defense", "attack", "speed", "pirouette"]
+    removable_suffix = ["core"]
+
+    for prefix in removable_prefix:
+        pokemon = pokemon.removeprefix(prefix)
+        
+    for suffix in removable_suffix:
+        pokemon = pokemon.removesuffix(suffix)
 
     name_aliter = {
         "ho-oh": "hooh", 
