@@ -1,9 +1,11 @@
+import pdb
 from discord.ext import commands
 from discord import Embed
 from os import listdir
 
 from managers import mongo_manager
 from helpers import battle_helper
+from helpers import general_helper
 from config import NORMAL_COLOR
 
 
@@ -197,7 +199,32 @@ class AdminSystem(commands.Cog):
         paginator = await battle_helper.get_battle_leaderboard_paginator(id=guild_id)
 
         await paginator.send(ctx)
-
+    
+    @commands.is_owner()    
+    @commands.command(name="setvalue", aliases=["sv"], description="Set the value of a key in database")
+    async def set_value(self, ctx: commands.Context, server_id:str, key:str, value:str):
+        
+        key_tree = key.split(".")
+        
+        collection = key_tree[0]
+        
+        query = {
+            "server_id" : server_id
+        }
+        
+        updated_data = {
+            ".".join(key_tree[1:]) : value
+        }
+        
+        try:
+            await mongo_manager.manager.update_all_data(collection, query, updated_data)
+        except Exception as e:
+            embd:Embed = await general_helper.get_error_embd("ERROR OCCURRED!", desc="")
+            embd.description = "```-aa sv <server_id> <collection>.<key1>.<key2>...<keyn> <value>```"
+            
+            return await ctx.send(embed=embd)
+        else:
+            await ctx.send("Value Updated!")
 
 def setup(bot):
     bot.add_cog(AdminSystem(bot))
