@@ -1,7 +1,7 @@
 py-cord==2.4.0
 requests
 TextWrapper
-pymongo[srv]
+pymongo[srv]>=4.1,<4.5
 python-dotenv
 motor
 dnspython
