@@ -1,0 +1,51 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "edge" ]
+
+jobs:
+
+  build-and-run:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Build the Docker image
+      run: docker build -t {{ secrets.DOCKER_USERNAME}}/aerial-ace:latest .
+
+    - name: Push the Image
+      run: docker push {{ secrets.DOCKER_USERNAME }}/aerial-ace:latest
+
+    - name: Set up SSH private key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.VPS_PRIVATE_KEY }}
+
+    - name: Log into the VPS
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_PRIVATE_KEY }}
+        port: 22
+        script: |
+          docker pull docker.io/{{ secrets.DOCKER_USERNAME }}/aerial-ace:latest
+
+          # stop existing aerial-ace container.
+          docker stop aerial-ace || true
+          docker rm aerial-ace || true
+
+          # remove unused images.
+          docker image prune -a -f
+
+          # start new aerial-ace container.
+          docker run -d --env-file /root/aerial-ace/.env --name aerial-ace docker.io/{{ secrets.DOCKER_USERNAME }}/aerial-ace:latest
