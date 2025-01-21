@@ -20,7 +20,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     
     - name: Build the Docker image
-      run: docker build -t {{ secrets.DOCKER_USERNAME}}/aerial-ace:latest .
+      run: docker build -t {{ secrets.DOCKER_USERNAME }}/aerial-ace:latest .
 
     - name: Push the Image
       run: docker push {{ secrets.DOCKER_USERNAME }}/aerial-ace:latest
