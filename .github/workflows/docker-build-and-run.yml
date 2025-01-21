@@ -20,10 +20,10 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     
     - name: Build the Docker image
-      run: docker build -t {{ secrets.DOCKER_USERNAME }}/aerial-ace:latest .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/aerial-ace:latest .
 
     - name: Push the Image
-      run: docker push {{ secrets.DOCKER_USERNAME }}/aerial-ace:latest
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/aerial-ace:latest
 
     - name: Set up SSH private key
       uses: webfactory/ssh-agent@v0.5.3
@@ -38,7 +38,7 @@ jobs:
         key: ${{ secrets.VPS_PRIVATE_KEY }}
         port: 22
         script: |
-          docker pull docker.io/{{ secrets.DOCKER_USERNAME }}/aerial-ace:latest
+          docker pull docker.io/${{ secrets.DOCKER_USERNAME }}/aerial-ace:latest
 
           # stop existing aerial-ace container.
           docker stop aerial-ace || true
@@ -48,4 +48,4 @@ jobs:
           docker image prune -a -f
 
           # start new aerial-ace container.
-          docker run -d --env-file /root/aerial-ace/.env --name aerial-ace docker.io/{{ secrets.DOCKER_USERNAME }}/aerial-ace:latest
+          docker run -d --env-file /root/aerial-ace/.env --name aerial-ace docker.io/${{ secrets.DOCKER_USERNAME }}/aerial-ace:latest
