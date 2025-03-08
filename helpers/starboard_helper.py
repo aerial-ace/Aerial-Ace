@@ -273,6 +273,8 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
             pokemon_name_storage = pokemon_name_storage.removeprefix("paldean") + "-paldea"
         elif pokemon_name_storage.startswith("complete"):
             pokemon_name_storage = pokemon_name_storage.removeprefix("complete") + "-complete"
+        elif pokemon_name_storage.startswith("dada"):
+            pokemon_name_storage = pokemon_name_storage.removeprefix("dada") + "-dada"
         elif pokemon_name_storage.startswith("10%"):
             pokemon_name_storage = pokemon_name_storage.removeprefix("10%") + "-10"
 
