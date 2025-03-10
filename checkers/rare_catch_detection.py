@@ -43,7 +43,7 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     catch_info = await determine_rare_catch(message)
 
     # return if not a rare catch and not a streak and not even a low/high iv.
-    if catch_info is None or ( catch_info["type"] == "" and  catch_info["streak"] == 0 and float(catch_info["iv"]) > 5 and float(catch_info["iv"]) < 95 ):
+    if catch_info is None or ( catch_info["type"] == "" and  catch_info["streak"] == 0 and float(catch_info["iv"]) > 10 and float(catch_info["iv"]) < 90 ):
         return None
     
     if catch_info.get("type") == "shiny":

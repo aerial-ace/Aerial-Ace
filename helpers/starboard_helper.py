@@ -339,11 +339,11 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
 
     else:
         ivs = float(iv)
-        iv_status = "Rare Low IV" if ivs < 5 else "Rare High IV"
-        iv_emote  = LOW_IV_EMOJI if ivs < 5 else HIGH_IV_EMOJI
+        iv_status = "Rare Low IV" if ivs < 10 else "Rare High IV"
+        iv_emote  = LOW_IV_EMOJI if ivs < 10 else HIGH_IV_EMOJI
 
         embd.title = "{emote} {status} Catch Detected {emote}".format(emote=iv_emote, status=iv_status)
-        embd.color = LOW_IV_COLOR if ivs < 5 else HIGH_IV_COLOR
+        embd.color = LOW_IV_COLOR if ivs < 10 else HIGH_IV_COLOR
         embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
         
         if high_res_enabled:
@@ -477,17 +477,17 @@ async def get_rare_catch_embd(server_details, catch_details):
 
     else:
         ivs = float(_iv)
-        iv_emote = LOW_IV_EMOJI if ivs < 5 else HIGH_IV_EMOJI
+        iv_emote = LOW_IV_EMOJI if ivs < 10 else HIGH_IV_EMOJI
         
-        if ivs < 5:
+        if ivs < 10:
             iv_status = "Rare Low IV"
-        elif ivs > 95:
+        elif ivs > 90:
             iv_status = "Rare High IV"
         else:
             return None # Return None if no case is matched.
 
         embd.title = f"{iv_emote} {iv_status} Catch Detected {iv_emote}"
-        embd.color = LOW_IV_COLOR if ivs < 5 else HIGH_IV_COLOR
+        embd.color = LOW_IV_COLOR if ivs < 10 else HIGH_IV_COLOR
         embd.description = "{ping} caught a {status} Pokemon\n\n:tada: Congratulations :tada:".format(ping=_ping, streak=_streak, pokemon=_pokemon, status=iv_status)
         embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
 
