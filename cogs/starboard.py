@@ -36,31 +36,35 @@ class StarboardSystem(commands.Cog):
     @starboard.command(name="alertenable", aliases=["ae"], description="Enables alerts when a pokemon of this catch type is caught")
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
-    async def enable_alerts(self, ctx:commands.Context, alert_type:str = None):
+    async def enable_alerts(self, ctx:commands.Context, *, alerts:str = None):
         
+        alerts_to_disable = alerts.lower().split()
         alert_types = ["rare", "regional", "shiny", "hunt", "gmax", "streak"]
         
-        if alert_type not in alert_types:
-            return await ctx.reply("Not a valid alert type! Alert type can only be one from : [rare/ regional/ shiny/ hunt/ gmax/ streak]")
+        for alert in alerts_to_disable:
+            if alert not in alert_types:
+                return await ctx.reply("Not a valid alert type! Alert type can only be one from : [rare/ regional/ shiny/ hunt/ gmax/ streak]")
 
-        reply = await starboard_helper.set_alerts(str(ctx.guild.id), alert_type, True)
-        
-        await ctx.send(reply)
+            reply = await starboard_helper.set_alerts(str(ctx.guild.id), alert, True)
+            
+            await ctx.send(reply)
         
     """ Disable Alert Mask """
     @starboard.command(name="alertdisable", aliases=["ad"], description="Disables alerts when a pokemon of this catch type is caught")
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
-    async def disable_alerts(self, ctx:commands.Context, alert_type:str = None):
+    async def disable_alerts(self, ctx:commands.Context, *, alerts:str = None):
         
+        alerts_to_disable = alerts.lower().split()
         alert_types = ["rare", "regional", "shiny", "hunt", "gmax", "streak"]
-        
-        if alert_type not in alert_types:
-            return await ctx.reply("Not a valid alert type! Alert type can only be one from : [rare/ regional/ shiny/ hunt/ gmax/ streak]")
 
-        reply = await starboard_helper.set_alerts(str(ctx.guild.id), alert_type, False)
-        
-        await ctx.send(reply)
+        for alert in alerts_to_disable:
+            if alert not in alert_types:
+                return await ctx.reply("Not a valid alert type! Alert type can only be one from : [rare/ regional/ shiny/ hunt/ gmax/ streak]")
+
+            reply = await starboard_helper.set_alerts(str(ctx.guild.id), alert, False)
+            
+            await ctx.send(reply)
 
     """ Information of Alert Mask """
     @starboard.command(name="alertinfo", aliases=["ai"], description="Gives Detailed info about which alerts are enabled.")
