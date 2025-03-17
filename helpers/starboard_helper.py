@@ -156,6 +156,8 @@ async def get_alert_info(server_id: str) -> Embed:
         
     for line in all_lines:
         embd.description += "```{}```".format(" | ".join(line))
+
+    embd.set_footer(text=f"MASK : {bin(server_mask)}")
         
     return embd
 
