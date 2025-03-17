@@ -75,11 +75,10 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
         embd = await general_helper.get_info_embd(f"{config.AERIAL_ACE_EMOJI} Customize Starboard Embed!", "Enhance the starboard embed using various customization features available to premium servers. Get premium now and customize your starboard embeds to suit your servers. ", config.DEFAULT_COLOR, "Use -aa premium or join support server to know more.")
         await message.channel.send(embed=embd)
 
-    
-    """ Send the starboard embed in the starboard channel """
-    starboard_reply = await starboard_helper.send_starboard(server_details, catch_info, message)
-
     if alerts_allowed:
+        """ Send the starboard embed in the starboard channel """
+        starboard_reply = await starboard_helper.send_starboard(server_details, catch_info, message)
+    
         """ Send feedback in the current channel """
         await message.channel.send(embed=starboard_reply)
 
