@@ -1,4 +1,3 @@
-import pdb
 import discord
 import random, re, logging
 
@@ -45,13 +44,13 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     if catch_info is None or ( catch_info["type"] == "" and  catch_info["streak"] == 0 and float(catch_info["iv"]) > 10 and float(catch_info["iv"]) < 90 ):
         return None
     
-    if catch_info.get("type") == "shiny":
-        await mongo_manager.manager.increment_shiny_counter(str(message.guild.id))
-        logging.info(f"=====Shiny caught in {server_details.get("server_name")}=====")
-
     server_details = await mongo_manager.manager.get_all_data("servers", {
         "server_id": str(message.guild.id)
     })
+
+    if catch_info.get("type") == "shiny":
+        await mongo_manager.manager.increment_shiny_counter(str(message.guild.id))
+        logging.info("=====Shiny caught in {}=====".format(server_details))
 
     alerts_allowed = await can_send_alert(server_details=server_details, catch_details=catch_info)
 
@@ -67,6 +66,13 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
             await message.channel.send(embed=reply)
         except discord.errors.Forbidden:
             return  # return if not allowed to send messages in the current channel
+        
+        """ Send the starboard embed in the starboard channel """
+        starboard_reply = await starboard_helper.send_starboard(server_details, catch_info, message)
+    
+        """ Send feedback in the current channel """
+        await message.channel.send(embed=starboard_reply)
+
 
     """ Send Customization Reminder for non premium servers"""
     customization_reminder_possibility = 30
@@ -74,13 +80,6 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     if server_details[0].get("tier", 0) == 0 and random.randint(0, 99) < customization_reminder_possibility:
         embd = await general_helper.get_info_embd(f"{config.AERIAL_ACE_EMOJI} Customize Starboard Embed!", "Enhance the starboard embed using various customization features available to premium servers. Get premium now and customize your starboard embeds to suit your servers. ", config.DEFAULT_COLOR, "Use -aa premium or join support server to know more.")
         await message.channel.send(embed=embd)
-
-    if alerts_allowed:
-        """ Send the starboard embed in the starboard channel """
-        starboard_reply = await starboard_helper.send_starboard(server_details, catch_info, message)
-    
-        """ Send feedback in the current channel """
-        await message.channel.send(embed=starboard_reply)
 
 async def determine_rare_catch(message:discord.Message):
     """check if any message is a rare catch message"""
