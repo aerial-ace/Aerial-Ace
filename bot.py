@@ -87,6 +87,8 @@ async def on_ready():
     logging.info(f"Logged in as {bot.user}")
     logging.info(f"Discord Version : {discord.__version__}")
 
+    print(f"Logged in as {bot.user}")
+    print(f"Discord Version : {discord.__version__}")
 
 @bot.event
 async def on_message(message: discord.Message):
