@@ -1,8 +1,8 @@
 from discord import Embed
 from discord.ext import commands
-import datetime
+import datetime, logging
 
-from helpers import general_helper, logger
+from helpers import general_helper
 import config
 
 all_categories = {"pokedex": "commands related to pokedex", "random": "commands related to random gen", "info": "commands related to information", "battle": "commands related to battleboard", "tags": "commands related to shinyhunts", "fun": "other fun commands", "misc": "commands that dont fit in other categories", "starboard": "commands related to starboard", "smogon": "commands related to showdown", "donation" : "Displays the current donation information and holds commands related to donation module", "spawnrate" : "Commands related to Spawn Rate Module"}
@@ -135,9 +135,8 @@ async def get_category_help_embed(ctx: commands.Context | None, input) -> Embed:
 
         try:
             embd.description = desc.format(prefix=prefix)
-
-        except Exception as e:
-            logger.Logger.log_error(e)
+        except:
+            pass
 
         embd.timestamp = datetime.datetime.now()
     else:

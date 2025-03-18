@@ -1,4 +1,4 @@
-import json
+import json, logging
 from managers import mongo_manager
 
 import config
@@ -36,7 +36,7 @@ async def search_cached_type_data(name: str) -> dict:
         try:
             return cached_type_data.get(name)
         except KeyError as kk:
-            print(f">>>>> {name} is not present in cached_type_data")
+            logging.critical(f"{name} is not present in cached_type_data")
             return None    
 
 async def cache_data():

@@ -134,16 +134,16 @@ async def get_alert_info(server_id: str) -> Embed:
     data = (await mongo_manager.manager.get_all_data("servers", query))[0]
     
     embd = await general_helper.get_info_embd("Alert Module", "")
-    
+
+    default_mask = {"mask" : "111111"}
+    server_mask = int( data.get("alerts", default_mask).get("mask"), 2 )
+
     all_lines = []
     line = []
     
     for i in ["rare", "regional", "shiny", "hunt", "gmax", "streak"]:
         
         alert_mask = ALERT_TYPE_MASK.get(i)
-        
-        default_mask = {"mask" : "111111"}
-        server_mask = int( data.get("alerts", default_mask).get("mask"), 2 )
         
         if len(line) <= 2:
             line.append( "{type} : {enabled}".format(type=i.upper(), enabled="✅" if alert_mask & server_mask > 0 else "❎") )

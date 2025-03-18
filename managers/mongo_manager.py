@@ -1,9 +1,8 @@
 
-import motor.motor_asyncio
+import motor.motor_asyncio, logging
 
 from managers import init_manager
 from managers import cache_manager
-from helpers import logger
 
 
 class MongoManager:
@@ -100,7 +99,7 @@ def init_mongo(mongo_uri: str, database_name: str):
     try:
         manager = MongoManager(mongo_uri, database_name)
     except Exception as e:
-        logger.Logger.log_error(e, f"Error while loading database")
+        logging.exception(f"Error while loading database")
         return False
 
     return True

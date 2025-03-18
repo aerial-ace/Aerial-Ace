@@ -1,7 +1,6 @@
 import pdb
 import discord
-import random
-import re
+import random, re, logging
 
 from managers import cache_manager, mongo_manager
 from helpers import starboard_helper, general_helper
@@ -48,6 +47,7 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     
     if catch_info.get("type") == "shiny":
         await mongo_manager.manager.increment_shiny_counter(str(message.guild.id))
+        logging.info(f"=====Shiny caught in {server_details.get("server_name")}=====")
 
     server_details = await mongo_manager.manager.get_all_data("servers", {
         "server_id": str(message.guild.id)

@@ -2,9 +2,9 @@ from discord.ext import commands
 from discord import Bot, Intents
 import discord
 import sys
+import logging
 
-from helpers.logger import Logger
-from managers import cache_manager, mongo_manager, init_manager, post_command_manager
+from managers import cache_manager, mongo_manager, init_manager, post_command_manager, logging_manager
 from config import TOKEN, MONGO_URI, TEST_TOKEN
 
 from helpers import general_helper
@@ -14,17 +14,20 @@ from checkers import auto_battle_log
 from checkers import spawn_speed_detection
 from checkers import donation_detection
 
+
+
+
+logging_manager.setup_logging()
+
 # determines whether to run the bot in local, or global mode
 is_test = False
 
 intents = Intents.default()
 intents.message_content = True
 
-
 # for getting the prefix
 def prefix_callable(_bot: Bot, message):
     return [f"<@{_bot.user.id}> ", f"<@!{_bot.user.id}> ", "-aa ", "aa."]
-
 
 bot = commands.AutoShardedBot(command_prefix=prefix_callable, description="Botto", case_insensitive=True, intents=intents)
 bot.remove_command("help")
@@ -81,8 +84,8 @@ async def on_ready():
     mongo_manager.init_mongo(MONGO_URI, "aerialace")
     await cache_manager.cache_data()
 
-    Logger.log_message(f"Logged in as {bot.user}")
-    Logger.log_message(f"Discord Version : {discord.__version__}")
+    logging.info(f"Logged in as {bot.user}")
+    logging.info(f"Discord Version : {discord.__version__}")
 
 
 @bot.event

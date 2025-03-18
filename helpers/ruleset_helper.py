@@ -1,8 +1,7 @@
 from discord import Embed
-import random
+import random, logging
 
 from managers import mongo_manager
-from helpers import logger
 from config import NORMAL_COLOR
 
 
@@ -39,6 +38,6 @@ async def add_ruleset(name: str, rules: list, user: str):
     try:
         await mongo_manager.manager.add_data("rulesets", new_db_entry)
     except Exception as e:
-        logger.Logger.log_error(e, "Error occurred while adding ruleset to the db.")
+        logging.exception("Error occurred while adding ruleset to the db.")
     else:
         return "Entry Added! Id : {}".format(number_of_rulesets + 1)

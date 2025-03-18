@@ -1,8 +1,9 @@
 from discord import Embed, Guild, Member
+import logging
 
 from views.PaginatorViews import PageView
 from managers import mongo_manager
-from helpers import logger, general_helper
+from helpers import general_helper
 from config import NORMAL_COLOR, WARNING_COLOR
 
 
@@ -52,7 +53,7 @@ async def set_channel(server_id: int, channel_id):
         )
 
     except Exception as e:
-        logger.Logger.log_error(e, "Error Occurred while trying to change the donation channel")
+        logging.exception("Error Occurred while trying to change the donation channel")
         return False
 
     else:
@@ -72,7 +73,7 @@ async def set_staff_role(server_id: int, role_id: int):
         )
 
     except Exception as e:
-        logger.Logger.log_error(e, "Error occurred while trying to set staff role id")
+        logging.exception("Error occurred while trying to set staff role id")
         return False
 
     else:

@@ -1,9 +1,10 @@
 from collections import OrderedDict
 from discord import Member, Embed, Guild
+import logging
 
 from views.PaginatorViews import PageView
 from managers import mongo_manager
-from helpers import general_helper, logger
+from helpers import general_helper
 from config import NORMAL_COLOR, ERROR_COLOR
 
 
@@ -92,7 +93,7 @@ async def register_battle_log(server_id, winner, loser, winner_name=None, loser_
         return f"> GG, <@{winner}> won over <@{loser}>. Scoreboard was updated."
 
     except Exception as e:
-        logger.Logger.log_error(e, "Error occurred while logging battle!")
+        logging.exception("Error occurred while logging battle!")
         return "Error occurred while logging battle!"
 
 
@@ -114,7 +115,7 @@ async def toggle_auto_logging(server_id: str):
         await mongo_manager.manager.update_all_data("servers", query, updated_data)
 
     except Exception as e:
-        logger.Logger.log_error(e, "Error occurred while toggling Auto Battle Logging!")
+        logging.exception("Error occurred while toggling Auto Battle Logging!")
         return "Error Occurred while toggling Auto Battle Logging!"
 
     else:
@@ -145,7 +146,7 @@ async def get_battle_score(server_id: int, user: Member) -> Embed:
         return await general_helper.get_info_embd(f"Battle Score - {user.name}", f"Wins : **{wins}**\n" + f"Loses : **{loses}**\n" + f"Win Perc : **{win_perc}**\n" + f"Overall Diff : **{wins - loses}**", NORMAL_COLOR)
 
     except Exception as e:
-        logger.Logger.log_error(e, f"Error while showing battle score")
+        logging.exception(f"Error while showing battle score")
         return await general_helper.get_info_embd("Error!", "Error showing battle score :(, error were registered though.", ERROR_COLOR)
 
 
@@ -213,7 +214,7 @@ async def get_battle_leaderboard_paginator(guild: Guild = None, id: str = None) 
         return paginator
 
     except Exception as e:
-        logger.Logger.log_error(e, f"Error while showing battle leaderboard")
+        logging.exception(f"Error while showing battle leaderboard")
         return await general_helper.get_info_embd("Oops", "Error occurred while showing battle leaderboard :|", ERROR_COLOR, "These errors were registered")
 
 
