@@ -1,4 +1,4 @@
-import pdb
+from discord import File
 from discord.ext import commands
 from discord import Embed
 from os import listdir
@@ -225,6 +225,12 @@ class AdminSystem(commands.Cog):
             return await ctx.send(embed=embd)
         else:
             await ctx.send("Value Updated!")
+
+    @commands.is_owner()
+    @commands.command(name="logs", aliases=["get-logs", "gl"], description="returns the latest log file")
+    async def get_logs(self, ctx:commands.Context):
+        with open("logs/aerial-ace.log", 'r') as log_file:
+            await ctx.send("Here is the log file:", file=File(log_file, "aerial-ace.log"))
 
 def setup(bot):
     bot.add_cog(AdminSystem(bot))

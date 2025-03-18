@@ -1,7 +1,10 @@
-import logging
+import logging, os
 from logging.handlers import TimedRotatingFileHandler
 
 def setup_logging():
+
+    if not os.path.exists("logs/"):
+        os.mkdir("logs/")
 
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
