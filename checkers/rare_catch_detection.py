@@ -50,7 +50,6 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
 
     if catch_info.get("type") == "shiny":
         await mongo_manager.manager.increment_shiny_counter(str(message.guild.id))
-        logging.info("=====Shiny caught in {}=====".format(server_details))
 
     alerts_allowed = await can_send_alert(server_details=server_details, catch_details=catch_info)
 
