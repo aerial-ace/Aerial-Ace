@@ -10,7 +10,6 @@ from config import TOKEN, MONGO_URI, TEST_TOKEN
 from helpers import general_helper
 
 from checkers import rare_catch_detection
-from checkers import auto_battle_log
 from checkers import spawn_speed_detection
 from checkers import donation_detection
 
