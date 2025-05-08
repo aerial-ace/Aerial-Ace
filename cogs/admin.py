@@ -1,12 +1,12 @@
-from discord import File
+from discord import File, User, Bot, Embed, Forbidden, HTTPException
 from discord.ext import commands
-from discord import Embed
 from os import listdir
+import logging
 
+from views.ButtonViews import DonationView
 from managers import mongo_manager
-from helpers import battle_helper
-from helpers import general_helper
-from config import NORMAL_COLOR
+from helpers import battle_helper, general_helper
+from config import NORMAL_COLOR, AVATAR_LINK
 
 
 class AdminSystem(commands.Cog):
@@ -229,8 +229,55 @@ class AdminSystem(commands.Cog):
     @commands.is_owner()
     @commands.command(name="logs", aliases=["get-logs", "gl"], description="returns the latest log file")
     async def get_logs(self, ctx:commands.Context):
-        with open("logs/aerial-ace.log", 'r') as log_file:
+       with open("logs/aerial-ace.log", 'r') as log_file:
             await ctx.send("Here is the log file:", file=File(log_file, "aerial-ace.log"))
+
+    @commands.command(name="send-reminder", aliases=["send-rem"], description="Send a premium reminder to the owner")
+    async def send_reminder(self, ctx:commands.Context, user_id:str, *, server_id:str):
+
+        server_ids = server_id.split()
+
+        bot:Bot = ctx.bot
+        premium_user:User = await bot.fetch_user(user_id)
+
+        if premium_user is None:
+            return await ctx.send(f"User with ID : _{user_id}_ was not found!")
+
+        server_list = []
+
+        for i in server_ids:
+            gld = await bot.fetch_guild(int(i))
+
+            server_list.append(
+                {
+                    "name" : gld.name,
+                    "id" : gld.id
+                }
+            )
+
+        premium_reminder_embd:Embed = Embed(title="REMINDER!", description="", color=NORMAL_COLOR)
+        premium_reminder_embd.set_thumbnail(url=AVATAR_LINK)
+        premium_reminder_embd.description = "This is a reminder that patreon has restricted access to the premium features of the Aerial Ace bot for the below mentioned server(s)\n"
+
+        for i in server_list:
+            server_name = i.get("name")
+            server_id = i.get("id")
+            premium_reminder_embd.description += f"\nName : **{server_name}**, ID : **{server_id}**"
+
+        premium_reminder_embd.description += "\n\nPlease make sure you clear your payment via patreon ( or any other payment method you are using ) to keep the premium features and priority support."
+        premium_reminder_embd.description += "\n\nIn case you are having difficulty in the payment process, please contact the dev. at the support server."
+
+        try:
+            if premium_user.can_send("Premium Check!"):
+                await premium_user.send(embed=premium_reminder_embd, view=DonationView(timeout=600))
+            else:
+                await ctx.send("Can't send premium notification")
+
+        except Forbidden:
+            return await ctx.send("User has `Receive Messages` disabled!")
+        except HTTPException as e:
+            logging.error(f"Error while sending reminder embed! ```{e}```")
+            return await ctx.send(f"Some Error occurred while sending DM to the user!\n```{e}```")
 
 def setup(bot):
     bot.add_cog(AdminSystem(bot))
