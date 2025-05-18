@@ -1,5 +1,8 @@
-import discord
 from textwrap import TextWrapper
+from functools import wraps
+from time import perf_counter
+
+import discord
 
 import config
 
@@ -31,6 +34,7 @@ async def get_info_embd(title, desc="", color=config.NORMAL_COLOR, footer=None, 
 
     return embd
 
+
 # returns an error embed provided the data
 async def get_error_embd(title, desc="", footer=None, show_thumbnail=False):
     embd = discord.Embed()
@@ -46,6 +50,7 @@ async def get_error_embd(title, desc="", footer=None, show_thumbnail=False):
         embd.set_thumbnail(url=f"{config.AVATAR_LINK}")
 
     return embd
+
 
 # returns an error embed provided the data
 async def get_warning_embd(title, desc="", footer=None, show_thumbnail=False):
@@ -76,3 +81,14 @@ async def get_user_id_from_ping(ping):
 
 async def get_trade_value(pokecoins: int, shinies: int, rares: int, redeems: int) -> int:
     return int(pokecoins) + config.TRADE_ITEM_WEIGHT["shinies"] * int(shinies) + config.TRADE_ITEM_WEIGHT["rares"] * int(rares) + config.TRADE_ITEM_WEIGHT["redeems"] * int(redeems)
+
+
+def exec_time(func) -> callable:
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = perf_counter()
+        func(*args, **kwargs)
+        elapsed = perf_counter() - start
+        print(f"Finished {func.__name__}!! Took : {elapsed:.6f} seconds")
+
+    return wrapper

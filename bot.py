@@ -49,7 +49,7 @@ async def on_guild_remove(guild):
 @bot.event
 async def on_ready():
     mongo_manager.init_mongo(MONGO_URI, "aerialace")
-    await cache_manager.cache_data()
+    # TODO: REMOVE await cache_manager.cache_data()
 
     logging.info(f"Logged in as {bot.user}")
     logging.info(f"Discord Version : {discord.__version__}")
@@ -88,31 +88,12 @@ async def after_command(ctx: commands.Context):
         await post_command_manager.process_post_commands(ctx)
 
 
-def main():
+def init(is_test: bool) -> None:
     for cog in initial_cogs:
         bot.load_extension(f"cogs.{cog}")
 
     for slash_cog in initial_slash_cogs:
         bot.load_extension(f"cogs.slash.{slash_cog}")
-
-
-if __name__ == "__main__":
-    print("""
-          ___            _       _    ___           
-         / _ \          (_)     | |  / _ \          
-        / /_\ \ ___ _ __ _  __ _| | / /_\ \ ___ ___ 
-        |  _  |/ _ \ '__| |/ _` | | |  _  |/ __/ _ \\
-        | | | |  __/ |  | | (_| | | | | | | (_|  __/
-        \_| |_/\___|_|  |_|\__,_|_| \_| |_/\___\___|
-          
-    """)
-
-    if len(sys.argv) < 2:
-        is_test = False
-    else:
-        is_test = True if sys.argv[1].lower() == "true" else False
-
-    main()
 
     if is_test is False:
         bot.run(TOKEN)

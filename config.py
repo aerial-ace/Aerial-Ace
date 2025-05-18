@@ -11,24 +11,13 @@ POKETWO_ID = "716390085896962058"
 
 MAX_TAG_TIMER_VALUE = 500
 
-TRADE_ITEM_WEIGHT = {
-    "pokecoins": 1,
-    "shinies": 50000,
-    "rares": 5000,
-    "redeems": 40000
-}
+TRADE_ITEM_WEIGHT = {"pokecoins": 1, "shinies": 50000, "rares": 5000, "redeems": 40000}
 
-ALERT_TYPE_MASK = {
-    "rare" : 0b000001,
-    "regional": 0b000010,
-    "shiny" : 0b000100,
-    "hunt" : 0b001000,
-    "gmax" : 0b010000,
-    "streak" : 0b100000
-}
+ALERT_TYPE_MASK = {"rare": 0b000001, "regional": 0b000010, "shiny": 0b000100, "hunt": 0b001000, "gmax": 0b010000, "streak": 0b100000}
 
 # Mongo Data
 MONGO_URI = os.environ["MONGO"]
+DB = "aerialace"
 
 # Logging details
 SUPPORT_SERVER_ID = 751076697884852389
@@ -111,18 +100,18 @@ WEAKNESS_FILE_LOCATION = "data/weakness_data.json"
 DUELISH_POKEMON_FILE_LOCATION = "data/duelish_pokemons.json"
 
 # colors
-NORMAL_COLOR         = 0x2B2D31
-DEFAULT_COLOR        = 0x546e7a
-ERROR_COLOR          = 0xe74c3c
-WARNING_COLOR        = 0xe67e22
-RARE_CATCH_COLOR     = 0x2B2D31
-SHINY_CATCH_COLOR    = 0xf1c40f
-SMOGON_COLOR         = 0x9b59b6
-STREAK_COLOR         = 0xc3f717
-LOW_IV_COLOR         = 0xcf65fc
-HIGH_IV_COLOR        = 0x71368A
-HUNT_COMPLETED_COLOR = 0xc27c0e
-GMAX_CATCH_COLOR     = 0xed4245
+NORMAL_COLOR = 0x2B2D31
+DEFAULT_COLOR = 0x546E7A
+ERROR_COLOR = 0xE74C3C
+WARNING_COLOR = 0xE67E22
+RARE_CATCH_COLOR = 0x2B2D31
+SHINY_CATCH_COLOR = 0xF1C40F
+SMOGON_COLOR = 0x9B59B6
+STREAK_COLOR = 0xC3F717
+LOW_IV_COLOR = 0xCF65FC
+HIGH_IV_COLOR = 0x71368A
+HUNT_COMPLETED_COLOR = 0xC27C0E
+GMAX_CATCH_COLOR = 0xED4245
 
 # starboard defaults
 DEFAULT_RARE_TEXT = "{ping} caught a level {level} `{pokemon}` \n\n:tada: Congratulations :tada:\n"
@@ -157,5 +146,5 @@ TIER_LINK = {
     "rock": "https://i.imgur.com/2rWh30S.png",
     "steel": "https://i.imgur.com/sV7gaY6.png",
     "water": "https://i.imgur.com/8Xaj0YF.png",
-    "eeveelution": "**Beta : ** https://i.imgur.com/WXTPYHv.png"
+    "eeveelution": "**Beta : ** https://i.imgur.com/WXTPYHv.png",
 }
