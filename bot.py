@@ -14,8 +14,6 @@ from checkers import spawn_speed_detection
 from checkers import donation_detection
 
 
-
-
 logging_manager.setup_logging()
 
 # determines whether to run the bot in local, or global mode
@@ -24,48 +22,18 @@ is_test = False
 intents = Intents.default()
 intents.message_content = True
 
+
 # for getting the prefix
 def prefix_callable(_bot: Bot, message):
     return [f"<@{_bot.user.id}> ", f"<@!{_bot.user.id}> ", "-aa ", "aa."]
 
+
 bot = commands.AutoShardedBot(command_prefix=prefix_callable, description="Botto", case_insensitive=True, intents=intents)
 bot.remove_command("help")
 
-initial_cogs = [
-    "presence_cycle",
-    "admin",
-    "starboard",
-    "help",
-    "smogon",
-    "mail",
-    "utility",
-    "suggestion",
-    "error_handler",
-    "pokedex",
-    "pokemon_info",
-    "random_misc",
-    "ruleset",
-    "spawn_speed",
-    "tag",
-    "fun",
-    "battle",
-    "donation"
-]
+initial_cogs = ["presence_cycle", "admin", "starboard", "help", "smogon", "mail", "utility", "suggestion", "error_handler", "pokedex", "pokemon_info", "random_misc", "ruleset", "spawn_speed", "tag", "fun", "battle", "donation"]
 
-initial_slash_cogs = [
-    "pokedex",
-    "pokeinfo",
-    "starboard",
-    "random_misc",
-    "ruleset",
-    "suggestion",
-    "tag",
-    "smogon",
-    "utility",
-    "battle",
-    "fun",
-    "help"
-]
+initial_slash_cogs = ["pokedex", "pokeinfo", "starboard", "random_misc", "ruleset", "suggestion", "tag", "smogon", "utility", "battle", "fun", "help"]
 
 
 @bot.event
@@ -88,6 +56,7 @@ async def on_ready():
 
     print(f"Logged in as {bot.user}")
     print(f"Discord Version : {discord.__version__}")
+
 
 @bot.event
 async def on_message(message: discord.Message):
@@ -128,7 +97,6 @@ def main():
 
 
 if __name__ == "__main__":
-
     print("""
           ___            _       _    ___           
          / _ \          (_)     | |  / _ \          
@@ -142,7 +110,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         is_test = False
     else:
-        is_test = (True if sys.argv[1].lower() == "true" else False)
+        is_test = True if sys.argv[1].lower() == "true" else False
 
     main()
 

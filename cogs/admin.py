@@ -218,7 +218,7 @@ class AdminSystem(commands.Cog):
         
         try:
             await mongo_manager.manager.update_all_data(collection, query, updated_data)
-        except Exception as e:
+        except Exception:
             embd:Embed = await general_helper.get_error_embd("ERROR OCCURRED!", desc="")
             embd.description = "```-aa sv <server_id> <collection>.<key1>.<key2>...<keyn> <value>```"
             

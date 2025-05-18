@@ -72,8 +72,8 @@ class PokemonInfo(commands.Cog):
     async def tierlist(self, ctx, tier: str):
         try:
             tier_link = config.TIER_LINK[tier.lower()]
-        except:
-            await ctx.reply(f"That is not a tier. Enter a good tier like `rare`, `mega`, `common`, `steel`, `eeveelution`")
+        except KeyError:
+            await ctx.reply("That is not a tier. Enter a good tier like `rare`, `mega`, `common`, `steel`, `eeveelution`")
             return
 
         await ctx.send(tier_link)
