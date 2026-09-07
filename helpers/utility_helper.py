@@ -1,9 +1,10 @@
-import discord
-from discord.ext import commands
 import random
 
-from helpers import general_helper
+import discord
+from discord.ext import commands
+
 import config
+from helpers import general_helper
 
 
 # returns a value for roll
@@ -20,79 +21,23 @@ async def get_about_embed(ctx) -> discord.Embed:
     embd = discord.Embed(title="__ABOUT - Aerial Ace__", color=config.NORMAL_COLOR)
     embd.description = "Aerial Ace = Pokedex + Poketwo Helper Bot"
 
-    embd.add_field(
-        name=f"Prefix",
-        value="`-aa ` and `aa.`",
-        inline=True
-    )
-    embd.add_field(
-        name=f"Support Server",
-        value=f"[Click here]({config.SUPPORT_SERVER_LINK})",
-        inline=True
-    )
-    embd.add_field(
-        name=f"Vote Link",
-        value=f"[Click Here]({config.VOTE_LINK})",
-        inline=True
-    )
-
-    embd.add_field(
-        name=f"Servers",
-        value=len(ctx.bot.guilds),
-        inline=True
-    )
-
-    embd.add_field(
-        name=f"Invite",
-        value=f"[Click here]({config.INVITE_LINK})",
-        inline=True
-    )
-
-    embd.add_field(
-        name=f"Ping",
-        value=str(round(ctx.bot.latency * 100, 2)),
-        inline=True
-    )
-
-    embd.add_field(
-        name=f"Language",
-        value="Python 3.10",
-        inline=True
-    )
-
-    embd.add_field(
-        name=f"Library",
-        value="[py-cord](https://github.com/Pycord-Development/pycord)",
-        inline=True
-    )
-
-    embd.add_field(
-        name=f"Repository",
-        value=f"[Click here]({config.REPO_LINK})",
-        inline=True
-    )
+    embd.add_field(name="Prefix", value="`-aa ` and `aa.`", inline=True)
+    embd.add_field(name="Support Server", value=f"[Click here]({config.SUPPORT_SERVER_LINK})", inline=True)
+    embd.add_field(name="Vote Link", value=f"[Click Here]({config.VOTE_LINK})", inline=True)
+    embd.add_field(name="Servers", value=str(len(ctx.bot.guilds)), inline=True)
+    embd.add_field(name="Invite", value=f"[Click here]({config.INVITE_LINK})", inline=True)
+    embd.add_field(name="Ping", value=str(round(ctx.bot.latency * 100, 2)), inline=True)
+    embd.add_field(name="Language", value="Python 3.13", inline=True)
+    embd.add_field(name="Library", value="[py-cord](https://github.com/Pycord-Development/pycord)", inline=True)
+    embd.add_field(name="Repository", value=f"[Click here]({config.REPO_LINK})", inline=True)
 
     bot: commands.Bot = ctx.bot
 
     shards = bot.shard_count
 
-    embd.add_field(
-        name=f"Shards",
-        value="{}".format(shards),
-        inline=True
-    )
-
-    embd.add_field(
-        name=f"Source Details",
-        value=f"**Aerial Ace** is an open source project released under GNU GPL v3 license.\nComplete source of the project is available on the github page (links above).\nRepo stars are appreciated :3",
-        inline=False
-    )
-
-    embd.add_field(
-        name=f"Made with  <3  by **Dev**",
-        value=f"**Discord** : [DevGa.me]({config.DEVELOPER_PROFILE_LINK})\n**Github** : [Devanshu19]({config.GITHUB_PROFILE_LINK})",
-        inline=False
-    )
+    embd.add_field(name="Shards", value=f"{shards}", inline=True)
+    embd.add_field(name="Source Details", value="**Aerial Ace** is a GNU GPLv3 open source project.", inline=False)
+    embd.add_field(name="Made with  <3  by **Dev**", value=f"**Discord** : [DevGa.me]({config.DEVELOPER_PROFILE_LINK})\n**Github** : [StaticAron]({config.GITHUB_PROFILE_LINK})", inline=False)
 
     embd.set_thumbnail(url=config.AVATAR_LINK)
 
@@ -102,7 +47,7 @@ async def get_about_embed(ctx) -> discord.Embed:
 # returns the vote embed
 async def get_vote_embed() -> discord.Embed:
     embd = discord.Embed(title="__Vote for Aerial Ace__", color=config.NORMAL_COLOR)
-    embd.description = f"You can help Aerial Ace by voting for it.\n**Thank you** if you voted :3\n"
+    embd.description = "You can help Aerial Ace by voting for it.\n**Thank you** if you voted\n"
     embd.description += f"Vote Link : [Click here]({config.VOTE_LINK})"
     embd.set_thumbnail(url=config.AVATAR_LINK)
 
@@ -134,22 +79,10 @@ async def register_suggestion(ctx, text: list) -> None:
 
     embd = discord.Embed(title="__Suggestion Recieved__", color=discord.Color.green())
 
-    embd.add_field(
-        name="Sent by",
-        value=ctx.author.name,
-        inline=False
-    )
+    embd.add_field(name="Sent by", value=ctx.author.name, inline=False)
 
-    embd.add_field(
-        name="Sent from",
-        value=ctx.guild.name,
-        inline=False
-    )
-    embd.add_field(
-        name="Suggestion",
-        value=" ".join(text),
-        inline=False
-    )
+    embd.add_field(name="Sent from", value=ctx.guild.name, inline=False)
+    embd.add_field(name="Suggestion", value=" ".join(text), inline=False)
 
     embd.set_thumbnail(url=config.AVATAR_LINK)
 

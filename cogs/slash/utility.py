@@ -1,9 +1,9 @@
 from discord import ApplicationContext
-from discord.ext import commands
 from discord.commands import slash_command
+from discord.ext import commands
 
-from views.ButtonViews import GeneralView, DonationView
-from helpers import utility_helper
+from helpers import general_helper, utility_helper
+from views.ButtonViews import DonationView, GeneralView
 
 
 class UtilitySlash(commands.Cog):
@@ -64,6 +64,15 @@ class UtilitySlash(commands.Cog):
     @slash_command(name="premium", description="Donate or become a patron to support the development of aerial ace")
     async def donation(self, ctx: ApplicationContext):
         reply = await utility_helper.get_premium_embed()
+        view = DonationView(200)
+
+        await ctx.respond(embed=reply, view=view)
+
+    """Get Support Details"""
+
+    @slash_command(name="support", description="Support Details about the bot", guild_ids=[751076697884852389])
+    async def support(self, ctx: ApplicationContext):
+        reply = await general_helper.donation_reminder()
         view = DonationView(200)
 
         await ctx.respond(embed=reply, view=view)

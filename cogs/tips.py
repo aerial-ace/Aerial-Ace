@@ -1,6 +1,7 @@
-from discord.ext import commands
-from discord import TextChannel
 import random
+
+from discord import TextChannel
+from discord.ext import commands
 
 from config import INFO_EMOJI
 
@@ -17,12 +18,11 @@ tips = [
     "You can get ability info using </ability:978913900005322774>",
     "You can express yourself with pokemon gifs using various commands like </cry:978913900378587179>, </dance:939545280351731733>, </pat:939845060298674236> etc.",
     "You can log battles(win/loss) manually by using `-aa lb` command and add them to battle leaderboard of your server.",
-    "View your server's battle leaderboard using </battle-leaderboard:939844903486259300>. Log battles using `-aa lb` command"
+    "View your server's battle leaderboard using </battle-leaderboard:939844903486259300>. Log battles using `-aa lb` command",
 ]
 
 
 class TipsModule(commands.Cog):
-
     def __init__(self):
         return
 

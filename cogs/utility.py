@@ -1,7 +1,7 @@
 from discord.ext import commands
 
 from views.ButtonViews import GeneralView, DonationView
-from helpers import utility_helper
+from helpers import general_helper, utility_helper
 
 
 class Utility(commands.Cog):
@@ -31,7 +31,7 @@ class Utility(commands.Cog):
 
     """Get links to support servers"""
 
-    @commands.command(name="support_server", aliases=["ss", "support"], description="Returns the link to support server")
+    @commands.command(name="support_server", aliases=["ss"], description="Returns the link to support server")
     async def support_server(self, ctx):
         reply = await utility_helper.get_support_server_embed()
         view = GeneralView(200, True, False, False, True)
@@ -70,6 +70,15 @@ class Utility(commands.Cog):
     @commands.command(name="premium", aliases=["patreon"], description="Subscribe to Patreon/Ko-Fi to get exclusive perks.")
     async def donation(self, ctx):
         reply = await utility_helper.get_premium_embed()
+        view = DonationView(200)
+
+        await ctx.send(embed=reply, view=view)
+
+    """Get Support Details"""
+
+    @commands.command(name="support", aliases=["sup"], description="Support Details about the bot")
+    async def support(self, ctx):
+        reply = await general_helper.donation_reminder()
         view = DonationView(200)
 
         await ctx.send(embed=reply, view=view)
