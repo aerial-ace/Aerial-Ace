@@ -1,0 +1,14 @@
+[project]
+name = "aerial-ace"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "dnspython>=2.8.0",
+    "motor>=3.2.0",
+    "py-cord>=2.8.1",
+    "pymongo[srv]>=4.1,<4.5",
+    "python-dotenv>=1.2.3",
+    "requests>=2.34.2",
+    "textwrapper>=1.0.2",
+    "uv>=0.12.10",
+]
