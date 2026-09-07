@@ -1,24 +1,21 @@
 from discord import ButtonStyle, Interaction
-from discord.ui import View, Button
+from discord.ui import Button, View
 
-from views.ModalViews import SurveyModal
+from config import GITHUB_EMOJI, GITHUB_SPONSORS_LINK, INVITE_LINK, PATREON_EMOJI, PATREON_LINK, PREMIUM_EMOJI, PREMIUM_IMAGE, REPO_LINK, SUPPORT_SERVER_LINK, VOTE_LINK
 from helpers import general_helper
-from config import PATREON_EMOJI, PAYPAL_EMOJI, PREMIUM_EMOJI, PATREON_LINK, PAYPAL_LINK, INVITE_LINK, SUPPORT_SERVER_LINK, REPO_LINK, VOTE_LINK, GITHUB_EMOJI, GITHUB_SPONSORS_LINK, PREMIUM_IMAGE
+from views.ModalViews import SurveyModal
 
 
 class DonationView(View):
-
     def __init__(self, timeout: int):
         super().__init__()
 
         self.timeout = timeout
 
-        paypal_btn = Button(label="PayPal", emoji=PAYPAL_EMOJI, style=ButtonStyle.link, url=PAYPAL_LINK)
         patreon_btn = Button(label="Patreon", emoji=PATREON_EMOJI, style=ButtonStyle.link, url=PATREON_LINK)
         github_btn = Button(label="Github Sponsors", emoji=GITHUB_EMOJI, style=ButtonStyle.link, url=GITHUB_SPONSORS_LINK)
 
         self.add_item(patreon_btn)
-        self.add_item(paypal_btn)
         self.add_item(github_btn)
 
 
@@ -79,7 +76,6 @@ class AcceptanceView(View):
 
 
 class GeneralView(View):
-
     def __init__(self, timeout: int = 200, invite: bool = True, support_server: bool = False, source: bool = False, donate: bool = True, vote=False, survey=False):
 
         super().__init__()
@@ -108,11 +104,7 @@ class GeneralView(View):
 
     async def donate_callback(self, interaction: Interaction) -> None:
 
-        embd = await general_helper.get_info_embd(
-            title="Aerial Ace Premium",
-            desc="Thanks for checking out the Premium Module.\nSubscribe to our patreon or paypal to avail premium features and support the development of Aerial Ace",
-            show_thumbnail=True
-        )
+        embd = await general_helper.get_info_embd(title="Aerial Ace Premium", desc="Thanks for checking out the Premium Module.\nSubscribe to our patreon or paypal to avail premium features and support the development of Aerial Ace", show_thumbnail=True)
 
         embd.set_image(url=PREMIUM_IMAGE)
 
@@ -123,3 +115,4 @@ class GeneralView(View):
     async def survey_callback(self, interaction: Interaction) -> None:
 
         await interaction.response.send_modal(SurveyModal())
+

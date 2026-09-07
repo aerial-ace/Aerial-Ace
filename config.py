@@ -1,7 +1,8 @@
 import os
+
 from dotenv import load_dotenv
 
-load_dotenv()
+_ = load_dotenv()
 
 # Bot data
 TOKEN = os.environ["TOKEN"]
@@ -11,21 +12,9 @@ POKETWO_ID = "716390085896962058"
 
 MAX_TAG_TIMER_VALUE = 500
 
-TRADE_ITEM_WEIGHT = {
-    "pokecoins": 1,
-    "shinies": 50000,
-    "rares": 5000,
-    "redeems": 40000
-}
+TRADE_ITEM_WEIGHT = {"pokecoins": 1, "shinies": 50000, "rares": 5000, "redeems": 40000}
 
-ALERT_TYPE_MASK = {
-    "rare" : 0b000001,
-    "regional": 0b000010,
-    "shiny" : 0b000100,
-    "hunt" : 0b001000,
-    "gmax" : 0b010000,
-    "streak" : 0b100000
-}
+ALERT_TYPE_MASK = {"rare": 0b000001, "regional": 0b000010, "shiny": 0b000100, "hunt": 0b001000, "gmax": 0b010000, "streak": 0b100000}
 
 # Mongo Data
 MONGO_URI = os.environ["MONGO"]
@@ -41,11 +30,10 @@ INVITE_LINK = "https://discord.com/api/oauth2/authorize?client_id=90838474739328
 AVATAR_LINK = "https://i.imgur.com/TAWr46v.png"
 SUPPORT_SERVER_LINK = "https://discord.gg/ZpBttKAHwg"
 REPO_LINK = "https://github.com/aerial-ace/Aerial-Ace/"
-GITHUB_PROFILE_LINK = "https://github.com/Devanshu19/"
+GITHUB_PROFILE_LINK = "https://github.com/staticaron/"
 VOTE_LINK = "https://top.gg/bot/908384747393286174/vote/"
 
 PATREON_LINK = "https://www.patreon.com/aerial_ace?fan_landing=true"
-PAYPAL_LINK = "https://www.paypal.me/devgame19"
 KO_FI_LINK = "https://ko-fi.com/aerial_ace"
 GITHUB_SPONSORS_LINK = "https://github.com/sponsors/aerial-ace"
 
@@ -60,7 +48,7 @@ IMPORTANT_EMOJI = "<a:Important:940582149797601391>"
 ALERT_EMOJI = "<:alert:940589741714317332>"
 ACCEPTED_EMOJI = "<:accepted:1138760940947525702>"
 INFO_EMOJI = "<:EG3:1080978835081805904>"
-GMAX_EMOJI = "<:gigantamax:1254519073144832124>"
+GMAX_EMOJI = "<:Gigantamax:1254518964852228198>"
 STREAK_EMOJI = "<:upgrades:1043145357070176407>"
 LOW_IV_EMOJI = "<:dragon_scale:1237580132005314592>"
 HIGH_IV_EMOJI = "<:deep_sea_tooth:1237580253614964736>"
@@ -71,7 +59,6 @@ NEXT_EMOJI = "<:next:964507779765272648>"
 PREV_EMOJI = "<:prev:964508551915634768>"
 FIRST_EMOJI = "<:first:964508851166646272>"
 LAST_EMOJI = "<:last:964508277809496125>"
-PAYPAL_EMOJI = "<:paypal:999716748712480848>"
 PATREON_EMOJI = "<:Patreon:999717040057237634>"
 KO_FI_EMOJI = "<:kofi:1082687243052921012>"
 GITHUB_EMOJI = "<:github:1035069645763383307>"
@@ -111,18 +98,18 @@ WEAKNESS_FILE_LOCATION = "data/weakness_data.json"
 DUELISH_POKEMON_FILE_LOCATION = "data/duelish_pokemons.json"
 
 # colors
-NORMAL_COLOR         = 0x2B2D31
-DEFAULT_COLOR        = 0x546e7a
-ERROR_COLOR          = 0xe74c3c
-WARNING_COLOR        = 0xe67e22
-RARE_CATCH_COLOR     = 0x2B2D31
-SHINY_CATCH_COLOR    = 0xf1c40f
-SMOGON_COLOR         = 0x9b59b6
-STREAK_COLOR         = 0xc3f717
-LOW_IV_COLOR         = 0xcf65fc
-HIGH_IV_COLOR        = 0x71368A
-HUNT_COMPLETED_COLOR = 0xc27c0e
-GMAX_CATCH_COLOR     = 0xed4245
+NORMAL_COLOR = 0x2B2D31
+DEFAULT_COLOR = 0x546E7A
+ERROR_COLOR = 0xE74C3C
+WARNING_COLOR = 0xE67E22
+RARE_CATCH_COLOR = 0x2B2D31
+SHINY_CATCH_COLOR = 0xF1C40F
+SMOGON_COLOR = 0x9B59B6
+STREAK_COLOR = 0xC3F717
+LOW_IV_COLOR = 0xCF65FC
+HIGH_IV_COLOR = 0x71368A
+HUNT_COMPLETED_COLOR = 0xC27C0E
+GMAX_CATCH_COLOR = 0xED4245
 
 # starboard defaults
 DEFAULT_RARE_TEXT = "{ping} caught a level {level} `{pokemon}` \n\n:tada: Congratulations :tada:\n"
@@ -157,5 +144,5 @@ TIER_LINK = {
     "rock": "https://i.imgur.com/2rWh30S.png",
     "steel": "https://i.imgur.com/sV7gaY6.png",
     "water": "https://i.imgur.com/8Xaj0YF.png",
-    "eeveelution": "**Beta : ** https://i.imgur.com/WXTPYHv.png"
+    "eeveelution": "**Beta : ** https://i.imgur.com/WXTPYHv.png",
 }
