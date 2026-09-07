@@ -1,36 +1,40 @@
+import random
+import re
+
 import discord
-import random, re, logging
 
-from managers import cache_manager, mongo_manager
-from helpers import starboard_helper, general_helper
 import config
+from helpers import general_helper, starboard_helper
+from managers import cache_manager, mongo_manager
 
-async def can_send_alert(server_details:dict, catch_details:dict) -> bool:
 
-    default_mask = {"mask" : "111111"}
+async def can_send_alert(server_details: dict, catch_details: dict) -> bool:
+
+    default_mask = {"mask": "111111"}
     mask = int(server_details[0].get("alerts", default_mask).get("mask"), 2)
-    
-    if catch_details.get("streak"):
-        if mask & config.ALERT_TYPE_MASK.get("streak") > 0:
-            return True
-        else:
-            return False
-        
-    if catch_details.get("hunt"):
-        if mask & config.ALERT_TYPE_MASK.get("hunt") > 0:
-            return True
-        else:
-            return False
-        
-    if mask & config.ALERT_TYPE_MASK.get(catch_details.get("type")) > 0:
-        return True
-    
-    return False
 
-async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
+    if catch_details.get("streak"):
+        return mask & config.ALERT_TYPE_MASK.get("streak") > 0
+
+    if catch_details.get("hunt"):
+        return mask & config.ALERT_TYPE_MASK.get("hunt") > 0
+
+    return mask & config.ALERT_TYPE_MASK.get(catch_details.get("type")) > 0
+
+
+async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
     """detect rare catch message"""
 
-    bot_member: discord.Member = message.guild.get_member(bot.user.id)
+    if message.guild is None or _bot.user is None:
+        return
+
+    bot_member: discord.Member | None = message.guild.get_member(_bot.user.id)
+    if bot_member is None:
+        return
+
+    # Return if not a proper text channel
+    if not isinstance(message.channel, discord.TextChannel):
+        return
 
     if message.channel.permissions_for(bot_member).send_messages is False:
         return
@@ -41,12 +45,10 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     catch_info = await determine_rare_catch(message)
 
     # return if not a rare catch and not a streak and not even a low/high iv.
-    if catch_info is None or ( catch_info["type"] == "" and  catch_info["streak"] == 0 and float(catch_info["iv"]) > 10 and float(catch_info["iv"]) < 90 ):
-        return None
-    
-    server_details = await mongo_manager.manager.get_all_data("servers", {
-        "server_id": str(message.guild.id)
-    })
+    if catch_info is None or (catch_info["type"] == "" and catch_info["streak"] == 0 and float(catch_info["iv"]) > 10 and float(catch_info["iv"]) < 90):
+        return
+
+    server_details = await mongo_manager.manager.get_all_data("servers", {"server_id": str(message.guild.id)})
 
     if catch_info.get("type") == "shiny":
         await mongo_manager.manager.increment_shiny_counter(str(message.guild.id))
@@ -54,7 +56,6 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
     alerts_allowed = await can_send_alert(server_details=server_details, catch_details=catch_info)
 
     if alerts_allowed:
-
         """ Get and Send Catch Detection Embed"""
         reply = await starboard_helper.get_rare_catch_embd(server_details, catch_info)
 
@@ -65,13 +66,12 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
             await message.channel.send(embed=reply)
         except discord.errors.Forbidden:
             return  # return if not allowed to send messages in the current channel
-        
+
         """ Send the starboard embed in the starboard channel """
         starboard_reply = await starboard_helper.send_starboard(server_details, catch_info, message)
-    
+
         """ Send feedback in the current channel """
         await message.channel.send(embed=starboard_reply)
-
 
     """ Send Customization Reminder for non premium servers"""
     customization_reminder_possibility = 30
@@ -80,7 +80,8 @@ async def rare_check(bot: discord.AutoShardedBot, message: discord.Message):
         embd = await general_helper.get_info_embd(f"{config.AERIAL_ACE_EMOJI} Customize Starboard Embed!", "Enhance the starboard embed using various customization features available to premium servers. Get premium now and customize your starboard embeds to suit your servers. ", config.DEFAULT_COLOR, "Use -aa premium or join support server to know more.")
         await message.channel.send(embed=embd)
 
-async def determine_rare_catch(message:discord.Message):
+
+async def determine_rare_catch(message: discord.Message):
     """check if any message is a rare catch message"""
 
     catch_info = {}
@@ -93,7 +94,7 @@ async def determine_rare_catch(message:discord.Message):
 
     catch_keywords = ["Congratulations", "You", "caught", "a", "Level"]
     shiny_keywords = ["These", "colors", "seem", "unusual"]
-    hunt_keywords  = ["Shiny streak reset."]
+    hunt_keywords = ["Shiny streak reset."]
 
     # determines whether this message is a catch message by checking the presence of the all catch keywords
     for catch_keyword in catch_keywords:
@@ -118,11 +119,11 @@ async def determine_rare_catch(message:discord.Message):
     level_regex = r"(?<=Level\s)\w+"
     level_regex_outcome = re.findall(level_regex, msg)
     level = level_regex_outcome[0] if len(level_regex_outcome) > 0 else 0
-    
+
     if level == 0:
         return
 
-    pokemon_name_regex = fr"(?<=\bLevel\s{level}\s)(.*?)(?=\s*<:)"
+    pokemon_name_regex = rf"(?<=\bLevel\s{level}\s)(.*?)(?=\s*<:)"
     pokemon_name_regex_outcome = re.findall(pokemon_name_regex, msg)
     pokemon_name = pokemon_name_regex_outcome[0] if len(pokemon_name_regex_outcome) > 0 else None
 
@@ -167,7 +168,7 @@ async def determine_rare_catch(message:discord.Message):
         catch_info["type"] = "shiny"
         return catch_info
     elif is_gmax:
-        catch_info["type"] = "gmax" 
+        catch_info["type"] = "gmax"
         return catch_info
     else:
         for i in pokemon_name.lower().split():
