@@ -1,8 +1,10 @@
+import pdb
+
 import discord
 from discord.ext import commands
 
-from managers import mongo_manager
 import config
+from managers import mongo_manager
 
 
 # register server in the database
@@ -16,12 +18,7 @@ async def register_guild(bot: commands.AutoShardedBot, guild: discord.Guild):
     server_duplicates = await mongo_manager.manager.get_documents_length("servers", {"server_id": server_id})
 
     if server_duplicates <= 0:
-        entry = {
-            "server_id": server_id,
-            "server_name": server_name,
-            "starboard": "0",
-            "auto_battle_logging": 0
-        }
+        entry = {"server_id": server_id, "server_name": server_name, "starboard": "0", "auto_battle_logging": 0}
 
         await mongo_manager.manager.add_data("servers", entry)
 
@@ -29,34 +26,14 @@ async def register_guild(bot: commands.AutoShardedBot, guild: discord.Guild):
     log_channel: discord.TextChannel = bot.get_guild(config.SUPPORT_SERVER_ID).get_channel(config.SERVER_JOIN_LOG_CHANNEL_ID)
 
     embed = discord.Embed(title="Server Added <:yay_yay:932361191928500284>", color=discord.Color.green())
-    embed.add_field(
-        name="Server Name",
-        value=guild.name,
-        inline=True
-    )
-    embed.add_field(
-        name="Server ID",
-        value=str(guild.id),
-        inline=True
-    )
-    embed.add_field(
-        name="Member Count",
-        value=str(guild.member_count),
-        inline=True
-    )
-    embed.add_field(
-        name="Server Count",
-        value=len(bot.guilds),
-        inline=False
-    )
+    embed.add_field(name="Server Name", value=guild.name, inline=True)
+    embed.add_field(name="Server ID", value=str(guild.id), inline=True)
+    embed.add_field(name="Member Count", value=str(guild.member_count), inline=True)
+    embed.add_field(name="Server Count", value=len(bot.guilds), inline=False)
 
     await log_channel.send(embed=embed)
 
-    data = {
-        "server_id": server_id,
-        "server_name": "NONE",
-        "starboard": "0"
-    }
+    data = {"server_id": server_id, "server_name": "NONE", "starboard": "0"}
 
     return data
 
@@ -69,10 +46,7 @@ async def register_guild_for_battles(guild_id: str):
         entry = {"server_id": guild_id, "logs": {}}
         await mongo_manager.manager.add_data("battles", entry)
 
-    return {
-        "server_id": guild_id,
-        "logs": {}
-    }
+    return {"server_id": guild_id, "logs": {}}
 
 
 async def register_guild_for_tags(guild_id: str):
@@ -83,11 +57,7 @@ async def register_guild_for_tags(guild_id: str):
         entry = {"server_id": guild_id, "tags": {}, "timer": 0}
         await mongo_manager.manager.add_data("tags", entry)
 
-    return {
-        "server_id": guild_id,
-        "tags": {},
-        "timer": {}
-    }
+    return {"server_id": guild_id, "tags": {}, "timer": {}}
 
 
 async def register_guild_for_donations(guild_id: str):
@@ -98,16 +68,11 @@ async def register_guild_for_donations(guild_id: str):
         entry = {"server_id": guild_id, "channel_id": "0", "donations": {}, "staff_role_id": "0", "log_channel_id": "0"}
         await mongo_manager.manager.add_data("donations", entry)
 
-    return {
-        "server_id": guild_id,
-        "channel_id": "0",
-        "donations": {},
-        "staff_role_id": "0",
-        "log_channel_id": "0"
-    }
+    return {"server_id": guild_id, "channel_id": "0", "donations": {}, "staff_role_id": "0", "log_channel_id": "0"}
 
 
 # register guild in the database without other bullshit
+
 
 async def register_guild_without_bs(guild_id: str, guild_name: str = "NONE"):
     server_id = str(guild_id)
@@ -120,11 +85,7 @@ async def register_guild_without_bs(guild_id: str, guild_name: str = "NONE"):
         entry = {"server_id": server_id, "server_name": server_name, "starboard": "0"}
         await mongo_manager.manager.add_data("servers", entry)
 
-    data = {
-        "server_id": server_id,
-        "server_name": "NONE",
-        "starboard": "0"
-    }
+    data = {"server_id": server_id, "server_name": "NONE", "starboard": "0"}
 
     return data
 
@@ -146,20 +107,8 @@ async def remove_guild(bot: commands.AutoShardedBot, guild: discord.Guild):
     log_channel: discord.TextChannel = bot.get_guild(config.SUPPORT_SERVER_ID).get_channel(config.SERVER_JOIN_LOG_CHANNEL_ID)
 
     embed = discord.Embed(title="Server Removed <:sedCat:933061761337270292>", color=discord.Color.red())
-    embed.add_field(
-        name="Server Name",
-        value=guild.name,
-        inline=True
-    )
-    embed.add_field(
-        name="Member Count",
-        value=str(guild.member_count),
-        inline=True
-    )
-    embed.add_field(
-        name="Server Count",
-        value=len(bot.guilds),
-        inline=False
-    )
+    embed.add_field(name="Server Name", value=guild.name, inline=True)
+    embed.add_field(name="Member Count", value=str(guild.member_count), inline=True)
+    embed.add_field(name="Server Count", value=len(bot.guilds), inline=False)
 
     await log_channel.send(embed=embed)

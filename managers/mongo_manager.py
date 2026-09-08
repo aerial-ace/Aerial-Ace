@@ -1,12 +1,13 @@
+import motor.motor_asyncio
 
-import motor.motor_asyncio, logging
+from managers import cache_manager, init_manager
 
-from managers import init_manager
-from managers import cache_manager
+from managers.logging_manager import get_logger
+
+logger = get_logger("main")
 
 
 class MongoManager:
-
     def __init__(self, mongo_uri: str, db_name: str):
         self.client = motor.motor_asyncio.AsyncIOMotorClient(mongo_uri)
         self.db = self.client[db_name]
@@ -59,7 +60,7 @@ class MongoManager:
     async def remove_entry(self, collection_name: str, query: dict, unset_data: dict):
         await self.db[collection_name].update_one(query, {"$unset": unset_data})
 
-    async def update_spawnrate(self, server_id:str, active:bool, channel_id:str):
+    async def update_spawnrate(self, server_id: str, active: bool, channel_id: str):
 
         updated_data = await cache_manager.update_spawnrates(server_id, active, channel_id)
 
@@ -67,28 +68,29 @@ class MongoManager:
         if updated_data is None:
             return
 
-        query = {"server_id" : server_id}
+        query = {"server_id": server_id}
 
-        await self.db["spawnrate"].update_one(query, {"$set" : updated_data}, upsert=True)
+        await self.db["spawnrate"].update_one(query, {"$set": updated_data}, upsert=True)
 
     async def update_shiny_counter(self, server_id, active, channel_id):
 
         updated_data = await cache_manager.update_shinycounter(server_id, active, channel_id)
 
         if updated_data is None:
-            return 
+            return
 
-        query = {"server_id" : str(server_id)}
+        query = {"server_id": str(server_id)}
 
-        await self.db["shinycounter"].update_one(query, {"$set" : updated_data}, upsert=True)
+        await self.db["shinycounter"].update_one(query, {"$set": updated_data}, upsert=True)
 
     async def increment_shiny_counter(self, server_id):
 
-        query = {"server_id" : str(server_id)}
+        query = {"server_id": str(server_id)}
 
         await cache_manager.increment_shiny_counter(server_id)
 
-        await self.db["shinycounter"].update_one(query, {"$inc" : {"count" : 1}})
+        await self.db["shinycounter"].update_one(query, {"$inc": {"count": 1}})
+
 
 manager = None
 
@@ -98,8 +100,10 @@ def init_mongo(mongo_uri: str, database_name: str):
 
     try:
         manager = MongoManager(mongo_uri, database_name)
-    except Exception as e:
-        logging.exception(f"Error while loading database")
+    except:
+        logger.exception("Error while loading database")
         return False
+
+    logger.info("Mongo Manager Loaded!")
 
     return True
