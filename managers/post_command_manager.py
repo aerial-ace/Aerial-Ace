@@ -20,6 +20,6 @@ async def process_post_commands(ctx: commands.Context):
             if isinstance(ctx.channel, TextChannel):
                 await tip_manager.TipsModule.send_random_tip(ctx.channel)
         elif random.randint(1, 100) < support_reminder_probability:
-            await ctx.send("Support the open source development of Aerial Ace. </about:939844901611372564> </support:1546638258459643964>")
+            await ctx.send("Support the open source development of Aerial Ace. </about:939844901611372564> </support:1546639707839139944>")
     except Forbidden:
         return
