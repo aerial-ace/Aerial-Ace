@@ -1,16 +1,14 @@
-import sys
-
 import discord
-from discord import AutoShardedBot, Intents
+from discord import Intents
 from discord.ext import commands
 
 from checkers import rare_catch_detection, spawn_speed_detection
-from config import MONGO_URI, TEST_TOKEN, TOKEN
+from config import MONGO_URI
 from helpers import general_helper
-from managers import cache_manager, init_manager, logging_manager, mongo_manager, post_command_manager
+from managers import cache_manager, init_manager, mongo_manager, post_command_manager
+from managers.logging_manager import get_logger
 
-logging_manager.setup_logging()
-logger = logging_manager.main_logger
+logger = get_logger("main")
 
 # determines whether to run the bot in local, or global mode
 is_test = False
@@ -19,108 +17,102 @@ intents = Intents.default()
 intents.message_content = True
 
 
-# for getting the prefix
-def prefix_callable(_bot: AutoShardedBot):
-    if _bot.user is None:
-        return ["-aa", "aa."]
-    return [f"<@{_bot.user.id}> ", f"<@!{_bot.user.id}> ", "-aa ", "aa."]
+class AerialAce(commands.AutoShardedBot):
+    def __init__(self):
+        self.setup_done = False
+        self.initial_cogs = ["presence_cycle", "admin", "starboard", "help", "smogon", "mail", "utility", "suggestion", "error_handler", "pokedex", "pokemon_info", "random_misc", "ruleset", "spawn_speed", "tag", "fun", "battle"]
+        self.initial_slash_cogs = ["pokedex", "pokeinfo", "starboard", "random_misc", "ruleset", "suggestion", "tag", "smogon", "utility", "battle", "fun", "help"]
 
+        super().__init__(command_prefix=self.prefix_callable, description="Botto", case_insensitive=True, intents=intents)
+        _ = self.remove_command("help")
 
-bot = commands.AutoShardedBot(command_prefix=["-aa", "aa."], description="Botto", case_insensitive=True, intents=intents)
-bot.command_prefix = prefix_callable(bot)
+    # for getting the prefix
+    def prefix_callable(self, bot, message):
+        if bot.user is None:
+            return ["-aa", "aa."]
+        return [f"<@{bot.user.id}> ", f"<@!{bot.user.id}> ", "-aa ", "aa."]
 
-_ = bot.remove_command("help")
+    async def load_cogs(self):
+        for cog in self.initial_cogs:
+            self.load_extension(f"cogs.{cog}")
 
-initial_cogs = ["presence_cycle", "admin", "starboard", "help", "smogon", "mail", "utility", "suggestion", "error_handler", "pokedex", "pokemon_info", "random_misc", "ruleset", "spawn_speed", "tag", "fun", "battle"]
+        for slash_cog in self.initial_slash_cogs:
+            self.load_extension(f"cogs.slash.{slash_cog}")
 
-initial_slash_cogs = ["pokedex", "pokeinfo", "starboard", "random_misc", "ruleset", "suggestion", "tag", "smogon", "utility", "battle", "fun", "help"]
+        logger.info("Cogs Loaded!")
 
+    async def on_guild_join(self, guild: discord.Guild):
+        if not self.setup_done:
+            return
 
-@bot.event
-async def on_guild_join(guild: discord.Guild):
-    _ = await init_manager.register_guild(bot, guild)
+        _ = await init_manager.register_guild(self, guild)
 
+        logger.info(f"Guild with name : {guild.name} and id {guild.id} joined!")
 
-@bot.event
-async def on_guild_remove(guild: discord.Guild):
-    await init_manager.remove_guild(bot, guild)
+    async def on_guild_remove(self, guild: discord.Guild):
+        if not self.setup_done:
+            return
 
+        await init_manager.remove_guild(self, guild)
 
-@bot.event
-async def on_ready():
-    _ = mongo_manager.init_mongo(MONGO_URI, "aerialace")
-    await cache_manager.cache_data()
+        logger.info(f"Guild with name : {guild.name} and id {guild.id} removed!")
 
-    logger.info(f"Logged in as {bot.user}")
-    logger.info(f"Discord Version : {discord.__version__}")
+    async def connect(self, *, reconnect=True) -> None:
+        if not self.setup_done:
+            await self.do_setup()
 
-    print(f"Logged in as {bot.user}")
-    print(f"Discord Version : {discord.__version__}")
+        await super().connect(reconnect=True)
 
+    async def do_setup(self):
+        mongo_manager.init_mongo(MONGO_URI, "aerialace")
+        await cache_manager.cache_data()
+        await self.load_cogs()
+        self.add_listener(self.after_command, "on_command_completion")
+        self.add_listener(self.after_command, "on_application_command_completion")
 
-@bot.event
-async def on_message(message: discord.Message):
-    # ignore your own stuff
-    if message.author == bot.user:
-        return
+        """
+        mongo_manager.init_mongo(MONGO_URI, "aerialace")
+        await cache_manager.cache_data()
 
-    # reply to solo pings
-    if message.content == "<@908384747393286174>":
-        _ = await message.channel.send(embed=(await general_helper.get_info_embd(title="Alola :wave:, This is Aerial Ace.", desc=f"Prefix : `-aa` or `aa.`\n**Slash Commands are available**\nPing : **{round(bot.latency * 1000, 2)} ms** \nHelp Command : `-aa help`")))
+        await self.load_cogs()
 
-    # detect rare catches from the poketwo bot
-    await rare_catch_detection.rare_check(bot, message)
+        # Make sure the after commands are hitting
+        self.add_listener(self.after_command, "on_command_completion")
+        self.add_listener(self.after_command, "on_application_command_completion")
+        """
 
-    # NOTE: Auto Battle Logging is not working as of now
-    # await auto_battle_log.determine_battle_message(bot, message)
+    async def on_ready(self):
+        logger.info(f"Logged in as {self.user}")
+        logger.info(f"Discord Version : {discord.__version__}")
 
-    await spawn_speed_detection.detect_spawn(message)
+        print(f"Logged in as {self.user}")
+        print(f"Discord Version : {discord.__version__}")
 
-    # NOTE:  Donation Logging Module has been disabled and not supported anymore
-    # _ = await donation_detection.donation_check(bot, message)
+        self.setup_done = True
 
-    # process commands
-    await bot.process_commands(message)
+    async def on_message(self, message: discord.Message):
+        if self.setup_done is False:
+            return
 
+        if message.author == self.user or message.content == "":
+            return
 
-@bot.listen("on_command_completion")
-@bot.listen("on_application_command_completion")
-async def after_command(ctx: commands.Context[commands.Bot]):
+        # reply to solo pings
+        if message.content == "<@908384747393286174>":
+            _ = await message.channel.send(embed=(await general_helper.get_info_embd(title="Alola :wave:, This is Aerial Ace.", desc=f"Prefix : `-aa` or `aa.`\n**Slash Commands are available**\nPing : **{round(self.latency * 1000, 2)} ms** \nHelp Command : `-aa help`")))
 
-    if ctx.command is None:
-        return
+        await rare_catch_detection.rare_check(self, message)
+        await spawn_speed_detection.detect_spawn(message)
 
-    if ctx.command.name != "help" and ctx.command.name != "mail":  # pyright: ignore[reportUnknownMemberType]
-        await post_command_manager.process_post_commands(ctx)
+        # NOTE:  Battle and Donation Logging Modules have been disabled and not supported anymore for time being
+        # await donation_detection.donation_check(self, message)
+        # await auto_battle_log.determine_battle_message(self, message)
 
+        await self.process_commands(message)
 
-def main():
-    for cog in initial_cogs:
-        bot.load_extension(f"cogs.{cog}")
+    async def after_command(self, ctx: commands.Context[commands.Bot]):
+        if ctx.command is None:
+            return
 
-    for slash_cog in initial_slash_cogs:
-        bot.load_extension(f"cogs.slash.{slash_cog}")
-
-
-if __name__ == "__main__":
-    print("""
-          ___            _       _    ___           
-         / _ \\          (_)     | |  / _ \\          
-        / /_\\ \\ ___ _ __ _  __ _| | / /_\\ \\ ___ ___ 
-        |  _  |/ _ \\ '__| |/ _` | | |  _  |/ __/ _ \\
-        | | | |  __/ |  | | (_| | | | | | | (_|  __/
-        \\_| |_/\\___|_|  |_|\\__,_|_| \\_| |_/\\___\\___|
-          
-    """)
-
-    if len(sys.argv) < 2:
-        is_test = False
-    else:
-        is_test = sys.argv[1].lower() == "true"
-
-    main()
-
-    if is_test is False:
-        bot.run(TOKEN)
-    else:
-        bot.run(TEST_TOKEN)
+        if ctx.command.name != "help" and ctx.command.name != "mail":  # pyright: ignore[reportUnknownMemberType]
+            await post_command_manager.process_post_commands(ctx)
