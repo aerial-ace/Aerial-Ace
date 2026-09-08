@@ -1,11 +1,9 @@
-FROM python:3.10-slim
+FROM python:3.13-slim
 
 WORKDIR /app
 
-COPY requirements.txt ./
-
-RUN pip install -r requirements.txt
+RUN pip install uv
 
 COPY . .
 
-CMD [ "python", "bot.py" ]
+CMD [ "uv", "run", "main.py" ]
