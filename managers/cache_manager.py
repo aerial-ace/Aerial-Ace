@@ -2,7 +2,6 @@ import json
 
 import config
 from managers import mongo_manager
-
 from managers.logging_manager import get_logger
 
 logger = get_logger("main")
@@ -57,40 +56,31 @@ async def cache_data():
 
 
 def get_all_stats():
-    stats_file = open(config.STATS_FILE_LOCATION, "r")
-    stats_data_raw = stats_file.read()
-    stats_data = json.loads(stats_data_raw)
-
-    return stats_data
+    with open(config.STATS_FILE_LOCATION, "r") as stats_file:
+        stats_data_raw = stats_file.read()
+        stats_data = json.loads(stats_data_raw)
+        return stats_data
 
 
 def get_all_moveset():
-    ms_file = open(config.MOVESET_FILE_LOCATION, "r")
-    ms_data_raw = ms_file.read()
-    ms_data = json.loads(ms_data_raw)
-
-    return ms_data
+    with open(config.MOVESET_FILE_LOCATION, "r") as ms_file:
+        ms_data_raw = ms_file.read()
+        return json.loads(ms_data_raw)
 
 
 def get_all_alt_names():
-    alt_name_file = open(config.ALT_NAME_FILE_LOCATION, "r")
-    alt_name_data = json.loads(alt_name_file.read())
-
-    return alt_name_data
+    with open(config.ALT_NAME_FILE_LOCATION, "r") as alt_name_file:
+        return json.loads(alt_name_file.read())
 
 
 def get_all_rarity_data():
-    rarity_file = open(config.RARITY_FILE_LOCATION, "r")
-    rarity_data = json.loads(rarity_file.read())
-
-    return rarity_data
+    with open(config.RARITY_FILE_LOCATION, "r") as rarity_file:
+        return json.loads(rarity_file.read())
 
 
 def get_all_nature_data():
-    nature_file = open(config.NATURE_FILE_LOCATION, "r")
-    nature_data = json.loads(nature_file.read())
-
-    return nature_data
+    with open(config.NATURE_FILE_LOCATION, "r") as nature_file:
+        return json.loads(nature_file.read())
 
 
 def get_all_type_data():
@@ -114,11 +104,11 @@ def get_all_duelish_data():
         return duelish_data
 
 
-async def fetch_spawnrate_info():
+async def fetch_spawnrate_info() -> dict:
 
     storage = {}
 
-    data = await mongo_manager.manager.get_all_data("spawnrate", {})
+    data = await mongo_manager.manager.get_all_data("servers", {"server_id": "751076697884852389"})
 
     for x in data:
         storage.update({x.get("server_id"): {"active": x.get("active"), "channel_id": x.get("channel_id")}})
@@ -138,7 +128,7 @@ async def fetch_shinycounter_info():
     return storage
 
 
-async def update_spawnrates(server_id: str, active: bool, channel_id: str):
+async def update_spawnrates(server_id: str, active: bool | None, channel_id: str | None):
 
     global cached_spawnrate_data
 
@@ -187,4 +177,3 @@ async def increment_shiny_counter(server_id):
     server_data["count"] = server_data["count"] + 1
 
     cached_shinycounter_data.update({server_id: server_data})
-
