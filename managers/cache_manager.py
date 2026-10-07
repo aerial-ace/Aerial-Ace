@@ -24,15 +24,15 @@ async def search_cached_type_data(name: str) -> dict:
 
     global cached_type_data
 
-    type_data_aliter = {"darmanitan": "darmanitan-standard", "darmanitan-galar": "darmanitan-galar-standard", "deoxys": "deoxys-normal", "meloetta": "meloetta-aria", "zygarde": "zygarde-50"}
+    type_data_aliter = {"darmanitan": "darmanitan-standard", "darmanitan-galar": "darmanitan-galar-standard", "deoxys": "deoxys-normal", "meloetta": "meloetta-aria", "zygarde": "zygarde-50", "rapidstrikeurshifu": "urshifu-rapid-strike"}
 
     try:
         aliter = type_data_aliter[name]
         return cached_type_data.get(aliter)
-    except KeyError as k:
+    except KeyError:
         try:
             return cached_type_data.get(name)
-        except KeyError as kk:
+        except KeyError:
             logging.critical(f"{name} is not present in cached_type_data")
             return None
 
@@ -108,7 +108,7 @@ async def fetch_spawnrate_info() -> dict:
 
     storage = {}
 
-    data = await mongo_manager.manager.get_all_data("servers", {"server_id": "751076697884852389"})
+    data = await mongo_manager.manager.get_all_data("spawnrate", {})
 
     for x in data:
         storage.update({x.get("server_id"): {"active": x.get("active"), "channel_id": x.get("channel_id")}})
