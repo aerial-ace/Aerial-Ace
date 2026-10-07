@@ -1,12 +1,15 @@
-from discord import TextChannel
-from discord import Embed, Message
-from discord import errors
 import datetime
 import json
 
-from managers import mongo_manager, init_manager, cache_manager
+from discord import Embed, Message, TextChannel, errors
+from discord.abc import GuildChannel
+
+from config import ALERT_TYPE_MASK, DEFAULT_GMAX_TEXT, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, ERROR_COLOR, GMAX_CATCH_COLOR, GMAX_EMOJI, HIGH_IV_COLOR, HIGH_IV_EMOJI, HIGH_RES_NON_SHINY_LINK_TEMPLATE, HIGH_RES_SHINY_LINK_TEMPLATE, HUNT_COMPLETED_COLOR, JIRACHI_WOW, LOW_IV_COLOR, LOW_IV_EMOJI, NON_SHINY_LINK_TEMPLATE, NORMAL_COLOR, PIKA_SHOCK, RARE_CATCH_COLOR, SHINY_CATCH_COLOR, SHINY_LINK_TEMPLATE, STREAK_COLOR, STREAK_EMOJI
 from helpers import general_helper
-from config import NORMAL_COLOR, RARE_CATCH_COLOR, SHINY_CATCH_COLOR, GMAX_CATCH_COLOR, HUNT_COMPLETED_COLOR, STREAK_COLOR, LOW_IV_COLOR, HIGH_IV_COLOR, NON_SHINY_LINK_TEMPLATE, HIGH_RES_NON_SHINY_LINK_TEMPLATE, SHINY_LINK_TEMPLATE, HIGH_RES_SHINY_LINK_TEMPLATE, JIRACHI_WOW, PIKA_SHOCK, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, DEFAULT_GMAX_TEXT, STREAK_EMOJI, GMAX_EMOJI, LOW_IV_EMOJI, HIGH_IV_EMOJI, ERROR_COLOR, ALERT_TYPE_MASK
+from managers import cache_manager, init_manager, mongo_manager
+from managers.logging_manager import get_logger
+
+logger = get_logger("main")
 
 """Sets/Resets the starboard channel"""
 
@@ -23,7 +26,7 @@ async def set_starboard(server_id: str, channel: TextChannel) -> str:
         if channel is not None:
             if server_data["starboard"] == str(channel.id):
                 return f"Starboard Channel is already set to {channel.mention}"
-                
+
             updated_data = {"starboard": str(channel.id)}
         else:
             if server_data["starboard"] == "0":
@@ -44,6 +47,7 @@ async def set_starboard(server_id: str, channel: TextChannel) -> str:
 
 """ Sets / Disables the shiny logging channel """
 
+
 async def set_shiny_starboard(server_id: str, channel: TextChannel) -> str:
     try:
         query = {"server_id": server_id}
@@ -56,7 +60,7 @@ async def set_shiny_starboard(server_id: str, channel: TextChannel) -> str:
         if channel is not None:
             if server_data.get("shiny_starboard_channel", "0") == str(channel.id):
                 return f"Shiny Starboard Channel is already set to {channel.mention}"
-                
+
             updated_data = {"shiny_starboard_channel": str(channel.id)}
         else:
             if server_data.get("shiny_starboard_channel", "0") == "0":
@@ -76,98 +80,94 @@ async def set_shiny_starboard(server_id: str, channel: TextChannel) -> str:
 
 
 """ Toggles the High Res Images"""
-async def set_highres(server_id:str):
-    
+
+
+async def set_highres(server_id: str):
+
     query = {"server_id": server_id}
 
     cursor = await mongo_manager.manager.get_all_data("servers", query)
 
     server_data = cursor[0]
-    
+
     if server_data.get("tier", 0) <= 0:
         return "Not a premium server! Use `-aa premium` to know more!"
-    
-    updated_data = {
-        "high_res" : not server_data.get("high_res", False)
-    }
-    
+
+    updated_data = {"high_res": not server_data.get("high_res", False)}
+
     await mongo_manager.manager.update_all_data("servers", query, updated_data)
-    
+
     return "High Res Status : **{}**".format(not server_data.get("high_res", False))
 
-""" Enable Alerts for a catch type """
-async def set_alerts(server_id: str, alert_type:str, enable=True) -> str:
-    
-    query = {
-        "server_id": server_id
-    }
-    
+
+async def set_alerts(server_id: str, alert_type: str, enable=True) -> str:
+    """Enable Alerts for a catch type"""
+
+    query = {"server_id": server_id}
+
     data = (await mongo_manager.manager.get_all_data("servers", query))[0]
-    
+
     if data.get("tier", 0) < 1:
         return "Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!"
-        
-    default_mask = { "mask" : "111111" }
-    prev_mask = int( data.get("alerts", default_mask).get("mask"), 2 )
-    alert_mask = ALERT_TYPE_MASK.get(alert_type)
-    
+
+    default_mask = {"mask": "111111"}
+    prev_mask = int(data.get("alerts", default_mask).get("mask"), 2)
+    alert_mask = ALERT_TYPE_MASK.get(alert_type, 0b000000)
+
     if enable:
         new_mask = prev_mask | alert_mask
     else:
         new_mask = prev_mask & ~alert_mask
-    
-    updated_data = {
-        "alerts.mask" : bin(new_mask).removeprefix("0b")
-    }
-    
+
+    updated_data = {"alerts.mask": bin(new_mask).removeprefix("0b")}
+
     await mongo_manager.manager.update_all_data("servers", query, updated_data)
-    
+
     return "Starboard Alerts have been {} on for `{}`".format("enabled" if enable else "disabled", alert_type.capitalize())
 
-""" Alert Info Embed """
+
 async def get_alert_info(server_id: str) -> Embed:
-    
-    query = {
-        "server_id" : server_id
-    }
-    
+    """Alert Info Embed"""
+
+    query = {"server_id": server_id}
+
     data = (await mongo_manager.manager.get_all_data("servers", query))[0]
-    
+
     embd = await general_helper.get_info_embd("Alert Module", "")
 
-    default_mask = {"mask" : "111111"}
-    server_mask = int( data.get("alerts", default_mask).get("mask"), 2 )
+    default_mask = {"mask": "111111"}
+    server_mask = int(data.get("alerts", default_mask).get("mask"), 2)
 
     all_lines = []
     line = []
-    
+
     for i in ["rare", "regional", "shiny", "hunt", "gmax", "streak"]:
-        
-        alert_mask = ALERT_TYPE_MASK.get(i)
-        
+        alert_mask = ALERT_TYPE_MASK.get(i, None)
+
+        if alert_mask is None:
+            return await general_helper.get_error_embd("Unknown Alert type, Please report this to the support server")
+
         if len(line) <= 2:
-            line.append( "{type} : {enabled}".format(type=i.upper(), enabled="✅" if alert_mask & server_mask > 0 else "❎") )
+            line.append("{type} : {enabled}".format(type=i.upper(), enabled="✅" if alert_mask & server_mask > 0 else "❎"))
         else:
             all_lines.append(line)
             line = ["{type} : {enabled}".format(type=i.upper(), enabled="✅" if alert_mask & server_mask > 0 else "❎")]
-        
+
     if len(line) != 0:
         all_lines.append(line)
-        
+
     for line in all_lines:
         embd.description += "```{}```".format(" | ".join(line))
 
     embd.set_footer(text=f"MASK : {bin(server_mask)}")
-        
-    return embd
 
-"""Change the starboard text"""
+    return embd
 
 
 async def set_starboard_text(server_id: str, text: str, type: str) -> Embed:
-    query = {
-        "server_id": server_id
-    }
+    """Change the starboard text"""
+
+    query = {"server_id": server_id}
 
     data = (await mongo_manager.manager.get_all_data("servers", query))[0]
 
@@ -175,13 +175,11 @@ async def set_starboard_text(server_id: str, text: str, type: str) -> Embed:
         return Embed(title="Whoops!", description="Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!")
 
     if type == "RARE":
-        updated_data = {
-            "starboard_text_rare": text
-        }
+        updated_data = {"starboard_text_rare": text}
     elif type == "SHINY":
-        updated_data = {
-            "starboard_text_shiny": text
-        }
+        updated_data = {"starboard_text_shiny": text}
+    else:
+        return await general_helper.get_info_embd("Unknown Rarity Type! This is unusual, please report it in the support server")
 
     try:
         await mongo_manager.manager.update_all_data("servers", query, updated_data)
@@ -190,16 +188,14 @@ async def set_starboard_text(server_id: str, text: str, type: str) -> Embed:
         else:
             return Embed(title=f"Starboard {type} Text Reset")
     except Exception as e:
-        return Embed(title="Error Occurred", description="```{}```".format(e))
+        return Embed(title="Error Occurred", description=f"```{e}```")
 
 
 """Change the starboard image"""
 
 
 async def set_starboard_image(server_id: str, text: str, type: str) -> Embed:
-    query = {
-        "server_id": server_id
-    }
+    query = {"server_id": server_id}
 
     data = (await mongo_manager.manager.get_all_data("servers", query))[0]
 
@@ -207,13 +203,11 @@ async def set_starboard_image(server_id: str, text: str, type: str) -> Embed:
         return Embed(title="Whoops!", description="Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!")
 
     if type == "RARE":
-        updated_data = {
-            "starboard_image_rare": text
-        }
+        updated_data = {"starboard_image_rare": text}
     elif type == "SHINY":
-        updated_data = {
-            "starboard_image_shiny": text
-        }
+        updated_data = {"starboard_image_shiny": text}
+    else:
+        return await general_helper.get_info_embd("Unknown Rarity Type! This is unusual, please report it in the support server")
 
     try:
         await mongo_manager.manager.update_all_data("servers", query, updated_data)
@@ -222,13 +216,11 @@ async def set_starboard_image(server_id: str, text: str, type: str) -> Embed:
         else:
             return Embed(title=f"Starboard {type} Image Reset")
     except Exception as e:
-        return Embed(title="Error Occurred", description="```{}```".format(e))
-
-
-"""Returns the starboard embed for starboard channel"""
+        return Embed(title="Error Occurred", description=f"```{e}```")
 
 
 async def get_starboard_embed(catch_details, server_details, message_link: str, tier: int = 0):
+    """Returns the starboard embed for starboard channel"""
 
     user_name = catch_details["user"]
     level = catch_details["level"]
@@ -240,30 +232,24 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
 
     pokemon = poke_id.replace(" ", "").lower()
     pokemon = pokemon.replace("é", "e")  # This is because of you Flabébé >:|
-    pokemon = pokemon.replace("'", "") # This is because of you Farfetch'd >:|
-    
+    pokemon = pokemon.replace("'", "")  # This is because of you Farfetch'd >:|
+
     removable_prefix = ["defense", "attack", "speed", "pirouette"]
     removable_suffix = ["core"]
 
     for prefix in removable_prefix:
         pokemon = pokemon.removeprefix(prefix)
-        
+
     for suffix in removable_suffix:
         pokemon = pokemon.removesuffix(suffix)
 
-    name_aliter = {
-        "ho-oh": "hooh", 
-        "chien-pao" : "chienpao", 
-        "wo-chien" : "wochien", 
-        "ting-lu" : "tinglu"
-    }
-    
+    name_aliter = {"ho-oh": "hooh", "chien-pao": "chienpao", "wo-chien": "wochien", "ting-lu": "tinglu"}
+
     pokemon_name_storage = pokemon
 
     try:
         pokemon_name_storage = name_aliter[pokemon]
     except KeyError:
-
         # modify the id for alolan and galarian forms
         if pokemon_name_storage.startswith("alolan"):
             pokemon_name_storage = pokemon_name_storage.removeprefix("alolan") + "-alola"
@@ -286,24 +272,30 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
     embd = Embed()
 
     embd.description = f"**`Trainer :`** {user_name}\n"
-    embd.description +=f"**`Pokemon :`** {poke_id.title()}\n"
-    embd.description +=f"**`Level   :`** {level} \n"
-    embd.description +=f"**`IVs     :`** {iv}% [TELEPORT]({message_link})\n\n"
+    embd.description += f"**`Pokemon :`** {poke_id.title()}\n"
+    embd.description += f"**`Level   :`** {level} \n"
+    embd.description += f"**`IVs     :`** {iv}% [TELEPORT]({message_link})\n\n"
 
-    pokemon_id = (await cache_manager.search_cached_type_data(pokemon_name_storage))["id"]
+    try:
+        pokemon_details = await cache_manager.search_cached_type_data(pokemon_name_storage)
+    except Exception as e:
+        logger.error(f"Pokemon with the name : {pokemon_name_storage} is not found type data!")
+        return
+
+    pokemon_id: str | None = pokemon_details.get("id", None)
 
     high_res_enabled = server_details.get("high_res", False)
 
     if type == "rare" or type == "regional":
         embd.title = ":star: Rare Catch Detected :star:"
         embd.color = RARE_CATCH_COLOR
-        embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
+        embd.description += f"**`Streak  :`** {streak} {STREAK_EMOJI}" if streak != 0 else ""
 
         if high_res_enabled:
             image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
             image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_name_storage)
-        
+
     elif type == "shiny":
         if is_hunt is False:
             embd.title = ":sparkles: Shiny Catch Detected :sparkles:"
@@ -312,8 +304,8 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
             embd.title = ":fire: Hunt Completed :fire:"
             embd.color = HUNT_COMPLETED_COLOR
 
-        embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
-        
+        embd.description += f"**`Streak  :`** {streak} {STREAK_EMOJI}" if streak != 0 else ""
+
         if high_res_enabled:
             image_link = HIGH_RES_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
@@ -322,18 +314,18 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
     elif type == "gmax":
         embd.title = f"{GMAX_EMOJI} GMAX Catch Detected {GMAX_EMOJI}"
         embd.color = GMAX_CATCH_COLOR
-        embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
-        
+        embd.description += f"**`Streak  :`** {streak} {STREAK_EMOJI}" if streak != 0 else ""
+
         if high_res_enabled:
             image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
             image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_name_storage)
 
     elif streak != 0 and tier > 0:
-        embd.title = "{emote} Catch Streak Detected {emote}".format(emote=STREAK_EMOJI)
+        embd.title = f"{STREAK_EMOJI} Catch Streak Detected {STREAK_EMOJI}"
         embd.color = STREAK_COLOR
-        embd.description += "**`Streak  :`** {streak}".format(streak=streak)
-        
+        embd.description += f"**`Streak  :`** {streak}"
+
         if high_res_enabled:
             image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
@@ -342,19 +334,19 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
     else:
         ivs = float(iv)
         iv_status = "Rare Low IV" if ivs < 10 else "Rare High IV"
-        iv_emote  = LOW_IV_EMOJI if ivs < 10 else HIGH_IV_EMOJI
+        iv_emote = LOW_IV_EMOJI if ivs < 10 else HIGH_IV_EMOJI
 
-        embd.title = "{emote} {status} Catch Detected {emote}".format(emote=iv_emote, status=iv_status)
+        embd.title = f"{iv_emote} {iv_status} Catch Detected {iv_emote}"
         embd.color = LOW_IV_COLOR if ivs < 10 else HIGH_IV_COLOR
-        embd.description += ("**`Streak  :`** {streak} {emote}".format(emote=STREAK_EMOJI, streak=streak) if streak != 0 else "")
-        
+        embd.description += f"**`Streak  :`** {streak} {STREAK_EMOJI}" if streak != 0 else ""
+
         if high_res_enabled:
             image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
         else:
             image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_name_storage)
 
     embd.set_thumbnail(url=image_link)
-    embd.timestamp = datetime.datetime.now()
+    embd.timestamp = datetime.datetime.now(tz=datetime.timezone.utc)
 
     return embd
 
@@ -362,7 +354,10 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
 """Sends the star catch embed to the starboard"""
 
 
-async def send_starboard(server_details, catch_details, message:Message):
+async def send_starboard(server_details, catch_details, message: Message):
+
+    if message.guild is None:
+        return await message.reply("Please use this command in a Server only!")
 
     try:
         data = server_details[0]
@@ -386,7 +381,7 @@ async def send_starboard(server_details, catch_details, message:Message):
     else:
         starboard_channel_id = data.get("starboard", "0")
 
-    tier = data.get("tier", 0)
+    tier: int = data.get("tier", 0)
 
     # return if module is disabled
     if starboard_channel_id == "0":
@@ -397,18 +392,19 @@ async def send_starboard(server_details, catch_details, message:Message):
 
     # send that starboard embed to the starboard channel
     try:
-        starboard_channel: TextChannel = message.guild.get_channel(int(starboard_channel_id))
-    except:
+        starboard_channel: GuildChannel | None = message.guild.get_channel(int(starboard_channel_id))
+    except Exception as e:
         return await general_helper.get_info_embd("No Access", f"Can't send message in <#{starboard_channel_id}>")
 
     try:
-        await starboard_channel.send(embed=reply)
+        if isinstance(starboard_channel, TextChannel):
+            await starboard_channel.send(embed=reply)
     except errors.Forbidden:
-        return await general_helper.get_info_embd(f"Missing Permissions!", f"Can't send message in <#{starboard_channel_id}>", ERROR_COLOR, "Please report this bug at the support server.")
+        return await general_helper.get_info_embd("Missing Permissions!", f"Can't send message in <#{starboard_channel_id}>", ERROR_COLOR, "Please report this bug at the support server.")
     except Exception as e:
-        return await general_helper.get_info_embd(f"Error Occurred!", f"Unable to send to Starboard. \n```{e}```", ERROR_COLOR, "Please report this bug at the support server.")
+        return await general_helper.get_info_embd("Error Occurred!", f"Unable to send to Starboard. \n```{e}```", ERROR_COLOR, "Please report this bug at the support server.")
 
-    return await general_helper.get_info_embd(f"This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
+    return await general_helper.get_info_embd("This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
 
 
 """returns the embed containing the rare catch info"""
@@ -445,7 +441,7 @@ async def get_rare_catch_embd(server_details, catch_details):
         embd.color = RARE_CATCH_COLOR
         embd.description = (DEFAULT_RARE_TEXT if data.get("starboard_text_rare", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_rare", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
-        embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")
+        embd.description += f"\n{STREAK_EMOJI} Streak : {_streak}" if _streak != 0 else ""
 
         embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
 
@@ -459,7 +455,7 @@ async def get_rare_catch_embd(server_details, catch_details):
 
         embd.description = (DEFAULT_SHINY_TEXT if data.get("starboard_text_shiny", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_shiny", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
-        embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")
+        embd.description += f"\n{STREAK_EMOJI} Streak : {_streak}" if _streak != 0 else ""
 
         embd.set_image(url=(PIKA_SHOCK if data.get("starboard_image_shiny", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_shiny", "DEFAULT")))
 
@@ -468,43 +464,42 @@ async def get_rare_catch_embd(server_details, catch_details):
         embd.color = GMAX_CATCH_COLOR
         embd.description = (DEFAULT_GMAX_TEXT if data.get("starboard_text_rare", "DEFAULT") == "DEFAULT" or tier < 1 else data.get("starboard_text_rare", "DEFAULT")).format(ping=_ping, level=_level, pokemon=_pokemon.strip())
 
-        embd.description += ("\n{emote} Streak : {streak}".format(emote=STREAK_EMOJI, streak=_streak) if _streak != 0 else "")
+        embd.description += f"\n{STREAK_EMOJI} Streak : {_streak}" if _streak != 0 else ""
 
         embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
 
     elif _streak != 0 and tier > 0:
         embd.title = f"{STREAK_EMOJI} Catch Streak {STREAK_EMOJI}"
         embd.color = STREAK_COLOR
-        embd.description = "{ping} caught their {streak}th {pokemon}\n\n:tada: Congratulations :tada:".format(ping=_ping, streak=_streak, pokemon=_pokemon)
+        embd.description = f"{_ping} caught their {_streak}th {_pokemon}\n\n:tada: Congratulations :tada:"
 
     else:
         ivs = float(_iv)
         iv_emote = LOW_IV_EMOJI if ivs < 10 else HIGH_IV_EMOJI
-        
+
         if ivs < 10:
             iv_status = "Rare Low IV"
         elif ivs > 90:
             iv_status = "Rare High IV"
         else:
-            return None # Return None if no case is matched.
+            return None  # Return None if no case is matched.
 
         embd.title = f"{iv_emote} {iv_status} Catch Detected {iv_emote}"
         embd.color = LOW_IV_COLOR if ivs < 10 else HIGH_IV_COLOR
-        embd.description = "{ping} caught a {status} Pokemon\n\n:tada: Congratulations :tada:".format(ping=_ping, streak=_streak, pokemon=_pokemon, status=iv_status)
+        embd.description = f"{_ping} caught a {iv_status} Pokemon\n\n:tada: Congratulations :tada:"
         embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
 
     embd.timestamp = datetime.datetime.now()
 
     return embd
 
+
 async def send_sample(server_id):
 
-    query = {
-        "server_id": str(server_id)
-    }
+    query = {"server_id": str(server_id)}
 
     cursor = await mongo_manager.manager.get_all_data("servers", query)
 
     data = cursor[0] if len(cursor) > 0 else None
 
-    return data.get("starboard") if data is not None else None   
+    return data.get("starboard") if data is not None else None

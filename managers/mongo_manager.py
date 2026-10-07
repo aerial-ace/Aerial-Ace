@@ -1,7 +1,6 @@
 import motor.motor_asyncio
 
 from managers import cache_manager, init_manager
-
 from managers.logging_manager import get_logger
 
 logger = get_logger("main")
@@ -21,23 +20,30 @@ class MongoManager:
 
         return True
 
-    async def get_all_data(self, collection_name: str, query: dict):
+    async def get_all_data(self, collection_name: str, query: dict[str, str]) -> list:
 
         try:
             result_cursor = await self.db[collection_name].find(query).to_list(length=None)
 
             # if no entry in the particular collection is present, create an empty entry into that collection
             if len(result_cursor) <= 0:
-                if collection_name == "battles":
-                    return [await init_manager.register_guild_for_battles(query.get("server_id"))]
-                elif collection_name == "servers":
-                    return [await init_manager.register_guild_without_bs(query.get("server_id"))]
-                elif collection_name == "tags":
-                    return [await init_manager.register_guild_for_tags(query.get("server_id"))]
-                elif collection_name == "donations":
-                    return [await init_manager.register_guild_for_donations(query.get("server_id"))]
-        except:
-            return None
+                server_id = query.get("server_id")
+
+                if server_id is not None:
+                    if collection_name == "battles":
+                        return [await init_manager.register_guild_for_battles(server_id)]
+                    elif collection_name == "servers":
+                        return [await init_manager.register_guild_without_bs(server_id)]
+                    elif collection_name == "tags":
+                        return [await init_manager.register_guild_for_tags(server_id)]
+                    elif collection_name == "donations":
+                        return [await init_manager.register_guild_for_donations(server_id)]
+                else:
+                    logger.error("No server of found from this query : {}".format(query))
+                    return
+
+        except Exception as e:
+            logger.error("Execption triggered while trying to fetch data from db {}".format(e))
 
         return result_cursor
 
@@ -60,7 +66,7 @@ class MongoManager:
     async def remove_entry(self, collection_name: str, query: dict, unset_data: dict):
         await self.db[collection_name].update_one(query, {"$unset": unset_data})
 
-    async def update_spawnrate(self, server_id: str, active: bool, channel_id: str):
+    async def update_spawnrate(self, server_id: str, active: bool | None, channel_id: str | None):
 
         updated_data = await cache_manager.update_spawnrates(server_id, active, channel_id)
 
