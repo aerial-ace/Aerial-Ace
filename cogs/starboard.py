@@ -1,12 +1,10 @@
-import pdb
-from discord.ext import commands
 from discord import TextChannel
+from discord.ext import commands
 
 from helpers import starboard_helper
 
 
 class StarboardSystem(commands.Cog):
-
     @commands.group(name="starboard", aliases=["sb"], description="A collection of commands to manage the starboard system in your server")
     async def starboard(self, ctx: commands.Context):
         if ctx.subcommand_passed is None:
@@ -23,38 +21,41 @@ class StarboardSystem(commands.Cog):
         await ctx.reply(reply)
 
     """ Toggle High Res Images"""
+
     @starboard.command(name="highres", aliases=["hr"], description="Enables High Res images in starboard")
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
-    async def toggle_highres(self, ctx:commands.Context):
-        
+    async def toggle_highres(self, ctx: commands.Context):
+
         reply = await starboard_helper.set_highres(str(ctx.guild.id))
-        
+
         await ctx.reply(reply)
 
     """ Set Alert Mask """
+
     @starboard.command(name="alertenable", aliases=["ae"], description="Enables alerts when a pokemon of this catch type is caught")
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
-    async def enable_alerts(self, ctx:commands.Context, *, alerts:str = None):
-        
+    async def enable_alerts(self, ctx: commands.Context, *, alerts: str = None):
+
         alerts_to_disable = alerts.lower().split()
         alert_types = ["rare", "regional", "shiny", "hunt", "gmax", "streak"]
-        
+
         for alert in alerts_to_disable:
             if alert not in alert_types:
                 return await ctx.reply("Not a valid alert type! Alert type can only be one from : [rare/ regional/ shiny/ hunt/ gmax/ streak]")
 
             reply = await starboard_helper.set_alerts(str(ctx.guild.id), alert, True)
-            
+
             await ctx.send(reply)
-        
+
     """ Disable Alert Mask """
+
     @starboard.command(name="alertdisable", aliases=["ad"], description="Disables alerts when a pokemon of this catch type is caught")
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
-    async def disable_alerts(self, ctx:commands.Context, *, alerts:str = None):
-        
+    async def disable_alerts(self, ctx: commands.Context, *, alerts: str = None):
+
         alerts_to_disable = alerts.lower().split()
         alert_types = ["rare", "regional", "shiny", "hunt", "gmax", "streak"]
 
@@ -63,22 +64,24 @@ class StarboardSystem(commands.Cog):
                 return await ctx.reply("Not a valid alert type! Alert type can only be one from : [rare/ regional/ shiny/ hunt/ gmax/ streak]")
 
             reply = await starboard_helper.set_alerts(str(ctx.guild.id), alert, False)
-            
+
             await ctx.send(reply)
 
     """ Information of Alert Mask """
+
     @starboard.command(name="alertinfo", aliases=["ai"], description="Gives Detailed info about which alerts are enabled.")
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
-    async def alert_info(self, ctx:commands.Context):
-        
+    async def alert_info(self, ctx: commands.Context):
+
         alert_types = ["rare", "regional", "shiny", "hunt", "gmax", "streak"]
-        
+
         reply = await starboard_helper.get_alert_info(str(ctx.guild.id))
-        
+
         await ctx.send(embed=reply)
 
     """ Toggle / Set Shiny Starboard Channel """
+
     @starboard.command(name="shinychannel", aliases=["shch"], description="Enables/Disables the shiny starboard system with the provided channel")
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
@@ -150,20 +153,20 @@ class StarboardSystem(commands.Cog):
     """Send Sample Message in starboard channel"""
 
     @starboard.command(name="sample", description="Sends a sample message in the assigned channel")
-    async def send_sample(self, context:commands.Context):
+    async def send_sample(self, context: commands.Context):
 
         channel_id = await starboard_helper.send_sample(context.guild.id)
 
-        bt:commands.Bot = context.bot
+        bt: commands.Bot = context.bot
 
         starboard_channel = bt.get_channel(int(channel_id))
 
         if starboard_channel is None:
             return await context.send(f"Can not find a channel with ID : {channel_id}. Try resetting the channel!")
-        
+
         if not isinstance(starboard_channel, TextChannel):
             return await context.send(f"Can only assign Text Channels not {starboard_channel.type}")
-        
+
         if not starboard_channel.permissions_for(context.guild.me).send_messages:
             return await context.send(f"No Permission to send messages!")
 
@@ -171,6 +174,7 @@ class StarboardSystem(commands.Cog):
             await starboard_channel.send("Sample Message! This channel is good for receiving starboard logs.")
         except Exception as e:
             await starboard_channel.send(embed=f"** SOME PROBLEM OCCURRED!**\nReport this at support server!```{e}```")
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(StarboardSystem())
