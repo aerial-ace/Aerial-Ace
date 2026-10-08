@@ -10,7 +10,6 @@ def setup_logging():
 
     root_logger = logging.getLogger("aerial-ace")
     root_logger.setLevel(logging.INFO)
-    root_logger.propagate = False
 
     if root_logger.hasHandlers():
         root_logger.handlers.clear()
