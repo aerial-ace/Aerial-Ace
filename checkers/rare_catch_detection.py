@@ -57,7 +57,7 @@ async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
     if message.channel.permissions_for(bot_member).send_messages is False:
         return
 
-    if str(message.author.id) != config.ADMIN_ID:
+    if str(message.author.id) != config.POKETWO_ID:
         return
 
     catch_info = await determine_rare_catch(message)
@@ -92,6 +92,7 @@ async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
         starboard_reply: discord.Embed | None = await starboard_helper.send_starboard(server_details, catch_info, message)
         if starboard_reply is None:
             logger.error("Failed to send starboard reply because no proper starboar reply!")
+            logger.error(f"Rare catch message was : {message.content}")
             return
 
         await message.channel.send(embed=starboard_reply)
