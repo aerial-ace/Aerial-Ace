@@ -14,7 +14,7 @@ MAX_TAG_TIMER_VALUE = 500
 
 TRADE_ITEM_WEIGHT = {"pokecoins": 1, "shinies": 50000, "rares": 5000, "redeems": 40000}
 
-ALERT_TYPE_MASK = {"rare": 0b000001, "regional": 0b000010, "shiny": 0b000100, "hunt": 0b001000, "gmax": 0b010000, "streak": 0b100000}
+ALERT_TYPE_MASK: dict[str, int] = {"rare": 0b000001, "regional": 0b000010, "shiny": 0b000100, "hunt": 0b001000, "gmax": 0b010000, "streak": 0b100000}
 
 # Mongo Data
 MONGO_URI = os.environ["MONGO"]

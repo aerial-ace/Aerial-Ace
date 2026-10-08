@@ -1,8 +1,12 @@
-from discord import Embed
-import random, logging
+import random
 
-from managers import mongo_manager
+from discord import Embed
+
 from config import NORMAL_COLOR
+from managers import mongo_manager
+from managers.logging_manager import get_logger
+
+logger = get_logger()
 
 
 async def get_random_ruleset_embed() -> Embed:
@@ -16,7 +20,7 @@ async def get_random_ruleset_embed() -> Embed:
     embd.description = ""
 
     for i, j in enumerate(random_ruleset.get("rules", [])):
-        embd.description += "\n**Rule {} **: {}".format(i, j)
+        embd.description += f"\n**Rule {i} **: {j}"
 
     embd.description += "\n\nUploaded By : **{}**".format(random_ruleset.get("user", "Admins"))
 
@@ -28,16 +32,11 @@ async def get_random_ruleset_embed() -> Embed:
 async def add_ruleset(name: str, rules: list, user: str):
     number_of_rulesets = await mongo_manager.manager.get_documents_length("rulesets", {})
 
-    new_db_entry = {
-        "id": number_of_rulesets + 1,
-        "name": name,
-        "rules": rules,
-        "user": user
-    }
+    new_db_entry = {"id": number_of_rulesets + 1, "name": name, "rules": rules, "user": user}
 
     try:
         await mongo_manager.manager.add_data("rulesets", new_db_entry)
-    except Exception as e:
-        logging.exception("Error occurred while adding ruleset to the db.")
+    except Exception as e:  # noqa: BLE001
+        logger.error("Error occurred while adding ruleset to the db.")
     else:
-        return "Entry Added! Id : {}".format(number_of_rulesets + 1)
+        return f"Entry Added! Id : {number_of_rulesets + 1}"
