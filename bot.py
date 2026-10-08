@@ -8,7 +8,7 @@ from helpers import general_helper
 from managers import cache_manager, init_manager, mongo_manager, post_command_manager
 from managers.logging_manager import get_logger
 
-logger = get_logger("main")
+logger = get_logger()
 
 # determines whether to run the bot in local, or global mode
 is_test = False
