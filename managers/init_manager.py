@@ -1,8 +1,12 @@
 import discord
+from discord.abc import GuildChannel
 from discord.ext import commands
 
 import config
 from managers import mongo_manager
+from managers.logging_manager import get_logger
+
+logger = get_logger()
 
 
 # register server in the database
@@ -20,16 +24,24 @@ async def register_guild(bot: commands.AutoShardedBot, guild: discord.Guild):
 
         await mongo_manager.manager.add_data("servers", entry)
 
-    # Log it in support server
-    log_channel: discord.TextChannel = bot.get_guild(config.SUPPORT_SERVER_ID).get_channel(config.SERVER_JOIN_LOG_CHANNEL_ID)
+    log_server: discord.Guild | None = bot.get_guild(config.SUPPORT_SERVER_ID)
+    if log_server is None:
+        logger.error("Log server not found!")
+        return
+
+    log_channel: GuildChannel | None = log_server.get_channel(config.SERVER_JOIN_LOG_CHANNEL_ID)
+    if log_channel is None:
+        logger.error("Failed to remove a build because log channel not found!")
+        return
 
     embed = discord.Embed(title="Server Added <:yay_yay:932361191928500284>", color=discord.Color.green())
     embed.add_field(name="Server Name", value=guild.name, inline=True)
     embed.add_field(name="Server ID", value=str(guild.id), inline=True)
     embed.add_field(name="Member Count", value=str(guild.member_count), inline=True)
-    embed.add_field(name="Server Count", value=len(bot.guilds), inline=False)
+    embed.add_field(name="Server Count", value=str(len(bot.guilds)), inline=False)
 
-    await log_channel.send(embed=embed)
+    if isinstance(log_channel, discord.TextChannel):
+        await log_channel.send(embed=embed)
 
     data = {"server_id": server_id, "server_name": "NONE", "starboard": "0"}
 
@@ -72,7 +84,7 @@ async def register_guild_for_donations(guild_id: str):
 # register guild in the database without other bullshit
 
 
-async def register_guild_without_bs(guild_id: str, guild_name: str = "NONE"):
+async def register_guild_without_bs(guild_id: str, guild_name: str = "NONE") -> dict:
     server_id = str(guild_id)
     server_name = str(guild_name)
 
@@ -102,11 +114,20 @@ async def remove_guild(bot: commands.AutoShardedBot, guild: discord.Guild):
 
     await mongo_manager.manager.remove_all_data("battles", query)
 
-    log_channel: discord.TextChannel = bot.get_guild(config.SUPPORT_SERVER_ID).get_channel(config.SERVER_JOIN_LOG_CHANNEL_ID)
+    log_server: discord.Guild | None = bot.get_guild(config.SUPPORT_SERVER_ID)
+    if log_server is None:
+        logger.error("Log server not found!")
+        return
+
+    log_channel: GuildChannel | None = log_server.get_channel(config.SERVER_JOIN_LOG_CHANNEL_ID)
+    if log_channel is None:
+        logger.error("Failed to remove a build because log channel not found!")
+        return
 
     embed = discord.Embed(title="Server Removed <:sedCat:933061761337270292>", color=discord.Color.red())
     embed.add_field(name="Server Name", value=guild.name, inline=True)
     embed.add_field(name="Member Count", value=str(guild.member_count), inline=True)
-    embed.add_field(name="Server Count", value=len(bot.guilds), inline=False)
+    embed.add_field(name="Server Count", value=str(len(bot.guilds)), inline=False)
 
-    await log_channel.send(embed=embed)
+    if isinstance(log_channel, discord.TextChannel):
+        await log_channel.send(embed=embed)
