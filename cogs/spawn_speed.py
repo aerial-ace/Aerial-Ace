@@ -1,3 +1,5 @@
+import asyncio
+
 from discord import StageChannel, TextChannel, Thread, VoiceChannel
 from discord.abc import GuildChannel, PrivateChannel
 from discord.ext import commands, tasks
@@ -6,7 +8,7 @@ from checkers import spawn_speed_detection
 from managers import cache_manager, mongo_manager
 from managers.logging_manager import get_logger
 
-logger = get_logger("main")
+logger = get_logger()
 
 
 class SpawnSpeedModule(commands.Cog):
@@ -32,6 +34,7 @@ class SpawnSpeedModule(commands.Cog):
     async def waiter(self):
         if self.bot:
             await self.bot.wait_until_ready()
+            await asyncio.sleep(3600)
 
     async def apply_spawn_counter(self, server_id: str | None = None):
         """Updates the spawn-speed channel name of each and every server"""
@@ -52,16 +55,16 @@ class SpawnSpeedModule(commands.Cog):
 
             try:
                 speed_display_channel: GuildChannel | PrivateChannel | Thread | None = await self.bot.fetch_channel(spawn_channel_id) if self.bot is not None else None
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning(f"Spawn Speed Channel with id {spawn_channel_id} not found!\n{e}")
                 continue  # Channel Not Found
 
-            if isinstance(speed_display_channel, TextChannel) or isinstance(speed_display_channel, VoiceChannel) or isinstance(speed_display_channel, StageChannel):
+            if isinstance(speed_display_channel, (TextChannel, VoiceChannel, StageChannel)):
                 try:
                     await speed_display_channel.edit(name=f"{spawn_speed} spawns / hour")
                     await spawn_speed_detection.reset_spawns(x)
-                except Exception as e:
-                    logger.error(f"Unable to edit the channel name for the channel with id : {spawn_channel_id}\n{e}")
+                except Exception as e:  # noqa: BLE001
+                    logger.warning(f"Unable to edit the channel name for the channel with id : {spawn_channel_id}\n{e}")
                     continue  # Unable to update the name of the channel
 
     async def apply_shiny_counter(self, server_id: str | None = None):
@@ -69,7 +72,7 @@ class SpawnSpeedModule(commands.Cog):
 
         logger.info("Updating Shiny Count Channels")
 
-        d = cache_manager.cached_shinycounter_data.items()
+        d: dict = cache_manager.cached_shinycounter_data.items()
 
         if server_id != None:
             d = [{server_id: cache_manager.get(server_id)}]
@@ -86,11 +89,11 @@ class SpawnSpeedModule(commands.Cog):
                 logger.warning(f"Shiny Count Channel with id {shiny_count_channel_id} not found!\n{e}")
                 continue
 
-            if isinstance(display_channel, TextChannel) or isinstance(display_channel, VoiceChannel) or isinstance(display_channel, StageChannel):
+            if isinstance(display_channel, (TextChannel, VoiceChannel, StageChannel)):
                 try:
                     await display_channel.edit(name="{} shinies ✨ / alltime".format(y.get("count")))
                 except Exception as e:
-                    logger.error(f"Unable to edit the channel name for the channel with id : {shiny_count_channel_id}\n{e}")
+                    logger.warning(f"Unable to edit the channel name for the channel with id : {shiny_count_channel_id}\n{e}")
                     continue
 
     """ SPAWN COUNTER """
