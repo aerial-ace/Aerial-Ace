@@ -6,20 +6,38 @@ import discord
 import config
 from helpers import general_helper, starboard_helper
 from managers import cache_manager, mongo_manager
+from managers.logging_manager import get_logger
+
+logger = get_logger()
 
 
-async def can_send_alert(server_details: dict, catch_details: dict) -> bool:
+async def can_send_alert(server_details: list, catch_details: dict) -> bool:
 
+    # fetch the server's mask
     default_mask = {"mask": "111111"}
     mask = int(server_details[0].get("alerts", default_mask).get("mask"), 2)
 
+    # if the catch is streak, check and return if the hunt streak is ON
     if catch_details.get("streak"):
-        return mask & config.ALERT_TYPE_MASK.get("streak") > 0
+        return mask & config.ALERT_TYPE_MASK.get("streak", 0) > 0
 
+    # if the catch is hunt, check and return if the hunt bit is ON
     if catch_details.get("hunt"):
-        return mask & config.ALERT_TYPE_MASK.get("hunt") > 0
+        return mask & config.ALERT_TYPE_MASK.get("hunt", 0) > 0
 
-    return mask & config.ALERT_TYPE_MASK.get(catch_details.get("type")) > 0
+    # Fetch the type of catch from the catch details
+    catch_type = catch_details.get("type", None)
+    if catch_type is None:
+        logger.error("Catch Type not found in catch details")
+        return False
+
+    # Fetch the alert mask bit from the alert type mask storage
+    alert_mask: int | None = config.ALERT_TYPE_MASK.get(catch_type, None)
+    if alert_mask is None:
+        logger.error("Catch Type is not registered in ALERT_TYPE_MASK")
+        return False
+
+    return (mask & alert_mask) > 0
 
 
 async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
@@ -39,7 +57,7 @@ async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
     if message.channel.permissions_for(bot_member).send_messages is False:
         return
 
-    if str(message.author.id) != config.POKETWO_ID:
+    if str(message.author.id) != config.ADMIN_ID:
         return
 
     catch_info = await determine_rare_catch(message)
@@ -49,11 +67,14 @@ async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
         return
 
     server_details = await mongo_manager.manager.get_all_data("servers", {"server_id": str(message.guild.id)})
+    if server_details is None:
+        logger.error("Failed to rare check! Can't fetch server data from DB")
+        return
 
     if catch_info.get("type") == "shiny":
         await mongo_manager.manager.increment_shiny_counter(str(message.guild.id))
 
-    alerts_allowed = await can_send_alert(server_details=server_details, catch_details=catch_info)
+    alerts_allowed = await can_send_alert(server_details, catch_info)
 
     if alerts_allowed:
         """ Get and Send Catch Detection Embed"""
@@ -68,9 +89,11 @@ async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
             return  # return if not allowed to send messages in the current channel
 
         """ Send the starboard embed in the starboard channel """
-        starboard_reply = await starboard_helper.send_starboard(server_details, catch_info, message)
+        starboard_reply: discord.Embed | None = await starboard_helper.send_starboard(server_details, catch_info, message)
+        if starboard_reply is None:
+            logger.error("Failed to send starboard reply because no proper starboar reply!")
+            return
 
-        """ Send feedback in the current channel """
         await message.channel.send(embed=starboard_reply)
 
     """ Send Customization Reminder for non premium servers"""
@@ -137,7 +160,7 @@ async def determine_rare_catch(message: discord.Message):
     if iv == "0":
         return None
 
-    user_regex = "<@\d+>"
+    user_regex = r"<@\d+>"
     user_regex_outcome = re.findall(user_regex, msg)
     user = user_regex_outcome[0] if len(user_regex_outcome) > 0 else None
 
@@ -177,7 +200,7 @@ async def determine_rare_catch(message: discord.Message):
                     catch_info["type"] = "regional"
                 if cache_manager.cached_rarity_data[i] in ["legendary", "mythical", "ultra beast"]:
                     catch_info["type"] = "rare"
-            except Exception:
+            except Exception:  # noqa: BLE001, S112
                 continue
 
     return catch_info
