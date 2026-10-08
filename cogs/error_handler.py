@@ -1,21 +1,25 @@
+from discord import Forbidden, HTTPException
 from discord.ext import commands
-from discord import HTTPException, Forbidden
 
+from managers.logging_manager import get_logger
 from views.ButtonViews import GeneralView
+
+logger = get_logger()
 
 
 class ErrorHandler(commands.Cog):
-
     @commands.Cog.listener()
     async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
+
+        if ctx.command is None:
+            return
 
         cog: commands.Cog = ctx.cog
         view = GeneralView(200, True, False, False, True)
 
         # return if cog has its own handler
-        if cog:
-            if cog._get_overridden_method(cog.cog_command_error) is not None:
-                return
+        if cog and cog._get_overridden_method(cog.cog_command_error) is not None:
+            return
 
         # exceptions that don't need to handled
         ignored_exceptions = (commands.CommandNotFound,)
@@ -43,6 +47,9 @@ class ErrorHandler(commands.Cog):
 
         if isinstance(error, commands.NotOwner):
             return await ctx.reply("You are not supposed to use this command :>", view=view)
+
+        logger.error(f"Error while running {ctx.command.name} command\n\tError : {error}")
+        await ctx.reply("Unknown Error Occurred! Please report this in Support Server")
 
 
 def setup(bot: commands.Bot):
