@@ -1,5 +1,6 @@
 import datetime
 import json
+import random
 
 from discord import Embed, Message, TextChannel, errors
 from discord.abc import GuildChannel
@@ -9,16 +10,25 @@ from helpers import general_helper
 from managers import cache_manager, init_manager, mongo_manager
 from managers.logging_manager import get_logger
 
-logger = get_logger("main")
+logger = get_logger()
 
 """Sets/Resets the starboard channel"""
 
 
-async def set_starboard(server_id: str, channel: TextChannel) -> str:
+async def set_starboard(server_id: str, channel: TextChannel | None) -> str:
+    """
+    Set the starboard channel to the provided channel
+    If channel is None, disable the module instead
+    """
+
     try:
         query = {"server_id": server_id}
 
-        cursor = await mongo_manager.manager.get_all_data("servers", query)
+        cursor: list | None = await mongo_manager.manager.get_all_data("servers", query)
+        if cursor is None or len(cursor) <= 0:
+            ref_num = random.getrandbits(64)
+            logger.error(f"Failed to set starboard channel! No data from servers collection; reference number : {ref_num}")
+            return f"Unable to set starboard channel! Please report this in Support Server\n`REFERENCE ID : {ref_num}"
 
         server_data = cursor[0]
 
@@ -36,7 +46,7 @@ async def set_starboard(server_id: str, channel: TextChannel) -> str:
 
         await mongo_manager.manager.update_all_data("servers", query, updated_data)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         return e.__str__()
     else:
         if channel is not None:
@@ -48,11 +58,15 @@ async def set_starboard(server_id: str, channel: TextChannel) -> str:
 """ Sets / Disables the shiny logging channel """
 
 
-async def set_shiny_starboard(server_id: str, channel: TextChannel) -> str:
+async def set_shiny_starboard(server_id: str, channel: TextChannel | None) -> str:
     try:
         query = {"server_id": server_id}
 
-        cursor = await mongo_manager.manager.get_all_data("servers", query)
+        cursor: list | None = await mongo_manager.manager.get_all_data("servers", query)
+        if cursor is None:
+            ref_num = random.getrandbits(64)
+            logger.error(f"Failed to set shiny starboard! No data from servers collection; reference number : {ref_num}")
+            return f"Unable to set shiny starboard! Please report this in Support Server\n`REFERENCE ID : {ref_num}"
 
         server_data = cursor[0]
 
@@ -70,7 +84,7 @@ async def set_shiny_starboard(server_id: str, channel: TextChannel) -> str:
 
         await mongo_manager.manager.update_all_data("servers", query, updated_data)
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         return e.__str__()
     else:
         if channel is not None:
@@ -86,7 +100,11 @@ async def set_highres(server_id: str):
 
     query = {"server_id": server_id}
 
-    cursor = await mongo_manager.manager.get_all_data("servers", query)
+    cursor: list | None = await mongo_manager.manager.get_all_data("servers", query)
+    if cursor is None:
+        ref_num = random.getrandbits(64)
+        logger.error(f"Failed to set high res! No data from servers collection; reference number : {ref_num}")
+        return f"Unable to set high res! Please report this in Support Server\n`REFERENCE ID : {ref_num}"
 
     server_data = cursor[0]
 
@@ -105,7 +123,13 @@ async def set_alerts(server_id: str, alert_type: str, enable=True) -> str:
 
     query = {"server_id": server_id}
 
-    data = (await mongo_manager.manager.get_all_data("servers", query))[0]
+    cursor: list | None = await mongo_manager.manager.get_all_data("servers", query)
+    if cursor is None:
+        ref_num = random.getrandbits(64)
+        logger.error(f"Failed to set alerts! No data from servers collection; reference number : {ref_num}")
+        return f"Unable to set alerts! Please report this in Support Server\n`REFERENCE ID : {ref_num}"
+
+    data = cursor[0]
 
     if data.get("tier", 0) < 1:
         return "Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!"
@@ -131,9 +155,16 @@ async def get_alert_info(server_id: str) -> Embed:
 
     query = {"server_id": server_id}
 
-    data = (await mongo_manager.manager.get_all_data("servers", query))[0]
+    cursor = await mongo_manager.manager.get_all_data("servers", query)
+    if cursor is None or len(cursor) <= 0:
+        ref_num = random.getrandbits(64)
+        logger.error(f"Failed to set alerts! No data from servers collection; reference number : {ref_num}")
+        return await general_helper.get_error_embd("Whoops", f"Unable to set alerts! Please report this in Support Server\n`REFERENCE ID : {ref_num}")
+
+    data = cursor[0]
 
     embd = await general_helper.get_info_embd("Alert Module", "")
+    embd.description = ""
 
     default_mask = {"mask": "111111"}
     server_mask = int(data.get("alerts", default_mask).get("mask"), 2)
@@ -169,7 +200,13 @@ async def set_starboard_text(server_id: str, text: str, type: str) -> Embed:
 
     query = {"server_id": server_id}
 
-    data = (await mongo_manager.manager.get_all_data("servers", query))[0]
+    cursor = await mongo_manager.manager.get_all_data("servers", query)
+    if cursor is None or len(cursor) <= 0:
+        ref_num = random.getrandbits(64)
+        logger.error(f"Failed to set starboard text! No data from servers collection; reference number : {ref_num}")
+        return await general_helper.get_error_embd("Whoops", f"Unable to set starboard text! Please report this in Support Server\n`REFERENCE ID : {ref_num}")
+
+    data = cursor[0]
 
     if data.get("tier", 0) < 1:
         return Embed(title="Whoops!", description="Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!")
@@ -187,7 +224,8 @@ async def set_starboard_text(server_id: str, text: str, type: str) -> Embed:
             return Embed(title=f"Starboard {type} Text Updated!")
         else:
             return Embed(title=f"Starboard {type} Text Reset")
-    except Exception as e:
+
+    except Exception as e:  # noqa: BLE001
         return Embed(title="Error Occurred", description=f"```{e}```")
 
 
@@ -197,7 +235,13 @@ async def set_starboard_text(server_id: str, text: str, type: str) -> Embed:
 async def set_starboard_image(server_id: str, text: str, type: str) -> Embed:
     query = {"server_id": server_id}
 
-    data = (await mongo_manager.manager.get_all_data("servers", query))[0]
+    cursor = await mongo_manager.manager.get_all_data("servers", query)
+    if cursor is None or len(cursor) <= 0:
+        ref_num = random.getrandbits(64)
+        logger.error(f"Failed to set starboard image! No data from servers collection; reference number : {ref_num}")
+        return await general_helper.get_error_embd("Whoops", f"Unable to set starboard image! Please report this in Support Server\n`REFERENCE ID : {ref_num}")
+
+    data = cursor[0]
 
     if data.get("tier", 0) < 2:
         return Embed(title="Whoops!", description="Your server is either not premium or is in lower tier. \nBecome a patron or upgrade to higher tier to access these customization!")
@@ -215,11 +259,12 @@ async def set_starboard_image(server_id: str, text: str, type: str) -> Embed:
             return Embed(title=f"Starboard {type} Image Updated!")
         else:
             return Embed(title=f"Starboard {type} Image Reset")
-    except Exception as e:
+
+    except Exception as e:  # noqa: BLE001
         return Embed(title="Error Occurred", description=f"```{e}```")
 
 
-async def get_starboard_embed(catch_details, server_details, message_link: str, tier: int = 0):
+async def get_starboard_embed(catch_details, server_details, message_link: str, tier: int = 0) -> Embed | None:
     """Returns the starboard embed for starboard channel"""
 
     user_name = catch_details["user"]
@@ -278,9 +323,13 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
 
     try:
         pokemon_details = await cache_manager.search_cached_type_data(pokemon_name_storage)
-    except Exception as e:
-        logger.error(f"Pokemon with the name : {pokemon_name_storage} is not found type data!")
-        return
+
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Pokemon with the name : {pokemon_name_storage} is not found type data!\n\terror : {e}")
+        return None
+
+    if pokemon_details is None:
+        return logger.error("Unable to create the starboard embed! Pokemon name is invalid!")
 
     pokemon_id: str | None = pokemon_details.get("id", None)
 
@@ -354,15 +403,20 @@ async def get_starboard_embed(catch_details, server_details, message_link: str, 
 """Sends the star catch embed to the starboard"""
 
 
-async def send_starboard(server_details, catch_details, message: Message):
+async def send_starboard(server_details, catch_details, message: Message) -> Embed | None:
+    """
+    Send the starboard embed according to the server details and catch details
+    Return a response embed
+    """
 
     if message.guild is None:
-        return await message.reply("Please use this command in a Server only!")
+        await message.reply("Please use this command in a Server only!")
+        return
 
     try:
-        data = server_details[0]
+        data: dict = server_details[0]
     except KeyError:
-        data = await init_manager.register_guild_without_bs(server_details[0].get("server_id"))
+        data: dict = await init_manager.register_guild_without_bs(server_details[0].get("server_id"))
 
     """
 
@@ -377,9 +431,9 @@ async def send_starboard(server_details, catch_details, message: Message):
 
     # Tries to fetch the shiny logging channel, if it is found then set the starboard channel as the shiny channel else just set the default logging channel.
     if catch_details.get("type", "rare") == "shiny":
-        starboard_channel_id = data.get("starboard") if data.get("shiny_starboard_channel", "0") == "0" else data.get("shiny_starboard_channel")
+        starboard_channel_id: str = data.get("starboard", "0") if data.get("shiny_starboard_channel", "0") == "0" else data.get("shiny_starboard_channel", "0")
     else:
-        starboard_channel_id = data.get("starboard", "0")
+        starboard_channel_id: str = data.get("starboard", "0")
 
     tier: int = data.get("tier", 0)
 
@@ -387,21 +441,33 @@ async def send_starboard(server_details, catch_details, message: Message):
     if starboard_channel_id == "0":
         return await general_helper.get_info_embd("No starboard channel set", "", NORMAL_COLOR)
 
-    # get starboard embed
+    # get starboard embed; if the embed is empty, stop the process
     reply = await get_starboard_embed(catch_details, server_details[0], message.jump_url, tier)
+    if reply is None:
+        return logger.error("Unable to fetch and send the starboard embed!")
 
     # send that starboard embed to the starboard channel
     try:
         starboard_channel: GuildChannel | None = message.guild.get_channel(int(starboard_channel_id))
-    except Exception as e:
+
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Error while fetching a starboard_channel with id : {starboard_channel_id}\n\terror : {e}")
         return await general_helper.get_info_embd("No Access", f"Can't send message in <#{starboard_channel_id}>")
+
+    # if channel is not found!
+    if starboard_channel is None:
+        ref_num = random.getrandbits(64)
+        logger.error(f"Channel with the ID doesn't exists : {starboard_channel_id}\n\treference id : {ref_num}")
+        return await general_helper.get_info_embd("Not Found!", "The provided channel was not found! Please try again")
 
     try:
         if isinstance(starboard_channel, TextChannel):
             await starboard_channel.send(embed=reply)
+
     except errors.Forbidden:
         return await general_helper.get_info_embd("Missing Permissions!", f"Can't send message in <#{starboard_channel_id}>", ERROR_COLOR, "Please report this bug at the support server.")
-    except Exception as e:
+
+    except Exception as e:  # noqa: BLE001
         return await general_helper.get_info_embd("Error Occurred!", f"Unable to send to Starboard. \n```{e}```", ERROR_COLOR, "Please report this bug at the support server.")
 
     return await general_helper.get_info_embd("This catch was sent to Starboard", f"Channel : {starboard_channel.mention}", NORMAL_COLOR)
@@ -489,16 +555,19 @@ async def get_rare_catch_embd(server_details, catch_details):
         embd.description = f"{_ping} caught a {iv_status} Pokemon\n\n:tada: Congratulations :tada:"
         embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
 
-    embd.timestamp = datetime.datetime.now()
+    embd.timestamp = datetime.datetime.now(datetime.timezone.utc)
 
     return embd
 
 
-async def send_sample(server_id):
+async def get_starboard_channel_id(server_id) -> str | None:
 
     query = {"server_id": str(server_id)}
 
-    cursor = await mongo_manager.manager.get_all_data("servers", query)
+    cursor: list | None = await mongo_manager.manager.get_all_data("servers", query)
+    if cursor is None:
+        logger.error("Can't send sample channel id because server data is not found!")
+        return None
 
     data = cursor[0] if len(cursor) > 0 else None
 
