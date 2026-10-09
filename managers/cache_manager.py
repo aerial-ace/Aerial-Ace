@@ -66,6 +66,7 @@ async def search_cached_type_data(name: str) -> dict | None:
         "hearthflamemaskogerpon": "ogerpon-hearthflame-mask",
         "cornerstonemaskogerpon": "ogerpon-cornerstone-mask",
         "neutralxerneas": "xerneas",
+        "zendarmanitan-galar": "darmanitan-galar-zen",
     }
     # fmt: on
 

@@ -4,6 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
     "dnspython>=2.8.0",
+    "httpx>=0.28.1",
     "motor>=3.2.0",
     "py-cord>=2.8.1",
     "pymongo[srv]>=4.1,<4.5",
