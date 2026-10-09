@@ -1,12 +1,12 @@
-from discord.ext import commands
-from discord.ui import View, Button
-from discord import ButtonStyle
 from json import JSONDecodeError
 
+from discord import ButtonStyle
+from discord.ext import commands
+from discord.ui import Button, View
+
+from config import ABILITY_LINK_TEMPLATE_SMOGON, ERROR_COLOR, INVITE_LINK, POKEMON_LINK_TEMPLATE_SMOGON
+from helpers import general_helper, pokedex_helper
 from views.ButtonViews import GeneralView
-from helpers import pokedex_helper
-from helpers import general_helper
-from config import POKEMON_LINK_TEMPLATE_SMOGON, ABILITY_LINK_TEMPLATE_SMOGON, ERROR_COLOR, INVITE_LINK
 
 
 class PokeDex(commands.Cog):
@@ -21,7 +21,7 @@ class PokeDex(commands.Cog):
 
         try:
             poke_data = await pokedex_helper.get_poke_by_id(poke)
-        except:
+        except Exception:  # noqa: BLE001
             reply = await general_helper.get_info_embd("Pokemon not found", f"Dex entry for id : `{poke}` was not found in the pokedex.\n Most uncommon ids follow this format : \n```{ctx.prefix}dex marowak-alola\n{ctx.prefix}dex gallade-mega\n{ctx.prefix}dex meowstic-female\n{ctx.prefix}dex deoxys-defense\n{ctx.prefix}dex necrozma-dawn\n{ctx.prefix}dex calyrex-shadow-rider\n{ctx.prefix}dex cinderace-gmax```\nIf you still think this pokemon is missing, report it at official server", ERROR_COLOR)
             view = GeneralView(200)
 
