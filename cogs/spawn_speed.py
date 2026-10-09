@@ -1,6 +1,6 @@
 import asyncio
 
-from discord import StageChannel, TextChannel, Thread, VoiceChannel
+from discord import Forbidden, HTTPException, StageChannel, TextChannel, Thread, VoiceChannel
 from discord.abc import GuildChannel, PrivateChannel
 from discord.ext import commands, tasks
 
@@ -39,62 +39,54 @@ class SpawnSpeedModule(commands.Cog):
     async def apply_spawn_counter(self, server_id: str | None = None):
         """Updates the spawn-speed channel name of each and every server"""
 
-        logger.info("Updating Spawn Speed Channels")
-
-        d = cache_manager.cached_spawnrate_data.items()
-
-        if server_id != None:
-            d = [{server_id: cache_manager.get(server_id)}]
-
-        for x, y in d:
+        for x, y in cache_manager.cached_spawnrate_data.items():
             if y.get("active", False) is False:
                 continue
 
             spawn_speed = await spawn_speed_detection.get_server_spawn_speed(str(x))
-            spawn_channel_id: int = int(y.get("channel_id"))
+            spawn_channel_id: int = int(y.get("channel_id", "0"))
+            if spawn_channel_id == "0":
+                continue  # channel id not found
 
-            try:
-                speed_display_channel: GuildChannel | PrivateChannel | Thread | None = await self.bot.fetch_channel(spawn_channel_id) if self.bot is not None else None
-            except Exception as e:  # noqa: BLE001
-                logger.warning(f"Spawn Speed Channel with id {spawn_channel_id} not found!\n{e}")
-                continue  # Channel Not Found
+            speed_display_channel: GuildChannel | PrivateChannel | Thread | None = await self.bot.fetch_channel(spawn_channel_id) if self.bot is not None else None
+            if speed_display_channel is None:
+                continue  # server channel not found
 
             if isinstance(speed_display_channel, (TextChannel, VoiceChannel, StageChannel)):
                 try:
                     await speed_display_channel.edit(name=f"{spawn_speed} spawns / hour")
                     await spawn_speed_detection.reset_spawns(x)
-                except Exception as e:  # noqa: BLE001
-                    logger.warning(f"Unable to edit the channel name for the channel with id : {spawn_channel_id}\n{e}")
+
+                except Forbidden:
                     continue  # Unable to update the name of the channel
+
+                except HTTPException:
+                    continue
 
     async def apply_shiny_counter(self, server_id: str | None = None):
         """Updates the shiny-counter channel name of each and every server"""
 
         logger.info("Updating Shiny Count Channels")
 
-        d: dict = cache_manager.cached_shinycounter_data.items()
-
-        if server_id != None:
-            d = [{server_id: cache_manager.get(server_id)}]
-
-        for x, y in d:
-            if y.get("active") is False:
+        for item in cache_manager.cached_shinycounter_data.values():
+            if item.get("active", False) is False:
                 continue
 
-            shiny_count_channel_id = int(y.get("channel_id"))
+            shiny_count_channel_id = int(item.get("channel_id", "0"))
+            if shiny_count_channel_id == "0":
+                continue  # ignore unset shiny channels
 
-            try:
-                display_channel: GuildChannel | PrivateChannel | Thread | None = await self.bot.fetch_channel(shiny_count_channel_id) if self.bot is not None else None
-            except Exception as e:
-                logger.warning(f"Shiny Count Channel with id {shiny_count_channel_id} not found!\n{e}")
-                continue
+            display_channel: GuildChannel | PrivateChannel | Thread | None = await self.bot.fetch_channel(shiny_count_channel_id) if self.bot is not None else None
+            if display_channel is None:
+                continue  # shiny channel id exists, but the channel itself doesn't exists
 
             if isinstance(display_channel, (TextChannel, VoiceChannel, StageChannel)):
                 try:
-                    await display_channel.edit(name="{} shinies ✨ / alltime".format(y.get("count")))
-                except Exception as e:
-                    logger.warning(f"Unable to edit the channel name for the channel with id : {shiny_count_channel_id}\n{e}")
-                    continue
+                    await display_channel.edit(name="{} shinies ✨ / alltime".format(item.get("count")))
+                except Forbidden:
+                    continue  # permission to edit the channel is not there
+                except HTTPException:
+                    continue  # failed to rename channel
 
     """ SPAWN COUNTER """
 
