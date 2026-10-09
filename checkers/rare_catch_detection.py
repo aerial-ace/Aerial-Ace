@@ -205,7 +205,7 @@ async def determine_rare_catch(message: discord.Message) -> dict | None:
             try:
                 if i == "galarian" or i == "alolan" or i == "hisuian":
                     catch_info["type"] = "regional"
-                if cache_manager.cached_rarity_data.get(i, "normal") in ["legendary", "mythical", "ultra beast"]:
+                if cache_manager.cached_rarity_data.get(i, "common") in ["legendary", "mythical", "ultra beast"]:
                     catch_info["type"] = "rare"
             except Exception:  # noqa: BLE001, S112
                 continue
