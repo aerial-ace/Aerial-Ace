@@ -8,7 +8,7 @@ from config import POKETWO_ID, NORMAL_COLOR, INFO_EMOJI
 
 
 async def donation_check(bot: AutoShardedBot, message: Message):
-    '''Performs a check on the provided message to look for data about donations'''
+    """Performs a check on the provided message to look for data about donations"""
 
     bot_member: Member = message.guild.get_member(bot.user.id)
 
@@ -101,8 +101,7 @@ async def donation_check(bot: AutoShardedBot, message: Message):
     except TimeoutError:
         return await message.channel.send("> No response from Poketwo Recieved, Donation Log session cancelled!")
     else:
-        await message.channel.send(
-            "> Donation Log Session Started! This donation will be logged automatically on completion!\n**NOTE** : Please don't add more than 20 items (1 page) at a time.")
+        await message.channel.send("> Donation Log Session Started! This donation will be logged automatically on completion!\n**NOTE** : Please don't add more than 20 items (1 page) at a time.")
 
     pokecoins = 0
     rares = 0
@@ -181,10 +180,7 @@ async def donation_check(bot: AutoShardedBot, message: Message):
         if wait_for_cancellation(message) is not False:
             return True
 
-        if wait_for_completion(message) is not False:
-            return True
-
-        return False
+        return wait_for_completion(message) is not False
 
     try:
         trade_complete_message = await bot.wait_for("message", check=wait_for_conclusion, timeout=360)
@@ -208,37 +204,17 @@ async def donation_check(bot: AutoShardedBot, message: Message):
 
         log_embd = Embed(title="Donation Log", color=NORMAL_COLOR)
 
-        log_embd.add_field(
-            name="Donator",
-            value=donator.mention,
-            inline=True
-        )
+        log_embd.add_field(name="Donator", value=donator.mention, inline=True)
 
-        log_embd.add_field(
-            name="Staff Involved",
-            value=staff.mention,
-            inline=True
-        )
+        log_embd.add_field(name="Staff Involved", value=staff.mention, inline=True)
 
-        log_embd.add_field(
-            name="Status",
-            value=f"{INFO_EMOJI} Not Collected",
-            inline=False
-        )
+        log_embd.add_field(name="Status", value=f"{INFO_EMOJI} Not Collected", inline=False)
 
-        log_embd.add_field(
-            name="Teleport",
-            value=f"[Click Here]({trade_complete_message.jump_url})",
-            inline=True
-        )
+        log_embd.add_field(name="Teleport", value=f"[Click Here]({trade_complete_message.jump_url})", inline=True)
 
         donated_items_str = f"```Pokecoins : {pokecoins}\nShinies : {shinies}\nRares : {rares}\nRedeems : {redeems}```"
 
-        log_embd.add_field(
-            name="Items Donated",
-            value=donated_items_str,
-            inline=False
-        )
+        log_embd.add_field(name="Items Donated", value=donated_items_str, inline=False)
 
         log_embd.set_thumbnail(url=donator.avatar.url)
 
@@ -254,10 +230,7 @@ async def log_donation(server_id: int, donator: Member, pokecoins: int = 0, rare
     """Logs the donation into the current logging channel"""
 
     if data_cursor is None:
-        data_cursor = await mongo_manager.manager.get_all_data(
-            collection_name="donations",
-            query={"server_id": str(server_id)}
-        )
+        data_cursor = await mongo_manager.manager.get_all_data(collection_name="donations", query={"server_id": str(server_id)})
 
     data = data_cursor[0]
 
@@ -282,8 +255,4 @@ async def log_donation(server_id: int, donator: Member, pokecoins: int = 0, rare
 
     donations[str(donator.id)] = user_donations
 
-    await mongo_manager.manager.update_all_data(
-        col_name="donations",
-        query={"server_id": str(server_id)},
-        updated_data={"donations": donations}
-    )
+    await mongo_manager.manager.update_all_data(col_name="donations", query={"server_id": str(server_id)}, updated_data={"donations": donations})
