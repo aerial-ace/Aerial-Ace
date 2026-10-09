@@ -29,12 +29,14 @@ async def can_send_alert(server_details: list, catch_details: dict) -> bool:
     catch_type = catch_details.get("type", None)
     if catch_type is None:
         logger.error("Catch Type not found in catch details")
+        logger.error(f"Catch Details were : {catch_details}")
         return False
 
     # Fetch the alert mask bit from the alert type mask storage
     alert_mask: int | None = config.ALERT_TYPE_MASK.get(catch_type, None)
     if alert_mask is None:
         logger.error("Catch Type is not registered in ALERT_TYPE_MASK")
+        logger.error(f"Catch Type is {catch_type}")
         return False
 
     return (mask & alert_mask) > 0
@@ -60,7 +62,11 @@ async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
     if str(message.author.id) != config.POKETWO_ID:
         return
 
-    catch_info = await determine_rare_catch(message)
+    catch_info: dict | None = await determine_rare_catch(message)
+    if catch_info is None:
+        ref_num = random.getrandbits(64)
+        logger.error(f"Error happened while trying to determine rare catch! Invalid Catch_Info : {catch_info}, reference num : {ref_num}")
+        return
 
     # return if not a rare catch and not a streak and not even a low/high iv.
     if catch_info is None or (catch_info["type"] == "" and catch_info["streak"] == 0 and float(catch_info["iv"]) > 10 and float(catch_info["iv"]) < 90):
@@ -105,7 +111,7 @@ async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
         await message.channel.send(embed=embd)
 
 
-async def determine_rare_catch(message: discord.Message):
+async def determine_rare_catch(message: discord.Message) -> dict | None:
     """check if any message is a rare catch message"""
 
     catch_info = {}
@@ -199,9 +205,13 @@ async def determine_rare_catch(message: discord.Message):
             try:
                 if i == "galarian" or i == "alolan" or i == "hisuian":
                     catch_info["type"] = "regional"
-                if cache_manager.cached_rarity_data[i] in ["legendary", "mythical", "ultra beast"]:
+                if cache_manager.cached_rarity_data.get(i, "normal") in ["legendary", "mythical", "ultra beast"]:
                     catch_info["type"] = "rare"
             except Exception:  # noqa: BLE001, S112
                 continue
+
+    if catch_info.get("type", "") == "":
+        logger.error(f"Unable to find the Rarity type of this pokemon with name : {pokemon_name}")
+        return None
 
     return catch_info
