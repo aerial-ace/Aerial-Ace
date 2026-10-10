@@ -74,21 +74,20 @@ async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
         return  # Unable to proceed! Either not a catch or failed to get catch info
 
     # return if not a rare catch and not a streak and not even a low/high iv.
-    # fmt: off
-    if (not catch_info.is_shiny and
-        not catch_info.is_hunt and
-        not catch_info.is_rare and
-        not catch_info.is_gmax and
-        catch_info.streak == 0 and
-        float(catch_info.ivs) > 10 and float(catch_info.ivs) < 90
-    ):
+    if not catch_info.is_shiny and not catch_info.is_hunt and not catch_info.is_rare and not catch_info.is_gmax and catch_info.streak == 0 and float(catch_info.ivs) > 10 and float(catch_info.ivs) < 90:
         return
-    # fmt: on
 
     server_details = await mongo_manager.manager.get_all_data("servers", {"server_id": str(message.guild.id)})
-    if server_details is None:
+    if server_details is None or len(server_details) <= 0:
         logger.error("Failed to rare check! Can't fetch server data from DB")
         return
+
+    tier: int = server_details[0].get("tier", 0)
+
+    # Check and return if the catch is streak only and the server doesn't support it
+    # If the catch passes this checkpoint, it is assumed that the catch streaks are supported in the server
+    if not catch_info.is_shiny and not catch_info.is_hunt and not catch_info.is_rare and not catch_info.is_gmax and not (float(catch_info.ivs) > 10 and float(catch_info.ivs) < 90) and catch_info.streak in [100, 1000, 10000] and tier <= 0:
+        return  # This catch is only a catch streak; and catch straks are disabled in base tier servers
 
     if catch_info.is_shiny:
         await mongo_manager.manager.increment_shiny_counter(str(message.guild.id))
@@ -97,10 +96,11 @@ async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
 
     if alerts_allowed:
         """ Get and Send Catch Detection Embed"""
+
         reply: discord.Embed | None = await starboard_helper.get_rare_catch_embd(server_details, catch_info)
         if reply is None:
             ref_num = random.getrandbits(64)
-            logger.error(f"Failed to get the rare catch embed! Reference Num : {ref_num}")
+            logger.error(f"Failed to get the rare catch embed! Rare Catch Embed is None. Ref Num : {ref_num}")
             logger.error(f"Catch Message was : {message.content}")
             reply_embd = await general_helper.get_error_embd("Whoops", f"Failed to get the rare catch embed! Please report this to the Support Server\b```Reference Number : {ref_num}```")
             await message.channel.send(embed=reply_embd)
@@ -121,7 +121,7 @@ async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
         await message.channel.send(embed=starboard_reply)
 
     """ Send Customization Reminder for non premium servers"""
-    customization_reminder_possibility = 30
+    customization_reminder_possibility = 10
 
     if server_details[0].get("tier", 0) == 0 and random.randint(0, 99) < customization_reminder_possibility:
         embd = await general_helper.get_info_embd(f"{config.AERIAL_ACE_EMOJI} Customize Starboard Embed!", "Enhance the starboard embed using various customization features available to premium servers. Get premium now and customize your starboard embeds to suit your servers. ", config.DEFAULT_COLOR, "Use -aa premium or join support server to know more.")
