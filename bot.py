@@ -94,7 +94,7 @@ class AerialAce(commands.AutoShardedBot):
         if self.setup_done is False:
             return
 
-        if message.author == self.user or message.content == "":
+        if message.author == self.user or (message.content == "" and len(message.embeds) <= 0):
             return
 
         # reply to solo pings
