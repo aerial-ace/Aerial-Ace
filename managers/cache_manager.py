@@ -38,7 +38,8 @@ async def search_cached_type_data(name: str) -> dict | None:
 
     # if neither the provided name or the aliter exist in cached_type_data;
     if type_data is None:
-        logger.error(f"{name} is not present in cached_type_data")
+        logger.error(f"Getting cached_type_data for {name}, converted to {poke_name} after applying variants")
+        logger.error(f"{poke_name} is not present in cached_type_data")
 
     return type_data
 
