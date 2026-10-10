@@ -443,6 +443,10 @@ async def send_starboard(server_details, catch_details: CatchInfo, message: Mess
 
 
 async def get_rare_catch_embd(server_details, catch_details: CatchInfo) -> Embed | None:
+    """
+    Return the rare catch embed if its construction was successful.
+    Return None if embed is not possible
+    """
 
     user_ping: str = catch_details.user
     poke_name: str = catch_details.pokemon
@@ -496,7 +500,7 @@ async def get_rare_catch_embd(server_details, catch_details: CatchInfo) -> Embed
 
         embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
 
-    elif catch_details.streak != 0 and tier > 0:
+    elif catch_details.streak != 0:
         embd.title = f"{STREAK_EMOJI} Catch Streak {STREAK_EMOJI}"
         embd.color = STREAK_COLOR
         embd.description = f"{user_ping} caught their {poke_strak}th {poke_name}\n\n:tada: Congratulations :tada:"
@@ -505,32 +509,18 @@ async def get_rare_catch_embd(server_details, catch_details: CatchInfo) -> Embed
         ivs = float(catch_details.ivs)
         iv_emote = LOW_IV_EMOJI if ivs < 10 else HIGH_IV_EMOJI
 
-        if ivs < 10:
-            iv_status = "Rare Low IV"
-        elif ivs > 90:
-            iv_status = "Rare High IV"
-        else:
-            return None  # Return None if no case is matched.
+        iv_status = "Rare Low IV" if ivs < 10 else "Rare High IV"
 
         embd.title = f"{iv_emote} {iv_status} Catch Detected {iv_emote}"
         embd.color = LOW_IV_COLOR if ivs < 10 else HIGH_IV_COLOR
         embd.description = f"{user_ping} caught a {iv_status} Pokemon\n\n:tada: Congratulations :tada:"
         embd.set_image(url=(JIRACHI_WOW if data.get("starboard_image_rare", "DEFAULT") == "DEFAULT" or tier < 2 else data.get("starboard_image_rare", "DEFAULT")))
+    else:
+        return None
 
     embd.timestamp = datetime.datetime.now(datetime.timezone.utc)
 
-    if embd.title == "":
-        logger.error("Catch Details don't match any rare catch scenario")
-        logger.error(f"Catch Details Is Shiny : {catch_details.is_shiny}")
-        logger.error(f"Catch Details Is Rare : {catch_details.is_rare}")
-        logger.error(f"Catch Details Is Gmax : {catch_details.is_gmax}")
-        logger.error(f"Catch Details Is Hunt : {catch_details.is_hunt}")
-        logger.error(f"Catch Details Type : {catch_details.type}")
-        logger.error(f"Catch Details Pokemon : {catch_details.pokemon}")
-        logger.error(f"Catch Details Streak : {catch_details.streak}")
-        return None
-
-    return embd if embd.title != "" else None
+    return embd
 
 
 async def get_starboard_channel_id(server_id) -> str | None:
