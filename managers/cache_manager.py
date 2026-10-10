@@ -1,6 +1,7 @@
 import json
 
 import config
+from helpers.data.catch_info import CatchType
 from managers import mongo_manager
 from managers.logging_manager import get_logger
 
@@ -9,6 +10,7 @@ logger = get_logger()
 # data containers
 cached_stats_data: dict[str, str] = {}
 cached_moveset_data: dict[str, str] = {}
+cached_name_variant_data: dict[str, str] = {}
 cached_alt_name_data: dict[str, str] = {}
 cached_rarity_data: dict[str, str] = {}
 cached_nature_data: dict[str, str] = {}
@@ -25,59 +27,14 @@ async def search_cached_type_data(name: str) -> dict | None:
 
     global cached_type_data  # noqa: PLW0602
 
-    # fmt: off
-    type_data_aliter = {
-        "darmanitan": "darmanitan-standard", 
-        "nidoran" : "nidoran-f",
-        "mr.mime-galar": "mr-mime-galar",
-        "darmanitan-galar": "darmanitan-galar-standard", 
-        "deoxys": "deoxys-normal", 
-        "wormadam": "wormadam-sandy",
-        "meloetta": "meloetta-aria", 
-        "giratina": "giratina-origin",
-        "basculin": "basculin-red-striped",
-        "tornadus": "tornadus-incarnate",
-        "thundurus": "thundurus-incarnate",
-        "landorus": "landorus-incarnate",
-        "keldeo" : "keldeo-ordinary",
-        "meowstic": "meowstic-female",
-        "aegislash": "aegislash-shield",
-        "pumpkaboo": "pumkaboo-average",
-        "gourgiest": "gourgiest-average",
-        "zygarde": "zygarde-50", 
-        "oricorio": "oricorio-baile",
-        "tapukoko": "tapu-koko",
-        "lycanroc": "lycanroc-midday",
-        "wishiwashi": "wishiwashi-solo",
-        "mimikyu": "mimikyu-busted",
-        "magearna": "magearna-original",
-        "necrozma": "necrozma-ultra",
-        "cramorant": "cramorant-gulping",
-        "toxtricity": "toxtricity-amped",
-        "eiscue": "eiscue-ice",
-        "indeedee": "indeedee-female",
-        "rapidstrikeurshifu": "urshifu-rapid-strike", 
-        "singlestrikeurshifu": "urshifu-single-strike",
-        "basculegion": "basculegion-female",
-        "enamorous": "enamorous-incarnate",
-        "shaymin": "shaymin-land",
-        "zenithmarshadow": "marshadow",
-        "wellspringmaskogerpon": "ogerpon-wellspring-mask",
-        "hearthflamemaskogerpon": "ogerpon-hearthflame-mask",
-        "cornerstonemaskogerpon": "ogerpon-cornerstone-mask",
-        "neutralxerneas": "xerneas",
-        "zendarmanitan-galar": "darmanitan-galar-zen",
-    }
-    # fmt: on
+    non_gmax: str = name.removesuffix("-gmax")
+    variant: str = cached_name_variant_data.get(non_gmax, non_gmax)
+    poke_name: str = name.replace(non_gmax, variant)
 
     type_data: dict | None = {}
 
     # if aliter name exists, then use that to fetch from catched_type_data; otherwise use the provided name
-    aliter = type_data_aliter.get(name, None)
-    if aliter is not None:
-        type_data = cached_type_data.get(aliter, None)
-    else:
-        type_data = cached_type_data.get(name, None)
+    type_data = cached_type_data.get(poke_name, None)
 
     # if neither the provided name or the aliter exist in cached_type_data;
     if type_data is None:
@@ -87,10 +44,11 @@ async def search_cached_type_data(name: str) -> dict | None:
 
 
 async def cache_data():
-    global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data, cached_weakness_data, cached_type_data, cached_duelish_data, cached_spawnrate_data, cached_shinycounter_data
+    global cached_stats_data, cached_moveset_data, cached_alt_name_data, cached_rarity_data, cached_nature_data, cached_weakness_data, cached_type_data, cached_duelish_data, cached_spawnrate_data, cached_shinycounter_data, cached_name_variant_data
 
     cached_stats_data = get_all_stats()
     cached_moveset_data = get_all_moveset()
+    cached_name_variant_data = get_all_name_variant_data()
     cached_alt_name_data = get_all_alt_names()
     cached_rarity_data = get_all_rarity_data()
     cached_nature_data = get_all_nature_data()
@@ -128,6 +86,12 @@ def get_all_moveset():
         return json.loads(ms_data_raw)
 
 
+def get_all_name_variant_data():
+    with open(config.NAME_VARIANT_FILE_LOCATION, "r") as variant_file:
+        variant_data_raw = variant_file.read()
+        return json.loads(variant_data_raw)
+
+
 def get_all_alt_names():
     with open(config.ALT_NAME_FILE_LOCATION, "r") as alt_name_file:
         return json.loads(alt_name_file.read())
@@ -162,6 +126,37 @@ def get_all_duelish_data():
         duelish_data = json.loads(duelish_file.read())
 
         return duelish_data
+
+
+async def fetch_poke_rarity_from_name(pokemon_name: str) -> CatchType:
+    """
+    Look in cached_rarity_data to see if the pokemon name belongs to any rarity types
+    """
+
+    catch_type = CatchType.COMMON
+
+    # Set the CatchType to the most prominent one
+    def set_catch_type(type: CatchType):
+        nonlocal catch_type
+        catch_type = type if type.value > catch_type.value else catch_type
+
+    for i in pokemon_name.lower().split():
+        if i in ["galarian", "alolan", "paldian", "hisuian"]:
+            set_catch_type(CatchType.REGIONAL)
+
+        rarity = cached_rarity_data.get(i, None)
+
+        match rarity:
+            case None:
+                continue  # keep checking for other words in the name
+            case "legendary":
+                set_catch_type(CatchType.LEGENDARY)
+            case "mythical":
+                set_catch_type(CatchType.MYTHICAL)
+            case "ultra beast":
+                set_catch_type(CatchType.ULTRABEAST)
+
+    return catch_type
 
 
 async def fetch_spawnrate_info() -> dict[str, dict] | None:
