@@ -50,5 +50,7 @@
 	"normal-deoxys": "deoxys-normal",
 	"speed-deoxys": "deoxys-speed",
 	"attack-deoxys": "deoxys-attack",
-	"defense-deoxys": "deoxys-defense"
+	"defense-deoxys": "deoxys-defense",
+	"battle-cyclizar": "cyclizar",
+	"ride-cyclizar": "cyclizar"
 }
