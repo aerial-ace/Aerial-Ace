@@ -277,7 +277,7 @@ async def get_starboard_embed(catch_details: CatchInfo, server_details, message_
     pokemon = poke_id.replace(" ", "-").lower()
     pokemon = pokemon.replace("é", "e")  # This is because of you Flabébé >:|
     pokemon = pokemon.replace("'", "")  # This is because of you Farfetch'd >:|
-    pokemon = pokemon.replace("Mr. ", "mr.")  # This is because of you Mr.<space>Mime
+    pokemon = pokemon.replace("mr.", "mr")  # This is because of you Mr.<space>Mime
 
     pokemon_name_storage = pokemon
 
