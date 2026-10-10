@@ -27,7 +27,6 @@ class SpawnSpeedModule(commands.Cog):
             return
 
         await self.apply_spawn_counter()
-
         await self.apply_shiny_counter()
 
     @update_spawn_speeds.before_loop
@@ -66,7 +65,7 @@ class SpawnSpeedModule(commands.Cog):
     async def apply_shiny_counter(self, server_id: str | None = None):
         """Updates the shiny-counter channel name of each and every server"""
 
-        logger.info("Updating Shiny Count Channels")
+        logger.warning(">>>>>>>>>>>>>>>>>>>Starting Shiny Channel Update")
 
         for item in cache_manager.cached_shinycounter_data.values():
             if item.get("active", False) is False:
@@ -74,18 +73,24 @@ class SpawnSpeedModule(commands.Cog):
 
             shiny_count_channel_id = int(item.get("channel_id", "0"))
             if shiny_count_channel_id == "0":
+                logger.warning("Shiny Channel is 0")
                 continue  # ignore unset shiny channels
 
             display_channel: GuildChannel | PrivateChannel | Thread | None = await self.bot.fetch_channel(shiny_count_channel_id) if self.bot is not None else None
             if display_channel is None:
+                logger.warning("Shiny Display Channel not found!")
                 continue  # shiny channel id exists, but the channel itself doesn't exists
 
             if isinstance(display_channel, (TextChannel, VoiceChannel, StageChannel)):
                 try:
                     await display_channel.edit(name="{} shinies ✨ / alltime".format(item.get("count")))
+
                 except Forbidden:
+                    logger.warning("Permission to udpate the channel name doesn't exists")
                     continue  # permission to edit the channel is not there
+
                 except HTTPException:
+                    logger.warning("Failed to update channel name")
                     continue  # failed to rename channel
 
     """ SPAWN COUNTER """
