@@ -31,6 +31,11 @@ async def search_cached_type_data(name: str) -> dict | None:
     variant: str = cached_name_variant_data.get(non_gmax, non_gmax)
     poke_name: str = name.replace(non_gmax, variant)
 
+    # Remove Types from the names
+    types = ["bug", "dark", "dragon", "electric", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "poison", "psychic", "rock", "steel", "water", "fairy", "normal"]
+    for t in types:
+        poke_name = poke_name.replace(f"{t}-", "")
+
     type_data: dict | None = {}
 
     # if aliter name exists, then use that to fetch from catched_type_data; otherwise use the provided name
