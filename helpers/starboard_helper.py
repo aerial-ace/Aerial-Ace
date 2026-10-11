@@ -290,12 +290,8 @@ async def get_starboard_embed(catch_details: CatchInfo, server_details, message_
         pokemon_name_storage = pokemon_name_storage.removeprefix("hisuian-") + "-hisui"
     elif pokemon_name_storage.startswith("paldean"):
         pokemon_name_storage = pokemon_name_storage.removeprefix("paldean-") + "-paldea"
-    elif pokemon_name_storage.startswith("complete"):
-        pokemon_name_storage = pokemon_name_storage.removeprefix("complete-") + "-complete"
     elif pokemon_name_storage.startswith("dada"):
         pokemon_name_storage = pokemon_name_storage.removeprefix("dada-") + "-dada"
-    elif pokemon_name_storage.startswith("10%"):
-        pokemon_name_storage = pokemon_name_storage.removeprefix("10%-") + "-10"
 
     if catch_details.is_gmax:
         pokemon_name_storage = pokemon_name_storage + "-gmax"
@@ -419,7 +415,7 @@ async def send_starboard(server_details, catch_details: CatchInfo, message: Mess
     if reply is None:
         ref_num = random.getrandbits(64)
         logger.error(f"Failed sending the starboard embed! Starboard Embed is invalid! Reference Number : {ref_num}")
-        await message.channel.send(f"Unable to send the starboard embed! Reference Number : {ref_num}. Please report in Suppot Server! Thanks")
+        # await message.channel.send(f"Unable to send the starboard embed! Reference Number : {ref_num}. Please report in Suppot Server! Thanks")
         return
 
     # send that starboard embed to the starboard channel
