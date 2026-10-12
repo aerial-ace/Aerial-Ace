@@ -1,12 +1,18 @@
+import random
+
 import discord
 
-from managers import cache_manager
+from config import ERROR_COLOR, NON_SHINY_LINK_TEMPLATE, NORMAL_COLOR, TYPES
 from helpers import general_helper
-from config import TYPES, NON_SHINY_LINK_TEMPLATE, NORMAL_COLOR, ERROR_COLOR
+from managers import cache_manager
+from managers.logging_manager import get_logger
+
+logger = get_logger()
 
 
-# get stats
 async def get_stats_embed(pokemon):
+    # get stats embed
+
     pokemon = pokemon.lower()
     embd = discord.Embed()
 
@@ -16,15 +22,11 @@ async def get_stats_embed(pokemon):
     embd.color = NORMAL_COLOR
 
     if pokemon in all_pokemon:
-        embd.title = "{poke}'s Stats".format(poke=pokemon.capitalize())
-        embd.add_field(name="Stats", value="```{stats}```".format(stats=cached_stats_data[pokemon]), inline=False)
+        embd.title = f"{pokemon.capitalize()}'s Stats"
+        embd.add_field(name="Stats", value=f"```{cached_stats_data[pokemon]}```", inline=False)
 
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon.lower())
         embd.set_thumbnail(url=image_link)
-
-        embd.set_footer(text="Missing stats for a potentially good pokemon? Report it at official server.")
-
-        return embd
 
     else:
         embd.title = "That pokemon was not found in the database"
@@ -33,13 +35,13 @@ async def get_stats_embed(pokemon):
         embd.description += "> PROBABLY this pokemon is not good for battling \n"
         embd.description += "> Stats for **most** mega are same as their non mega forms"
 
-        embd.set_footer(text="Missing stats for a potentially good pokemon? Report it at official server")
+    embd.set_footer(text="This data might be outdated! If you can help with the data update, please reach out in the support server!")
+    return embd
 
-        return embd
 
-
-# get moveset
 async def get_moveset_embed(poke):
+    # get moveset embed
+
     poke = poke.lower()
     embd = discord.Embed()
 
@@ -49,15 +51,12 @@ async def get_moveset_embed(poke):
     embd.color = NORMAL_COLOR
 
     if poke in all_pokemon:
-        embd.title = "{poke}'s Moveset".format(poke=poke.capitalize())
-        embd.description = "```{ms}```".format(ms=cached_moveset_data[poke])
+        embd.title = f"{poke.capitalize()}'s Moveset"
+        embd.description = f"```{cached_moveset_data[poke]}```"
 
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=poke.lower())
         embd.set_thumbnail(url=image_link)
 
-        embd.set_footer(text="Missing moveset for a potentially good pokemon? Report it at official server.")
-
-        return embd
     else:
         embd.title = "That pokemon was not found in the database"
         embd.color = ERROR_COLOR
@@ -65,44 +64,44 @@ async def get_moveset_embed(poke):
         embd.description += "> PROBABLY this pokemon is not good for battling\n"
         embd.description += "> If this pokemon is a mega, try searching their non mega form"
 
-        embd.set_footer(text="Missing moveset for a potentially good pokemon? Report it at official server.")
+    embd.set_footer(text="This data might be outdated! If you can help with the data update, please reach out in the support server!")
+    return embd
 
-        return embd
 
-
-# get nature
 async def get_nature_embed(poke: str):
+    # get nature embed
+
     poke = poke.lower()
     embd = discord.Embed()
 
     try:
         nature = cache_manager.cached_nature_data[poke]
-        embd.title = "{poke}'s nature".format(poke=poke.capitalize())
+        embd.title = f"{poke.capitalize()}'s nature"
         embd.color = NORMAL_COLOR
         embd.description = f"```{nature}```"
 
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=poke.lower())
         embd.set_thumbnail(url=image_link)
 
-        embd.set_footer(text="Missing nature for a potentially good pokemon? Report it at official server.")
     except KeyError:
         embd.title = "That pokemon was not found in the database"
         embd.description = "> If the name is correct then \n"
         embd.description += "> PROBABLY this pokemon is not good for battling"
 
-        embd.set_footer(text="Missing nature for a potentially good pokemon? Report it at official server.")
-
         embd.color = ERROR_COLOR
+
+    embd.set_footer(text="This data might be outdated! If you can help with the data update, please reach out in the support server!")
 
     return embd
 
 
-# get weakness
-async def get_weakness_embed(params):
+async def get_weakness_embed(params) -> discord.Embed:
+    # get weakness embed
+
     params = [p.lower() for p in params]
 
     # determine the type of input
-    type_input = (True if params[0] in TYPES else False)
+    type_input = params[0] in TYPES
 
     # return if input error
     if type_input:
@@ -115,14 +114,24 @@ async def get_weakness_embed(params):
             reply = await general_helper.get_info_embd(title="Breh, whats this?", desc="Input Error, either give a valid type set or a valid pokemon name", color=ERROR_COLOR)
             return reply
 
+    types: list[str] = []
+
     # get types from the input
-    try:
-        if not type_input:
-            types = (await cache_manager.search_cached_type_data(params[0]))["types"]
-        else:
-            types = params
-    except KeyError as err:
-        return await general_helper.get_info_embd(title="Not Found Error!", desc="That pokemon was not found, try this ```-aa weak Emolga```", color=ERROR_COLOR, footer="Report missing weakness data of any pokemon at the official server when?")
+    if not type_input:
+        poke_name = "-".join(params)
+        poke_data = await cache_manager.search_cached_type_data(poke_name)
+        if poke_data is None:
+            ref_num = random.getrandbits(64)
+            logger.error("Failed to generate weakness data! No Pokemon Type data received!")
+            return await general_helper.get_error_embd(title="Not Found Error!", desc="That pokemon was not found, try this ```-aa weak Emolga\n-aa weak palkia-origin```\nReport missing weakness data of any pokemon in the support server", footer=f"Provide this reference number : {ref_num}")
+
+        types = poke_data.get("types", [])
+        if len(types) <= 0:
+            ref_num = random.getrandbits(64)
+            logger.error(f"Failed to get types from pokemon_data! Pokemon Data is {poke_data}, reference number : {ref_num}")
+            return await general_helper.get_error_embd("Whoops!", "Failed to get Weakness Data! Maybe check the pokemon name!", f"Provide this reference number : {ref_num}")
+    else:
+        types = params
 
     # get individual weakness per type
     individual_weakness = {}
@@ -170,15 +179,10 @@ async def get_weakness_embed(params):
         embed.description = f"Types : {type_text}"
 
     for tier in list(weakness_tiers.keys()):
-
         if len(weakness_tiers[tier]) <= 0:
             continue
 
-        embed.add_field(
-            name=f"{tier.capitalize()} against",
-            value=weakness_tiers[tier],
-            inline=False
-        )
+        embed.add_field(name=f"{tier.capitalize()} against", value=weakness_tiers[tier], inline=False)
 
         image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=params[0].lower()).replace("-mega-x", "-megax").replace("-mega-y", "-megay").replace("-female", "-f").replace("-male", "")
 

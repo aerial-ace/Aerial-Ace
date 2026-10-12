@@ -1,15 +1,13 @@
 from discord import ApplicationContext, AutocompleteContext
+from discord.commands import Option, slash_command
 from discord.ext import commands
-from discord.commands import slash_command, Option
 
-from views.ButtonViews import GeneralView
-from helpers import pokemon_info_helper
 import config
+from helpers import pokemon_info_helper
+from views.ButtonViews import GeneralView
 
 
 class PokeInfoSlash(commands.Cog):
-    default_view: GeneralView = None
-
     @commands.Cog.listener()
     async def on_ready(self):
         self.default_view = GeneralView(200, True, False, False, True)
@@ -52,7 +50,7 @@ class PokeInfoSlash(commands.Cog):
 
     """For getting tierlists"""
 
-    tierlist_categories = ["common", "mega", "rare", "bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water", "eeveelution"]
+    tierlist_categories: list = ["common", "mega", "rare", "bug", "dark", "dragon", "electric", "fairy", "fighting", "fire", "flying", "ghost", "grass", "ground", "ice", "normal", "poison", "psychic", "rock", "steel", "water", "eeveelution"]
 
     # return category from the input
     async def get_category(self, ctx: AutocompleteContext):
@@ -64,9 +62,9 @@ class PokeInfoSlash(commands.Cog):
         try:
             tier_link = config.TIER_LINK[category.lower()]
         except KeyError:
-            return await ctx.respond(f"That is not a tier. Enter a good tier like `rare`, `mega`, `common`, `steel`, `eeveelution`")
+            return await ctx.respond("That is not a tier. Enter a good tier like `rare`, `mega`, `common`, `steel`, `eeveelution`")
 
-        await ctx.respond(tier_link, view=self.default_view)
+        await ctx.respond(f"{tier_link} - These lists might be outdated! If you can help with updating these, please reach out in the support sever!", view=self.default_view)
 
 
 def setup(bot: commands.Bot):
