@@ -48,9 +48,6 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.NotOwner):
             return await ctx.reply("You are not supposed to use this command :>", view=view)
 
-        logger.error(f"Error while running {ctx.command.name} command\n\tError : {error}")
-        await ctx.reply("Unknown Error Occurred! Please report this in Support Server")
-
 
 def setup(bot: commands.Bot):
     bot.add_cog(ErrorHandler())
