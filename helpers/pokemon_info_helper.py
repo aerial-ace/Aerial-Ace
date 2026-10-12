@@ -103,16 +103,12 @@ async def get_weakness_embed(params) -> discord.Embed:
     # determine the type of input
     type_input = params[0] in TYPES
 
-    # return if input error
+    # return if input error; first word is type but any of the other words in not type
     if type_input:
         for t in params:
             if t.lower() not in TYPES:
-                reply = await general_helper.get_info_embd(title="Breh, whats this?", desc="Input Error, either give a valid type set or a valid pokemon name", color=ERROR_COLOR)
+                reply = await general_helper.get_info_embd(title="Breh, whats this?", desc=f"Input Error, either give a valid type set or a valid pokemon name. {t} is not a valid type name", color=ERROR_COLOR)
                 return reply
-    else:
-        if len(params) > 1:
-            reply = await general_helper.get_info_embd(title="Breh, whats this?", desc="Input Error, either give a valid type set or a valid pokemon name", color=ERROR_COLOR)
-            return reply
 
     types: list[str] = []
 

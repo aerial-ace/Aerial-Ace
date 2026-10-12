@@ -1,5 +1,4 @@
 import json
-import pdb  # noqa: T100
 
 import config
 from helpers.data.catch_info import CatchType
