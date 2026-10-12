@@ -304,13 +304,7 @@ async def get_starboard_embed(catch_details: CatchInfo, server_details, message_
     ivs: str = str(poke_ivs) + "%" if poke_ivs > 0.0 else "None"
     embd.description += f"**`IVs     :`** {ivs} [TELEPORT]({message_link})\n\n"
 
-    try:
-        pokemon_details = await cache_manager.search_cached_type_data(pokemon_name_storage)
-
-    except Exception as e:  # noqa: BLE001
-        logger.error(f"Pokemon with the name : {pokemon_name_storage} is not found type data!\n\terror : {e}")
-        return None
-
+    pokemon_details = await cache_manager.search_cached_type_data(pokemon_name_storage)
     if pokemon_details is None:
         logger.error("Unable to create the starboard embed! Pokemon name is invalid!")
         return

@@ -1,4 +1,5 @@
 import json
+import pdb  # noqa: T100
 
 import config
 from helpers.data.catch_info import CatchType
@@ -23,7 +24,11 @@ cached_shinycounter_data: dict[str, dict] = {}
 
 
 async def search_cached_type_data(name: str) -> dict | None:
-    """Return the type data of the poemon; if type data is not found, return None"""
+    """
+    Return the type data of the pokemon;
+    If exact name doesn't exists, return any match from the pokemon name words
+    If type data is not found, return None
+    """
 
     global cached_type_data  # noqa: PLW0602
 
@@ -42,6 +47,18 @@ async def search_cached_type_data(name: str) -> dict | None:
     type_data = cached_type_data.get(poke_name, None)
 
     # if neither the provided name or the aliter exist in cached_type_data;
+    if type_data is None:
+        # Try finding the words in the pokemon name if the cached_type_data
+        poke_name_words = poke_name.split("-")
+        for word in poke_name_words:
+            type_data = cached_type_data.get(word, None)
+
+            # if a match is found, break with current type data
+            if type_data is not None:
+                logger.error(f"{poke_name} was not found in cached_type_data! {name} -> After Applying Variants -> {poke_name}")
+                logger.error(f"Substring {word} was found, so working with that to send the starboard embed")
+                break
+
     if type_data is None:
         logger.error(f"Getting cached_type_data for {name}, converted to {poke_name} after applying variants")
         logger.error(f"{poke_name} is not present in cached_type_data")
