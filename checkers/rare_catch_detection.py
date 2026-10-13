@@ -102,6 +102,7 @@ async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
             ref_num = random.getrandbits(64)
             logger.error(f"Failed to get the rare catch embed! Rare Catch Embed is None. Ref Num : {ref_num}")
             logger.error(f"Catch Message was : {message.content}")
+            logger.error(f"Server of the catch was : {message.guild.id}")
             reply_embd = await general_helper.get_error_embd("Whoops", f"Failed to get the rare catch embed! Please report this to the Support Server\b```Reference Number : {ref_num}```")
             await message.channel.send(embed=reply_embd)
             return
@@ -116,6 +117,7 @@ async def rare_check(_bot: discord.AutoShardedBot, message: discord.Message):
         if starboard_reply is None:
             logger.error("Failed to send starboard reply because no proper starboar reply!")
             logger.error(f"Rare catch message was : {message.content}")
+            logger.error(f"Server of the catch was : {message.guild.id}")
             return
 
         await message.channel.send(embed=starboard_reply)
