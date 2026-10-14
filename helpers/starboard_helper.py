@@ -306,16 +306,18 @@ async def get_starboard_embed(catch_details: CatchInfo, server_details, message_
 
     pokemon_details = await cache_manager.search_cached_type_data(pokemon_name_storage)
     if pokemon_details is None:
-        logger.error("Unable to create the starboard embed! Pokemon name is invalid!")
-        return
+        logger.warning(f"{pokemon_name_storage} is not present in type_data! Thumbnail Image will be absent")
 
-    pokemon_id: str | None = pokemon_details.get("id", None)
-
+    pokemon_id: str | None = pokemon_details.get("id", None) if pokemon_details is not None else None
     high_res_enabled = server_details.get("high_res", False)
-    if high_res_enabled:
-        image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
-    else:
-        image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_name_storage)
+
+    image_link = ""
+    # set the thumbnail image to the pokemon image if the pokemon id can be determined
+    if pokemon_details is not None:
+        if high_res_enabled:
+            image_link = HIGH_RES_NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
+        else:
+            image_link = NON_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_name_storage)
 
     # If the catch is a Rare Type
     if catch_details.is_rare:
@@ -335,9 +337,9 @@ async def get_starboard_embed(catch_details: CatchInfo, server_details, message_
 
         # reset the image links for the shiny ones
         if high_res_enabled:
-            image_link = HIGH_RES_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id)
+            image_link = HIGH_RES_SHINY_LINK_TEMPLATE.format(pokemon=pokemon_id) if pokemon_id is not None else ""
         else:
-            image_link = SHINY_LINK_TEMPLATE.format(pokemon=pokemon_name_storage)
+            image_link = SHINY_LINK_TEMPLATE.format(pokemon=pokemon_name_storage) if pokemon_id is not None else ""
 
     elif catch_details.is_gmax:
         embd.title = f"{GMAX_EMOJI} GMAX Catch Detected {GMAX_EMOJI}"

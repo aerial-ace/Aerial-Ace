@@ -54,13 +54,13 @@ async def search_cached_type_data(name: str) -> dict | None:
 
             # if a match is found, break with current type data
             if type_data is not None:
-                logger.error(f"{poke_name} was not found in cached_type_data! {name} -> After Applying Variants -> {poke_name}")
-                logger.error(f"Substring {word} was found, so working with that to send the starboard embed")
+                logger.warning(f"{poke_name} was not found in cached_type_data! {name} -> After Applying Variants -> {poke_name}")
+                logger.warning(f"Substring {word} was found, so working with that to send the starboard embed")
                 break
 
     if type_data is None:
-        logger.error(f"Getting cached_type_data for {name}, converted to {poke_name} after applying variants")
-        logger.error(f"{poke_name} is not present in cached_type_data")
+        logger.warning(f"Getting cached_type_data for {name}, converted to {poke_name} after applying variants")
+        logger.warning(f"{poke_name} is not present in cached_type_data")
 
     return type_data
 
