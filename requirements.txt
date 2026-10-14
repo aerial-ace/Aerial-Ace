@@ -1,8 +1,6 @@
 py-cord
-requests
+httpx
 TextWrapper
-pymongo[srv]>=4.1,<4.5
 python-dotenv
 motor
-dnspython
 uv

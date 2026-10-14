@@ -1,12 +1,12 @@
-import requests
-from discord import Embed
 import json
 
-from views.PaginatorViews import PageView
-from helpers import general_helper
-from config import NORMAL_COLOR, SMOGON_API_TEMPLATE, SMOGON_COLOR, ERROR_COLOR, NON_SHINY_LINK_TEMPLATE
+import httpx
+from discord import Embed
 
+from config import ERROR_COLOR, NON_SHINY_LINK_TEMPLATE, NORMAL_COLOR, SMOGON_API_TEMPLATE, SMOGON_COLOR
+from helpers import general_helper
 from views import PaginatorViews
+from views.PaginatorViews import PageView
 
 
 class SmogonData:
@@ -27,7 +27,8 @@ class SmogonData:
 
 async def get_smogon_data(gen: int, tier: str, pokemon: str) -> SmogonData | None:
     smogon_url = SMOGON_API_TEMPLATE.format(gen=gen, tier=tier, pokemon=pokemon)
-    smogon_request = requests.get(url=smogon_url)
+    async with httpx.AsyncClient() as client:
+        smogon_request = await client.get(url=smogon_url)
 
     data = json.loads(smogon_request.text)
 
@@ -56,33 +57,17 @@ async def get_smogon_data(gen: int, tier: str, pokemon: str) -> SmogonData | Non
     return smogon_data
 
 
-async def get_smogon_paginator(data: SmogonData) -> PageView:
+async def get_smogon_paginator(data: SmogonData) -> PageView | Embed:
     if data.error is not None:
-        return await general_helper.get_info_embd("Error!!", "**Error Code :** {code}\n**Error Description** {desc}\n\nThere is a possibility that the searched pokemon is not available in that generation or in that tier. \nTry with gen it was first introduced in.".format(code=data.error, desc=data.message), color=ERROR_COLOR)
+        return await general_helper.get_info_embd("Error!!", f"**Error Code :** {data.error}\n**Error Description** {data.message}\n\nThere is a possibility that the searched pokemon is not available in that generation or in that tier. \nTry with gen it was first introduced in.", color=ERROR_COLOR)
 
     mainEmbed = Embed(title=f"{data.name.capitalize()} - Smogon Analysis", color=SMOGON_COLOR)
     mainEmbed.set_thumbnail(url=NON_SHINY_LINK_TEMPLATE.format(pokemon=data.name.lower()))
 
-    mainEmbed.add_field(
-        name="Gen - Tier",
-        value="{} - {}".format(data.gen, data.tier.upper()),
-        inline=True
-    )
-    mainEmbed.add_field(
-        name="Pokemon",
-        value=data.name.capitalize(),
-        inline=True
-    )
-    mainEmbed.add_field(
-        name="Tier Rank",
-        value=data.rank,
-        inline=True
-    )
-    mainEmbed.add_field(
-        name="Usage Percentage",
-        value=data.usage,
-        inline=False
-    )
+    mainEmbed.add_field(name="Gen - Tier", value=f"{data.gen} - {data.tier.upper()}", inline=True)
+    mainEmbed.add_field(name="Pokemon", value=data.name.capitalize(), inline=True)
+    mainEmbed.add_field(name="Tier Rank", value=data.rank, inline=True)
+    mainEmbed.add_field(name="Usage Percentage", value=str(data.usage), inline=False)
 
     # abilities
 
@@ -92,15 +77,11 @@ async def get_smogon_paginator(data: SmogonData) -> PageView:
 
     if abilities != {}:
         for i in range(len(abilities)):
-            abilities_str += "{} - *{}*\n".format(abilities[i].capitalize(), ability_perc[i])
+            abilities_str += f"{abilities[i].capitalize()} - *{ability_perc[i]}*\n"
     else:
         abilities_str = "*Not enough data here*"
 
-    mainEmbed.add_field(
-        name="Abilities - %",
-        value=abilities_str,
-        inline=False
-    )
+    mainEmbed.add_field(name="Abilities - %", value=abilities_str, inline=False)
 
     # items
 
@@ -113,15 +94,11 @@ async def get_smogon_paginator(data: SmogonData) -> PageView:
 
     if items != {}:
         for i in range(len(items)):
-            items_str += "{} - *{}*\n".format(items[i].capitalize(), items_perc[i])
+            items_str += f"{items[i].capitalize()} - *{items_perc[i]}*\n"
     else:
         items_str = "*Not enough data here*"
 
-    itemEmbed.add_field(
-        name="Items - Usage %",
-        value=items_str,
-        inline=True
-    )
+    itemEmbed.add_field(name="Items - Usage %", value=items_str, inline=True)
 
     # moves
 
@@ -134,15 +111,11 @@ async def get_smogon_paginator(data: SmogonData) -> PageView:
 
     if moves != []:
         for i in range(len(moves)):
-            moves_str += "{} - *{}*\n".format(moves[i].capitalize(), moves_perc[i])
+            moves_str += f"{moves[i].capitalize()} - *{moves_perc[i]}*\n"
     else:
         moves_str = "*Not enough data here*"
 
-    moveEmbed.add_field(
-        name="Moves - Usage %",
-        value=moves_str,
-        inline=True
-    )
+    moveEmbed.add_field(name="Moves - Usage %", value=moves_str, inline=True)
 
     # Checks
 
@@ -159,11 +132,7 @@ async def get_smogon_paginator(data: SmogonData) -> PageView:
     else:
         checks_str = "*Not enough data here*"
 
-    counterEmbed.add_field(
-        name="Checks - KO %",
-        value=checks_str,
-        inline=True
-    )
+    counterEmbed.add_field(name="Checks - KO %", value=checks_str, inline=True)
 
     # stats
 
@@ -185,16 +154,12 @@ async def get_smogon_paginator(data: SmogonData) -> PageView:
 
             if spreads != {}:
                 for j in range(len(spreads)):
-                    stats_str += "{} : {} - *{}*\n".format(natures[i], spreads[j], perc[j])
+                    stats_str += f"{natures[i]} : {spreads[j]} - *{perc[j]}*\n"
             else:
-                stats_str += "Others : *{}*".format(perc)
+                stats_str += f"Others : *{perc}*"
     else:
         stats_str = "*Not enough data here*"
 
-    statsEmbed.add_field(
-        name="Stats Spreads - Usage %",
-        value=stats_str,
-        inline=False
-    )
+    statsEmbed.add_field(name="Stats Spreads - Usage %", value=stats_str, inline=False)
 
     return PaginatorViews.PageView([mainEmbed, itemEmbed, moveEmbed, counterEmbed, statsEmbed])
