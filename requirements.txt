@@ -1,6 +1,0 @@
-py-cord
-httpx
-TextWrapper
-python-dotenv
-motor
-uv
