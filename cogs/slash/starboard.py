@@ -4,7 +4,7 @@ from discord import ApplicationContext, Forbidden, Option, TextChannel
 from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-from helpers import starboard_helper
+from helpers import general_helper, starboard_helper
 from managers.logging_manager import get_logger
 
 logger = get_logger()
@@ -160,7 +160,7 @@ class StarboardSlash(commands.Cog):
             logger.error("Can't send sample message because not channel id")
             return
 
-        starboard_channel = ctx.bot.get_channel(int(channel_id))
+        starboard_channel = await general_helper.get_channel_from_bot(ctx.bot, int(channel_id))
 
         if starboard_channel is None:
             return await ctx.respond(f"Can not find a channel with ID : {channel_id}. Try resetting the channel!")

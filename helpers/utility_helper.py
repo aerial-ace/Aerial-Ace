@@ -1,6 +1,7 @@
 import random
 
 import discord
+from discord.abc import GuildChannel, PrivateChannel
 from discord.ext import commands
 
 import config
@@ -75,7 +76,7 @@ async def get_invite_embed() -> discord.Embed:
 
 # logs the suggestions
 async def register_suggestion(ctx, text: list) -> None:
-    suggestion_channel: discord.TextChannel = ctx.bot.get_guild(config.SUPPORT_SERVER_ID).get_channel(config.SUGGESTION_LOG_CHANNEL_ID)
+    suggestion_channel: GuildChannel | PrivateChannel | discord.Thread | None = await general_helper.get_channel_from_bot(ctx.bot, config.SUGGESTION_LOG_CHANNEL_ID)
 
     embd = discord.Embed(title="__Suggestion Recieved__", color=discord.Color.green())
 
@@ -86,7 +87,8 @@ async def register_suggestion(ctx, text: list) -> None:
 
     embd.set_thumbnail(url=config.AVATAR_LINK)
 
-    await suggestion_channel.send(embed=embd)
+    if isinstance(suggestion_channel, discord.TextChannel):
+        await suggestion_channel.send(embed=embd)
 
 
 # returns the donation embed

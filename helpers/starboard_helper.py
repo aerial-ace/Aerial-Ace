@@ -2,8 +2,8 @@ import datetime
 import json
 import random
 
-from discord import Embed, Message, TextChannel, errors
-from discord.abc import GuildChannel
+from discord import Embed, Message, TextChannel, Thread, errors
+from discord.abc import GuildChannel, PrivateChannel
 
 from config import ALERT_TYPE_MASK, DEFAULT_GMAX_TEXT, DEFAULT_RARE_TEXT, DEFAULT_SHINY_TEXT, ERROR_COLOR, GMAX_CATCH_COLOR, GMAX_EMOJI, HIGH_IV_COLOR, HIGH_IV_EMOJI, HIGH_RES_NON_SHINY_LINK_TEMPLATE, HIGH_RES_SHINY_LINK_TEMPLATE, HUNT_COMPLETED_COLOR, JIRACHI_WOW, LOW_IV_COLOR, LOW_IV_EMOJI, NON_SHINY_LINK_TEMPLATE, NORMAL_COLOR, PIKA_SHOCK, RARE_CATCH_COLOR, SHINY_CATCH_COLOR, SHINY_LINK_TEMPLATE, STREAK_COLOR, STREAK_EMOJI
 from helpers import general_helper
@@ -415,8 +415,8 @@ async def send_starboard(server_details, catch_details: CatchInfo, message: Mess
         return
 
     # send that starboard embed to the starboard channel
-    starboard_channel: GuildChannel | None = message.guild.get_channel(int(starboard_channel_id))
-    if starboard_channel is None:
+    starboard_channel: GuildChannel | PrivateChannel | Thread | None = await general_helper.get_channel_from_server(message.guild, int(starboard_channel_id))
+    if starboard_channel is None or not isinstance(starboard_channel, GuildChannel):
         return await general_helper.get_info_embd("Whoops", f"Can't send messages in <#{starboard_channel_id}>. Try resetting the starboard channel")
 
     try:

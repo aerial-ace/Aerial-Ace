@@ -1,6 +1,6 @@
 from os import listdir
 
-from discord import Bot, Embed, File, Forbidden, HTTPException, User
+from discord import Bot, Embed, File, Forbidden, Guild, HTTPException, User
 from discord.ext import commands
 
 from config import AVATAR_LINK, NORMAL_COLOR
@@ -228,7 +228,9 @@ class AdminSystem(commands.Cog):
         server_list = []
 
         for i in server_ids:
-            gld = await bot.fetch_guild(int(i))
+            gld: Guild | None = await general_helper.get_guild_from_bot(bot, int(i))
+            if gld is None:
+                return
 
             server_list.append({"name": gld.name, "id": gld.id})
 

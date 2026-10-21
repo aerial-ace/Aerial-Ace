@@ -1,10 +1,9 @@
-import asyncio
-
 from discord import Forbidden, HTTPException, StageChannel, TextChannel, Thread, VoiceChannel
 from discord.abc import GuildChannel, PrivateChannel
 from discord.ext import commands, tasks
 
 from checkers import spawn_speed_detection
+from helpers import general_helper
 from managers import cache_manager, mongo_manager
 from managers.logging_manager import get_logger
 
@@ -26,8 +25,8 @@ class SpawnSpeedModule(commands.Cog):
         if cache_manager.cached_spawnrate_data is None:
             return
 
-        await self.apply_spawn_counter()
         await self.apply_shiny_counter()
+        await self.apply_spawn_counter()
 
     @update_spawn_speeds.before_loop
     async def waiter(self):
@@ -38,6 +37,9 @@ class SpawnSpeedModule(commands.Cog):
     async def apply_spawn_counter(self, server_id: str | None = None):
         """Updates the spawn-speed channel name of each and every server"""
 
+        if self.bot is None:
+            return
+
         for x, y in cache_manager.cached_spawnrate_data.items():
             if y.get("active", False) is False:
                 continue
@@ -47,7 +49,7 @@ class SpawnSpeedModule(commands.Cog):
             if spawn_channel_id == "0":
                 continue  # channel id not found
 
-            speed_display_channel: GuildChannel | PrivateChannel | Thread | None = await self.bot.fetch_channel(spawn_channel_id) if self.bot is not None else None
+            speed_display_channel: GuildChannel | PrivateChannel | Thread | None = await general_helper.get_channel_from_bot(self.bot, spawn_channel_id)
             if speed_display_channel is None:
                 continue  # server channel not found
 
@@ -64,10 +66,13 @@ class SpawnSpeedModule(commands.Cog):
 
     async def apply_shiny_counter(self, server_id: str | None = None):
         """Updates the shiny-counter channel name of each and every server"""
+        cached_data = cache_manager.cached_shinycounter_data.values()
 
-        logger.warning(">>>>>>>>>>>>>>>>>>>Starting Shiny Channel Update")
+        logger.info(f">>>> Starting Shiny Channel Update for {len(cached_data)} servers")
 
-        for item in cache_manager.cached_shinycounter_data.values():
+        for item in cached_data:
+            logger.info(f"Server Data for this server : {item}")
+
             if item.get("active", False) is False:
                 continue
 
@@ -76,7 +81,7 @@ class SpawnSpeedModule(commands.Cog):
                 logger.warning("Shiny Channel is 0")
                 continue  # ignore unset shiny channels
 
-            display_channel: GuildChannel | PrivateChannel | Thread | None = await self.bot.fetch_channel(shiny_count_channel_id) if self.bot is not None else None
+            display_channel: GuildChannel | PrivateChannel | Thread | None = await general_helper.get_channel_from_bot(self.bot, shiny_count_channel_id) if self.bot is not None else None
             if display_channel is None:
                 logger.warning("Shiny Display Channel not found!")
                 continue  # shiny channel id exists, but the channel itself doesn't exists

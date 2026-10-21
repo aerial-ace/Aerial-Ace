@@ -1,10 +1,9 @@
 from textwrap import TextWrapper
 
-from discord import Embed
-from discord.ext import commands
+from discord import AutoShardedBot, Bot, Embed, Forbidden, Guild, NotFound, Thread
+from discord.abc import GuildChannel, PrivateChannel
 
 import config
-from views.ButtonViews import DonationView
 
 
 # for wrapping text
@@ -109,3 +108,60 @@ async def donation_reminder() -> Embed:
     embd.set_thumbnail(url="https://i.imgur.com/cYQMCLw.gif")
 
     return embd
+
+
+async def get_guild_from_bot(bot: Bot | AutoShardedBot, guild_id: int) -> Guild | None:
+    """
+    Try to get a guild from bot's memory cache and if not found then fetch the API directly.
+    """
+
+    # Fetch from the cache
+    guild: Guild | None = bot.get_guild(guild_id)
+    if guild is not None:
+        return guild
+
+    # Fetch from the API
+    try:
+        guild = await bot.fetch_guild(guild_id)
+    except Exception:  # noqa: BLE001
+        return None
+
+    return guild
+
+
+async def get_channel_from_bot(bot: Bot | AutoShardedBot, channel_id: int) -> GuildChannel | PrivateChannel | Thread | None:
+    """
+    Try to get a channel from bot's memory cache and if not found then fetch the API directly.
+    """
+
+    # Fetch from the cache
+    channel: GuildChannel | PrivateChannel | Thread | None = bot.get_channel(int(channel_id))
+    if channel is not None:
+        return channel
+
+    # Fetch from the API
+    try:
+        channel = await bot.fetch_channel(channel_id)
+    except (NotFound, Forbidden):
+        return None
+
+    return channel
+
+
+async def get_channel_from_server(server: Guild, channel_id: int) -> GuildChannel | PrivateChannel | Thread | None:
+    """
+    Try to get a channel from guild's memory cache and if not found then fetch the API directly.
+    """
+
+    # Fetch from the cache
+    channel: GuildChannel | PrivateChannel | Thread | None = server.get_channel(channel_id)
+    if channel is not None:
+        return channel
+
+    # Fetch from the API
+    try:
+        channel = await server.fetch_channel(channel_id)
+    except (NotFound, Forbidden):
+        return None
+
+    return channel

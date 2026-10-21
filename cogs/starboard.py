@@ -4,7 +4,7 @@ from discord import Forbidden, TextChannel, Thread
 from discord.abc import GuildChannel, PrivateChannel
 from discord.ext import commands
 
-from helpers import starboard_helper
+from helpers import general_helper, starboard_helper
 from managers.logging_manager import get_logger
 
 logger = get_logger()
@@ -194,7 +194,7 @@ class StarboardSystem(commands.Cog):
 
         bt: commands.Bot = context.bot
 
-        starboard_channel: GuildChannel | PrivateChannel | Thread | None = bt.get_channel(int(channel_id))
+        starboard_channel: GuildChannel | PrivateChannel | Thread | None = await general_helper.get_channel_from_bot(bt, int(channel_id))
 
         if starboard_channel is None:
             return await context.send(f"Can not find a channel with ID : {channel_id}. Try resetting the channel!")
