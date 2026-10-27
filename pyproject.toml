@@ -8,5 +8,5 @@ dependencies = [
     "py-cord>=2.8.1",
     "python-dotenv>=1.2.3",
     "textwrapper>=1.0.2",
-    "uv>=0.12.18",
+    "uv>=0.13.4",
 ]
