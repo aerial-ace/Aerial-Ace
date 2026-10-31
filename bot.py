@@ -20,8 +20,8 @@ intents.message_content = True
 class AerialAce(commands.AutoShardedBot):
     def __init__(self):
         self.setup_done = False
-        self.initial_cogs = ["presence_cycle", "admin", "starboard", "help", "smogon", "mail", "utility", "suggestion", "error_handler", "pokedex", "pokemon_info", "random_misc", "ruleset", "spawn_speed", "tag", "fun", "battle"]
-        self.initial_slash_cogs = ["pokedex", "pokeinfo", "starboard", "random_misc", "ruleset", "suggestion", "tag", "smogon", "utility", "battle", "fun", "help"]
+        self.initial_cogs = ["presence_cycle", "admin", "starboard", "help", "mail", "utility", "suggestion", "error_handler", "pokedex", "pokemon_info", "random_misc", "ruleset", "spawn_speed", "tag", "fun", "battle"]
+        self.initial_slash_cogs = ["pokedex", "pokeinfo", "starboard", "random_misc", "ruleset", "suggestion", "tag", "utility", "battle", "fun", "help"]
 
         super().__init__(command_prefix=self.prefix_callable, description="Botto", case_insensitive=True, intents=intents)
         _ = self.remove_command("help")

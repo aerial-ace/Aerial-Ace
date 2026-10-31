@@ -1,7 +1,5 @@
 import sys
 
-from discord.ext import commands
-
 from bot import AerialAce
 from config import TEST_TOKEN, TOKEN
 from managers.logging_manager import setup_logging
