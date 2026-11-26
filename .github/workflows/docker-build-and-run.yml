@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "edge" ]
+    branches: [ "actions" ]
 
 jobs:
 
@@ -30,6 +30,16 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.VPS_PRIVATE_KEY }}
 
+    - name: Copy Compose file to VPS
+      uses: appleboy/scp-action@v1
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_PRIVATE_KEY }}
+        port: 22
+        source: compose.yaml
+        target: /home/deploy/aerial-ace
+
     - name: Log into the VPS
       uses: appleboy/ssh-action@master
       with:
@@ -38,14 +48,10 @@ jobs:
         key: ${{ secrets.VPS_PRIVATE_KEY }}
         port: 22
         script: |
-          docker pull docker.io/${{ secrets.DOCKER_USERNAME }}/aerial-ace:latest
+          set -e
 
-          # stop existing aerial-ace container.
           docker stop aerial-ace || true
-          docker rm aerial-ace || true
+          docker mr aerial-ace || true 
 
-          # remove unused images.
-          docker image prune -a -f
-
-          # start new aerial-ace container.
-          docker run -d --env-file /root/aerial-ace/.env --name aerial-ace docker.io/${{ secrets.DOCKER_USERNAME }}/aerial-ace:latest
+          cd /home/deploy/aerial-ace
+          docker compose up -d --pull always --remove-orphans
