@@ -3,7 +3,7 @@ services:
     image: staticaron/aerial-ace:latest
     container_name: aerial-ace
     env_file:
-      - /root/aerial-ace/.env
+      - /home/deploy/aerial-ace/.env
     restart: always
     volumes:
-      - /root/aerial-ace/logs:/app/logs
+      - /home/deploy/aerial-ace/logs:/app/logs
